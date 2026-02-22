@@ -1,0 +1,12 @@
+{
+    "settings": {
+    "title": "Settings En",
+    "email": "E-Mail",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen?",
+    "noAccount": "Noch keinen Account?",
+    "register": "Registrieren",
+    "button": "Anmelden",
+    "error": "Ungültige E-Mail oder Passwort."
+  }
+}

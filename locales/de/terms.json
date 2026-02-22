@@ -1,0 +1,95 @@
+{
+    "terms": {
+    "title": "Allgemeine Geschäftsbedingungen",
+    "effectiveDate": "Zuletzt aktualisiert: {{date}}",
+    "backButton": "← Zurück",
+    
+    "sections": {
+      "scope": {
+        "title": "1. Geltungsbereich",
+        "paragraphs": [
+          "Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen der alpina GmbH (nachfolgend 'Anbieter') und den Nutzern (nachfolgend 'Kunden') der Intelligence-Plattform alpina.",
+          "Die Plattform bietet datenbasierte Analysen und Entscheidungsunterstützung für Unternehmen. Durch die Registrierung oder Nutzung der Dienste erkennen Kunden diese AGB als verbindlich an."
+        ]
+      },
+      "description": {
+        "title": "2. Leistungsbeschreibung",
+        "intro": "alpina stellt eine cloudbasierte Plattform zur Verfügung, die:",
+        "items": [
+          "Datenintegration aus verschiedenen Quellen",
+          "Erweiterte Datenanalyse und Visualisierung",
+          "Vorhersagemodelle und KI-gestützte Erkenntnisse",
+          "Berichterstattung und Dashboard-Funktionen",
+          "API-Zugang für Integrationen"
+        ],
+        "outro": "Die genauen Leistungsumfänge sind in den jeweiligen Servicepaketen definiert."
+      },
+      "registration": {
+        "title": "3. Registrierung und Konto",
+        "paragraphs": [
+          "Für die Nutzung der Plattform ist eine Registrierung erforderlich. Der Kunde verpflichtet sich, wahrheitsgemäße und vollständige Angaben zu machen.",
+          "Jeder Kunde ist für die Sicherheit seiner Zugangsdaten verantwortlich und muss unverzüglich unbefugte Nutzung melden. Der Anbieter behält sich das Recht vor, Konten bei Verdacht auf Missbrauch zu sperren."
+        ]
+      },
+      "termination": {
+        "title": "4. Vertragslaufzeit und Kündigung",
+        "paragraphs": [
+          "Die Vertragslaufzeit richtet sich nach dem gewählten Abrechnungsmodell (monatlich/jährlich).",
+          "Kündigungsfristen:"
+        ],
+        "items": [
+          "Monatliche Verträge: 30 Tage zum Monatsende",
+          "Jährliche Verträge: 90 Tage zum Vertragsende"
+        ],
+        "outro": "Das Recht zur fristlosen Kündigung aus wichtigem Grund bleibt beiden Parteien vorbehalten."
+      },
+      "payment": {
+        "title": "5. Vergütung und Zahlung",
+        "paragraphs": [
+          "Die Preise sind in Euro zuzüglich gesetzlicher Mehrwertsteuer. Rechnungen werden elektronisch versendet und sind innerhalb von 14 Tagen zahlbar.",
+          "Bei Zahlungsverzug behält sich der Anbieter das Recht vor, den Dienstzugang einzuschränken oder zu sperren."
+        ]
+      },
+      "privacy": {
+        "title": "6. Datenschutz und Datensicherheit",
+        "paragraphs": [
+          "Der Anbieter verpflichtet sich zur Einhaltung der Datenschutz-Grundverordnung (DSGVO) und aller relevanten Datenschutzgesetze.",
+          "Kundendaten werden in hochsicheren Rechenzentren in Deutschland gespeichert. Details zur Datenverarbeitung sind in der separaten Datenschutzerklärung geregelt."
+        ]
+      },
+      "warranty": {
+        "title": "7. Gewährleistung und Haftung",
+        "paragraphs": [
+          "Der Anbieter gewährleistet die vertragsgemäße Funktion der Plattform. Bei Verfügbarkeitsstörungen wird eine durchschnittliche Verfügbarkeit von 99,5% pro Monat angestrebt.",
+          "Die Haftung ist auf Vorsatz und grobe Fahrlässigkeit beschränkt. Für leichte Fahrlässigkeit haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten."
+        ]
+      },
+      "intellectual": {
+        "title": "8. Geistiges Eigentum",
+        "paragraphs": [
+          "Alle Rechte an der Plattform, einschließlich Software, Algorithmen und Dokumentation, verbleiben beim Anbieter.",
+          "Der Kunde erhält ein nicht-exklusives, nicht-übertragbares Nutzungsrecht für die Vertragslaufzeit."
+        ]
+      },
+      "final": {
+        "title": "9. Schlussbestimmungen",
+        "paragraphs": [
+          "Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand ist der Sitz des Anbieters.",
+          "Änderungen dieser AGB werden dem Kunden mindestens 30 Tage vor Inkrafttreten mitgeteilt. Widerspruch führt zur ordentlichen Kündigung."
+        ]
+      }
+    },
+    
+    "contact": {
+      "title": "Kontakt",
+      "company": "alpina GmbH",
+      "address": [
+        "Musterstraße 123",
+        "10115 Berlin",
+        "Deutschland"
+      ],
+      "email": "legal@helvetika.de",
+      "phone": "+49 (0)30 12345678"
+    }
+  }
+}

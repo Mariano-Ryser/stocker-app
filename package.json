@@ -1,0 +1,38 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "node": "node server.js"
+  },
+  "dependencies": {
+    "@svgr/webpack": "^8.1.0",
+    "@types/node": "^18.15.10",
+    "@types/react": "^18.0.30",
+    "axios": "^1.13.2",
+    "chart.js": "^4.5.1",
+    "cloudinary": "^2.6.0",
+    "html2canvas": "^1.4.1",
+    "jsbarcode": "^3.12.3",
+    "jspdf": "^4.1.0",
+    "lucide-react": "^0.556.0",
+    "next-auth": "^4.24.11",
+    "react-chartjs-2": "^5.3.1",
+    "react-draggable": "^4.5.0",
+    "react-icons": "^4.10.1",
+    "recharts": "^3.5.1",
+    "styled-jsx": "^5.0.2",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "eslint": "8.18.0",
+    "next": "^15.2.3",
+    "react": "^19.0.0",
+    "react-dom": "^19.2.4",
+    "typescript": "^5.0.2"
+  }
+}

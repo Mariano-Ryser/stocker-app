@@ -1,0 +1,339 @@
+/* HEADER ADMIN */
+.header { 
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 6rem;
+  background: rgba(255, 255, 255, 0.933);
+  backdrop-filter: blur(3px);
+  border-bottom: 1px solid #f1f5f9;
+  z-index: 100;
+  transition: all 0.25s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  transform: translateY(0);
+}
+
+.header.scrolled {
+  height: 5.5rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+/* Clase para ocultar el header */
+.header.hidden {
+  transform: translateY(-100%);
+}
+
+.container {
+  max-width: 1280px;
+  height: 100%;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* LOGO */
+.logo {
+  cursor: pointer;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: translateY(-1px);
+}
+
+.logoIcon {
+  width: 150px;
+  height: 90px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.logoImage {
+  width: 12rem;
+  object-fit: contain;
+}
+
+.logoText h1 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+  letter-spacing: -0.025em;
+}
+
+.logoSubtitle {
+  font-size: 0.75rem;
+  color: #6b7280;
+  letter-spacing: 0.025em;
+}
+
+.logoHighlight {
+  color: #2563eb;
+}
+
+/* DESKTOP NAV */
+.desktopNav {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.desktopNav a {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  color: #1f2937;
+}
+
+.desktopNav a:hover {
+  background: #f9fafb;
+  color: #2563eb;
+}
+
+/* DESKTOP ACTIONS */
+.desktopActions {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* DESKTOP BUTTONS */
+.btnText {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #1f2937;
+  font-size: 0.95rem;
+  padding: 0.625rem 1rem;
+  border-radius: 0.75rem;
+  transition: all 0.2s ease;
+}
+
+.btnText:hover {
+  background: #f9fafb;
+  color: #2563eb;
+}
+
+/* MOBILE TOGGLE */
+.mobileToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #1f2937;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 102;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+}
+
+.mobileToggle:hover {
+  background: #f9fafb;
+}
+
+/* MOBILE MENU DROPDOWN */
+.mobileMenu {
+  position: fixed;
+  top: 5rem;
+  right: 0rem;
+  background: white;
+  z-index: 101;
+  opacity: 0;
+  transform: translateY(-1rem) scale(0.95);
+  transform-origin: top right;
+  pointer-events: none;
+  transition: all 0.2s ease;
+  min-width: 280px;
+  max-width: 90vw;
+  border: 1px solid #f1f5f9;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* Ajuste para cuando el header está oculto */
+.header.hidden + .mobileMenu,
+.header.hidden ~ .mobileMenu {
+  top: 0;
+}
+
+.mobileMenu.open {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.mobileMenu.scrolled {
+  transform: translateY(-0.5rem) scale(0.95);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
+
+.mobileNav {
+  padding: 0.5rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.mobileNavItem {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.875rem 1.5rem;
+  color: #1f2937;
+  text-decoration: none;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.mobileNavItem:hover {
+  background: #f9fafb;
+  color: #2563eb;
+}
+
+.mobileDivider {
+  height: 1px;
+  background: #f1f5f9;
+  margin: 0.5rem 1.5rem;
+}
+
+.mobileActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.5rem 1.5rem;
+}
+
+.mobileLoginBtn {
+  width: 100%;
+  padding: 0.875rem 1rem;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: rgb(0, 0, 0);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: center;
+  border-radius: 0.5rem;
+}
+
+.mobileLoginBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+/* BACKDROP */
+.menuBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(2px);
+  z-index: 99;
+}
+
+/* Ajuste para el backdrop cuando el header está oculto */
+.header.hidden ~ .menuBackdrop {
+  top: 0;
+}
+
+/* BREAKPOINTS */
+@media (min-width: 1024px) {
+  .desktopNav,
+  .desktopActions {
+    display: flex;
+  }
+
+  .mobileToggle,
+  .mobileMenu,
+  .menuBackdrop {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .logoImage {
+    width: 9rem;
+    object-fit: contain;
+  }
+  
+  .container {
+    padding: 0 1rem;
+  }
+  
+  .mobileMenu {
+    right: 1rem;
+    left: 1rem;
+    min-width: unset;
+    transform-origin: top center;
+  }
+  
+  .header.hidden + .mobileMenu,
+  .header.hidden ~ .mobileMenu {
+    top: 0;
+  }
+  
+  .logoText h1 {
+    font-size: 1.3rem;
+  }
+  
+  .logoSubtitle {
+    font-size: 0.7rem;
+  }
+  
+  .logoIcon {
+    width: 110px;
+    height: 80px;
+  }
+}
+
+@media (max-width: 360px) {
+  .logoImage {
+    width: 9rem;
+    object-fit: contain;
+  }
+  
+  .logoIcon {
+    width: 100px;
+    height: 70px;
+  }
+  
+  .logoText h1 {
+    font-size: 1.2rem;
+  }
+  
+  .mobileMenu {
+    right: 0.5rem;
+    left: 0.5rem;
+  }
+}
+
+/* Ajuste para cuando el header tiene scroll y está oculto */
+.header.scrolled.hidden {
+  height: 5.5rem;
+}
+
+/* Transición suave */
+.header {
+  transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.header.hidden ~ .mobileMenu {
+  transition: top 0.3s ease-in-out;
+}

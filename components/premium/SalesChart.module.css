@@ -1,0 +1,650 @@
+.salesChartContainer {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Header minimalista */
+.chartHeader {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .chartHeader {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+}
+
+.chartTitle {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  line-height: 1.3;
+}
+
+.chartSubtitle {
+  margin: 0;
+  color: #6b7280;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+}
+
+/* Controles minimalistas */
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .controls {
+    flex-direction: row;
+    align-items: center;
+    width: auto;
+    min-width: 250px;
+  }
+}
+
+.timeRangeSelector {
+  display: flex;
+  background: #f9fafb;
+  border-radius: 6px;
+  padding: 2px;
+  border: 1px solid #e5e7eb;
+  width: 100%;
+  overflow: hidden;
+}
+
+@media (min-width: 640px) {
+  .timeRangeSelector {
+    width: auto;
+  }
+}
+
+.timeButton {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  background: none;
+  border-radius: 4px;
+  font-size: 0.8125rem;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-weight: 500;
+  white-space: nowrap;
+  text-align: center;
+  min-height: 36px;
+}
+
+.timeButton:hover {
+  color: #374151;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.timeButton.active {
+  background: white;
+  color: #111827;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  font-weight: 600;
+}
+
+.selectors {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .selectors {
+    width: auto;
+  }
+}
+
+.select {
+  flex: 1;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: white;
+  color: #374151;
+  font-size: 0.8125rem;
+  cursor: pointer;
+  transition: border-color 0.15s ease;
+  min-height: 36px;
+  min-width: 0;
+}
+
+.select:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Stats Overview minimalista */
+.statsOverview {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem 0;
+  border-top: 1px solid #f3f4f6;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.statCard {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0.75rem;
+  transition: border-color 0.15s ease;
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+}
+
+.statLabel {
+  font-size: 0.6875rem;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+  display: block;
+}
+
+.statValue {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #111827;
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  flex-wrap: wrap;
+  line-height: 1.2;
+}
+
+.growth {
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 0.125rem 0.375rem;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.growth.positive {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.growth.negative {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+/* Chart Wrapper minimalista */
+.chartWrapper {
+  background: white;
+  border: 1px solid #f3f4f6;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1.25rem;
+  overflow: hidden;
+}
+
+.chartHeaderRow {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+@media (min-width: 480px) {
+  .chartHeaderRow {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.chartPeriodTitle {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.chartLegend {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  white-space: nowrap;
+}
+
+.legendDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.revenueDot {
+  background: #3b82f6;
+}
+
+.salesDot {
+  background: #f59e0b;
+}
+
+/* Chart Area minimalista */
+.chartArea {
+  position: relative;
+  height: 180px;
+  margin-bottom: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .chartArea {
+    height: 200px;
+  }
+}
+
+.barsContainer {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 120px;
+  border-bottom: 1px solid #e5e7eb;
+  position: relative;
+  padding: 0 0.25rem;
+}
+
+@media (min-width: 768px) {
+  .barsContainer {
+    height: 140px;
+    padding: 0 0.5rem;
+  }
+}
+
+.barGroup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  position: relative;
+  min-width: 20px;
+}
+
+.barLabel {
+  font-size: 0.65rem;
+  color: #6b7280;
+  font-weight: 500;
+  position: absolute;
+  bottom: -1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  text-align: center;
+  width: 100%;
+}
+
+.barWrapper {
+  width: 16px;
+  height: 100%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  position: relative;
+}
+
+@media (max-width: 380px) {
+  .barWrapper {
+    width: 12px;
+  }
+}
+
+@media (min-width: 768px) {
+  .barWrapper {
+    width: 20px;
+  }
+}
+
+.revenueBar {
+  width: 10px;
+  background: #3b82f6;
+  border-radius: 2px 2px 0 0;
+  position: relative;
+  transition: height 0.3s ease;
+  min-height: 1px;
+  margin: 0 auto;
+}
+
+@media (min-width: 768px) {
+  .revenueBar {
+    width: 14px;
+  }
+}
+
+.revenueBar:hover {
+  background: #2563eb;
+}
+
+.barValue {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.6rem;
+  font-weight: 600;
+  color: #374151;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+}
+
+.revenueBar:hover .barValue {
+  opacity: 1;
+}
+
+/* Line Chart minimalista */
+.lineContainer {
+  position: absolute;
+  bottom: 0;
+  left: 0.5rem;
+  right: 0.5rem;
+  height: 120px;
+}
+
+@media (min-width: 768px) {
+  .lineContainer {
+    height: 140px;
+  }
+}
+
+.linePoint {
+  position: absolute;
+  width: 5px;
+  height: 5px;
+  background: #f59e0b;
+  border-radius: 50%;
+  transform: translate(-50%, 50%);
+  border: 1.5px solid white;
+  box-shadow: 0 0 0 1px #f59e0b;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  z-index: 2;
+}
+
+.linePoint:hover {
+  transform: translate(-50%, 50%) scale(1.4);
+}
+
+/* Details Section (plegable) */
+.detailsSection {
+  border-top: 1px solid #f3f4f6;
+  padding-top: 1rem;
+}
+
+.detailsToggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.75rem;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #374151;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.detailsToggle:hover {
+  background: #f3f4f6;
+  border-color: #d1d5db;
+}
+
+.toggleIcon {
+  width: 16px;
+  height: 16px;
+  transition: transform 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+.toggleIcon.rotated {
+  transform: rotate(180deg);
+}
+
+.detailsContent {
+  margin-top: 0.75rem;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  max-height: 250px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.dataTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.75rem;
+  min-width: 350px;
+}
+
+@media (min-width: 480px) {
+  .dataTable {
+    font-size: 0.8125rem;
+    min-width: 400px;
+  }
+}
+
+.dataTable thead {
+  background: #f9fafb;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.dataTable th {
+  padding: 0.75rem 0.5rem;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #e5e7eb;
+  white-space: nowrap;
+}
+
+@media (min-width: 480px) {
+  .dataTable th {
+    padding: 0.75rem 1rem;
+  }
+}
+
+.dataTable td {
+  padding: 0.75rem 0.5rem;
+  border-bottom: 1px solid #f3f4f6;
+  color: #4b5563;
+  white-space: nowrap;
+}
+
+@media (min-width: 480px) {
+  .dataTable td {
+    padding: 0.75rem 1rem;
+  }
+}
+
+.dataTable tbody tr:hover {
+  background: #f9fafb;
+}
+
+.dataTable tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Loading State minimalista */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 250px;
+  gap: 0.75rem;
+  padding: 2rem;
+}
+
+.spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Breakpoints específicos para mejor responsividad */
+@media (max-width: 380px) {
+  .salesChartContainer {
+    padding: 0.75rem;
+  }
+  
+  .statsOverview {
+    grid-template-columns: 1fr;
+  }
+  
+  .timeButton {
+    padding: 0.375rem 0.5rem;
+    font-size: 0.75rem;
+  }
+  
+  .select {
+    font-size: 0.75rem;
+  }
+  
+  .chartTitle {
+    font-size: 1rem;
+  }
+  
+  .chartSubtitle {
+    font-size: 0.75rem;
+  }
+  
+  .chartPeriodTitle {
+    font-size: 0.75rem;
+  }
+  
+  .legendItem {
+    font-size: 0.6875rem;
+  }
+  
+  .barLabel {
+    font-size: 0.6rem;
+    bottom: -1.25rem;
+  }
+  
+  .barValue {
+    font-size: 0.55rem;
+    top: -15px;
+  }
+  
+  .dataTable {
+    min-width: 300px;
+    font-size: 0.6875rem;
+  }
+  
+  .dataTable th,
+  .dataTable td {
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 320px) {
+  .salesChartContainer {
+    padding: 0.5rem;
+  }
+  
+  .controls {
+    gap: 0.5rem;
+  }
+  
+  .timeRangeSelector {
+    flex-direction: column;
+    background: transparent;
+    border: none;
+    padding: 0;
+    gap: 0.25rem;
+  }
+  
+  .timeButton {
+    width: 100%;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    background: white;
+    margin-bottom: 0.25rem;
+  }
+  
+  .timeButton:last-child {
+    margin-bottom: 0;
+  }
+  
+  .selectors {
+    flex-direction: column;
+  }
+  
+  .dataTable {
+    min-width: 280px;
+  }
+}
+
+/* Asegurar que todo sea visible */
+.salesChartContainer {
+  display: block !important;
+}

@@ -1,0 +1,196 @@
+{
+     "privacy": {
+    "title": "Datenschutzerklärung",
+    "effectiveDate": "Zuletzt aktualisiert: {{date}}",
+    "backButton": "← Zurück",
+    "intro": "Diese Datenschutzerklärung informiert Sie über die Art, den Umfang und Zweck der Verarbeitung personenbezogener Daten innerhalb unserer Online-Angebote und der damit verbundenen Webseiten, Funktionen und Inhalte.",
+    
+    "sections": {
+      "responsible": {
+        "title": "1. Verantwortlicher",
+        "text": "Verantwortlich für die Datenverarbeitung ist:",
+        "company": "Helvetika GmbH",
+        "address1": "Musterstraße 123",
+        "address2": "10115 Berlin",
+        "address3": "Deutschland",
+        "email": "Email: datenschutz@helvetika.de",
+        "phone": "Telefon: +49 (0)30 12345678"
+      },
+      
+      "principles": {
+        "title": "2. Grundsätze der Datenverarbeitung",
+        "text": "Wir verarbeiten personenbezogene Daten nach folgenden Grundsätzen:",
+        "items": {
+          "lawfulness": "Rechtmäßigkeit: Verarbeitung nach gesetzlichen Bestimmungen",
+          "goodFaith": "Treu und Glauben: Transparente Verarbeitung",
+          "purpose": "Zweckbindung: Daten nur für festgelegte Zwecke",
+          "minimization": "Datensparsamkeit: Erhebung auf das notwendige Minimum",
+          "storage": "Speicherbegrenzung: Zeitlich begrenzte Aufbewahrung",
+          "integrity": "Integrität und Vertraulichkeit: Sicherung der Daten"
+        }
+      },
+      
+      "dataTypes": {
+        "title": "3. Arten der verarbeiteten Daten",
+        "inventory": {
+          "title": "3.1 Bestandsdaten",
+          "items": {
+            "name": "Name, Vorname",
+            "email": "E-Mail-Adresse",
+            "company": "Unternehmensname",
+            "position": "Position im Unternehmen",
+            "contact": "Kontaktdaten"
+          }
+        },
+        "usage": {
+          "title": "3.2 Nutzungsdaten",
+          "items": {
+            "ip": "IP-Adressen",
+            "access": "Zugriffszeiten",
+            "functions": "Genutzte Funktionen",
+            "device": "Geräteinformationen",
+            "browser": "Browser-Typ und Version"
+          }
+        },
+        "content": {
+          "title": "3.3 Inhaltsdaten",
+          "items": {
+            "uploads": "Hochgeladene Daten und Dokumente",
+            "analytics": "Analysen und Berichte",
+            "settings": "Einstellungen und Präferenzen"
+          }
+        }
+      },
+      
+      "purposes": {
+        "title": "4. Zwecke der Verarbeitung",
+        "items": {
+          "platform": "Bereitstellung der Plattform-Funktionalitäten",
+          "authentication": "Authentifizierung und Zugangskontrolle",
+          "support": "Kundenbetreuung und Support",
+          "billing": "Rechnungsstellung und Zahlungsabwicklung",
+          "improvement": "Verbesserung unserer Dienste",
+          "legal": "Einhaltung gesetzlicher Verpflichtungen",
+          "security": "Betrugsprävention und Sicherheit"
+        }
+      },
+      
+      "legalBasis": {
+        "title": "5. Rechtsgrundlagen der Verarbeitung",
+        "text": "Die Verarbeitung Ihrer Daten erfolgt auf folgenden Rechtsgrundlagen:",
+        "items": {
+          "consent": "Art. 6 Abs. 1 lit. a DSGVO: Einwilligung",
+          "contract": "Art. 6 Abs. 1 lit. b DSGVO: Vertragserfüllung",
+          "legal": "Art. 6 Abs. 1 lit. c DSGVO: Rechtliche Verpflichtung",
+          "interest": "Art. 6 Abs. 1 lit. f DSGVO: Berechtigtes Interesse"
+        }
+      },
+      
+      "thirdParties": {
+        "title": "6. Datenweitergabe an Dritte",
+        "text": "Eine Weitergabe Ihrer Daten erfolgt nur:",
+        "items": {
+          "hosting": "An Dienstleister für Hosting und Wartung",
+          "payment": "An Zahlungsdienstleister für Transaktionen",
+          "authorities": "Bei gesetzlicher Verpflichtung an Behörden",
+          "business": "Bei Unternehmensverkauf oder -umstrukturierung"
+        },
+        "note": "Alle Dienstleister unterliegen strengen vertraglichen Datenschutzpflichten."
+      },
+      
+      "international": {
+        "title": "7. Internationale Datenübermittlungen",
+        "text": "Ihre Daten werden grundsätzlich innerhalb der EU/EWR verarbeitet. Sollten Daten außerhalb dieses Raums verarbeitet werden, erfolgt dies nur:",
+        "items": {
+          "adequacy": "Gemäß Angemessenheitsbeschluss der EU-Kommission",
+          "guarantees": "Mit geeigneten Garantien (z.B. Standardvertragsklauseln)",
+          "consent": "Mit Ihrer ausdrücklichen Einwilligung"
+        }
+      },
+      
+      "security": {
+        "title": "8. Datensicherheit",
+        "text": "Wir treffen umfassende technische und organisatorische Maßnahmen:",
+        "items": {
+          "encryption": "Verschlüsselung der Datenübertragung (TLS/SSL)",
+          "updates": "Regelmäßige Sicherheitsupdates",
+          "access": "Zugangskontrollen und Authentifizierung",
+          "audits": "Regelmäßige Sicherheitsaudits",
+          "backups": "Datensicherungen und Notfallkonzepte"
+        },
+        "note": "Unsere Server befinden sich in ISO 27001 zertifizierten Rechenzentren in Deutschland."
+      },
+      
+      "storage": {
+        "title": "9. Speicherdauer",
+        "text": "Personenbezogene Daten werden nur so lange gespeichert, wie es erforderlich ist:",
+        "items": {
+          "account": "Kontodaten: Bis zur Kündigung plus 3 Jahre",
+          "usage": "Nutzungsdaten: 24 Monate",
+          "invoices": "Rechnungsdaten: 10 Jahre (gesetzliche Aufbewahrung)",
+          "analytics": "Analysedaten: Nach Vertragsende 90 Tage"
+        }
+      },
+      
+      "rights": {
+        "title": "10. Ihre Rechte",
+        "text": "Gemäß DSGVO stehen Ihnen folgende Rechte zu:",
+        "items": {
+          "information": "Auskunftsrecht: Über gespeicherte Daten informieren",
+          "correction": "Berichtigungsrecht: Falsche Daten korrigieren",
+          "deletion": "Löschungsrecht: Daten löschen lassen ('Recht auf Vergessenwerden')",
+          "restriction": "Einschränkungsrecht: Verarbeitung einschränken",
+          "objection": "Widerspruchsrecht: Verarbeitung widersprechen",
+          "portability": "Datenübertragbarkeit: Daten in strukturiertem Format erhalten",
+          "complaint": "Beschwerderecht: Bei Aufsichtsbehörde beschweren"
+        }
+      },
+      
+      "cookies": {
+        "title": "11. Cookies und Tracking",
+        "text": "Wir setzen folgende Arten von Cookies ein:",
+        "table": {
+          "headers": {
+            "type": "Cookie-Typ",
+            "purpose": "Zweck",
+            "duration": "Speicherdauer"
+          },
+          "rows": {
+            "necessary": {
+              "type": "Notwendige Cookies",
+              "purpose": "Grundfunktionalität der Plattform",
+              "duration": "Sitzung"
+            },
+            "preference": {
+              "type": "Präferenz-Cookies",
+              "purpose": "Benutzereinstellungen speichern",
+              "duration": "1 Jahr"
+            },
+            "statistics": {
+              "type": "Statistik-Cookies",
+              "purpose": "Nutzungsanalyse (anonymisiert)",
+              "duration": "24 Monate"
+            }
+          }
+        }
+      },
+      
+      "contact": {
+        "title": "12. Kontaktaufnahme",
+        "text": "Bei Fragen zum Datenschutz kontaktieren Sie uns bitte:",
+        "officer": {
+          "title": "Datenschutzbeauftragter",
+          "name": "Mariano Ryser",
+          "email": "Email: rysermariano@gmail.com",
+          "phone": "Telefon: +41 (0)78 874 79 74"
+        },
+        "authority": {
+          "title": "Aufsichtsbehörde",
+          "name": "Berliner Beauftragte für Datenschutz und Informationsfreiheit",
+          "address1": "Friedrichstraße 219",
+          "address2": "10969 Berlin"
+        }
+      }
+    }
+  }
+}

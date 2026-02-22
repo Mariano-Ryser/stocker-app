@@ -1,0 +1,465 @@
+/* Update.module.css */
+
+/* ===== MODAL BACKDROP ===== */
+.modalBackdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+/* ===== MODAL ===== */
+.modal {
+  background: white;
+  width: 95%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow: hidden;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.loadingModal {
+  padding: 40px;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ===== MODAL HEADER ===== */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: #666;
+}
+
+.closeBtn:hover:not(:disabled) {
+  background: #e9ecef;
+  color: #333;
+}
+
+.closeBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ===== MODAL BODY ===== */
+.modalBody {
+  padding: 24px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* ===== FORM SECTION ===== */
+.formSection {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.9rem;
+}
+
+.formGroup select {
+  padding: 8px 12px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  background: white;
+}
+
+.formGroup select:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+.formGroup select:disabled {
+  background-color: #f8f9fa;
+  color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* ===== TABLE SECTION ===== */
+.tableSection {
+  margin-bottom: 24px;
+}
+
+.tableSection h3 {
+  margin: 0 0 16px 0;
+  font-size: 1.1rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  margin-bottom: 12px;
+}
+
+.itemsTable {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+}
+
+.itemsTable th {
+  background: #f8f9fa;
+  padding: 12px 8px;
+  font-weight: 600;
+  color: #495057;
+  font-size: 0.85rem;
+  text-align: left;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.itemsTable td {
+  padding: 12px 8px;
+  border-bottom: 1px solid #f1f3f4;
+  vertical-align: top;
+}
+
+.itemsTable tr:last-child td {
+  border-bottom: none;
+}
+
+.rowDisabled {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.rowError {
+  background-color: #fff5f5 !important;
+}
+
+.inputError {
+  border-color: #e53e3e !important;
+  background-color: #fff5f5;
+}
+
+.itemsTable select,
+.itemsTable input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  background: white;
+}
+
+.itemsTable select:focus,
+.itemsTable input:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.itemsTable select:disabled,
+.itemsTable input:disabled {
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+.totalColumn {
+  font-weight: 600;
+  color: #333;
+  white-space: nowrap;
+}
+
+.actionsColumn {
+  width: 50px;
+  text-align: center;
+}
+
+.removeBtn {
+  background: #dc3545;
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  font-size: 12px;
+}
+
+.removeBtn:hover:not(:disabled) {
+  background: #c82333;
+}
+
+.removeBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  background: #6c757d;
+}
+
+/* ===== ADD BUTTON ===== */
+.addBtn {
+  background: #28a745;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  color: white;
+  cursor: pointer;
+  font-weight: 500;
+  width: 100%;
+}
+
+.addBtn:hover:not(:disabled) {
+  background: #218838;
+}
+
+.addBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  background: #6c757d;
+}
+
+/* ===== TOTALS SECTION ===== */
+.totalsSection {
+  background: #f8f9fa;
+  padding: 16px;
+  border-radius: 4px;
+  margin-top: 20px;
+  border: 1px solid #e9ecef;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 0.95rem;
+}
+
+.totalRow:not(.grandTotal) {
+  color: #6c757d;
+}
+
+.grandTotal {
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #333;
+  border-top: 1px solid #dee2e6;
+  margin-top: 8px;
+  padding-top: 10px;
+}
+
+/* ===== MODAL FOOTER ===== */
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 20px 24px;
+  border-top: 1px solid #e0e0e0;
+  background: #f8f9fa;
+}
+
+.btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  min-width: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btnCancel {
+  background: white;
+  color: #6c757d;
+  border: 1px solid #6c757d;
+}
+
+.btnCancel:hover:not(:disabled) {
+  background: #f8f9fa;
+}
+
+.btnSave {
+  background: #007bff;
+  color: white;
+}
+
+.btnSave:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+/* ===== LOADING SPINNER ===== */
+.loadingSpinner {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.loadingSpinner.small {
+  width: 16px;
+  height: 16px;
+}
+
+.loadingSpinner:not(.small) {
+  width: 30px;
+  height: 30px;
+  margin: 0 auto 12px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== STOCK INFO ===== */
+.stockInfo {
+  position: relative;
+  margin-top: 4px;
+  font-size: 0.75rem;
+}
+
+.stockBadge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  font-size: 0.7rem;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  margin-top: 2px;
+}
+
+.stockBadge.inStock {
+  background-color: #d4edda;
+  color: #155724;
+  border-color: #c3e6cb;
+}
+
+.stockBadge.lowStock {
+  background-color: #fff3cd;
+  color: #856404;
+  border-color: #ffeaa7;
+}
+
+.stockBadge.outOfStock {
+  background-color: #f8d7da;
+  color: #721c24;
+  border-color: #f5c6cb;
+}
+
+.stockError {
+  color: #e53e3e;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  font-weight: 500;
+  background-color: #f8d7da;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #f5c6cb;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 768px) {
+  .modalBackdrop {
+    padding: 10px;
+  }
+
+  .modal {
+    max-height: 95vh;
+  }
+
+  .modalHeader {
+    padding: 16px 20px;
+  }
+
+  .modalBody {
+    padding: 20px;
+  }
+
+  .formSection {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .tableContainer {
+    margin-bottom: 8px;
+  }
+
+  .itemsTable th,
+  .itemsTable td {
+    padding: 10px 6px;
+  }
+
+  .modalFooter {
+    padding: 16px 20px;
+    flex-direction: column-reverse;
+  }
+
+  .btn {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .modalHeader h2 {
+    font-size: 1.1rem;
+  }
+
+  .itemsTable {
+    min-width: 500px;
+  }
+
+  .itemsTable select,
+  .itemsTable input {
+    padding: 4px 6px;
+    font-size: 0.85rem;
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "menu": {
+    "home": "Panel de control",
+    "articles": "Búsqueda de artículos",
+    "clients": "Clientes",
+    "invoices": "Facturas",
+    "scanner": "Escáner",
+    "sold": "Artículos vendidos",
+    "inventory": "Movimientos de inventario",
+    "settings": "Configuración",
+    "ceo": "CEO",
+    "logout": "Cerrar sesión"
+  },
+  "roles": {
+    "ceo": "CEO",
+    "admin": "Administrador",
+    "pro": "Pro",
+    "medium": "Medio",
+    "basic": "Básico"
+  },
+  "loading": "cargando..."
+}

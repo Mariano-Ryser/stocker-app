@@ -1,0 +1,72 @@
+.wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+/* tamaños */
+.small { font-size: 12px; }
+.medium { font-size: 14px; }
+.large { font-size: 16px; }
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: white;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+.button:hover {
+  border-color: #3b82f6;
+  background-color: #f8fafc;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.code {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* dropdown */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  min-width: 180px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  z-index: 50;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.option:hover {
+  background-color: #f3f4f6;
+}
+
+.optionCode {
+  margin-left: auto;
+  font-size: 12px;
+  color: #6b7280;
+}

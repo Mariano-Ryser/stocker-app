@@ -1,0 +1,22 @@
+{
+  "footer": {
+    "brandDesc": "Intelligent platform for secure, scalable, and data-driven decisions in the business environment.",
+    "product": "Product",
+    "productItems": {
+      "bi": "Business Intelligence",
+      "analytics": "Analytics & Reports",
+      "automation": "Automation",
+      "security": "Data Security"
+    },
+    "company": "Company",
+    "companyItems": {
+      "about": "About Us",
+      "roadmap": "Roadmap",
+      "privacy": "Privacy Policy",
+      "imprint": "Imprint"
+    },
+    "contact": "Contact",
+    "copyright": "© {{year}} Alpina AG · All rights reserved",
+    "country": "Switzerland"
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "menu": {
+    "home": "Dashboard",
+    "articles": "Artikel suche",
+    "clients": "Kunden",
+    "invoices": "Rechnungen",
+    "scanner": "Scanner",
+    "sold": "Verkaufte Artikel",
+    "inventory": "Lagerbewegungen",
+    "settings": "Settings",
+    "ceo": "CEO",
+    "logout":"Logout"
+  },
+  "roles": {
+    "ceo": "CEO",
+    "admin": "Admin",
+    "pro": "Pro",
+    "medium": "Medium",
+    "basic": "Basic"
+  },
+  "loading": "wird geladen..."
+}

@@ -1,0 +1,22 @@
+{
+  "footer": {
+    "brandDesc": "Plataforma inteligente para decisiones seguras, escalables y basadas en datos en el entorno empresarial.",
+    "product": "Producto",
+    "productItems": {
+      "bi": "Business Intelligence",
+      "analytics": "Analítica e Informes",
+      "automation": "Automatización",
+      "security": "Seguridad de Datos"
+    },
+    "company": "Empresa",
+    "companyItems": {
+      "about": "Sobre Nosotros",
+      "roadmap": "Hoja de Ruta",
+      "privacy": "Política de Privacidad",
+      "imprint": "Aviso Legal"
+    },
+    "contact": "Contacto",
+    "copyright": "© {{year}} Alpina AG · Todos los derechos reservados",
+    "country": "Suiza"
+  }
+}
