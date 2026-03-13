@@ -1,0 +1,89 @@
+{
+  "artikel": {
+    "title": "Lista de Artículos",
+    "subtitle": "Administre su lista de productos",
+    "newArticle": "Nuevo Artículo",
+    "view": {
+      "table": "Vista tabla",
+      "grid": "Vista cuadrícula"
+    },
+    "search": {
+      "placeholder": "Nombre o número de artículo",
+      "button": "Buscar",
+      "activeSearch": "Búsqueda activa: \"{term}\"",
+      "clear": "Limpiar búsqueda",
+      "results": "{count} artículos mostrados",
+      "resultsOf": "de {total} total",
+      "for": "para \"{term}\""
+    },
+    "filter": {
+      "stock": "Filtro de stock:",
+      "all": "Todos los artículos",
+      "inStock": "En stock (≥50)",
+      "lowStock": "Stock bajo (1-49)",
+      "outOfStock": "Sin stock (0)",
+      "sort": "Ordenar:",
+      "sortNone": "Por defecto",
+      "sortAsc": "Stock: Ascendente ⬆️ (bajo → alto)",
+      "sortDesc": "Stock: Descendente ⬇️ (alto → bajo)",
+      "activeFilter": "Filtro: {filter}",
+      "activeSort": "Orden: {sort}",
+      "filterInStock": "En stock",
+      "filterLowStock": "Stock bajo",
+      "filterOutOfStock": "Sin stock",
+      "sortAscLabel": "Bajo a Alto",
+      "sortDescLabel": "Alto a Bajo",
+      "resetAll": "Restablecer todos los filtros",
+      "clear": "Limpiar"
+    },
+    "table": {
+      "name": "Nombre del artículo",
+      "number": "Número",
+      "price": "Precio",
+      "stock": "Stock"
+    },
+    "card": {
+      "number": "N°: {number}",
+      "location": "📍 {location}",
+      "units": "unidades",
+      "unit": "unidad"
+    },
+    "stock": {
+      "outOfStock": "Agotado",
+      "lowStock": "Stock bajo",
+      "inStock": "En stock",
+      "status": {
+        "outOfStock": "Sin stock",
+        "lowStock": "Stock bajo",
+        "inStock": "En stock"
+      }
+    },
+    "loading": {
+      "auth": "Cargando autenticación...",
+      "products": "Cargando..."
+    },
+    "empty": {
+      "restricted": {
+        "title": "Acceso restringido",
+        "text": "Debe iniciar sesión para ver los productos"
+      },
+      "notFound": {
+        "title": "No se encontraron artículos",
+        "text": "Sin resultados para \"{term}\"",
+        "textWithFilters": " con los filtros seleccionados"
+      },
+      "noProducts": {
+        "title": "No hay artículos disponibles",
+        "text": "Cree su primer artículo"
+      },
+      "resetButton": "Restablecer todos los filtros"
+    },
+    "pagination": {
+      "page": "Página {current} de {total}",
+      "total": "({total} artículos en total)"
+    },
+    "errors": {
+      "loadFailed": "Error al cargar los artículos"
+    }
+  }
+}

@@ -1,12 +1,193 @@
 {
-    "settings": {
-    "title": "Settings En",
-    "email": "E-Mail",
-    "password": "Passwort",
-    "forgotPassword": "Passwort vergessen?",
-    "noAccount": "Noch keinen Account?",
-    "register": "Registrieren",
-    "button": "Anmelden",
-    "error": "Ungültige E-Mail oder Passwort."
+  "settings": {
+    "title": "Settings",
+    "subtitle": "Manage users and profile",
+    "tabs": {
+      "users": "Users",
+      "profile": "My Profile"
+    },
+    "alerts": {
+      "success": "Success",
+      "error": "Error"
+    },
+    "users": {
+      "title": "User Management",
+      "limits": {
+        "title": "User Limit",
+        "max": "Maximum",
+        "created": "Created",
+        "available": "Available",
+        "reached": "Limit reached",
+        "help": "You can create additional users for your company. Each user has access to the same products and customers.",
+        "ceoHelp": "As CEO, you can create users, activate/deactivate them, and adjust limits."
+      },
+      "create": {
+        "title": "New User",
+        "nameLabel": "Full Name *",
+        "namePlaceholder": "e.g., John Doe",
+        "emailLabel": "Email *",
+        "emailPlaceholder": "example@company.com",
+        "passwordLabel": "Password *",
+        "passwordPlaceholder": "Minimum 6 characters",
+        "submit": "Create User",
+        "submitting": "Creating...",
+        "errors": {
+          "nameRequired": "Name is required",
+          "emailRequired": "Email is required",
+          "emailInvalid": "Invalid email",
+          "passwordRequired": "Password is required",
+          "passwordMin": "Minimum 6 characters",
+          "userExists": "A user with this email already exists.",
+          "emailTaken": "This email is already in use",
+          "limitReached": "User limit reached. Cannot create more users.",
+          "createFailed": "Error creating user",
+          "unexpected": "An unexpected error occurred. Please try again."
+        }
+      },
+      "list": {
+        "title": "Company Users",
+        "empty": {
+          "title": "No Users",
+          "text": "Create the first user to get started"
+        },
+        "table": {
+          "user": "User",
+          "role": "Role",
+          "status": "Status",
+          "actions": "Actions"
+        },
+        "roles": {
+          "ceo": "CEO",
+          "admin": "Admin",
+          "user": "User"
+        },
+        "status": {
+          "active": "Active",
+          "inactive": "Inactive",
+          "you": "You"
+        },
+        "actions": {
+          "activate": "Activate",
+          "deactivate": "Deactivate",
+          "activateTitle": "Activate user",
+          "deactivateTitle": "Deactivate user",
+          "confirm": "Are you sure you want to {action} this user?"
+        },
+        "noEmail": "No email"
+      }
+    },
+    "profile": {
+      "title": "My Profile",
+      "form": {
+        "nameLabel": "Name",
+        "languageLabel": "Language",
+        "submit": "Save Changes",
+        "saving": "Saving...",
+        "errors": {
+          "userNotLoaded": "User not loaded",
+          "updateFailed": "Error updating profile"
+        }
+      },
+      "account": {
+        "title": "Account Information",
+        "memberSince": "Member since:",
+        "companyId": "Company ID:",
+        "role": "Role:",
+        "unknown": "Unknown",
+        "noId": "No ID"
+      }
+    },
+    "company": {
+      "logo": {
+        "title": "Company Logo",
+        "noLogo": "No logo uploaded",
+        "select": "Select logo",
+        "upload": "Upload logo",
+        "uploading": "Uploading...",
+        "remove": "Remove logo",
+        "help": "Recommended size: 300×300px. Max 5MB. Supported formats: JPG, PNG, GIF, WebP.",
+        "errors": {
+          "invalidType": "Only image files are allowed (jpeg, jpg, png, gif, webp)",
+          "tooLarge": "Image cannot be larger than 5MB",
+          "selectFile": "Please select a logo",
+          "userNotLoaded": "User not loaded. Please log in again.",
+          "uploadFailed": "Upload failed",
+          "deleteFailed": "Delete failed"
+        },
+        "confirmDelete": "Are you sure you want to delete the logo?"
+      },
+      "data": {
+        "title": "Company Information",
+        "nameLabel": "Company Name *",
+        "namePlaceholder": "Your Company Ltd.",
+        "emailLabel": "Email",
+        "emailPlaceholder": "info@company.com",
+        "phoneLabel": "Phone",
+        "phonePlaceholder": "+44 123 456789",
+        "currencyLabel": "Currency",
+        "timezoneLabel": "Timezone",
+        "address": {
+          "title": "Address",
+          "street": "Street",
+          "streetPlaceholder": "Main Street",
+          "number": "Number",
+          "numberPlaceholder": "123",
+          "complement": "Complement (optional)",
+          "complementPlaceholder": "3rd floor, Building B, etc.",
+          "postalCode": "Postal Code",
+          "postalCodePlaceholder": "12345",
+          "city": "City",
+          "cityPlaceholder": "London",
+          "state": "State/County (optional)",
+          "statePlaceholder": "Greater London",
+          "country": "Country",
+          "countryPlaceholder": "United Kingdom",
+          "preview": "Address preview:"
+        },
+        "bank": {
+          "title": "Bank Details",
+          "bankName": "Bank Name",
+          "bankNamePlaceholder": "e.g., Barclays",
+          "iban": "IBAN",
+          "ibanPlaceholder": "GB00 0000 0000 0000 0000 00",
+          "bic": "BIC / SWIFT",
+          "bicPlaceholder": "e.g., BARCGB22",
+          "accountHolder": "Account Holder",
+          "accountHolderPlaceholder": "Company or person name",
+          "currency": "Account Currency",
+          "selectCurrency": "Select currency",
+          "preview": "Bank details preview",
+          "errors": {
+            "ibanInvalidLength": "IBAN must be between 15 and 34 characters",
+            "ibanInvalidFormat": "Invalid IBAN format"
+          }
+        },
+        "submit": "Save Information",
+        "saving": "Saving...",
+        "errors": {
+          "nameRequired": "Company name is required",
+          "emailInvalid": "Invalid email",
+          "updateFailed": "Error updating information"
+        },
+        "success": "✓ {message}"
+      },
+      "messages": {
+        "logoUploaded": "Logo uploaded successfully",
+        "logoRemoved": "Logo removed successfully",
+        "dataUpdated": "Information updated successfully"
+      }
+    },
+    "currencies": {
+      "EUR": "€ Euro",
+      "CHF": "CHF Swiss Franc",
+      "USD": "$ US Dollar",
+      "GBP": "£ British Pound"
+    },
+    "timezones": {
+      "Europe/Berlin": "Berlin (GMT+1)",
+      "Europe/London": "London (GMT+0)",
+      "Europe/Paris": "Paris (GMT+1)",
+      "America/New_York": "New York (GMT-5)"
+    }
   }
 }

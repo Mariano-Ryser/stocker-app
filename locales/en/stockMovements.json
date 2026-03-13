@@ -1,0 +1,56 @@
+{
+  "stockMovements": {
+    "title": "Stock Movements",
+    "subtitle": "Overview of incoming and outgoing items",
+    "loading": "Loading movements…",
+    "loadingAuth": "Loading…",
+    "error": "Error loading",
+    "noMovements": "No movements",
+    "refresh": "↻",
+    "filters": {
+      "allTypes": "All types",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "search": "Search articles…",
+      "clear": "Clear"
+    },
+    "table": {
+      "date": "Date",
+      "article": "Article",
+      "type": "Type",
+      "quantity": "Quantity",
+      "stock": "Stock",
+      "user": "User",
+      "reference": "Ref"
+    },
+    "movementTypes": {
+      "WAREHOUSE_IN": {
+        "label": "Incoming",
+        "icon": "↓"
+      },
+      "WAREHOUSE_OUT": {
+        "label": "Outgoing",
+        "icon": "↑"
+      },
+      "MANUAL_ADJUSTMENT": {
+        "label": "Adjustment",
+        "icon": "✎"
+      },
+      "RETURN": {
+        "label": "Return",
+        "icon": "↩"
+      },
+      "DAMAGED": {
+        "label": "Damaged",
+        "icon": "⚠"
+      },
+      "INITIAL_STOCK": {
+        "label": "Initial stock",
+        "icon": "●"
+      }
+    },
+    "pagination": {
+      "page": "Page {current} of {total}"
+    }
+  }
+}

@@ -53,7 +53,7 @@ export default function Header() {
 
   // Cierra el menú al hacer clic fuera
   useEffect(() => {
-    const handleClickOutside = (e) => {
+    const handleClickOutside = (e:any) => {
       if (
         mobileOpen &&
         menuRef.current &&
@@ -95,11 +95,11 @@ export default function Header() {
           {/* Logo */}
           <div className={styles.logo} onClick={handleLogoClick}>
             <div className={styles.logoIcon}>
-              <img
-                src="/img/logo78.png" 
+               <img
+                src="/img/logo80.webp" 
                 alt="Logo"
                 className={styles.logoImage}
-              />
+              /> 
             </div>
             <div className={styles.logoText}>
               {/* <h1>Alpina<span className={styles.logoHighlight}></span></h1> */}

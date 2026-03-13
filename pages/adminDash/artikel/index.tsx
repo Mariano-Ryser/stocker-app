@@ -13,6 +13,9 @@ export default function ListProduct() {
   const { t } = useLanguage();
   const { isAuthenticated, loading: authLoading } = useAuth();
   
+  // Nuevo estado para controlar la vista (tabla vs cuadrícula)
+  const [viewMode, setViewMode] = useState('table'); // 'table' o 'grid'
+  
   const {
     products,
     loading: productsLoading,
@@ -60,18 +63,25 @@ export default function ListProduct() {
     setEditingProduct(null);
   };
 
-  const getStockStatus = (product) => {
+  const getStockStatus = (product:any) => {
     const stock = product.stock || 0;
     if (stock <= 0) return 'outOfStock';
     if (stock < 50) return 'lowStock';
     return 'inStock';
   };
 
+  const getStockStatusText = (product) => {
+    const stock = product.stock || 0;
+    if (stock <= 0) return t('artikel.stock.outOfStock');
+    if (stock < 50) return t('artikel.stock.lowStock');
+    return t('artikel.stock.inStock');
+  };
+
   if (authLoading) {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loadingSpinner}></div>
-        <p>Cargando autenticación...</p>
+        <p>{t('artikel.loading.auth')}</p>
       </div>
     );
   }
@@ -80,20 +90,48 @@ export default function ListProduct() {
     <div className={styles.container}>
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <h1 className={styles.title}>Artikelliste</h1>
-          <p className={styles.subtitle}>Verwalten Sie Ihre Produktliste</p>
+          <h1 className={styles.title}>{t('artikel.title')}</h1>
+          <p className={styles.subtitle}>{t('artikel.subtitle')}</p>
         </div>
         
-        {isAuthenticated && (
-          <button 
-            onClick={() => setShowModal(true)} 
-            className={styles.newBtn}
-            disabled={productsLoading}
-          >
-            <span className={styles.plus}>+</span>
-            Neuer Artikel
-          </button>
-        )}
+        <div className={styles.headerActions}>
+          {/* Botones para cambiar vista */}
+          {isAuthenticated && (
+            <div className={styles.viewToggle}>
+              <button
+                className={`${styles.viewButton} ${viewMode === 'table' ? styles.activeView : ''}`}
+                onClick={() => setViewMode('table')}
+                title={t('artikel.view.table')}
+                disabled={productsLoading}
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                  <path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h10v2H7v-2z"/>
+                </svg>
+              </button>
+              <button
+                className={`${styles.viewButton} ${viewMode === 'grid' ? styles.activeView : ''}`}
+                onClick={() => setViewMode('grid')}
+                title={t('artikel.view.grid')}
+                disabled={productsLoading}
+              >
+                <svg viewBox="0 0 24 24" width="20" height="20">
+                  <path fill="currentColor" d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/>
+                </svg>
+              </button>
+            </div>
+          )}
+          
+          {isAuthenticated && (
+            <button 
+              onClick={() => setShowModal(true)} 
+              className={styles.newBtn}
+              disabled={productsLoading}
+            >
+              <span className={styles.plus}>+</span>
+              {t('artikel.newArticle')}
+            </button>
+          )}
+        </div>
       </header>
 
       <div className={styles.searchSection}>
@@ -104,7 +142,7 @@ export default function ListProduct() {
             </svg>
             <input
               type="text"
-              placeholder="Name or number"
+              placeholder={t('artikel.search.placeholder')}
               className={styles.searchInput}
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
@@ -118,18 +156,18 @@ export default function ListProduct() {
               onClick={confirmSearch}
               disabled={productsLoading || !searchInput.trim()}
             >
-              Suchen
+              {t('artikel.search.button')}
             </button>
             
             {/* Mostrar indicador de búsqueda activa */}
             {activeSearch && (
               <div className={styles.activeSearchIndicator}>
-                <span>Aktive Suche: "{activeSearch}"</span>
+                <span>{t('artikel.search.activeSearch').replace('{term}', activeSearch)}</span>
                 <button 
                   className={styles.clearSearch}
                   onClick={clearSearch}
                   disabled={productsLoading}
-                  title="Suche löschen"
+                  title={t('artikel.search.clear')}
                 >
                   ✕
                 </button>
@@ -140,7 +178,7 @@ export default function ListProduct() {
           <div className={styles.filterGroup}>
             <div className={styles.filterContainer}>
               <label htmlFor="stock-filter" className={styles.filterLabel}>
-                Bestandsfilter:
+                {t('artikel.filter.stock')}
               </label>
               <select
                 id="stock-filter"
@@ -149,16 +187,16 @@ export default function ListProduct() {
                 onChange={(e) => setStock(e.target.value)}
                 disabled={productsLoading}
               >
-                <option value="all">Alle Artikel</option>
-                <option value="inStock">Auf Lager (≥50)</option>
-                <option value="lowStock">Wenig Bestand (1-49)</option>
-                <option value="outOfStock">Nicht auf Lager (0)</option>
+                <option value="all">{t('artikel.filter.all')}</option>
+                <option value="inStock">{t('artikel.filter.inStock')}</option>
+                <option value="lowStock">{t('artikel.filter.lowStock')}</option>
+                <option value="outOfStock">{t('artikel.filter.outOfStock')}</option>
               </select>
             </div>
 
             <div className={styles.filterContainer}>
               <label htmlFor="sort-order" className={styles.filterLabel}>
-                Sortieren:
+                {t('artikel.filter.sort')}
               </label>
               <select
                 id="sort-order"
@@ -167,9 +205,9 @@ export default function ListProduct() {
                 onChange={(e) => setSort(e.target.value)}
                 disabled={productsLoading}
               >
-                <option value="none">Standard</option>
-                <option value="asc">Bestand: Aufsteigend ⬆️ (niedrig → hoch)</option>
-                <option value="desc">Bestand: Absteigend ⬇️ (hoch → niedrig)</option>
+                <option value="none">{t('artikel.filter.sortNone')}</option>
+                <option value="asc">{t('artikel.filter.sortAsc')}</option>
+                <option value="desc">{t('artikel.filter.sortDesc')}</option>
               </select>
             </div>
           </div>
@@ -177,18 +215,18 @@ export default function ListProduct() {
 
         <div className={styles.searchStats}>
           <span className={styles.resultsCount}>
-            {products.length} Artikel angezeigt
-            {paginationInfo.total > 0 && ` von ${paginationInfo.total} insgesamt`}
-            {activeSearch && ` für "${activeSearch}"`}
+            {t('artikel.search.results').replace('{count}', products.length)}
+            {paginationInfo.total > 0 && ` ${t('artikel.search.resultsOf').replace('{total}', paginationInfo.total)}`}
+            {activeSearch && ` ${t('artikel.search.for').replace('{term}', activeSearch)}`}
           </span>
           <div className={styles.activeFilters}>
             {stockFilter !== 'all' && (
               <span className={styles.activeFilter}>
-                Filter: { 
-                  stockFilter === 'inStock' ? 'Auf Lager' : 
-                  stockFilter === 'lowStock' ? 'Wenig Bestand' : 
-                  'Nicht auf Lager'
-                }
+                {t('artikel.filter.activeFilter').replace('{filter}', 
+                  stockFilter === 'inStock' ? t('artikel.filter.filterInStock') : 
+                  stockFilter === 'lowStock' ? t('artikel.filter.filterLowStock') : 
+                  t('artikel.filter.filterOutOfStock')
+                )}
                 <button 
                   className={styles.clearFilter}
                   onClick={() => setStock('all')}
@@ -200,10 +238,10 @@ export default function ListProduct() {
             )}
             {sortOrder !== 'none' && (
               <span className={styles.activeFilter}>
-                Sortierung: { 
-                  sortOrder === 'asc' ? 'Niedrig zu Hoch' : 
-                  'Hoch zu Niedrig'
-                }
+                {t('artikel.filter.activeSort').replace('{sort}', 
+                  sortOrder === 'asc' ? t('artikel.filter.sortAscLabel') : 
+                  t('artikel.filter.sortDescLabel')
+                )}
                 <button 
                   className={styles.clearFilter}
                   onClick={() => setSort('none')}
@@ -219,99 +257,182 @@ export default function ListProduct() {
                 onClick={resetFilters}
                 disabled={productsLoading}
               >
-                Alle Filter zurücksetzen
+                {t('artikel.filter.resetAll')}
               </button>
             )}
           </div>
         </div>
       </div>
-
+   <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={goToPage}
+              onNext={nextPage}
+              onPrev={prevPage}
+              loading={productsLoading}
+            />
       <div className={styles.tableContainer}>
+         {/* Paginación */}
+         
         {productsLoading ? (
           <div className={styles.loading}>
             <div className={styles.loadingSpinner}></div>
-            Laden...
+            {t('artikel.loading.products')}
           </div>
         ) : !isAuthenticated ? (
           <div className={styles.emptyState}>
             <div className={styles.emptyIcon}>🔒</div>
-            <h3 className={styles.emptyTitle}>Acceso restringido</h3>
-            <p className={styles.emptyText}>Debe iniciar sesión para ver los productos</p>
+            <h3 className={styles.emptyTitle}>{t('artikel.empty.restricted.title')}</h3>
+            <p className={styles.emptyText}>{t('artikel.empty.restricted.text')}</p>
           </div>
         ) : products.length === 0 ? (
           <div className={styles.emptyState}>
             {activeSearch || stockFilter !== 'all' || sortOrder !== 'none' ? (
               <>
                 <div className={styles.emptyIcon}>🔍</div>
-                <h3 className={styles.emptyTitle}>Keine Artikel gefunden</h3>
+                <h3 className={styles.emptyTitle}>{t('artikel.empty.notFound.title')}</h3>
                 <p className={styles.emptyText}>
-                  {activeSearch && `Keine Ergebnisse für "${activeSearch}"`}
-                  {activeSearch && (stockFilter !== 'all' || sortOrder !== 'none') && ' mit den ausgewählten Filtern'}
+                  {activeSearch && t('artikel.empty.notFound.text').replace('{term}', activeSearch)}
+                  {activeSearch && (stockFilter !== 'all' || sortOrder !== 'none') && t('artikel.empty.notFound.textWithFilters')}
                 </p>
                 <button 
                   className={styles.clearSearchBtn}
                   onClick={resetFilters}
                 >
-                  Alle Filter zurücksetzen
+                  {t('artikel.empty.resetButton')}
                 </button>
               </>
             ) : (
               <>
                 <div className={styles.emptyIcon}>📦</div>
-                <h3 className={styles.emptyTitle}>Keine Artikel vorhanden</h3>
-                <p className={styles.emptyText}>Erstellen Sie Ihren ersten Artikel</p>
+                <h3 className={styles.emptyTitle}>{t('artikel.empty.noProducts.title')}</h3>
+                <p className={styles.emptyText}>{t('artikel.empty.noProducts.text')}</p>
               </>
             )}
           </div>
         ) : (
           <>
-            <table className={styles.productsTable}>
-              <thead>
-                <tr>
-                  <th className={`${styles.tableHeader} ${styles.colName}`}>Artikelname</th>
-                  <th className={`${styles.tableHeader} ${styles.colLager}`}>Nummer</th>
-                  <th className={`${styles.tableHeader} ${styles.colPrice}`}>Preis (CHF)</th>
-                  <th className={`${styles.tableHeader} ${styles.colStock}`}>
-                    Bestand
-                    {sortOrder !== 'none' && (
-                      <span className={styles.sortIndicator}>
-                        {sortOrder === 'asc' ? '⬆️' : '⬇️'}
-                      </span>
-                    )}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
+            {/* Vista de Tabla */}
+            {viewMode === 'table' && (
+              <>
+                <table className={styles.productsTable}>
+                  <thead>
+                    <tr>
+                      <th className={`${styles.tableHeader} ${styles.colName}`}>{t('artikel.table.name')}</th>
+                      <th className={`${styles.tableHeader} ${styles.colLager}`}>{t('artikel.table.number')}</th>
+                      <th className={`${styles.tableHeader} ${styles.colPrice}`}>{t('artikel.table.price')}</th>
+                      <th className={`${styles.tableHeader} ${styles.colStock}`}>
+                        {t('artikel.table.stock')}
+                        {sortOrder !== 'none' && (
+                          <span className={styles.sortIndicator}>
+                            {sortOrder === 'asc' ? '⬆️' : '⬇️'}
+                          </span>
+                        )}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {products.map((product) => (
+                      <tr 
+                        key={product._id} 
+                        className={styles.productRow}
+                        onClick={() => {
+                          if (isAuthenticated) {
+                            setEditingProduct(product);
+                            setProductToEdit(product);
+                          }
+                        }}
+                        style={{ cursor: isAuthenticated ? 'pointer' : 'default' }}
+                      >
+                        <td className={`${styles.tableCell} ${styles.productName}`}>
+                          {product.artikelName}
+                        </td>
+                        <td className={`${styles.tableCell} ${styles.productLager}`}>
+                          {product.artikelNumber || '-'}
+                        </td>
+                        <td className={`${styles.tableCell} ${styles.productPrice}`}>
+                          {product.price ? `CHF ${parseFloat(product.price).toFixed(2)}` : '-'}
+                        </td>
+                        <td className={styles.tableCell}>
+                          <span className={`${styles.stockBadge} ${styles[getStockStatus(product)]}`}>
+                            {product.stock || 0}
+                          </span>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </>
+            )}
+
+            {/* Vista de Cuadrícula */}
+            {viewMode === 'grid' && (
+              <div className={styles.productGrid}>
                 {products.map((product) => (
-                  <tr 
-                    key={product._id} 
-                    className={styles.productRow}
+                  <div
+                    key={product._id}
+                    className={styles.productCard}
                     onClick={() => {
                       if (isAuthenticated) {
                         setEditingProduct(product);
                         setProductToEdit(product);
                       }
                     }}
-                    style={{ cursor: isAuthenticated ? 'pointer' : 'default' }}
                   >
-                    <td className={`${styles.tableCell} ${styles.productName}`}>
-                      {product.artikelName}
-                    </td>
-                    <td className={`${styles.tableCell} ${styles.productLager}`}>
-                      {product.artikelNumber || '-'}
-                    </td>
-                    <td className={`${styles.tableCell} ${styles.productPrice}`}>
-                      {product.price ? `CHF ${parseFloat(product.price).toFixed(2)}` : '-'}
-                    </td>
-                    <td className={styles.tableCell}>
-                      <span className={`${styles.stockBadge} ${styles[getStockStatus(product)]}`}>
-                        {product.stock || 0}
+                    <div className={styles.cardImageWrapper}>
+                      {product.imagen ? (
+                        <img 
+                          src={product.imagen} 
+                          alt={product.artikelName}
+                          className={styles.cardImage}
+                        />
+                      ) : (
+                        <div className={styles.cardPlaceholder}>
+                          <img
+                            src="/img/moving-box.png"
+                            alt="Placeholder"
+                            className={styles.placeholderImage}
+                          />
+                        </div>
+                      )}
+                      
+                      {/* Badge de stock en la imagen */}
+                      <span className={`${styles.cardStockBadge} ${styles[getStockStatus(product)]}`}>
+                        {product.stock || 0} {product.stock === 1 ? t('artikel.card.unit') : t('artikel.card.units')}
                       </span>
-                    </td>
-                  </tr>
+                    </div>
+                    
+                    <div className={styles.cardContent}>
+                      <h3 className={styles.cardTitle}>{product.artikelName}</h3>
+                      <div className={styles.cardDetails}>
+                        {product.artikelNumber && (
+                          <p className={styles.cardNumber}>
+                            {t('artikel.card.number').replace('{number}', product.artikelNumber)}
+                          </p>
+                        )}
+                        {product.lagerPlatz && (
+                          <p className={styles.cardLocation}>
+                            {t('artikel.card.location').replace('{location}', product.lagerPlatz)}
+                          </p>
+                        )}
+                      </div>
+                      <div className={styles.cardFooter}>
+                        {product.price ? (
+                          <span className={styles.cardPrice}>
+                            CHF {parseFloat(product.price).toFixed(2)}
+                          </span>
+                        ) : (
+                          <span className={styles.cardPrice}>-</span>
+                        )}
+                        <span className={`${styles.cardStockStatus} ${styles[getStockStatus(product)]}`}>
+                          {getStockStatusText(product)}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
                 ))}
-              </tbody>
-            </table>
+              </div>
+            )}
 
             {/* Paginación */}
             <Pagination
@@ -325,8 +446,10 @@ export default function ListProduct() {
 
             {/* Info de paginación adicional */}
             <div className={styles.paginationInfo}>
-              Seite {currentPage} von {totalPages} 
-              {paginationInfo.total > 0 && ` (${paginationInfo.total} Artikel insgesamt)`}
+              {t('artikel.pagination.page')
+                .replace('{current}', currentPage)
+                .replace('{total}', totalPages)}
+              {paginationInfo.total > 0 && ` ${t('artikel.pagination.total').replace('{total}', paginationInfo.total)}`}
             </div>
           </>
         )}

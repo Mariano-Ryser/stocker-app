@@ -1,12 +1,193 @@
 {
-    "settings": {
-    "title": "Settings En",
-    "email": "E-Mail",
-    "password": "Passwort",
-    "forgotPassword": "Passwort vergessen?",
-    "noAccount": "Noch keinen Account?",
-    "register": "Registrieren",
-    "button": "Anmelden",
-    "error": "Ungültige E-Mail oder Passwort."
+  "settings": {
+    "title": "Configuración",
+    "subtitle": "Gestionar usuarios y perfil",
+    "tabs": {
+      "users": "Usuarios",
+      "profile": "Mi Perfil"
+    },
+    "alerts": {
+      "success": "Éxito",
+      "error": "Error"
+    },
+    "users": {
+      "title": "Gestión de Usuarios",
+      "limits": {
+        "title": "Límite de Usuarios",
+        "max": "Máximo",
+        "created": "Creados",
+        "available": "Disponibles",
+        "reached": "Límite alcanzado",
+        "help": "Puede crear usuarios adicionales para su empresa. Cada usuario tiene acceso a los mismos productos y clientes.",
+        "ceoHelp": "Como CEO, puede crear usuarios, activarlos/desactivarlos y ajustar los límites."
+      },
+      "create": {
+        "title": "Nuevo Usuario",
+        "nameLabel": "Nombre Completo *",
+        "namePlaceholder": "Ej.: Juan Pérez",
+        "emailLabel": "Correo *",
+        "emailPlaceholder": "ejemplo@empresa.com",
+        "passwordLabel": "Contraseña *",
+        "passwordPlaceholder": "Mínimo 6 caracteres",
+        "submit": "Crear Usuario",
+        "submitting": "Creando...",
+        "errors": {
+          "nameRequired": "El nombre es requerido",
+          "emailRequired": "El correo es requerido",
+          "emailInvalid": "Correo inválido",
+          "passwordRequired": "La contraseña es requerida",
+          "passwordMin": "Mínimo 6 caracteres",
+          "userExists": "Ya existe un usuario con este correo.",
+          "emailTaken": "Este correo ya está en uso",
+          "limitReached": "Límite de usuarios alcanzado. No se pueden crear más usuarios.",
+          "createFailed": "Error al crear el usuario",
+          "unexpected": "Ocurrió un error inesperado. Por favor intente de nuevo."
+        }
+      },
+      "list": {
+        "title": "Usuarios de la Empresa",
+        "empty": {
+          "title": "Sin Usuarios",
+          "text": "Cree el primer usuario para comenzar"
+        },
+        "table": {
+          "user": "Usuario",
+          "role": "Rol",
+          "status": "Estado",
+          "actions": "Acciones"
+        },
+        "roles": {
+          "ceo": "CEO",
+          "admin": "Admin",
+          "user": "Usuario"
+        },
+        "status": {
+          "active": "Activo",
+          "inactive": "Inactivo",
+          "you": "Usted"
+        },
+        "actions": {
+          "activate": "Activar",
+          "deactivate": "Desactivar",
+          "activateTitle": "Activar usuario",
+          "deactivateTitle": "Desactivar usuario",
+          "confirm": "¿Está seguro que desea {action} este usuario?"
+        },
+        "noEmail": "Sin correo"
+      }
+    },
+    "profile": {
+      "title": "Mi Perfil",
+      "form": {
+        "nameLabel": "Nombre",
+        "languageLabel": "Idioma",
+        "submit": "Guardar Cambios",
+        "saving": "Guardando...",
+        "errors": {
+          "userNotLoaded": "Usuario no cargado",
+          "updateFailed": "Error al actualizar el perfil"
+        }
+      },
+      "account": {
+        "title": "Información de la Cuenta",
+        "memberSince": "Miembro desde:",
+        "companyId": "ID de Empresa:",
+        "role": "Rol:",
+        "unknown": "Desconocido",
+        "noId": "Sin ID"
+      }
+    },
+    "company": {
+      "logo": {
+        "title": "Logo de la Empresa",
+        "noLogo": "No hay logo subido",
+        "select": "Seleccionar logo",
+        "upload": "Subir logo",
+        "uploading": "Subiendo...",
+        "remove": "Eliminar logo",
+        "help": "Tamaño recomendado: 300×300px. Máx 5MB. Formatos soportados: JPG, PNG, GIF, WebP.",
+        "errors": {
+          "invalidType": "Solo se permiten archivos de imagen (jpeg, jpg, png, gif, webp)",
+          "tooLarge": "La imagen no puede ser mayor a 5MB",
+          "selectFile": "Por favor seleccione un logo",
+          "userNotLoaded": "Usuario no cargado. Por favor inicie sesión nuevamente.",
+          "uploadFailed": "Error al subir",
+          "deleteFailed": "Error al eliminar"
+        },
+        "confirmDelete": "¿Está seguro que desea eliminar el logo?"
+      },
+      "data": {
+        "title": "Información de la Empresa",
+        "nameLabel": "Nombre de la Empresa *",
+        "namePlaceholder": "Su Empresa S.L.",
+        "emailLabel": "Correo",
+        "emailPlaceholder": "info@empresa.com",
+        "phoneLabel": "Teléfono",
+        "phonePlaceholder": "+34 123 456789",
+        "currencyLabel": "Moneda",
+        "timezoneLabel": "Zona Horaria",
+        "address": {
+          "title": "Dirección",
+          "street": "Calle",
+          "streetPlaceholder": "Calle Principal",
+          "number": "Número",
+          "numberPlaceholder": "123",
+          "complement": "Complemento (opcional)",
+          "complementPlaceholder": "3er piso, Edificio B, etc.",
+          "postalCode": "Código Postal",
+          "postalCodePlaceholder": "12345",
+          "city": "Ciudad",
+          "cityPlaceholder": "Madrid",
+          "state": "Provincia (opcional)",
+          "statePlaceholder": "Madrid",
+          "country": "País",
+          "countryPlaceholder": "España",
+          "preview": "Vista previa de dirección:"
+        },
+        "bank": {
+          "title": "Datos Bancarios",
+          "bankName": "Nombre del Banco",
+          "bankNamePlaceholder": "Ej: Banco Santander",
+          "iban": "IBAN",
+          "ibanPlaceholder": "ES00 0000 0000 0000 0000 0000",
+          "bic": "BIC / SWIFT",
+          "bicPlaceholder": "Ej: BSCHESMM",
+          "accountHolder": "Titular de la Cuenta",
+          "accountHolderPlaceholder": "Nombre de la empresa o persona",
+          "currency": "Moneda de la Cuenta",
+          "selectCurrency": "Seleccionar moneda",
+          "preview": "Vista previa de datos bancarios",
+          "errors": {
+            "ibanInvalidLength": "El IBAN debe tener entre 15 y 34 caracteres",
+            "ibanInvalidFormat": "Formato de IBAN no válido"
+          }
+        },
+        "submit": "Guardar Información",
+        "saving": "Guardando...",
+        "errors": {
+          "nameRequired": "El nombre de la empresa es requerido",
+          "emailInvalid": "Correo inválido",
+          "updateFailed": "Error al actualizar la información"
+        },
+        "success": "✓ {message}"
+      },
+      "messages": {
+        "logoUploaded": "Logo subido exitosamente",
+        "logoRemoved": "Logo eliminado exitosamente",
+        "dataUpdated": "Información actualizada exitosamente"
+      }
+    },
+    "currencies": {
+      "EUR": "€ Euro",
+      "CHF": "CHF Franco Suizo",
+      "USD": "$ Dólar Americano",
+      "GBP": "£ Libra Esterlina"
+    },
+    "timezones": {
+      "Europe/Berlin": "Berlín (GMT+1)",
+      "Europe/London": "Londres (GMT+0)",
+      "Europe/Paris": "París (GMT+1)",
+      "America/New_York": "Nueva York (GMT-5)"
+    }
   }
 }

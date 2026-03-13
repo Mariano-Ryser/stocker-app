@@ -1,0 +1,91 @@
+{
+  "rechnungForm": {
+    "common": {
+      "cancel": "Cancel",
+      "close": "Close",
+      "save": "Save",
+      "saving": "Saving...",
+      "loading": "Loading...",
+      "error": "Error"
+    },
+    "creator": {
+      "title": "New Invoice",
+      "submit": "Create Invoice"
+    },
+    "editor": {
+      "title": "Edit Invoice",
+      "submit": "Save Changes",
+      "loadingData": "Loading invoice data..."
+    },
+    "restricted": {
+      "title": "Access Restricted",
+      "message": "You must be logged in to manage invoices.",
+      "close": "Close"
+    },
+    "client": {
+      "label": "Customer",
+      "placeholder": "Search or select customer...",
+      "search": "Search customers...",
+      "random": "Random Customer (Default)",
+      "randomBadge": "🎯",
+      "noClients": "No clients available",
+      "moreClients": "... and {count} more clients",
+      "clientCount": "{count} client{plural} available",
+      "showingFirst": "(showing first {count})",
+      "info": "Select a customer from the list or use \"Random Customer\"",
+      "clearTitle": "Clear selection (use RandomCustomer)"
+    },
+    "status": {
+      "label": "Status",
+      "paid": "Paid",
+      "pending": "Pending",
+      "cancelled": "Cancelled"
+    },
+    "items": {
+      "title": "Items ({count})",
+      "add": "+ Add item",
+      "item": "Item {number}",
+      "searchPlaceholder": "Search items... (min. 2 characters)",
+      "noResults": "No items found for \"{search}\"",
+      "minChars": "Enter at least 2 characters to search",
+      "searchHint": "Search results for: \"{search}\"",
+      "searching": "Searching...",
+      "removeTitle": "Remove item",
+      "fields": {
+        "article": "Item",
+        "quantity": "Quantity",
+        "unitPrice": "Unit Price",
+        "total": "Total"
+      },
+      "stock": {
+        "label": "Stock: {stock} | Needed: {needed} | Remaining: {remaining}",
+        "otherLines": "Other lines: {count}",
+        "error": "⚠️ {message}",
+        "badge": {
+          "inStock": "In Stock",
+          "lowStock": "Low Stock",
+          "outOfStock": "Out of Stock"
+        }
+      },
+      "errors": {
+        "selectAll": "Please select all items",
+        "quantityPositive": "Quantity must be greater than 0",
+        "priceNegative": "Price cannot be negative",
+        "stock": "Please correct stock errors",
+        "minOneItem": "At least one item is required"
+      }
+    },
+    "totals": {
+      "subtotal": "Subtotal:",
+      "tax": "1% VAT:",
+      "total": "Total:"
+    },
+    "messages": {
+      "createSuccess": "Invoice created successfully",
+      "updateSuccess": "Invoice updated successfully",
+      "createError": "Error creating invoice",
+      "updateError": "Error updating invoice",
+      "unknownError": "Unknown error"
+    }
+  }
+}

@@ -1786,3 +1786,230 @@
     page-break-inside: avoid;
   }
 }
+
+/* Añade estos estilos a tu ScannerSalesPage.module.css */
+
+.cacheInfo {
+  font-size: 0.8rem;
+  color: #666;
+  margin-left: 8px;
+  font-weight: normal;
+}
+
+.refreshCacheButton {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: all 0.2s;
+}
+
+.refreshCacheButton:hover {
+  background-color: #f0f0f0;
+  transform: rotate(180deg);
+}
+
+.refreshCacheButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Búsqueda manual */
+.manualSearchSection {
+  background: white;
+  border-radius: 8px;
+  padding: 16px;
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.manualSearchHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.manualSearchHeader h3 {
+  margin: 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.closeManualSearch {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+  color: #666;
+}
+
+.closeManualSearch:hover {
+  color: #333;
+}
+
+.manualSearchInput {
+  width: 100%;
+  padding: 10px;
+  border: 2px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 1rem;
+  margin-bottom: 12px;
+}
+
+.manualSearchInput:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.manualSearchLoading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  color: #666;
+}
+
+.spinnerSmall {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.manualSearchResults {
+  max-height: 300px;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+}
+
+.manualSearchResultItem {
+  padding: 12px;
+  border-bottom: 1px solid #e0e0e0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.manualSearchResultItem:hover {
+  background-color: #f5f5f5;
+}
+
+.manualSearchResultItem:last-child {
+  border-bottom: none;
+}
+
+.resultItemMain {
+  display: flex;
+  flex-direction: column;
+}
+
+.resultItemName {
+  font-weight: 500;
+  color: #333;
+}
+
+.resultItemNumber {
+  font-size: 0.8rem;
+  color: #666;
+  margin-top: 2px;
+}
+
+.resultItemDetails {
+  text-align: right;
+}
+
+.resultItemPrice {
+  font-weight: 600;
+  color: #28a745;
+  display: block;
+}
+
+.resultItemStock {
+  font-size: 0.8rem;
+  display: block;
+  margin-top: 2px;
+}
+
+.inStock {
+  color: #28a745;
+}
+
+.outOfStock {
+  color: #dc3545;
+}
+
+.noResults {
+  padding: 20px;
+  text-align: center;
+  color: #666;
+  background: #f9f9f9;
+  border-radius: 6px;
+}
+
+.minCharsHint {
+  padding: 8px;
+  text-align: center;
+  color: #ffc107;
+  font-size: 0.9rem;
+  background: #fff3cd;
+  border-radius: 4px;
+  margin-top: 8px;
+}
+
+.buttonSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-top: 2px solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+
+.loadingHint {
+  color: #666;
+  font-size: 0.9rem;
+  margin-top: 10px;
+}
+
+.loadingBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  font-size: 0.8rem;
+  color: #666;
+  background: #f0f0f0;
+  padding: 2px 6px;
+  border-radius: 12px;
+}
+
+.smallSpinner {
+  width: 12px;
+  height: 12px;
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #007bff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

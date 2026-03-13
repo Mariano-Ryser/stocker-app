@@ -1,0 +1,291 @@
+/* frontend/components/adminDash/regnung/templatesStyles/letter.module.css */
+
+.invoiceLetter {
+  font-family: 'Times New Roman', Times, serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 25px 30px;
+  background: white;
+  color: #000;
+  font-size: 11pt;
+  line-height: 1.4;
+  position: relative;
+}
+
+/* Header con diseño para ventana de sobre */
+.header {
+  position: relative;
+  min-height: 140px;
+  margin-bottom: 30px;
+}
+
+/* Información del remitente - arriba a la derecha */
+.senderInfo {
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: right;
+  max-width: 350px;
+}
+
+.logoContainer {
+  margin-bottom: 10px;
+  text-align: right;
+}
+
+.logo {
+  max-width: 180px;
+  max-height: 90px;
+  object-fit: contain;
+}
+
+.companyDetails {
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.4;
+}
+
+.companyDetails .companyName {
+  font-weight: bold;
+  font-size: 12pt;
+  margin-bottom: 5px;
+  color: #000;
+}
+
+/* Área para la ventana del sobre - destinatario */
+.recipientWindow {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 260px;
+  min-height: 100px;
+}
+
+.recipientAddress {
+  font-size: 11pt;
+  line-height: 1.4;
+  padding: 5px 0;
+}
+
+.recipientAddress div {
+  margin: 3px 0;
+}
+
+.recipientCompany {
+  font-weight: bold;
+  font-size: 12pt;
+  margin-bottom: 5px;
+}
+
+/* Metadatos de la factura */
+.invoiceMeta {
+  margin: 25px 0 15px 0;
+  padding: 12px 0;
+  font-size: 11pt;
+  border-bottom: 1px solid #000;
+}
+
+.metaRow {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+  max-width: 320px;
+  margin-left: auto;
+}
+
+.metaLabel {
+  font-weight: bold;
+  color: #333;
+}
+
+.metaValue {
+  color: #000;
+}
+
+/* Asunto */
+.subject {
+  margin: 20px 0 25px 0;
+  font-size: 12pt;
+  padding: 5px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Tabla */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 11pt;
+}
+
+.table th {
+  background: #f5f5f5;
+  border-bottom: 2px solid #000;
+  border-top: 1px solid #000;
+  padding: 10px 6px;
+  text-align: left;
+  font-weight: bold;
+  font-size: 10pt;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid #ddd;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 1px solid #000;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.textRight {
+  text-align: right;
+}
+
+/* Sección de totales */
+.totalsSection {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.totals {
+  width: 320px;
+  border: 1px solid #000;
+  padding: 18px;
+  background: #fafafa;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 11pt;
+  border-bottom: 1px dotted #ccc;
+}
+
+.totalRow:last-child {
+  border-bottom: none;
+}
+
+.totalRow.final {
+  font-weight: bold;
+  font-size: 12pt;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #000;
+  border-bottom: none;
+}
+
+/* Footer */
+.footer {
+  margin-top: 45px;
+  padding-top: 25px;
+  border-top: 1px solid #333;
+  font-size: 9pt;
+  color: #666;
+  text-align: center;
+  position: relative;
+}
+
+.paymentInfo {
+  margin-bottom: 10px;
+}
+
+.thanks {
+  font-size: 10pt;
+  color: #333;
+  margin: 12px 0;
+  font-style: italic;
+}
+
+.legalInfo {
+  margin-top: 10px;
+  font-size: 8pt;
+  color: #999;
+}
+
+.page {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 8pt;
+  color: #999;
+}
+
+/* Estilos para impresión */
+@media print {
+  .invoiceLetter {
+    padding: 15px 20px;
+  }
+  
+  .recipientWindow {
+    top: 45px;
+    left: 0;
+  }
+  
+  .table th {
+    background: #f5f5f5 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .totals {
+    background: #fafafa !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .page {
+    color: #999;
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .invoiceLetter {
+    padding: 15px;
+  }
+  
+  .header {
+    position: static;
+    min-height: auto;
+  }
+  
+  .senderInfo {
+    position: static;
+    text-align: left;
+    margin-bottom: 20px;
+    max-width: 100%;
+  }
+  
+  .logoContainer {
+    text-align: left;
+  }
+  
+  .recipientWindow {
+    position: static;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px dashed #ccc;
+  }
+  
+  .metaRow {
+    margin-left: 0;
+    max-width: 100%;
+  }
+  
+  .totalsSection {
+    justify-content: flex-start;
+  }
+  
+  .totals {
+    width: 100%;
+  }
+}

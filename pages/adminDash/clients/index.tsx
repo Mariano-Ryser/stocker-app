@@ -1,4 +1,3 @@
-
 import { useClients } from '../../../hooks/useClients';
 import { useState, useMemo, useEffect } from 'react';
 import { useInfiniteScroll } from '../../../hooks/useInfiniteScroll';
@@ -6,6 +5,7 @@ import LoadMoreTrigger from '../../../components/shared/LoadMoreTrigger';
 import ClientsCreator from '../../../components/adminDash/clients/ClientCreator';
 import ClientEditor from '../../../components/adminDash/clients/ClientEditor';
 import { useAuth } from '../../../components/auth/AuthProvider';
+import { useLanguage } from '../../../contexts/LanguageContext';
 import styles from './clients.module.css';
 
 interface Client {
@@ -19,6 +19,7 @@ interface Client {
 }
 
 export default function ClientsPage() {
+  const { t } = useLanguage();
   const { user ,isAuthenticated, loading: authLoading } = useAuth();
   const { 
     clients, 
@@ -48,7 +49,7 @@ export default function ClientsPage() {
   };
 
   const handleDelete = async (clientId: string) => {
-    if (!isAuthenticated || !window.confirm('¿Está seguro de que desea eliminar este cliente?')) {
+    if (!isAuthenticated || !window.confirm(t('clients.actions.confirmDelete'))) {
       return;
     }
     
@@ -82,7 +83,7 @@ export default function ClientsPage() {
   }, [clients, searchTerm]);
 
   // Usar el hook de infinite scroll
-const {
+  const {
     visibleItems: visibleClients,
     loadingMore,
     loadMoreRef,
@@ -96,172 +97,199 @@ const {
 
   if (authLoading) {
     return (
-        <div className={styles.loadingContainer}>
-          <div className={styles.loadingSpinner}></div>
-          <p>Cargando autenticación...</p>
-        </div>
-     
+      <div className={styles.loadingContainer}>
+        <div className={styles.loadingSpinner}></div>
+        <p>{t('clients.loadingAuth')}</p>
+      </div>
     );
   }
 
   return (
-      <div className={styles.container}>
-        <header className={styles.header}>
-          <div className={styles.headerContent}>
-            <h1 className={styles.title}>Kunden</h1>
-            <p className={styles.subtitle}>Verwalten Sie Ihre Kundenliste</p>
-          </div>
-          {isAuthenticated && (
+    <div className={styles.container}>
+      <header className={styles.header}>
+        <div className={styles.headerContent}>
+          <h1 className={styles.title}>{t('clients.title')}</h1>
+          <p className={styles.subtitle}>{t('clients.subtitle')}</p>
+        </div>
+        {isAuthenticated && (
+          <button 
+            className={styles.newBtn} 
+            onClick={() => setShowModal(true)}
+            disabled={clientsLoading}
+          >
+            <span className={styles.plus}>+</span>
+            {t('clients.newClient')}
+          </button>
+        )}
+      </header>
+
+      {/* Buscador */}
+      <div className={styles.searchSection}>
+        <div className={styles.searchContainer}>
+          <svg className={styles.searchIcon} viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+          </svg>
+          <input
+            type="text"
+            placeholder={t('clients.search.placeholder')}
+            className={styles.searchInput}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            disabled={clientsLoading}
+          />
+          {searchTerm && (
             <button 
-              className={styles.newBtn} 
-              onClick={() => setShowModal(true)}
+              className={styles.clearSearch}
+              onClick={() => setSearchTerm('')}
               disabled={clientsLoading}
             >
-              <span className={styles.plus}>+</span>
-              Neuer Kunde
+              ✕
             </button>
           )}
-        </header>
+        </div>
+        <div className={styles.searchStats}>
+          <span className={styles.resultsCount}>
+            {t('clients.search.results')
+              .replace('{visible}', visibleClients.length)
+              .replace('{total}', filteredClients.length)}
+            {hasMore && t('clients.search.moreAvailable')
+              .replace('{remaining}', filteredClients.length - visibleClients.length)}
+          </span>
+        </div>
+      </div>
 
-        {/* Buscador */}
-        <div className={styles.searchSection}>
-          <div className={styles.searchContainer}>
-            <svg className={styles.searchIcon} viewBox="0 0 24 24" width="20" height="20">
-              <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </svg>
-            <input
-              type="text"
-              placeholder="Kunden suchen... (Name, Vorname, Email, Adresse, Telefon)"
-              className={styles.searchInput}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              disabled={clientsLoading}
-            />
-            {searchTerm && (
-              <button 
-                className={styles.clearSearch}
-                onClick={() => setSearchTerm('')}
-                disabled={clientsLoading}
-              >
-                ✕
-              </button>
+      <div className={styles.clientsList}>
+        {clientsLoading ? (
+          <div className={styles.loading}>
+            <div className={styles.loadingSpinner}></div>
+            {t('clients.loading')}
+          </div>
+        ) : !isAuthenticated ? (
+          <div className={styles.emptyState}>
+            <div className={styles.emptyIcon}>🔒</div>
+            <h3 className={styles.emptyTitle}>{t('clients.empty.restricted.title')}</h3>
+            <p className={styles.emptyText}>{t('clients.empty.restricted.text')}</p>
+          </div>
+        ) : visibleClients.length === 0 ? (
+          <div className={styles.emptyState}>
+            {searchTerm ? (
+              <>
+                <div className={styles.emptyIcon}>🔍</div>
+                <h3 className={styles.emptyTitle}>{t('clients.empty.notFound.title')}</h3>
+                <p className={styles.emptyText}>
+                  {t('clients.empty.notFound.text').replace('{search}', searchTerm)}
+                </p>
+                <button 
+                  className={styles.clearSearchBtn}
+                  onClick={() => setSearchTerm('')}
+                >
+                  {t('clients.search.clear')}
+                </button>
+              </>
+            ) : (
+              <>
+                <div className={styles.emptyIcon}>👥</div>
+                <h3 className={styles.emptyTitle}>{t('clients.empty.noClients.title')}</h3>
+                <p className={styles.emptyText}>{t('clients.empty.noClients.text')}</p>
+              </>
             )}
           </div>
-          <div className={styles.searchStats}>
-            <span className={styles.resultsCount}>
-              {visibleClients.length} von {filteredClients.length} Kunden angezeigt
-              {hasMore && ` (${filteredClients.length - visibleClients.length} mehr verfügbar)`}
-            </span>
-          </div>
-        </div>
+        ) : (
+          <>
+            <div className={styles.clientsGrid}>
+              {visibleClients.map(client => (
+                <div key={client._id} className={styles.clientCard}>
+                  <div className={styles.clientInfo}>
+                    <h3 className={styles.clientName}>{client.vorname} {client.name}</h3>
 
-        <div className={styles.clientsList}>
-          {clientsLoading ? (
-            <div className={styles.loading}>
-              <div className={styles.loadingSpinner}></div>
-              Laden...
-            </div>
-          ) : !isAuthenticated ? (
-            <div className={styles.emptyState}>
-              <div className={styles.emptyIcon}>🔒</div>
-              <h3 className={styles.emptyTitle}>Acceso restringido</h3>
-              <p className={styles.emptyText}>Debe iniciar sesión para ver los clientes</p>
-            </div>
-          ) : visibleClients.length === 0 ? (
-            <div className={styles.emptyState}>
-              {searchTerm ? (
-                <>
-                  <div className={styles.emptyIcon}>🔍</div>
-                  <h3 className={styles.emptyTitle}>Keine Kunden gefunden</h3>
-                  <p className={styles.emptyText}>Keine Ergebnisse für "{searchTerm}"</p>
-                  <button 
-                    className={styles.clearSearchBtn}
-                    onClick={() => setSearchTerm('')}
-                  >
-                    Suche zurücksetzen
-                  </button>
-                </>
-              ) : (
-                <>
-                  <div className={styles.emptyIcon}>👥</div>
-                  <h3 className={styles.emptyTitle}>Keine Kunden vorhanden</h3>
-                  <p className={styles.emptyText}>Erstellen Sie Ihren ersten Kunden</p>
-                </>
-              )}
-            </div>
-          ) : (
-            <>
-              <div className={styles.clientsGrid}>
-                {visibleClients.map(client => (
-                  <div key={client._id} className={styles.clientCard}>
-                    <div className={styles.clientInfo}>
-                      <h3 className={styles.clientName}>{client.vorname} {client.name}</h3>
-                      <div className={styles.clientDetails}>
-                        <div className={styles.detail}>
-                          <span className={styles.label}>Email:</span>
-                          <span className={styles.value}>{client.email || '-'}</span>
-                        </div>
-                        <div className={styles.detail}>
-                          <span className={styles.label}>Adresse:</span>
-                          <span className={styles.value}>{client.adresse || '-'}</span>
-                        </div>
-                        <div className={styles.detail}>
-                          <span className={styles.label}>Telefon:</span>
-                          <span className={styles.value}>{client.phone || '-'}</span>
-                        </div>
+                <div className={styles.clientDetails}>
+                    {client.company && (
+                      <div className={styles.detail}>
+                        <span className={styles.label}>{t('clients.table.company')}</span>
+                        <span className={styles.value}>{client.company}</span>
                       </div>
-                    </div> <button 
-                                className={styles.editBtn}
-                                onClick={() => handleEdit(client)}
-                                disabled={clientsLoading}
-                              >
-                                Bearbeiten
-                              </button>
-                        {isAuthenticated && user.role === 'admin' || user.role === 'ceo' && (
-                          <div className={styles.clientActions}>
-                             
-       
-                              <button 
-                                className={styles.deleteBtn}
-                                onClick={() => handleDelete(client._id)}
-                                disabled={clientsLoading || deletingClientId === client._id}
-                              >
-                                {deletingClientId === client._id ? 'Löschen…' : 'Löschen'}
-                              </button>
-
-                          </div>
-                      )}
+                    )}
+                    
+                    <div className={styles.detail}>
+                      <span className={styles.label}>{t('clients.table.email')}</span>
+                      <span className={styles.value}>{client.email || '-'}</span>
+                    </div>
+                    
+                    <div className={styles.detail}>
+                      <span className={styles.label}>{t('clients.table.phone')}</span>
+                      <span className={styles.value}>{client.phone || '-'}</span>
+                    </div>
+                    
+                    {/* Dirección formateada */}
+                    {client.formattedAddress && (
+                      <div className={styles.detail}>
+                        <span className={styles.label}>{t('clients.table.address')}</span>
+                        <span className={styles.value}>{client.formattedAddress}</span>
+                      </div>
+                    )}
+                    
+                    {/* Compatibilidad con campo antiguo */}
+                    {!client.formattedAddress && client.adresse && (
+                      <div className={styles.detail}>
+                        <span className={styles.label}>{t('clients.table.address')}</span>
+                        <span className={styles.value}>{client.adresse}</span>
+                      </div>
+                    )}
                   </div>
-                ))}
-              </div>
+                </div>
+                  
+                  <button 
+                    className={styles.editBtn}
+                    onClick={() => handleEdit(client)}
+                    disabled={clientsLoading}
+                  >
+                    {t('clients.actions.edit')}
+                  </button>
+                  
+                  {isAuthenticated && (user.role === 'admin' || user.role === 'ceo') && (
+                    <div className={styles.clientActions}>
+                      <button 
+                        className={styles.deleteBtn}
+                        onClick={() => handleDelete(client._id)}
+                        disabled={clientsLoading || deletingClientId === client._id}
+                      >
+                        {deletingClientId === client._id 
+                          ? t('clients.actions.deleting') 
+                          : t('clients.actions.delete')}
+                      </button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
 
-              {/* Load More Trigger */}
-              <LoadMoreTrigger
-                loadingMore={loadingMore}
-                hasMore={hasMore}
-                loadMoreRef={loadMoreRef}
-                customMessage="Mehr Kunden laden"
-              />
-            </>
-          )}
-        </div>
-
-        {showModal && isAuthenticated && (
-          <ClientsCreator
-            onClose={() => setShowModal(false)}
-            onCreated={fetchClients}
-            createClient={createClient}
-          />
-        )}
-
-        {editingClient && isAuthenticated && (
-          <ClientEditor
-            client={editingClient}
-            onClose={handleCloseEdit}
-            onUpdated={fetchClients}
-            updateClient={editClient}
-          />
+            {/* Load More Trigger */}
+            <LoadMoreTrigger
+              loadingMore={loadingMore}
+              hasMore={hasMore}
+              loadMoreRef={loadMoreRef}
+              customMessage={t('clients.loadMore')}
+            />
+          </>
         )}
       </div>
+
+      {showModal && isAuthenticated && (
+        <ClientsCreator
+          onClose={() => setShowModal(false)}
+          onCreated={fetchClients}
+          createClient={createClient}
+        />
+      )}
+
+      {editingClient && isAuthenticated && (
+        <ClientEditor
+          client={editingClient}
+          onClose={handleCloseEdit}
+          onUpdated={fetchClients}
+          updateClient={editClient}
+        />
+      )}
+    </div>
   );
 }

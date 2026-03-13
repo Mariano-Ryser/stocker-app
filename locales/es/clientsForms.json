@@ -1,0 +1,75 @@
+{
+  "clientForm": {
+    "restricted": {
+      "title": "Acceso restringido",
+      "message": "Debe iniciar sesión para gestionar clientes.",
+      "close": "Cerrar"
+    },
+    "fields": {
+      "firstName": {
+        "label": "Nombre *",
+        "placeholder": "Nombre"
+      },
+      "lastName": {
+        "label": "Apellido *",
+        "placeholder": "Apellido"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Email"
+      },
+      "address": {
+        "label": "Dirección",
+        "placeholder": "Dirección"
+      },
+      "phone": {
+        "label": "Teléfono",
+        "placeholder": "Teléfono"
+      }
+    },
+    "address": {
+      "title": "Dirección",
+      "street": "Calle",
+      "streetPlaceholder": "Calle Principal",
+      "number": "Número",
+      "numberPlaceholder": "123",
+      "complement": "Complemento",
+      "complementPlaceholder": "3er piso, Edificio B, etc.",
+      "postalCode": "Código Postal",
+      "postalCodePlaceholder": "12345",
+      "city": "Ciudad",
+      "cityPlaceholder": "Madrid",
+      "state": "Provincia",
+      "statePlaceholder": "Madrid",
+      "country": "País",
+      "countryPlaceholder": "España",
+      "company": "Nombre de la Empresa",
+      "companyPlaceholder": "Empresa S.L."
+    },
+    "buttons": {
+      "cancel": "Cancelar",
+      "creating": "Creando...",
+      "create": "Crear Cliente",
+      "updating": "Actualizando...",
+      "save": "Guardar Cambios"
+    },
+  "errors": {
+    "emailExists": "Este correo ya está registrado",
+    "requiredFields": "Por favor complete todos los campos requeridos",
+    "clientNotFound": "Cliente no encontrado",
+    "validationError": "Error de validación",
+    "serverError": "Error del servidor. Por favor intente más tarde",
+    "networkError": "Error de conexión. Por favor verifique su internet",
+    "createFailed": "Error al crear el cliente",
+    "updateFailed": "Error al actualizar el cliente",
+    "unknown": "Error desconocido"
+  },
+    "creator": {
+      "title": "Nuevo Cliente"
+    },
+    "editor": {
+      "title": "Editar Cliente",
+      "id": "ID: {id}"
+    }
+  }
+}

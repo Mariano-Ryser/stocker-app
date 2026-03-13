@@ -12,14 +12,14 @@ export const useBulkImport = () => {
         throw new Error('Nicht authentifiziert. Bitte erneut anmelden.');
       }
 
-      console.log(`=== STARTING BULK IMPORT (${type}) ===`);
-      console.log(`Number of ${type} to import:`, data.length);
+      // // console.log(`=== STARTING BULK IMPORT (${type}) ===`);
+      // // console.log(`Number of ${type} to import:`, data.length);
       
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
       const endpoint = type === 'sales' ? 'sales/bulk' : 'products/bulk';
       const url = `${backendUrl}/${endpoint}`;
       
-      console.log('Sending request to:', url);
+      // // console.log('Sending request to:', url);
       
       const bodyKey = type === 'sales' ? 'sales' : 'products';
       const requestBody = { [bodyKey]: data };
@@ -33,15 +33,15 @@ export const useBulkImport = () => {
         body: JSON.stringify(requestBody)
       });
 
-      console.log('Response status:', response.status);
+      // console.log('Response status:', response.status);
 
       const responseText = await response.text();
-      console.log('Raw response:', responseText.substring(0, 500));
+      // console.log('Raw response:', responseText.substring(0, 500));
 
       let result;
       try {
         result = JSON.parse(responseText);
-        console.log('Parsed JSON result:', result);
+        // console.log('Parsed JSON result:', result);
       } catch (parseError) {
         console.error('Failed to parse response as JSON:', parseError);
         throw new Error(`Server returned invalid JSON: ${responseText.substring(0, 100)}`);
@@ -52,7 +52,7 @@ export const useBulkImport = () => {
         throw new Error(result.message || `Import fehlgeschlagen (${response.status})`);
       }
 
-      console.log(`=== BULK IMPORT SUCCESSFUL (${type}) ===`);
+      // console.log(`=== BULK IMPORT SUCCESSFUL (${type}) ===`);
       
       // MANEJO ESPECÍFICO PARA LA RESPUESTA DEL BACKEND
       let formattedResult;
@@ -83,7 +83,7 @@ export const useBulkImport = () => {
         };
       }
       
-      console.log('Formatted result for frontend:', formattedResult);
+      // console.log('Formatted result for frontend:', formattedResult);
       return formattedResult;
 
     } catch (error) {
@@ -100,8 +100,8 @@ export const useBulkImport = () => {
 
   // Validación de productos mejorada
   const validateProducts = (products) => {
-    console.log('=== VALIDATING PRODUCTS ===');
-    console.log('Input products count:', products.length);
+    // console.log('=== VALIDATING PRODUCTS ===');
+    // console.log('Input products count:', products.length);
     
     const validationResults = {
       valid: [],
@@ -162,9 +162,9 @@ export const useBulkImport = () => {
       }
     });
 
-    console.log('=== VALIDATION RESULTS ===');
-    console.log('Valid products:', validationResults.valid.length);
-    console.log('Invalid products:', validationResults.invalid.length);
+    // console.log('=== VALIDATION RESULTS ===');
+    // console.log('Valid products:', validationResults.valid.length);
+    // console.log('Invalid products:', validationResults.invalid.length);
     
     return validationResults;
   };

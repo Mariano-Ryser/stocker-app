@@ -1,12 +1,193 @@
 {
-    "settings": {
-    "title": "Settings De",
-    "email": "E-Mail",
-    "password": "Passwort",
-    "forgotPassword": "Passwort vergessen?",
-    "noAccount": "Noch keinen Account?",
-    "register": "Registrieren",
-    "button": "Anmelden",
-    "error": "Ungültige E-Mail oder Passwort."
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Benutzer und Profil verwalten",
+    "tabs": {
+      "users": "Benutzer",
+      "profile": "Mein Profil"
+    },
+    "alerts": {
+      "success": "Erfolg",
+      "error": "Fehler"
+    },
+    "users": {
+      "title": "Benutzerverwaltung",
+      "limits": {
+        "title": "Benutzerlimit",
+        "max": "Maximum",
+        "created": "Erstellt",
+        "available": "Verfügbar",
+        "reached": "Limit erreicht",
+        "help": "Sie können zusätzliche Benutzer für Ihr Unternehmen erstellen. Jeder Benutzer hat Zugriff auf dieselben Produkte und Kunden.",
+        "ceoHelp": "Als CEO können Sie Benutzer erstellen, aktivieren/deaktivieren und Limits anpassen."
+      },
+      "create": {
+        "title": "Neuer Benutzer",
+        "nameLabel": "Vollständiger Name *",
+        "namePlaceholder": "z.B. Max Mustermann",
+        "emailLabel": "E-Mail *",
+        "emailPlaceholder": "beispiel@firma.de",
+        "passwordLabel": "Passwort *",
+        "passwordPlaceholder": "Mindestens 6 Zeichen",
+        "submit": "Benutzer erstellen",
+        "submitting": "Erstelle...",
+        "errors": {
+          "nameRequired": "Name ist erforderlich",
+          "emailRequired": "E-Mail ist erforderlich",
+          "emailInvalid": "Ungültige E-Mail",
+          "passwordRequired": "Passwort ist erforderlich",
+          "passwordMin": "Mindestens 6 Zeichen",
+          "userExists": "Ein Benutzer mit dieser E-Mail existiert bereits.",
+          "emailTaken": "Diese E-Mail wird bereits verwendet",
+          "limitReached": "Benutzerlimit erreicht. Es können keine weiteren Benutzer erstellt werden.",
+          "createFailed": "Fehler beim Erstellen des Benutzers",
+          "unexpected": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+        }
+      },
+      "list": {
+        "title": "Unternehmensbenutzer",
+        "empty": {
+          "title": "Keine Benutzer",
+          "text": "Erstellen Sie den ersten Benutzer, um zu beginnen"
+        },
+        "table": {
+          "user": "Benutzer",
+          "role": "Rolle",
+          "status": "Status",
+          "actions": "Aktionen"
+        },
+        "roles": {
+          "ceo": "Geschäftsführer",
+          "admin": "Administrator",
+          "user": "Benutzer"
+        },
+        "status": {
+          "active": "Aktiv",
+          "inactive": "Inaktiv",
+          "you": "Sie"
+        },
+        "actions": {
+          "activate": "Aktivieren",
+          "deactivate": "Deaktivieren",
+          "activateTitle": "Benutzer aktivieren",
+          "deactivateTitle": "Benutzer deaktivieren",
+          "confirm": "Sind Sie sicher, dass Sie diesen Benutzer {action} möchten?"
+        },
+        "noEmail": "Keine E-Mail"
+      }
+    },
+    "profile": {
+      "title": "Mein Profil",
+      "form": {
+        "nameLabel": "Name",
+        "languageLabel": "Sprache",
+        "submit": "Änderungen speichern",
+        "saving": "Speichere...",
+        "errors": {
+          "userNotLoaded": "Benutzer nicht geladen",
+          "updateFailed": "Fehler beim Aktualisieren des Profils"
+        }
+      },
+      "account": {
+        "title": "Kontoinformationen",
+        "memberSince": "Mitglied seit:",
+        "companyId": "Unternehmens-ID:",
+        "role": "Rolle:",
+        "unknown": "Unbekannt",
+        "noId": "Keine ID"
+      }
+    },
+    "company": {
+      "logo": {
+        "title": "Firmenlogo",
+        "noLogo": "Kein Logo hochgeladen",
+        "select": "Logo auswählen",
+        "upload": "Logo hochladen",
+        "uploading": "Lade hoch...",
+        "remove": "Logo entfernen",
+        "help": "Empfohlene Größe: 300×300px. Max 5MB. Unterstützte Formate: JPG, PNG, GIF, WebP.",
+        "errors": {
+          "invalidType": "Nur Bilddateien sind erlaubt (jpeg, jpg, png, gif, webp)",
+          "tooLarge": "Das Bild darf nicht größer als 5MB sein",
+          "selectFile": "Bitte wählen Sie ein Logo aus",
+          "userNotLoaded": "Benutzer nicht geladen. Bitte melden Sie sich erneut an.",
+          "uploadFailed": "Upload fehlgeschlagen",
+          "deleteFailed": "Löschen fehlgeschlagen"
+        },
+        "confirmDelete": "Sind Sie sicher, dass Sie das Logo löschen möchten?"
+      },
+      "data": {
+        "title": "Unternehmensinformationen",
+        "nameLabel": "Firmenname *",
+        "namePlaceholder": "Ihre Firma GmbH",
+        "emailLabel": "E-Mail",
+        "emailPlaceholder": "info@firma.de",
+        "phoneLabel": "Telefon",
+        "phonePlaceholder": "+49 123 456789",
+        "currencyLabel": "Währung",
+        "timezoneLabel": "Zeitzone",
+        "address": {
+          "title": "Adresse",
+          "street": "Straße",
+          "streetPlaceholder": "Hauptstraße",
+          "number": "Hausnummer",
+          "numberPlaceholder": "123",
+          "complement": "Adresszusatz (optional)",
+          "complementPlaceholder": "3. Stock, Gebäude B, etc.",
+          "postalCode": "Postleitzahl",
+          "postalCodePlaceholder": "12345",
+          "city": "Stadt",
+          "cityPlaceholder": "Berlin",
+          "state": "Bundesland (optional)",
+          "statePlaceholder": "Berlin",
+          "country": "Land",
+          "countryPlaceholder": "Deutschland",
+          "preview": "Adressvorschau:"
+        },
+        "bank": {
+          "title": "Bankverbindung",
+          "bankName": "Bankname",
+          "bankNamePlaceholder": "z.B. Deutsche Bank",
+          "iban": "IBAN",
+          "ibanPlaceholder": "DE00 0000 0000 0000 0000 00",
+          "bic": "BIC / SWIFT",
+          "bicPlaceholder": "z.B. DEUTDEBB",
+          "accountHolder": "Kontoinhaber",
+          "accountHolderPlaceholder": "Firmen- oder Personenname",
+          "currency": "Kontowährung",
+          "selectCurrency": "Währung auswählen",
+          "preview": "Bankdaten-Vorschau",
+          "errors": {
+            "ibanInvalidLength": "Die IBAN muss zwischen 15 und 34 Zeichen lang sein",
+            "ibanInvalidFormat": "Ungültiges IBAN-Format"
+          }
+        },
+        "submit": "Informationen speichern",
+        "saving": "Speichere...",
+        "errors": {
+          "nameRequired": "Firmenname ist erforderlich",
+          "emailInvalid": "Ungültige E-Mail",
+          "updateFailed": "Fehler beim Aktualisieren der Informationen"
+        },
+        "success": "✓ {message}"
+      },
+      "messages": {
+        "logoUploaded": "Logo erfolgreich hochgeladen",
+        "logoRemoved": "Logo erfolgreich entfernt",
+        "dataUpdated": "Informationen erfolgreich aktualisiert"
+      }
+    },
+    "currencies": {
+      "EUR": "€ Euro",
+      "CHF": "CHF Schweizer Franken",
+      "USD": "$ US-Dollar",
+      "GBP": "£ Britisches Pfund"
+    },
+    "timezones": {
+      "Europe/Berlin": "Berlin (MEZ)",
+      "Europe/London": "London (GMT)",
+      "Europe/Paris": "Paris (MEZ)",
+      "America/New_York": "New York (EST)"
+    }
   }
-} 
+}

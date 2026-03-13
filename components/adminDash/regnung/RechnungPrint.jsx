@@ -2,11 +2,14 @@
 import React, { useState, useRef } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { InvoiceClassic } from "./templates/InvoiceClassic";
+import { InvoiceClassic2 } from "./templates/InvoiceClassic2";
 import { InvoiceModern } from "./templates/InvoiceModern";
+import { InvoiceLetter } from "./templates/InvoiceLetter";
+import { TicketThermal } from "./templates/TicketThermal";
 import styles from "./RechnungPrint.module.css";
 import { printStyles } from './printStyles';
-// Importamos ReactDOMServer para renderizar a HTML
 import ReactDOMServer from 'react-dom/server';
+import { useLanguage } from "../../../contexts/LanguageContext";
 
 // Configuración de plantillas disponibles
 const TEMPLATES = {
@@ -17,6 +20,13 @@ const TEMPLATES = {
     type: 'invoice',
     styleClass: 'invoice-classic'
   },
+   classic2: { 
+    name: 'Klassisch-2', 
+    component: InvoiceClassic2,
+    icon: '📄',
+    type: 'invoice',
+    styleClass: 'invoice-classic2'
+  },
   modern: { 
     name: 'Modern', 
     component: InvoiceModern,
@@ -24,10 +34,25 @@ const TEMPLATES = {
     type: 'invoice',
     styleClass: 'invoice-modern'
   },
+    letter: { // <-- NUEVA PLANTILLA
+    name: 'Brief', 
+    component: InvoiceLetter,
+    icon: '✉️',
+    type: 'invoice',
+    styleClass: 'invoice-letter'
+  },
+  ticket: { 
+    name: 'Ticket', 
+    component: TicketThermal,
+    icon: '🧾',
+    type: 'ticket',
+    styleClass: 'invoice-ticket'
+  }
 };
 
 export default function RechnungPrint({ sale, onClose }) {
   const { user, company } = useAuth();
+  const { t } = useLanguage();
   const [selectedTemplate, setSelectedTemplate] = useState('classic');
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
 
@@ -56,12 +81,12 @@ export default function RechnungPrint({ sale, onClose }) {
   // Utilidades comunes
   const formatAddress = (address) => {
     if (!address) return '';
-    return [
-      address.street,
-      address.number,
-      address.postalCode,
-      address.city
-    ].filter(Boolean).join(' ');
+    const parts = [];
+    if (address.street) parts.push(address.street);
+    if (address.number) parts.push(address.number);
+    if (address.postalCode) parts.push(address.postalCode);
+    if (address.city) parts.push(address.city);
+    return parts.join(' ');
   };
 
   const formatDate = (dateString, addDays = 0) => {
@@ -105,6 +130,7 @@ export default function RechnungPrint({ sale, onClose }) {
         companyInfo={companyInfo}
         taxRate={taxRate}
         isPrintVersion={true}
+        t={t}
       />
     );
 
@@ -113,7 +139,7 @@ export default function RechnungPrint({ sale, onClose }) {
       <!DOCTYPE html>
       <html>
         <head>
-          <title>${template.name} - ${safeSale.lieferschein || "Rechnung"}</title>
+          <title>${template.name} - ${safeSale.lieferschein || t('invoice.title')}</title>
           <meta charset="UTF-8">
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Times+New+Roman&display=swap" rel="stylesheet">
           <style>
@@ -161,9 +187,27 @@ export default function RechnungPrint({ sale, onClose }) {
       {showTemplateSelector && (
         <div className={styles.templateDropdown}>
           <div className={styles.templateGroup}>
-            <h4>Rechnungen</h4>
+            <h4>{t('invoice.title')}</h4>
             {Object.entries(TEMPLATES)
-              .filter(([_, t]) => t.type === 'invoice')
+              .filter(([_, tpl]) => tpl.type === 'invoice')
+              .map(([key, template]) => (
+                <button
+                  key={key}
+                  className={`${styles.templateOption} ${selectedTemplate === key ? styles.active : ''}`}
+                  onClick={() => {
+                    setSelectedTemplate(key);
+                    setShowTemplateSelector(false);
+                  }}
+                >
+                  <span>{template.icon}</span>
+                  <span>{template.name}</span>
+                </button>
+              ))}
+          </div>
+          <div className={styles.templateGroup}>
+            <h4>{t('invoice.ticket.title') || 'Tickets'}</h4>
+            {Object.entries(TEMPLATES)
+              .filter(([_, tpl]) => tpl.type === 'ticket')
               .map(([key, template]) => (
                 <button
                   key={key}
@@ -195,7 +239,7 @@ export default function RechnungPrint({ sale, onClose }) {
           <button className={styles.closeBtn} onClick={onClose}>✖</button>
         </div>
 
-        {/* Vista previa con estilos module - AHORA USA LA PLANTILLA SELECCIONADA */}
+        {/* Vista previa con estilos module */}
         <div ref={printRef} className={styles.printContent}>
           <PreviewComponent
             sale={safeSale}
@@ -207,6 +251,7 @@ export default function RechnungPrint({ sale, onClose }) {
             companyInfo={companyInfo}
             taxRate={taxRate}
             isPrintVersion={false}
+            t={t}
           />
         </div>
 
@@ -216,7 +261,7 @@ export default function RechnungPrint({ sale, onClose }) {
             className={`${styles.printBtn} no-print`} 
             onClick={handlePrint}
           >
-            🖨️ Drucken ({TEMPLATES[selectedTemplate].name})
+            🖨️ {t('invoice.actions.print') || 'Drucken'} ({TEMPLATES[selectedTemplate].name})
           </button>
         </div>
       </div>

@@ -1,0 +1,75 @@
+{
+  "sales": {
+    "title": "Facturas",
+    "subtitle": "Administre sus facturas y ventas",
+    "loading": {
+      "auth": "Cargando autenticación...",
+      "invoices": "Cargando facturas...",
+      "short": "Cargando..."
+    },
+    "error": {
+      "general": "Error",
+      "title": "Error al cargar las facturas"
+    },
+    "actions": {
+      "new": "Nueva Factura",
+      "retry": "Intentar de nuevo",
+      "resetFilters": "Restablecer todos los filtros",
+      "createFirst": "Crear primera factura",
+      "loadMore": "Cargar más facturas ({remaining} disponibles)",
+      "stock": "Ver movimientos de stock"
+    },
+    "buttons": {
+      "stock": "Stock",
+      "edit": "Editar"
+    },
+    "search": {
+      "placeholder": "Buscar cliente o número de factura...",
+      "results": "{visible} de {total} facturas",
+      "moreAvailable": " ({remaining} más disponibles)"
+    },
+    "filter": {
+      "allStatus": "Todos los estados",
+      "status": "Estado",
+      "date": "Fecha",
+      "sortBy": "Ordenar por"
+    },
+    "sort": {
+      "newest": "Más recientes primero",
+      "oldest": "Más antiguas primero",
+      "priceHigh": "Precio: Mayor a Menor",
+      "priceLow": "Precio: Menor a Mayor",
+      "clientAZ": "Cliente: A-Z",
+      "clientZA": "Cliente: Z-A",
+      "price": "Precio",
+      "client": "Cliente",
+      "date": "Fecha"
+    },
+    "status": {
+      "paid": "Pagada",
+      "cancelled": "Cancelada",
+      "pending": "Pendiente"
+    },
+    "table": {
+      "date": "Fecha",
+      "client": "Cliente",
+      "invoiceNumber": "N° Factura",
+      "total": "Total",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "client": {
+      "unknown": "Desconocido"
+    },
+    "empty": {
+      "notFound": {
+        "title": "No se encontraron facturas",
+        "text": "Sin resultados para sus criterios de búsqueda"
+      },
+      "noInvoices": {
+        "title": "No hay facturas disponibles",
+        "text": "Cree su primera factura"
+      }
+    }
+  }
+}

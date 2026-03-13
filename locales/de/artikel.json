@@ -1,0 +1,89 @@
+{
+  "artikel": {
+    "title": "Artikelliste",
+    "subtitle": "Verwalten Sie Ihre Produktliste",
+    "newArticle": "Neuer Artikel",
+    "view": {
+      "table": "Tabellenansicht",
+      "grid": "Rasteransicht"
+    },
+    "search": {
+      "placeholder": "Name oder Artikelnummer",
+      "button": "Suchen",
+      "activeSearch": "Aktive Suche: \"{term}\"",
+      "clear": "Suche löschen",
+      "results": "{count} Artikel angezeigt",
+      "resultsOf": "von {total} insgesamt",
+      "for": "für \"{term}\""
+    },
+    "filter": {
+      "stock": "Bestandsfilter:",
+      "all": "Alle Artikel",
+      "inStock": "Auf Lager (≥50)",
+      "lowStock": "Wenig Bestand (1-49)",
+      "outOfStock": "Nicht auf Lager (0)",
+      "sort": "Sortieren:",
+      "sortNone": "Standard",
+      "sortAsc": "Bestand: Aufsteigend ⬆️ (niedrig → hoch)",
+      "sortDesc": "Bestand: Absteigend ⬇️ (hoch → niedrig)",
+      "activeFilter": "Filter: {filter}",
+      "activeSort": "Sortierung: {sort}",
+      "filterInStock": "Auf Lager",
+      "filterLowStock": "Wenig Bestand",
+      "filterOutOfStock": "Nicht auf Lager",
+      "sortAscLabel": "Niedrig zu Hoch",
+      "sortDescLabel": "Hoch zu Niedrig",
+      "resetAll": "Alle Filter zurücksetzen",
+      "clear": "Löschen"
+    },
+    "table": {
+      "name": "Artikelname",
+      "number": "Nummer",
+      "price": "Preis",
+      "stock": "Bestand"
+    },
+    "card": {
+      "number": "N°: {number}",
+      "location": "📍 {location}",
+      "units": "Einheiten",
+      "unit": "Einheit"
+    },
+    "stock": {
+      "outOfStock": "Ausverkauft",
+      "lowStock": "Niedriger Bestand",
+      "inStock": "Auf Lager",
+      "status": {
+        "outOfStock": "Nicht auf Lager",
+        "lowStock": "Wenig Bestand",
+        "inStock": "Auf Lager"
+      }
+    },
+    "loading": {
+      "auth": "Authentifizierung wird geladen...",
+      "products": "Laden..."
+    },
+    "empty": {
+      "restricted": {
+        "title": "Zugriff eingeschränkt",
+        "text": "Sie müssen sich anmelden, um Produkte zu sehen"
+      },
+      "notFound": {
+        "title": "Keine Artikel gefunden",
+        "text": "Keine Ergebnisse für \"{term}\"",
+        "textWithFilters": " mit den ausgewählten Filtern"
+      },
+      "noProducts": {
+        "title": "Keine Artikel vorhanden",
+        "text": "Erstellen Sie Ihren ersten Artikel"
+      },
+      "resetButton": "Alle Filter zurücksetzen"
+    },
+    "pagination": {
+      "page": "Seite {current} von {total}",
+      "total": "({total} Artikel insgesamt)"
+    },
+    "errors": {
+      "loadFailed": "Fehler beim Laden der Artikel"
+    }
+  }
+}

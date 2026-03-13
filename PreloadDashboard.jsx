@@ -8,11 +8,13 @@ export function preloadDashboardOnce() {
   
   const dashboardPages = [
     '/adminDash/artikel',
+    '/adminDash/wareneigang',
+    
+    '/adminDash/stockMovements',
     '/adminDash/clients',
     '/adminDash/regnung',
     '/adminDash/scanner',
-    '/adminDash/verkaufteArtikel',
-    '/adminDash/settings'
+    '/adminDash/settings',
   ];
   
   console.log('🚀 ...');

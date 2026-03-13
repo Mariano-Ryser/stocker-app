@@ -1,0 +1,237 @@
+/* Contenedor general */
+.container {
+  margin-top: 5rem;
+  background: #f9fafb;
+}
+
+/* Header */
+.header {
+  margin-bottom: 20px;
+}
+.title {
+  font-size: 22px;
+  font-weight: 600;
+}
+.subtitle {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: white;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+.filters input,
+.filters select {
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.clearBtn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+/* Tabla */
+.tableContainer {
+  background: white;
+  border-radius: 14px;
+  overflow-x: auto; /* scroll horizontal en móvil */
+  box-shadow: 0 4px 14px rgba(0,0,0,.08);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px; /* for mobile scroll */
+}
+
+.table thead th {
+  font-size: 12px;
+  color: #6b7280;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.row {
+  transition: background .15s ease;
+}
+
+.row:hover {
+  background: #f9fafb;
+}
+
+.table td {
+  padding: 14px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle; /* alinear stock correctamente */
+}
+
+/* Producto */
+.productName {
+  font-weight: 500;
+}
+
+.productSku {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Tipo */
+.typeBadge {
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-weight: 500;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Cantidad */
+.quantity {
+  font-weight: 600;
+}
+
+.positive {
+  color: #059669;
+}
+
+.negative {
+  color: #b91c1c;
+}
+
+/* Stock */
+.stock {
+  gap: 6px;
+}
+
+.stockOld {
+  color: #6b7280;
+}
+
+.stockArrow {
+  color: #9ca3af;
+}
+
+.stockNew {
+  font-weight: 600;
+}
+
+/* Usuario */
+.userName {
+  font-size: 13px;
+}
+
+/* Referencia */
+.ref {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.refNumber {
+  font-size: 12px;
+  background: #f3f4f6;
+  padding: 3px 8px;
+  border-radius: 6px;
+}
+
+/* Paginación */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.pagination button {
+  border: none;
+  background: #f3f4f6;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+/* Centro / Cargando / Empty */
+.center {
+  padding: 40px;
+  text-align: center;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Responsive móvil */
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+  }
+
+  .filters input,
+  .filters select,
+  .clearBtn {
+    width: 100%;
+  }
+
+  .table {
+    min-width: 600px; /* scroll horizontal en móvil */
+  }
+
+  .table td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+}

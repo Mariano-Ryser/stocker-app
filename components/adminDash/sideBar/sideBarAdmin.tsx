@@ -9,6 +9,8 @@ import HeaderAmind from '../headerAdmin/HeaderAdmin';
 import {
   HomeIcon,
   ArticlesIcon,
+  GoodsInIcon,
+  StockMovementsIcon,
   ClientsIcon,
   InvoicesIcon,
   ScannerIcon,
@@ -125,6 +127,8 @@ export default function DashboardLayout({ children }) {
                 <span className={styles.linkText}>{t("menu.home")}</span>
               </Link>
             </li>
+
+
             <li>
               <Link
                 href="/adminDash/artikel"
@@ -136,6 +140,31 @@ export default function DashboardLayout({ children }) {
                 <span className={styles.linkText}>{t("menu.articles")}</span>
               </Link>
             </li>
+
+
+            <li>
+              <Link
+                href="/adminDash/wareneigang"
+                className={router.pathname === "/adminDash/wareneigang" ? styles.active : ""}
+                prefetch={true}
+                onClick={handleLinkClick}
+              >
+                <GoodsInIcon />   
+                <span className={styles.linkText}>{t("menu.wareneigang")}</span>
+              </Link>
+            </li>
+              <li>
+              <Link
+                href="/adminDash/stockMovements"
+                className={router.pathname === "/adminDash/stockMovements" ? styles.active : ""}
+                prefetch={true}
+                onClick={handleLinkClick}
+              >
+                 <StockMovementsIcon />  
+                <span className={styles.linkText}>{t("menu.inventory")}</span>
+              </Link>
+            </li>
+
             <li>
               <Link
                 href="/adminDash/clients"

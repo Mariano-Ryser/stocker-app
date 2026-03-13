@@ -1,0 +1,75 @@
+{
+  "sales": {
+    "title": "Rechnungen",
+    "subtitle": "Verwalten Sie Ihre Rechnungen und Verkäufe",
+    "loading": {
+      "auth": "Authentifizierung wird geladen...",
+      "invoices": "Rechnungen werden geladen...",
+      "short": "Lade..."
+    },
+    "error": {
+      "general": "Fehler",
+      "title": "Fehler beim Laden der Rechnungen"
+    },
+    "actions": {
+      "new": "Neue Rechnung",
+      "retry": "Erneut versuchen",
+      "resetFilters": "Alle Filter zurücksetzen",
+      "createFirst": "Erste Rechnung erstellen",
+      "loadMore": "Mehr Rechnungen laden ({remaining} verfügbar)",
+      "stock": "Stock Bewegungen anzeigen"
+    },
+    "buttons": {
+      "stock": "Stock",
+      "edit": "Bearbeiten"
+    },
+    "search": {
+      "placeholder": "Kunde oder Rechnungsnummer suchen...",
+      "results": "{visible} von {total} Rechnungen",
+      "moreAvailable": " ({remaining} mehr verfügbar)"
+    },
+    "filter": {
+      "allStatus": "Alle Status",
+      "status": "Status",
+      "date": "Datum",
+      "sortBy": "Sortierung"
+    },
+    "sort": {
+      "newest": "Neueste zuerst",
+      "oldest": "Älteste zuerst",
+      "priceHigh": "Preis: Hoch zu Niedrig",
+      "priceLow": "Preis: Niedrig zu Hoch",
+      "clientAZ": "Kunde: A-Z",
+      "clientZA": "Kunde: Z-A",
+      "price": "Preis",
+      "client": "Kunde",
+      "date": "Datum"
+    },
+    "status": {
+      "paid": "Bezahlt",
+      "cancelled": "Storniert",
+      "pending": "Ausstehend"
+    },
+    "table": {
+      "date": "Datum",
+      "client": "Kunde",
+      "invoiceNumber": "Lieferschein",
+      "total": "Total",
+      "status": "Status",
+      "actions": "Aktionen"
+    },
+    "client": {
+      "unknown": "Unbekannt"
+    },
+    "empty": {
+      "notFound": {
+        "title": "Keine Rechnungen gefunden",
+        "text": "Keine Ergebnisse für Ihre Suchkriterien"
+      },
+      "noInvoices": {
+        "title": "Keine Rechnungen vorhanden",
+        "text": "Erstellen Sie Ihre erste Rechnung"
+      }
+    }
+  }
+}

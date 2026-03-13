@@ -1,8 +1,8 @@
 {
    "header": {
-    "adminDash": "Admin INGLEEEES",
-    "login": "Login",
-    "logout": "Abmelden",
+    "adminDash": "Panel de administración",
+    "login": "Iniciar sesión",
+    "logout": "cerrar sesión",
     "register": "Register"
   }
 }

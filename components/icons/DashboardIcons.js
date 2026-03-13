@@ -23,7 +23,25 @@ export const IconPackage = ({ className }) => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
   </svg>
 );
+// NUEVO: Icono para entrada de mercancía (wareneigang)
+export const GoodsInIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+    <line x1="12" y1="8" x2="12" y2="16"></line>
+    <polyline points="8 12 12 16 16 12"></polyline>
+  </svg>
+);
 
+// NUEVO: Icono para movimientos de stock (inventory/stockMovements)
+export const StockMovementsIcon = () => (
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M7 16l-4 4 4 4"></path>
+    <path d="M17 8l4-4-4-4"></path>
+    <path d="M3 20h5a8 8 0 0 0 8-8"></path>
+    <path d="M21 4h-5a8 8 0 0 0-8 8"></path>
+    <rect x="9" y="9" width="6" height="6" rx="1"></rect>
+  </svg>
+);
 
 export const IconChart = ({ className = "", ...props }) => (
   <svg 

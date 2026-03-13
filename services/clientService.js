@@ -15,11 +15,11 @@ const getAuthHeaders = () => {
   return headers;
 };
 
-// GET all clients del usuario actual
+//  GET all clients 🔴 del usuario actual
 export async function getClients() {
   try {
     const API_URL = `${API_BASE_URL}/clients`;
-    console.log('Fetching clients',);
+    // console.log('Fetching clients');
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -30,27 +30,26 @@ export async function getClients() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
-        return;
+        return { ok: false, message: 'Sesión expirada' };
       }
       
       const errorText = await res.text();
       console.error('Error response:', errorText);
-      throw new Error(`Error al obtener clientes: ${res.status}`);
+      return { ok: false, message: `Error al obtener clientes: ${res.status}` };
     }
     
     const data = await res.json();
-    console.log('Clients fetched with stats:', data);
     return data;
   } catch (error) {
     console.error('Error in getClients:', error);
-    throw new Error(`Error: ${error.message}`);
+    return { ok: false, message: error.message };
   }
 }
-
+//  Get ClientsStats🔴
 export async function getClientsStats() {
   try {
     const API_URL = `${API_BASE_URL}/clients/stats`;
-    console.log('Fetching clients stats');
+    // console.log('Fetching clients stats');
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -61,29 +60,26 @@ export async function getClientsStats() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
-        return;
+        return { ok: false, message: 'Sesión expirada' };
       }
       
       const errorText = await res.text();
       console.error('Error response:', errorText);
-      throw new Error(`Error al obtener estadísticas: ${res.status}`);
+      return { ok: false, message: `Error al obtener estadísticas: ${res.status}` };
     }
     
     const data = await res.json();
-    console.log('Clients stats fetched:', data);
     return data;
   } catch (error) {
     console.error('Error in getClientsStats:', error);
-    throw new Error(`Error: ${error.message}`);
+    return { ok: false, message: error.message };
   }
 }
 
-
-// CREATE client
+// CREATE client - 🔴 CORREGIDO: NO lanzar errores, devolver objeto con error
 export async function createClientAPI(client) {
   try {
     const API_URL = `${API_BASE_URL}/clients`;
-    console.log('Creating client with data:', client);
     
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -91,40 +87,42 @@ export async function createClientAPI(client) {
       body: JSON.stringify(client)
     });
     
+    const responseData = await res.json();
+    
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error('Error response:', errorText);
+      console.error('Error response:', responseData);
       
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
-        return;
+        return { ok: false, message: 'Sesión expirada' };
       }
       
-      let errorMessage = `Error ${res.status}`;
-      try {
-        const errorData = JSON.parse(errorText);
-        errorMessage = errorData.message || errorMessage;
-      } catch (e) {
-        // Si no es JSON, usar el texto
-      }
-      
-      throw new Error(errorMessage);
+      // ✅ Devolver el errorCode y el mensaje
+      return { 
+        ok: false, 
+        errorCode: responseData.errorCode || 'UNKNOWN_ERROR',  // <--- NUEVO
+        message: responseData.message || `Error ${res.status}` 
+      };
     }
     
-    return res.json();
+    return { ok: true, client: responseData.client };
   } catch (error) {
     console.error('Error in createClientAPI:', error);
-    throw new Error(`Error: ${error.message}`);
+    return { 
+      ok: false, 
+      errorCode: 'NETWORK_ERROR',
+      message: error.message || 'Error de conexión' 
+    };
   }
 }
 
-// UPDATE client
+// UPDATE client - 🔴 CORREGIDO con errorCode
 export async function updateClientAPI(id, client) {
   try {
     const API_URL = `${API_BASE_URL}/clients/${id}`;
-    console.log('Updating client:', id, client);
+    // console.log('Updating client:', id, client);
     
     const res = await fetch(API_URL, {
       method: 'PUT',
@@ -132,40 +130,42 @@ export async function updateClientAPI(id, client) {
       body: JSON.stringify(client)
     });
     
+    const responseData = await res.json();
+    
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error('Error response:', errorText);
+      console.error('Error response:', responseData);
       
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
-        return;
+        return { ok: false, message: 'Sesión expirada' };
       }
       
-      let errorMessage = `Error ${res.status}`;
-      try {
-        const errorData = JSON.parse(errorText);
-        errorMessage = errorData.message || errorMessage;
-      } catch (e) {
-        // Si no es JSON, usar el texto
-      }
-      
-      throw new Error(errorMessage);
+      // ✅ Devolver errorCode y message
+      return { 
+        ok: false, 
+        errorCode: responseData.errorCode || 'UNKNOWN_ERROR',
+        message: responseData.message || `Error ${res.status}` 
+      };
     }
     
-    return res.json();
+    return { ok: true, client: responseData.client };
   } catch (error) {
     console.error('Error in updateClientAPI:', error);
-    throw new Error(`Error: ${error.message}`);
+    return { 
+      ok: false, 
+      errorCode: 'NETWORK_ERROR',
+      message: error.message || 'Error de conexión' 
+    };
   }
 }
 
-// DELETE client
+// DELETE client - 🔴 CORREGIDO: NO lanzar errores
 export async function deleteClientAPI(id) {
   try {
     const API_URL = `${API_BASE_URL}/clients/${id}`;
-    console.log('Deleting client:', id);
+    // console.log('Deleting client:', id);
     
     const res = await fetch(API_URL, {
       method: 'DELETE',
@@ -173,22 +173,21 @@ export async function deleteClientAPI(id) {
     });
     
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error('Error response:', errorText);
-      
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
-        return;
+        return { ok: false, message: 'Sesión expirada' };
       }
       
-      throw new Error(`Error al eliminar cliente: ${res.status}`);
+      const errorText = await res.text();
+      console.error('Error response:', errorText);
+      return { ok: false, message: `Error al eliminar cliente: ${res.status}` };
     }
     
-    return res.json();
+    return { ok: true };
   } catch (error) {
     console.error('Error in deleteClientAPI:', error);
-    throw new Error(`Error: ${error.message}`);
+    return { ok: false, message: error.message };
   }
 }

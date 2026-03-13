@@ -1,0 +1,56 @@
+{
+  "stockMovements": {
+    "title": "Lagerbewegungen",
+    "subtitle": "Ein- und Ausgänge im Überblick",
+    "loading": "Lade Bewegungen…",
+    "loadingAuth": "Laden…",
+    "error": "Fehler beim Laden",
+    "noMovements": "Keine Bewegungen",
+    "refresh": "↻",
+    "filters": {
+      "allTypes": "Alle Typen",
+      "startDate": "Startdatum",
+      "endDate": "Enddatum",
+      "search": "Artikel suchen…",
+      "clear": "Zurücksetzen"
+    },
+    "table": {
+      "date": "Datum",
+      "article": "Artikel",
+      "type": "Typ",
+      "quantity": "Menge",
+      "stock": "Bestand",
+      "user": "User",
+      "reference": "Ref"
+    },
+    "movementTypes": {
+      "WAREHOUSE_IN": {
+        "label": "Eingang",
+        "icon": "↓"
+      },
+      "WAREHOUSE_OUT": {
+        "label": "Ausgang",
+        "icon": "↑"
+      },
+      "MANUAL_ADJUSTMENT": {
+        "label": "Anpassung",
+        "icon": "✎"
+      },
+      "RETURN": {
+        "label": "Rückgabe",
+        "icon": "↩"
+      },
+      "DAMAGED": {
+        "label": "Beschädigt",
+        "icon": "⚠"
+      },
+      "INITIAL_STOCK": {
+        "label": "Erstbestand",
+        "icon": "●"
+      }
+    },
+    "pagination": {
+      "page": "Seite {current} von {total}"
+    }
+  }
+}

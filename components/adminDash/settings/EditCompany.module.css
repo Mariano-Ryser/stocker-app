@@ -448,3 +448,98 @@
   line-height: 1.5;
 }
 
+/* Agregar al final de EditCompany.module.css */
+
+/* Sección de banco */
+.bankSection {
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.bankSectionTitle {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: #374151;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bankSectionTitle::before {
+  content: '';
+  display: block;
+  width: 4px;
+  height: 20px;
+  background-color: #2563eb;
+  border-radius: 2px;
+}
+
+/* Input de IBAN con formato */
+.ibanInput {
+  font-family: 'Courier New', monospace;
+  letter-spacing: 1px;
+}
+
+/* Preview de datos bancarios */
+.bankPreview {
+  margin-top: 16px;
+  padding: 16px;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border-left: 3px solid #2563eb;
+}
+
+.bankPreviewLabel {
+  display: block;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+.bankPreviewText {
+  font-size: 0.95rem;
+  color: #1f2937;
+  line-height: 1.5;
+}
+
+.bankPreviewName {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 4px;
+  color: #111827;
+}
+
+.bankPreviewIban {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  background-color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  margin-right: 8px;
+  font-size: 0.9rem;
+}
+
+.bankPreviewBic {
+  display: inline-block;
+  font-family: 'Courier New', monospace;
+  background-color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 4px;
+  border: 1px solid #e5e7eb;
+  font-size: 0.9rem;
+}
+
+/* Responsive para móviles */
+@media (max-width: 640px) {
+  .bankPreviewIban,
+  .bankPreviewBic {
+    display: block;
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+}

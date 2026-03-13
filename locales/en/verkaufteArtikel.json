@@ -1,0 +1,69 @@
+{
+  "verkaufteArtikel": {
+    "title": "Sold Items",
+    "subtitle": "Overview of all sold items",
+    "loading": "Loading sold items...",
+    "loadingData": "Loading sales data...",
+    "loadingShort": "Loading...",
+    "error": {
+      "general": "Error",
+      "title": "Error loading items"
+    },
+    "actions": {
+      "retry": "Try again",
+      "refresh": "Refresh",
+      "clearFilters": "Clear filters",
+      "loadMore": "Load more ({remaining})"
+    },
+    "stats": {
+      "revenue": "Revenue",
+      "units": "Units",
+      "articles": "Items",
+      "items": "items",
+      "of": "of"
+    },
+    "filters": {
+      "product": "Search items...",
+      "client": "Customer",
+      "lieferschein": "Invoice No.",
+      "dateFrom": "From",
+      "dateTo": "To",
+      "dateSeparator": "—",
+      "showCancelled": "Show cancelled",
+      "showPending": "Show pending"
+    },
+    "table": {
+      "article": "Item",
+      "quantity": "Qty",
+      "price": "Price",
+      "total": "Total",
+      "client": "Customer",
+      "date": "Date",
+      "lieferschein": "Invoice No.: {number}"
+    },
+    "card": {
+      "client": "Customer:",
+      "lieferschein": "Invoice No.:",
+      "date": "Date:",
+      "price": "Price:",
+      "total": "Total:"
+    },
+    "client": {
+      "unknown": "Unknown customer"
+    },
+    "empty": {
+      "notFound": {
+        "title": "No items found",
+        "text": "No results for your search criteria"
+      },
+      "noSales": {
+        "title": "No sold items",
+        "text": "No items have been sold yet"
+      }
+    },
+    "status": {
+      "cancelled": "Cancelled",
+      "pending": "Pending"
+    }
+  }
+}

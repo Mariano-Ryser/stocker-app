@@ -39,13 +39,13 @@ export function useSales() {
 
     // Evitar múltiples llamadas simultáneas
     if (isFetchingRef.current && !forceRefresh) {
-      console.log('Sales: Already fetching, skipping...');
+      // console.log('Sales: Already fetching, skipping...');
       return;
     }
 
     // Si ya fetchamos y no es force refresh, skip
     if (hasFetchedRef.current && !forceRefresh) {
-      console.log('Sales: Already fetched, skipping...');
+      // console.log('Sales: Already fetched, skipping...');
       return;
     }
 
@@ -54,7 +54,7 @@ export function useSales() {
     setError(null);
     
     try {
-      console.log('Sales: Fetching data...');
+      // console.log('Sales: Fetching data...');
       const data = await getSales(); // ✅ Esto ya devuelve {sales, stats}
       
       const newSales = data.sales || [];
@@ -64,7 +64,7 @@ export function useSales() {
       setSalesStats(newStats);
       hasFetchedRef.current = true;
       
-      console.log('Sales: Fetch completed');
+      // console.log('Sales: Fetch completed');
       
     } catch (err) {
       console.error('Error fetching sales:', err);
@@ -79,7 +79,7 @@ export function useSales() {
   // ✅ SOLO fetch cuando isAuthenticated cambia (montaje)
   useEffect(() => {
     if (isAuthenticated && !hasFetchedRef.current) {
-      console.log('Sales: Initial fetch triggered');
+      // console.log('Sales: Initial fetch triggered');
       fetchSales();
     }
     
@@ -95,7 +95,7 @@ export function useSales() {
 
   // ✅ Función de refresh manual
   const refreshSales = useCallback(() => {
-    console.log('Sales: Manual refresh triggered');
+    // console.log('Sales: Manual refresh triggered');
     hasFetchedRef.current = false;
     fetchSales(true);
   }, [fetchSales]);
@@ -107,10 +107,10 @@ export function useSales() {
     }
     
     try {
-      console.log('Creating sale...');
+      // console.log('Creating sale...');
       const res = await createSaleAPI(payload);
       
-      console.log('API Response:', res);
+      // console.log('API Response:', res);
 
       // Si hay error
       if (!res.success) {
@@ -154,36 +154,39 @@ export function useSales() {
   };
 
   // ✅ Función updateSale optimizada
-  const updateSale = async (id, payload) => {
-    if (!isAuthenticated) {
-      setError('Debe iniciar sesión para actualizar ventas');
-      return { success: false, message: 'No autenticado' };
+const updateSale = async (id, payload) => {
+  if (!isAuthenticated) {
+    setError('Debe iniciar sesión para actualizar ventas');
+    return { success: false, message: 'No autenticado' };
+  }
+  
+  try {
+    // console.log('Updating sale...');
+    const res = await updateSaleAPI(id, payload);
+
+    // Actualizar lista local si tenemos respuesta
+    if (res.sale) {
+      setSales(prev => prev.map(sale => 
+        sale._id === id ? res.sale : sale
+      ));
+      // console.log('✅ Venta actualizada en estado local:', res.sale);
+    } else {
+      // console.log('⚠️ No se recibió sale en la respuesta');
     }
     
-    try {
-      console.log('Updating sale...');
-      const res = await updateSaleAPI(id, payload);
-
-      // Actualizar lista local si tenemos respuesta
-      if (res.sale) {
-        setSales(prev => prev.map(sale => 
-          sale._id === id ? res.sale : sale
-        ));
-      }
-      
-      return { 
-        success: true, 
-        sale: res.sale 
-      };
-    } catch (err) {
-      console.error('Error updating sale:', err);
-      setError(err.message);
-      return { 
-        success: false, 
-        message: err.message 
-      };
-    }
-  };
+    return { 
+      success: true, 
+      sale: res.sale 
+    };
+  } catch (err) {
+    console.error('Error updating sale:', err);
+    setError(err.message);
+    return { 
+      success: false, 
+      message: err.message 
+    };
+  }
+};
 
   // ✅ Función deleteSale optimizada
   const deleteSale = async (id) => {
@@ -193,7 +196,7 @@ export function useSales() {
     }
     
     try {
-      console.log('Deleting sale...');
+      // console.log('Deleting sale...');
       await deleteSaleAPI(id);
 
       // Eliminar de la lista local

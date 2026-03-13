@@ -1,0 +1,60 @@
+{
+  "invoice": {
+    "title": "Rechnung",
+    "invoice": "RECHNUNG",
+    "invoiceNumber": "Nr:",
+    "date": "Datum:",
+    "dueDate": "Fällig:",
+    "status": {
+      "paid": "Bezahlt",
+      "cancelled": "Storniert",
+      "pending": "Ausstehend",
+      "label": "Status:"
+    },
+    "seller": "Verkäufer",
+    "customer": "Kunde",
+    "customerRecipient": "Rechnungsempfänger",
+    "customerDirect": "Bar",
+    "invoiceDetails": "Rechnungsdetails",
+    "paymentInfo": "Zahlungsinformation",
+    "bank": "Bank:",
+    "iban": "IBAN:",
+    "bic": "BIC/SWIFT:",
+    "accountHolder": "Kontoinhaber:",
+    "bankName": "Bank:",
+    "thanks": "Vielen Dank für Ihren Auftrag!",
+    "thanksTicket": "Vielen Dank für Ihren Einkauf!",
+    "actions": {
+      "print": "Drucken"
+    },
+    "table": {
+      "pos": "Pos.",
+      "item": "Artikel",
+      "description": "Beschreibung",
+      "quantity": "Menge",
+      "unitPrice": "Einzelpreis",
+      "total": "Gesamt"
+    },
+    "totals": {
+      "subtotal": "Zwischensumme:",
+      "discount": "Rabatt:",
+      "tax": "MwSt ({rate}%):",
+      "total": "Gesamtbetrag:"
+    },
+    "ticket": {
+      "title": "Tickets",
+      "ticketNumber": "Ticket #:",
+      "date": "Datum:",
+      "customer": "Kunde:",
+      "divider": "----------------------",
+      "doubleDivider": "======================"
+    },
+    "footer": {
+      "bankInfo": "Bankverbindung",
+      "bankName": "Bank",
+      "accountHolder": "Kontoinhaber",
+      "currency": "Währung",
+      "bankInfoLegacy": "Bank: | IBAN: "
+    }
+  }
+}

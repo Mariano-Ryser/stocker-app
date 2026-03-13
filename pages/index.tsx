@@ -24,8 +24,8 @@ export default function Home() {
       <TechCarrousel />
      <div className="about-page">
         <div className="container">
-          <h2>{t('index.title')}</h2>
-          <p>{t('index.p')}</p>
+          <h2>{t('home.title')}</h2>
+          <p>{t('home.p')}</p>
         </div>
       </div>
       <Footer />

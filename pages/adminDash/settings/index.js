@@ -79,14 +79,14 @@ export default function Settings() {
   const validateForm = () => {
     const newErrors = {};
     
-    if (!formData.name.trim()) newErrors.name = 'Name ist erforderlich';
+    if (!formData.name.trim()) newErrors.name = t('settings.users.create.errors.nameRequired');
     if (!formData.email.trim()) {
-      newErrors.email = 'E-Mail ist erforderlich';
+      newErrors.email = t('settings.users.create.errors.emailRequired');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Ungültige E-Mail-Adresse';
+      newErrors.email = t('settings.users.create.errors.emailInvalid');
     }
-    if (!formData.password) newErrors.password = 'Passwort ist erforderlich';
-    else if (formData.password.length < 6) newErrors.password = 'Mindestens 6 Zeichen';
+    if (!formData.password) newErrors.password = t('settings.users.create.errors.passwordRequired');
+    else if (formData.password.length < 6) newErrors.password = t('settings.users.create.errors.passwordMin');
     
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -103,7 +103,7 @@ export default function Settings() {
       const result = await createCompanyUser(formData);
       
       if (result.success) {
-        setSuccess('Benutzer erfolgreich erstellt');
+        setSuccess(t('settings.alerts.success'));
         setFormData({ name: '', email: '', password: '' });
         clearError();
         setTimeout(() => setSuccess(''), 3000);
@@ -111,19 +111,19 @@ export default function Settings() {
         if (result.message === 'El usuario ya existe' || 
             result.message?.toLowerCase().includes('ya existe')) {
           setErrors({ 
-            create: 'Ein Benutzer mit dieser E-Mail-Adresse existiert bereits.',
-            email: 'Diese E-Mail wird bereits verwendet'
+            create: t('settings.users.create.errors.userExists'),
+            email: t('settings.users.create.errors.emailTaken')
           });
         } else if (result.message?.includes('Límite') || 
                    result.message?.includes('limit')) {
-          setErrors({ create: 'Benutzerlimit erreicht. Keine weiteren Benutzer können erstellt werden.' });
+          setErrors({ create: t('settings.users.create.errors.limitReached') });
         } else {
-          setErrors({ create: result.message || 'Fehler beim Erstellen des Benutzers' });
+          setErrors({ create: t('settings.users.create.errors.createFailed') });
         }
       }
     } catch (error) {
       console.error('Error in handleCreateUser:', error);
-      setErrors({ create: 'Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.' });
+      setErrors({ create: t('settings.users.create.errors.unexpected') });
     }
   };
 
@@ -134,7 +134,7 @@ export default function Settings() {
       setErrors({});
       
       if (!user || (!user.id && !user._id)) {
-        setErrors({ update: 'Benutzer nicht geladen' });
+        setErrors({ update: t('settings.profile.form.errors.userNotLoaded') });
         return;
       }
       
@@ -156,12 +156,12 @@ export default function Settings() {
       const result = await updateUserHook(userId, updateData);
       
       if (result.success) {
-        setSuccess('Profil erfolgreich aktualisiert');
+        setSuccess(t('settings.alerts.success'));
         updateUser(result.user);
         clearError();
         setTimeout(() => setSuccess(''), 3000);
       } else {
-        setErrors({ update: result.error || 'Fehler beim Aktualisieren' });
+        setErrors({ update: result.error || t('settings.profile.form.errors.updateFailed') });
       }
     } catch (error) {
       console.error('Error en handleUpdateProfile:', error);
@@ -170,13 +170,14 @@ export default function Settings() {
   };
 
   const handleToggleUserStatus = async (userId, isActive) => {
-    if (!confirm(`Sind Sie sicher, dass Sie diesen Benutzer ${isActive ? 'aktivieren' : 'deaktivieren'} möchten?`)) return;
+    const action = isActive ? t('settings.users.list.actions.activate') : t('settings.users.list.actions.deactivate');
+    if (!confirm(t('settings.users.list.actions.confirm').replace('{action}', action))) return;
     
     try {
       const result = await toggleUserStatus(userId, isActive);
       
       if (result.success) {
-        setSuccess(`Benutzer erfolgreich ${isActive ? 'aktiviert' : 'deaktiviert'}`);
+        setSuccess(t('settings.alerts.success'));
         clearError();
         setTimeout(() => setSuccess(''), 3000);
       } else {
@@ -192,8 +193,8 @@ export default function Settings() {
   return (
     <div className={styles.container}>
       <div className={styles.header}> 
-        <h1>{t('settings.title') || 'Einstellungen'}</h1>
-        <p>{t('settings.manageUsers') || 'Benutzer und Profil verwalten'}</p>
+        <h1>{t('settings.title')}</h1>
+        <p>{t('settings.subtitle')}</p>
       </div>
 
       {/* Alerts */}
@@ -225,7 +226,7 @@ export default function Settings() {
             <svg className={styles.tabIcon} width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M16 11C17.66 11 18.99 9.66 18.99 8C18.99 6.34 17.66 5 16 5C14.34 5 13 6.34 13 8C13 9.66 14.34 11 16 11ZM8 11C9.66 11 10.99 9.66 10.99 8C10.99 6.34 9.66 5 8 5C6.34 5 5 6.34 5 8C5 9.66 6.34 11 8 11ZM8 13C5.67 13 1 14.17 1 16.5V19H15V16.5C15 14.17 10.33 13 8 13ZM16 13C15.71 13 15.38 13.02 15.03 13.05C16.19 13.89 17 15.02 17 16.5V19H23V16.5C23 14.17 18.33 13 16 13Z" fill="currentColor"/>
             </svg>
-            Benutzer
+            {t('settings.tabs.users')}
           </button>
           <button 
             className={`${styles.tab} ${activeTab === 'profile' ? styles.activeTab : ''}`}
@@ -234,7 +235,7 @@ export default function Settings() {
             <svg className={styles.tabIcon} width="18" height="18" viewBox="0 0 24 24" fill="none">
               <path d="M12 12C14.21 12 16 10.21 16 8C16 5.79 14.21 4 12 4C9.79 4 8 5.79 8 8C8 10.21 9.79 12 12 12ZM12 14C9.33 14 4 15.34 4 18V20H20V18C20 15.34 14.67 14 12 14Z" fill="currentColor"/>
             </svg>
-            Mein Profil
+            {t('settings.tabs.profile')}
           </button>
         </div>
       </div>
@@ -246,7 +247,7 @@ export default function Settings() {
             {/* Limits Card */}
             <div className={styles.limitsCard}>
               <div className={styles.cardHeader}>
-                <h3>Benutzerlimit</h3>
+                <h3>{t('settings.users.limits.title')}</h3>
                 {user.role === 'ceo' && (
                   <span className={styles.adminBadge}>CEO</span>
                 )}
@@ -254,15 +255,15 @@ export default function Settings() {
               <div className={styles.cardBody}>
                 <div className={styles.limitsGrid}>
                   <div className={styles.limitItem}>
-                    <div className={styles.limitLabel}>Maximal</div>
+                    <div className={styles.limitLabel}>{t('settings.users.limits.max')}</div>
                     <div className={styles.limitValue}>{userLimits.maxUsers || 3}</div>
                   </div>
                   <div className={styles.limitItem}>
-                    <div className={styles.limitLabel}>Erstellt</div>
+                    <div className={styles.limitLabel}>{t('settings.users.limits.created')}</div>
                     <div className={styles.limitValue}>{userLimits.createdUsers || 0}</div>
                   </div>
                   <div className={styles.limitItem}>
-                    <div className={styles.limitLabel}>Verfügbar</div>
+                    <div className={styles.limitLabel}>{t('settings.users.limits.available')}</div>
                     <div className={`${styles.limitValue} ${userLimits.remaining <= 0 ? styles.limitReached : ''}`}>
                       {userLimits.remaining || 3}
                     </div>
@@ -270,12 +271,11 @@ export default function Settings() {
                 </div>
                 <div className={styles.limitHelp}>
                   <p className={styles.helpText}>
-                    Sie können zusätzliche Benutzer für Ihr Unternehmen erstellen. 
-                    Jeder Benutzer hat Zugriff auf dieselben Produkte und Kunden.
+                    {t('settings.users.limits.help')}
                   </p>
                   {user.role === 'ceo' && (
                     <p className={styles.adminText}>
-                      <strong>Als CEO:</strong> Sie können Benutzer erstellen, activieren/deaktivieren und die Benutzerlimits anpassen.
+                      <strong>{t('settings.users.limits.ceoHelp')}</strong>
                     </p>
                   )}
                 </div>
@@ -285,7 +285,7 @@ export default function Settings() {
             {/* Create User Card */}
             <div className={styles.createUserCard}>
               <div className={styles.cardHeader}>
-                <h3>Neuer Benutzer</h3>
+                <h3>{t('settings.users.create.title')}</h3>
               </div>
               <div className={styles.cardBody}>
                 {(userLimits.remaining <= 0 || !userLimits.canCreateMore) ? (
@@ -294,15 +294,15 @@ export default function Settings() {
                       <path d="M1 21H23L12 2L1 21ZM13 18H11V16H13V18ZM13 14H11V10H13V14Z" fill="currentColor"/>
                     </svg>
                     <div className={styles.warningContent}>
-                      <p className={styles.warningTitle}>Limit erreicht</p>
+                      <p className={styles.warningTitle}>{t('settings.users.limits.reached')}</p>
                       <p>
                         {userLimits.remaining === 0 
-                          ? `Sie haben das maximale Benutzerlimit von ${userLimits.maxUsers} erreicht.` 
-                          : 'Das Benutzerlimit wurde erreicht.'}
+                          ? t('settings.users.create.errors.limitReached')
+                          : t('settings.users.limits.reached')}
                       </p>
                       {user.role === 'ceo' && (
                         <p className={styles.upgradeText}>
-                          Um mehr Benutzer zu erstellen, können Sie Ihr Benutzerlimit erweitern.
+                          {t('settings.users.limits.ceoHelp')}
                         </p>
                       )}
                     </div>
@@ -320,7 +320,7 @@ export default function Settings() {
                     
                     <div className={styles.formGroup}>
                       <label htmlFor="name" className={styles.formLabel}>
-                        Vollständiger Name *
+                        {t('settings.users.create.nameLabel')}
                       </label>
                       <input
                         type="text"
@@ -328,7 +328,7 @@ export default function Settings() {
                         value={formData.name}
                         onChange={(e) => setFormData({...formData, name: e.target.value})}
                         className={`${styles.formInput} ${errors.name ? styles.inputError : ''}`}
-                        placeholder="z.B.: Max Mustermann"
+                        placeholder={t('settings.users.create.namePlaceholder')}
                         disabled={loading}
                       />
                       {errors.name && <div className={styles.fieldError}>{errors.name}</div>}
@@ -336,7 +336,7 @@ export default function Settings() {
                     
                     <div className={styles.formGroup}>
                       <label htmlFor="email" className={styles.formLabel}>
-                        E-Mail *
+                        {t('settings.users.create.emailLabel')}
                       </label>
                       <input
                         type="email"
@@ -344,7 +344,7 @@ export default function Settings() {
                         value={formData.email}
                         onChange={(e) => setFormData({...formData, email: e.target.value})}
                         className={`${styles.formInput} ${errors.email ? styles.inputError : ''}`}
-                        placeholder="beispiel@firma.de"
+                        placeholder={t('settings.users.create.emailPlaceholder')}
                         disabled={loading}
                       />
                       {errors.email && <div className={styles.fieldError}>{errors.email}</div>}
@@ -352,7 +352,7 @@ export default function Settings() {
                     
                     <div className={styles.formGroup}>
                       <label htmlFor="password" className={styles.formLabel}>
-                        Passwort *
+                        {t('settings.users.create.passwordLabel')}
                       </label>
                       <input
                         type="password"
@@ -360,7 +360,7 @@ export default function Settings() {
                         value={formData.password}
                         onChange={(e) => setFormData({...formData, password: e.target.value})}
                         className={`${styles.formInput} ${errors.password ? styles.inputError : ''}`}
-                        placeholder="Mindestens 6 Zeichen"
+                        placeholder={t('settings.users.create.passwordPlaceholder')}
                         disabled={loading}
                       />
                       {errors.password && <div className={styles.fieldError}>{errors.password}</div>}
@@ -377,10 +377,10 @@ export default function Settings() {
                             <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" strokeOpacity="0.3"/>
                             <path d="M12 2a10 10 0 0110 10" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
                           </svg>
-                          Wird erstellt...
+                          {t('settings.users.create.submitting')}
                         </>
                       ) : (
-                        'Benutzer erstellen'
+                        t('settings.users.create.submit')
                       )}
                     </button>
                   </form>
@@ -392,7 +392,7 @@ export default function Settings() {
             <div className={styles.usersListCard}>
               <div className={styles.cardHeader}>
                 <div className={styles.headerContent}>
-                  <h3>Unternehmensbenutzer</h3>
+                  <h3>{t('settings.users.list.title')}</h3>
                   <span className={styles.usersCount}>{companyUsers.length}</span>
                 </div>
               </div>
@@ -400,23 +400,23 @@ export default function Settings() {
                 {loading && !companyUsers.length ? (
                   <div className={styles.loadingState}>
                     <div className={styles.spinner}></div>
-                    <p>Benutzer werden geladen...</p>
+                    <p>{t('settings.users.list.loading')}</p>
                   </div>
                 ) : companyUsers.length === 0 ? (
                   <div className={styles.emptyState}>
                     <svg className={styles.emptyIcon} width="48" height="48" viewBox="0 0 24 24" fill="none">
                       <path d="M9 11.75C8.31 11.75 7.75 12.31 7.75 13C7.75 13.69 8.31 14.25 9 14.25C9.69 14.25 10.25 13.69 10.25 13C10.25 12.31 9.69 11.75 9 11.75ZM15 11.75C14.31 11.75 13.75 12.31 13.75 13C13.75 13.69 14.31 14.25 15 14.25C15.69 14.25 16.25 13.69 16.25 13C16.25 12.31 15.69 11.75 15 11.75ZM12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 12.5C10.07 12.5 8.5 14.07 8.5 16H10.5C10.5 15.17 11.17 14.5 12 14.5C12.83 14.5 13.5 15.17 13.5 16H15.5C15.5 14.07 13.93 12.5 12 12.5Z" fill="currentColor"/>
                     </svg>
-                    <h4>Keine Benutzer</h4>
-                    <p>Erstellen Sie den ersten Benutzer, um zu beginnen</p>
+                    <h4>{t('settings.users.list.empty.title')}</h4>
+                    <p>{t('settings.users.list.empty.text')}</p>
                   </div>
                 ) : (
                   <div className={styles.usersTable}>
                     <div className={styles.tableHeader}>
-                      <div className={styles.tableCell}>Benutzer</div>
-                      <div className={styles.tableCell}>Rolle</div>
-                      <div className={styles.tableCell}>Status</div>
-                      <div className={styles.tableCell}>Aktionen</div>
+                      <div className={styles.tableCell}>{t('settings.users.list.table.user')}</div>
+                      <div className={styles.tableCell}>{t('settings.users.list.table.role')}</div>
+                      <div className={styles.tableCell}>{t('settings.users.list.table.status')}</div>
+                      <div className={styles.tableCell}>{t('settings.users.list.table.actions')}</div>
                     </div>
                     
                     <div className={styles.tableBody}>
@@ -431,25 +431,26 @@ export default function Settings() {
                                 <div className={styles.userName}>
                                   {companyUser.name || 'Unbekannt'}
                                   {companyUser._id === (user._id || user.id) && (
-                                    <span className={styles.currentUserBadge}>Sie</span>
+                                    <span className={styles.currentUserBadge}>{t('settings.users.list.status.you')}</span>
                                   )}
                                 </div>
                                 <div className={styles.userEmail}>
-                                  {companyUser.email || 'Keine E-Mail'}
+                                  {companyUser.email || t('settings.users.list.noEmail')}
                                 </div>
                               </div>
                             </div>
                           </div>
                           <div className={styles.tableCell}>
                             <span className={`${styles.roleBadge} ${styles[`role${companyUser.role?.charAt(0)?.toUpperCase() + companyUser.role?.slice(1) || 'User'}`]}`}>
-                              {companyUser.role === 'ceo' ? 'CEO' : 
-                               companyUser.role === 'admin' ? 'Admin' : 'Benutzer'}
+                              {companyUser.role === 'ceo' ? t('settings.users.list.roles.ceo') : 
+                               companyUser.role === 'admin' ? t('settings.users.list.roles.admin') : 
+                               t('settings.users.list.roles.user')}
                             </span>
                           </div>
                           <div className={styles.tableCell}>
                             <div className={`${styles.statusIndicator} ${companyUser.isActive ? styles.active : styles.inactive}`}>
                               <div className={styles.statusDot}></div>
-                              {companyUser.isActive ? 'Aktiv' : 'Inaktiv'}
+                              {companyUser.isActive ? t('settings.users.list.status.active') : t('settings.users.list.status.inactive')}
                             </div>
                           </div>
                           <div className={styles.tableCell}>
@@ -458,9 +459,9 @@ export default function Settings() {
                                 className={`${styles.actionBtn} ${companyUser.isActive ? styles.btnDanger : styles.btnSuccess}`}
                                 onClick={() => handleToggleUserStatus(companyUser._id, !companyUser.isActive)}
                                 disabled={loading}
-                                title={companyUser.isActive ? 'Benutzer deaktivieren' : 'Benutzer aktivieren'}
+                                title={companyUser.isActive ? t('settings.users.list.actions.deactivateTitle') : t('settings.users.list.actions.activateTitle')}
                               >
-                                {companyUser.isActive ? 'Deaktivieren' : 'Aktivieren'}
+                                {companyUser.isActive ? t('settings.users.list.actions.deactivate') : t('settings.users.list.actions.activate')}
                               </button>
                             )}
                           </div>
@@ -477,10 +478,11 @@ export default function Settings() {
           <div className={styles.profileSection}>
             <div className={styles.profileCard}>
               <div className={styles.cardHeader}>
-                <h3>Mein Profil</h3>
+                <h3>{t('settings.profile.title')}</h3>
                 <span className={`${styles.roleBadge} ${styles[`role${user.role?.charAt(0)?.toUpperCase() + user.role?.slice(1) || 'User'}`]}`}>
-                  {user.role === 'ceo' ? 'CEO' : 
-                   user.role === 'admin' ? 'Administrator' : 'Benutzer'}
+                  {user.role === 'ceo' ? t('settings.users.list.roles.ceo') : 
+                   user.role === 'admin' ? t('settings.users.list.roles.admin') : 
+                   t('settings.users.list.roles.user')}
                 </span>
               </div>
               <div className={styles.cardBody}>
@@ -497,7 +499,7 @@ export default function Settings() {
                   <div className={styles.formGrid}>
                     <div className={styles.formGroup}>
                       <label htmlFor="editName" className={styles.formLabel}>
-                        Name
+                        {t('settings.profile.form.nameLabel')}
                       </label>
                       <input
                         type="text"
@@ -511,7 +513,7 @@ export default function Settings() {
 
                     <div className={styles.formGroup}>
                       <label htmlFor="editLanguage" className={styles.formLabel}>
-                        Sprache / Language
+                        {t('settings.profile.form.languageLabel')}
                       </label>
                       <div className={styles.languageSelectWrapper}>
                         <select
@@ -527,7 +529,6 @@ export default function Settings() {
                             </option>
                           ))}
                         </select>
-                       
                       </div>
                     </div>
                   </div>
@@ -544,10 +545,10 @@ export default function Settings() {
                             <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" strokeOpacity="0.3"/>
                             <path d="M12 2a10 10 0 0110 10" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
                           </svg>
-                          Wird gespeichert...
+                          {t('settings.profile.form.saving')}
                         </>
                       ) : (
-                        'Änderungen speichern'
+                        t('settings.profile.form.submit')
                       )}
                     </button>
                   </div>
@@ -564,29 +565,30 @@ export default function Settings() {
                 
                 {/* Konto Informationen */}
                 <div className={styles.accountInfo}>
-                  <h4 className={styles.infoTitle}>Kontoinformationen</h4>
+                  <h4 className={styles.infoTitle}>{t('settings.profile.account.title')}</h4>
                   <div className={styles.infoGrid}>
                     <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Benutzer seit:</span>
+                      <span className={styles.infoLabel}>{t('settings.profile.account.memberSince')}</span>
                       <span className={styles.infoValue}>
                         {user.createdAt ? new Date(user.createdAt).toLocaleDateString('de-DE', {
                           day: 'numeric',
                           month: 'long',
                           year: 'numeric'
-                        }) : 'Unbekannt'}
+                        }) : t('settings.profile.account.unknown')}
                       </span>
                     </div>
                     <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Unternehmens-ID:</span>
+                      <span className={styles.infoLabel}>{t('settings.profile.account.companyId')}</span>
                       <span className={styles.infoValue}>
-                        {user.companyId || 'Keine ID'}
+                        {user.companyId || t('settings.profile.account.noId')}
                       </span>
                     </div>
                     <div className={styles.infoItem}>
-                      <span className={styles.infoLabel}>Rolle:</span>
+                      <span className={styles.infoLabel}>{t('settings.profile.account.role')}</span>
                       <span className={styles.infoValue}>
-                        {user.role === 'ceo' ? 'CEO' : 
-                         user.role === 'admin' ? 'Administrator' : 'Benutzer'}
+                        {user.role === 'ceo' ? t('settings.users.list.roles.ceo') : 
+                         user.role === 'admin' ? t('settings.users.list.roles.admin') : 
+                         t('settings.users.list.roles.user')}
                       </span>
                     </div>
                   </div>

@@ -8,8 +8,6 @@ import styles from "./Footer.module.css";
 export default function Footer() { 
   const { t } = useLanguage();
 
-
-
   // Definir las rutas para los items de compañía
   const companyItems = [
     { key: "about", route: "/informativePages/uberUns" },
@@ -25,12 +23,11 @@ export default function Footer() {
         <div className={styles.brand}>
           <div className={styles.logo}>
             <img
-              src="/img/logo78.png"
+              src="/img/logo80.webp"
               alt="Alpina logo"
               className={styles.logoImg}
             />
           </div>
-
           <p className={styles.brandDesc}>
             {t("footer.brandDesc")}
           </p>

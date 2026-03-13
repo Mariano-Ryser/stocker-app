@@ -1,7 +1,59 @@
-  {
-    "index": 
-    {
-    "title": "Warum Alpiana",
-    "p": "In einer Welt, die zunehmend von Daten getrieben wird, ist es entscheidend, die richtigen Werkzeuge zu haben, um diese Daten sicher, schnell und effizient zu nutzen. Alpina bietet eine benutzerfreundliche und leistungsstarke Plattform, die Unternehmen dabei unterstützt, ihre Daten in wertvolle Erkenntnisse zu verwandeln. Mit höchsten Sicherheitsstandards, schnellen Analyseprozessen und vollständiger Kontrolle über Warenflüsse und Geschäftskennzahlen ermöglicht Alpina fundierte Entscheidungen auf Basis verlässlicher Daten. So behalten Sie jederzeit den Überblick über Ihr Geschäft und schaffen die Grundlage für nachhaltiges Wachstum und langfristigen Erfolg."
+{
+  "index": {
+    "welcome": "Willkommen zurück,",
+    "loading": "Dashboard wird geladen...",
+    "refresh": "Aktualisieren",
+    "premiumBadge": "PREMIUM",
+    "premiumTitle": "Analytics Dashboard",
+    "premiumSubtitle": "Erweiterte Statistiken und Einblicke für Premium-Benutzer",
+    "quickActions": "Schnellaktionen",
+    "quickActionsDesc": "Häufig genutzte Funktionen",
+    "stats": {
+      "products": "Produkte",
+      "productsDesc": "Im Inventar",
+      "customers": "Kunden",
+      "customersDesc": "Aktive Profile",
+      "sales": "Verkäufe",
+      "salesDesc": "Bezahlte Verkäufe",
+      "pending": "ausstehend",
+      "cancelled": "storniert",
+      "revenue": "Umsatz",
+      "revenueDesc": "Ø {amount} / Verkauf",
+      "revenueNote": "Nur bezahlte Verkäufe"
+    },
+    "actions": {
+      "scanner": "Scanner",
+      "scannerDesc": "Barcode Scan",
+      "product": "Produkt",
+      "productDesc": "Neu erfassen",
+      "customers": "Kunden",
+      "customersDesc": "Verwalten",
+      "invoice": "Rechnung",
+      "invoiceDesc": "Verkauf",
+      "importExport": "Import/Export",
+      "importExportDesc": "Excel",
+      "soldItems": "Verkaufte Artikel",
+      "soldItemsDesc": "Übersicht",
+      "barcode": "Barcode Creator",
+      "barcodeDesc": "Codebar",
+      "goodsIn": "Wareneingang",
+      "goodsInDesc": "Artikel hinzufügen"
+    },
+    "profile": {
+      "email": "Email:",
+      "date": "Datum:",
+      "sales": "Verkäufe:",
+      "userId": "Benutzer-ID:",
+      "paid": "bezahlt"
+    },
+    "tips": {
+      "title": "💡 Tipps & Hinweise",
+      "tip1": "Verwende den Scanner für schnelle Verkäufe",
+      "tip2": "Exportiere regelmäßig deine Daten",
+      "tip3": "Überprüfe die Verkaufsstatistiken monatlich",
+      "upgrade": "Upgrade auf Premium",
+      "upgradeDesc": "für erweiterte Analytics",
+      "upgradeButton": "Jetzt upgraden"
+    }
   }
 }

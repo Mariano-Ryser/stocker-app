@@ -1,4 +1,4 @@
-// hooks/useClients.js (CORREGIDO)
+// hooks/useClients.js
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
 import { 
@@ -14,7 +14,7 @@ export function useClients() {
   const [clientsStats, setClientsStats] = useState({ total: 0 });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [refreshTrigger, setRefreshTrigger] = useState(0); // ← NUEVO: Para forzar refrescos
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   
   const { isAuthenticated } = useAuth();
 
@@ -32,12 +32,12 @@ export function useClients() {
     }
 
     if (isFetchingRef.current && !forceRefresh) {
-      console.log('Clients: Already fetching, skipping...');
+      // console.log('Clients: Already fetching, skipping...');
       return;
     }
 
     if (hasFetchedRef.current && !forceRefresh) {
-      console.log('Clients: Already fetched, skipping...');
+      // console.log('Clients: Already fetched, skipping...');
       return;
     }
 
@@ -46,21 +46,25 @@ export function useClients() {
     setError(null);
     
     try {
-      console.log('Clients: Fetching data...');
+      // console.log('Clients: Fetching data...');
       const data = await getClients();
+      
+      if (data.ok === false) {
+        setError(data.message);
+        return;
+      }
       
       if (isMountedRef.current) {
         setClients(data.clients || data || []);
         setClientsStats(data.stats || { total: data.total || 0 });
         hasFetchedRef.current = true;
         
-        // Incrementar refreshTrigger después de fetch exitoso
         if (forceRefresh) {
           setRefreshTrigger(prev => prev + 1);
         }
       }
       
-      console.log('Clients: Fetch completed');
+      // console.log('Clients: Fetch completed');
     } catch (err) {
       if (isMountedRef.current) {
         setError(err.message);
@@ -77,7 +81,7 @@ export function useClients() {
 
   // Función para refrescar manualmente
   const refreshClients = useCallback(() => {
-    console.log('Clients: Manual refresh triggered');
+    // console.log('Clients: Manual refresh triggered');
     hasFetchedRef.current = false;
     fetchClients(true);
   }, [fetchClients]);
@@ -90,14 +94,19 @@ export function useClients() {
     }
 
     try {
-      console.log('Clients: Fetching stats only...');
+      // console.log('Clients: Fetching stats only...');
       const data = await getClientsStats();
+      
+      if (data.ok === false) {
+        console.error('Error fetching stats:', data.message);
+        return;
+      }
       
       if (isMountedRef.current) {
         setClientsStats(data.stats || { total: 0 });
       }
       
-      console.log('Clients: Stats fetch completed');
+      // console.log('Clients: Stats fetch completed');
     } catch (err) {
       console.error("Error fetching clients stats:", err);
     }
@@ -108,7 +117,7 @@ export function useClients() {
     isMountedRef.current = true;
     
     if (isAuthenticated && !hasFetchedRef.current && isMountedRef.current) {
-      console.log('Clients: Initial fetch triggered');
+      // console.log('Clients: Initial fetch triggered');
       fetchClients();
     }
     
@@ -123,76 +132,85 @@ export function useClients() {
   }, [isAuthenticated, fetchClients]);
 
   /** CREAR CLIENTE */
-  const createClient = async (client) => {
-    if (!isAuthenticated) {
-      setError('Debe iniciar sesión para crear clientes');
-      return { success: false, message: 'No autenticado' };
-    }
+ const createClient = async (client:any) => {
+  if (!isAuthenticated) {
+    setError('Debe iniciar sesión para crear clientes');
+    return { success: false, message: 'No autenticado' };
+  }
+  
+  try {
+    const res = await createClientAPI(client);
     
-    try {
-      const res = await createClientAPI(client);
-      
+    if (res.ok) {
       if (res.client) {
         setClients(prev => [...prev, res.client]);
         setClientsStats(prev => ({ 
           total: prev.total + 1 
         }));
-        // Incrementar refreshTrigger para notificar a useInfiniteScroll
         setRefreshTrigger(prev => prev + 1);
       }
       
-      return { 
-        success: true, 
-        client: res.client,
-        ok: true 
-      };
-    } catch (err) {
-      console.error('Error creating client:', err);
-      setError(err.message);
+      return { success: true, client: res.client };
+    } else {
+      // ✅ Pasar tanto el errorCode como el mensaje
       return { 
         success: false, 
-        message: err.message,
-        ok: false 
+        errorCode: res.errorCode,  // <--- NUEVO
+        message: res.message 
       };
     }
-  };
+    
+  } catch (err) {
+    console.error('Error inesperado:', err);
+    return { 
+      success: false, 
+      errorCode: 'UNEXPECTED_ERROR',
+      message: err.message 
+    };
+  }
+};
 
   /** EDITAR CLIENTE */
-  const editClient = async (id, clientData) => {
-    if (!isAuthenticated) {
-      setError('Debe iniciar sesión para editar clientes');
-      return { success: false, message: 'No autenticado' };
-    }
+// EDITAR CLIENTE - VERSIÓN ACTUAL (INCORRECTA)
+/** EDITAR CLIENTE - VERSIÓN CORREGIDA */
+const editClient = async (id:any, clientData:any) => {
+  if (!isAuthenticated) {
+    setError('Debe iniciar sesión para editar clientes');
+    return { success: false, message: 'No autenticado' };
+  }
+  
+  try {
+    const res = await updateClientAPI(id, clientData);
     
-    try {
-      const res = await updateClientAPI(id, clientData);
-      
+    if (res.ok) {
       if (res.client) {
         setClients(prev => prev.map(client => 
           client._id === id ? res.client : client
         ));
-        // Incrementar refreshTrigger para notificar a useInfiniteScroll
         setRefreshTrigger(prev => prev + 1);
       }
       
-      return { 
-        success: true, 
-        client: res.client,
-        ok: true 
-      };
-    } catch (err) {
-      console.error('Error updating client:', err);
-      setError(err.message);
+      return { success: true, client: res.client };
+    } else {
+      // ✅ CORREGIDO: Devolver errorCode también
       return { 
         success: false, 
-        message: err.message,
-        ok: false 
+        errorCode: res.errorCode,  // <--- AHORA SÍ
+        message: res.message 
       };
     }
-  };
+  } catch (err) {
+    console.error('Error inesperado updating client:', err);
+    return { 
+      success: false, 
+      errorCode: 'UNEXPECTED_ERROR',
+      message: err.message 
+    };
+  }
+};
 
   // Función deleteClient
-  const deleteClient = async (id) => {
+  const deleteClient = async (id:any) => {
     if (!isAuthenticated) {
       setError('Debe iniciar sesión para eliminar clientes');
       return { success: false, message: 'No autenticado' };
@@ -201,25 +219,22 @@ export function useClients() {
     try {
       const res = await deleteClientAPI(id);
       
-      setClients(prev => prev.filter(client => client._id !== id));
-      setClientsStats(prev => ({ 
-        total: Math.max(0, prev.total - 1) 
-      }));
-      // Incrementar refreshTrigger para notificar a useInfiniteScroll
-      setRefreshTrigger(prev => prev + 1);
-      
-      return { 
-        success: true,
-        ok: true 
-      };
+      if (res.ok) {
+        setClients(prev => prev.filter(client => client._id !== id));
+        setClientsStats(prev => ({ 
+          total: Math.max(0, prev.total - 1) 
+        }));
+        setRefreshTrigger(prev => prev + 1);
+        
+        return { success: true };
+      } else {
+        setError(res.message);
+        return { success: false, message: res.message };
+      }
     } catch (err) {
-      console.error('Error deleting client:', err);
+      console.error('Error inesperado deleting client:', err);
       setError(err.message);
-      return { 
-        success: false, 
-        message: err.message,
-        ok: false 
-      };
+      return { success: false, message: err.message };
     }
   };
 
@@ -233,10 +248,10 @@ export function useClients() {
     clientsStats,
     loading,
     error,
-    refreshTrigger, // ← IMPORTANTE: Exportar refreshTrigger
+    refreshTrigger,
     setError: clearError,
     fetchClients,
-    refreshClients, // ← Exportar función de refresh
+    refreshClients,
     fetchClientsStats,
     createClient,
     editClient,        

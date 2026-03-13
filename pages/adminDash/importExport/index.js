@@ -7,7 +7,6 @@ import { useBulkImport } from '../../../services/bulkImportService';
 import styles from './ImportExportPage.module.css';
 
 
-
 export default function ImportExportPage() {
   // Estados para selección de tipo
   const [dataType, setDataType] = useState('products');
@@ -349,10 +348,6 @@ export default function ImportExportPage() {
                     <li className={styles.templateItem}>
                       <span className={styles.templateItemLabel}>Bild-URL</span>
                       <span className={styles.templateItemHint}>Link zum Produktbild</span>
-                    </li>
-                    <li className={styles.templateItem}>
-                      <span className={styles.templateItemLabel}>Gelöscht</span>
-                      <span className={styles.templateItemHint}>Ja/Nein</span>
                     </li>
                   </ul>
                 ) : (

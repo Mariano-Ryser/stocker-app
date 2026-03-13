@@ -2,9 +2,11 @@
 import { useState, useEffect } from 'react';
 import { useUsers } from '../../../hooks/useUsers';
 import { useCompany } from '../../../hooks/useCompany';
+import { useLanguage } from '../../../contexts/LanguageContext';
 import styles from './EditCompany.module.css';
 
 export default function EditCompanyComponent({ user, company, updateCompany: updateCompanyContext }) {
+  const { t } = useLanguage();
   const { uploadCompanyLogo, deleteCompanyLogo } = useUsers();
   const { updateCompanyData, loading: companyLoading, error: companyError } = useCompany();
   
@@ -14,7 +16,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
     phone: company?.phone || '',
     currency: company?.currency || 'EUR',
     timezone: company?.timezone || 'Europe/Berlin',
-    // Campos de dirección separados
+    // Campos de dirección
     street: company?.address?.street || '',
     number: company?.address?.number || '',
     complement: company?.address?.complement || '',
@@ -22,6 +24,12 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
     city: company?.address?.city || '',
     state: company?.address?.state || '',
     country: company?.address?.country || '',
+    // Nuevos campos bancarios
+    bankName: company?.bankDetails?.bankName || '',
+    iban: company?.bankDetails?.iban || '',
+    bic: company?.bankDetails?.bic || '',
+    accountHolder: company?.bankDetails?.accountHolder || '',
+    bankCurrency: company?.bankDetails?.currency || '',
   });
 
   // Estados para el logo
@@ -32,6 +40,26 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
   const [errors, setErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+
+  // Función para formatear IBAN mientras el usuario escribe
+  const formatIBAN = (value) => {
+    // Eliminar caracteres no alfanuméricos y convertir a mayúsculas
+    const cleaned = value.replace(/[^a-zA-Z0-9]/g, '').toUpperCase();
+    
+    // Agrupar en bloques de 4 caracteres
+    const groups = [];
+    for (let i = 0; i < cleaned.length; i += 4) {
+      groups.push(cleaned.substr(i, 4));
+    }
+    
+    return groups.join(' ');
+  };
+
+  const handleIBANChange = (e) => {
+    const rawValue = e.target.value;
+    const formattedValue = formatIBAN(rawValue);
+    setCompanyForm({...companyForm, iban: formattedValue});
+  };
 
   useEffect(() => {
     if (company) {
@@ -48,6 +76,11 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
         city: company.address?.city || '',
         state: company.address?.state || '',
         country: company.address?.country || '',
+        bankName: company.bankDetails?.bankName || '',
+        iban: company.bankDetails?.iban || '',
+        bic: company.bankDetails?.bic || '',
+        accountHolder: company.bankDetails?.accountHolder || '',
+        bankCurrency: company.bankDetails?.currency || '',
       });
       setLogoPreview(company.logo || '');
     }
@@ -56,9 +89,17 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
   const validateCompanyForm = () => {
     const newErrors = {};
     
-    if (!companyForm.name.trim()) newErrors.companyName = 'Firmenname ist erforderlich';
+    if (!companyForm.name.trim()) newErrors.companyName = t('settings.company.data.errors.nameRequired');
     if (companyForm.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(companyForm.email)) {
-      newErrors.companyEmail = 'Ungültige E-Mail-Adresse';
+      newErrors.companyEmail = t('settings.company.data.errors.emailInvalid');
+    }
+    
+    // Validación básica de IBAN (longitud, pero no validación completa)
+    if (companyForm.iban) {
+      const cleanIBAN = companyForm.iban.replace(/\s/g, '');
+      if (cleanIBAN.length < 15 || cleanIBAN.length > 34) {
+        newErrors.iban = t('settings.company.data.bank.errors.ibanInvalidLength');
+      }
     }
     
     setErrors(newErrors);
@@ -81,7 +122,6 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
         phone: companyForm.phone,
         currency: companyForm.currency,
         timezone: companyForm.timezone,
-        // Enviamos la dirección como un objeto anidado
         address: {
           street: companyForm.street,
           number: companyForm.number,
@@ -90,17 +130,25 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
           city: companyForm.city,
           state: companyForm.state,
           country: companyForm.country,
+        },
+        // Enviamos los datos bancarios como objeto anidado
+        bankDetails: {
+          bankName: companyForm.bankName,
+          iban: companyForm.iban.replace(/\s/g, '').toUpperCase(), // Limpiar espacios antes de enviar
+          bic: companyForm.bic,
+          accountHolder: companyForm.accountHolder,
+          currency: companyForm.bankCurrency,
         }
       };
       
       const result = await updateCompanyData(dataToSend);
       
       if (result.success) {
-        setSuccessMessage('✓ Unternehmensdaten erfolgreich aktualisiert');
+        setSuccessMessage(t('settings.company.messages.dataUpdated'));
         setShowSuccess(true);
         setTimeout(() => setShowSuccess(false), 3000);
       } else {
-        setErrors({ company: companyError || 'Fehler beim Aktualisieren der Unternehmensdaten' });
+        setErrors({ company: companyError || t('settings.company.data.errors.updateFailed') });
       }
     } catch (error) {
       console.error('Error in handleUpdateCompany:', error);
@@ -112,16 +160,14 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // Validar tipo de archivo
       const validTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
       if (!validTypes.includes(file.type)) {
-        setErrors({ ...errors, logo: 'Nur Bilddateien sind erlaubt (jpeg, jpg, png, gif, webp)' });
+        setErrors({ ...errors, logo: t('settings.company.logo.errors.invalidType') });
         return;
       }
       
-      // Validar tamaño (max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        setErrors({ ...errors, logo: 'Bild darf nicht größer als 5MB sein' });
+        setErrors({ ...errors, logo: t('settings.company.logo.errors.tooLarge') });
         return;
       }
       
@@ -133,12 +179,12 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
 
   const handleUploadLogo = async () => {
     if (!user || (!user.id && !user._id)) {
-      setErrors({ ...errors, logo: 'Benutzer nicht geladen. Bitte neu anmelden.' });
+      setErrors({ ...errors, logo: t('settings.company.logo.errors.userNotLoaded') });
       return;
     }
 
     if (!logoFile) {
-      setErrors({ ...errors, logo: 'Bitte wählen Sie ein Logo aus' });
+      setErrors({ ...errors, logo: t('settings.company.logo.errors.selectFile') });
       return;
     }
 
@@ -150,17 +196,16 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
       const result = await uploadCompanyLogo(userId, logoFile, company, updateCompanyContext);
 
       if (result.success) {
-        setSuccessMessage('✓ Logo erfolgreich hochgeladen');
+        setSuccessMessage(t('settings.company.messages.logoUploaded'));
         setShowSuccess(true);
         setLogoFile(null);
         
-        // Limpiar el input file
         const fileInput = document.getElementById('logoInput');
         if (fileInput) fileInput.value = '';
         
         setTimeout(() => setShowSuccess(false), 3000);
       } else {
-        setErrors({ ...errors, logo: result.error || 'Fehler beim Hochladen' });
+        setErrors({ ...errors, logo: result.error || t('settings.company.logo.errors.uploadFailed') });
       }
     } catch (error) {
       setErrors({ ...errors, logo: error.message });
@@ -170,27 +215,27 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
   };
 
   const handleDeleteLogo = async () => {
-    if (!confirm('Sind Sie sicher, dass Sie das Logo entfernen möchten?')) return;
+    if (!confirm(t('settings.company.logo.confirmDelete'))) return;
 
     try {
       const result = await deleteCompanyLogo(user.companyId);
 
       if (result.success) {
-        setSuccessMessage('✓ Logo erfolgreich entfernt');
+        setSuccessMessage(t('settings.company.messages.logoRemoved'));
         setShowSuccess(true);
         setLogoPreview('');
         setLogoFile(null);
         
         setTimeout(() => setShowSuccess(false), 3000);
       } else {
-        setErrors({ ...errors, logo: result.error || 'Fehler beim Entfernen' });
+        setErrors({ ...errors, logo: result.error || t('settings.company.logo.errors.deleteFailed') });
       }
     } catch (error) {
       setErrors({ ...errors, logo: error.message });
     }
   };
 
-  // Función para formatear dirección completa (útil para mostrar en facturas)
+  // Función para formatear dirección completa
   const getFormattedAddress = () => {
     const parts = [];
     if (companyForm.street) parts.push(companyForm.street);
@@ -225,7 +270,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
             <button 
               className={styles.closeSuccessBtn}
               onClick={() => setShowSuccess(false)}
-              aria-label="Schließen"
+              aria-label={t('rechnungForm.common.close')}
             >
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2">
                 <path d="M6 18L18 6M6 6l12 12" />
@@ -237,14 +282,14 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
 
       {/* Logo de Empresa */}
       <div className={styles.logoSection}>
-        <h4 className={styles.logoTitle}>Unternehmenslogo</h4>
+        <h4 className={styles.logoTitle}>{t('settings.company.logo.title')}</h4>
         
         <div className={styles.logoContainer}>
           {logoPreview ? (
             <div className={styles.logoPreview}>
               <img 
                 src={logoPreview} 
-                alt="Unternehmenslogo" 
+                alt={t('settings.company.logo.title')} 
                 className={styles.logoImage}
               />
               <div className={styles.logoActions}>
@@ -254,7 +299,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                   onClick={handleDeleteLogo}
                   disabled={isUploadingLogo}
                 >
-                  Logo entfernen
+                  {t('settings.company.logo.remove')}
                 </button>
               </div>
             </div>
@@ -263,7 +308,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
               <svg className={styles.logoIcon} width="48" height="48" viewBox="0 0 24 24" fill="none">
                 <path d="M19 5v14H5V5h14m0-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-4.86 8.86l-3 3.87L9 13.14 6 17h12l-3.86-5.14z" fill="currentColor"/>
               </svg>
-              <p className={styles.logoPlaceholderText}>Kein Logo hochgeladen</p>
+              <p className={styles.logoPlaceholderText}>{t('settings.company.logo.noLogo')}</p>
             </div>
           )}
           
@@ -281,7 +326,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                 <svg className={styles.uploadIcon} width="16" height="16" viewBox="0 0 24 24" fill="none">
                   <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z" fill="currentColor"/>
                 </svg>
-                Logo auswählen
+                {t('settings.company.logo.select')}
               </span>
             </label>
             
@@ -300,10 +345,10 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                         <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" strokeOpacity="0.3"/>
                         <path d="M12 2a10 10 0 0110 10" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
                       </svg>
-                      Wird hochgeladen...
+                      {t('settings.company.logo.uploading')}
                     </>
                   ) : (
-                    'Logo hochladen'
+                    t('settings.company.logo.upload')
                   )}
                 </button>
               </div> 
@@ -314,7 +359,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
             )}
             
             <p className={styles.uploadHelp}>
-              Empfohlene Größe: 300×300px. Maximal 5MB. Unterstützte Formate: JPG, PNG, GIF, WebP.
+              {t('settings.company.logo.help')}
             </p>
           </div>
         </div>
@@ -322,7 +367,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
 
       {/* Unternehmensdaten Form */}
       <div className={styles.companyFormSection}>
-        <h4 className={styles.companyFormTitle}>Unternehmensdaten</h4>
+        <h4 className={styles.companyFormTitle}>{t('settings.company.data.title')}</h4>
         
         {errors.company && (
           <div className={styles.formError}>
@@ -338,7 +383,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
               <label htmlFor="companyName" className={styles.formLabel}>
-                Firmenname *
+                {t('settings.company.data.nameLabel')}
               </label>
               <input
                 type="text"
@@ -346,7 +391,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                 value={companyForm.name}
                 onChange={e => setCompanyForm({...companyForm, name: e.target.value})}
                 className={`${styles.formInput} ${errors.companyName ? styles.inputError : ''}`}
-                placeholder="Ihre Firma GmbH"
+                placeholder={t('settings.company.data.namePlaceholder')}
                 disabled={companyLoading}
               />
               {errors.companyName && <div className={styles.fieldError}>{errors.companyName}</div>}
@@ -354,7 +399,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
             
             <div className={styles.formGroup}>
               <label htmlFor="companyEmail" className={styles.formLabel}>
-                E-Mail
+                {t('settings.company.data.emailLabel')}
               </label>
               <input
                 type="email"
@@ -362,7 +407,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                 value={companyForm.email}
                 onChange={e => setCompanyForm({...companyForm, email: e.target.value})}
                 className={`${styles.formInput} ${errors.companyEmail ? styles.inputError : ''}`}
-                placeholder="info@firma.de"
+                placeholder={t('settings.company.data.emailPlaceholder')}
                 disabled={companyLoading}
               />
               {errors.companyEmail && <div className={styles.fieldError}>{errors.companyEmail}</div>}
@@ -372,7 +417,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
               <label htmlFor="companyPhone" className={styles.formLabel}>
-                Telefon
+                {t('settings.company.data.phoneLabel')}
               </label>
               <input
                 type="text"
@@ -380,14 +425,14 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                 value={companyForm.phone}
                 onChange={e => setCompanyForm({...companyForm, phone: e.target.value})}
                 className={styles.formInput}
-                placeholder="+49 123 456789"
+                placeholder={t('settings.company.data.phonePlaceholder')}
                 disabled={companyLoading}
               />
             </div>
             
             <div className={styles.formGroup}>
               <label htmlFor="companyCurrency" className={styles.formLabel}>
-                Währung
+                {t('settings.company.data.currencyLabel')}
               </label>
               <div className={styles.selectWrapper}>
                 <select
@@ -397,10 +442,10 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                   className={styles.formInput}
                   disabled={companyLoading}
                 >
-                  <option value="EUR">€ Euro</option>
-                  <option value="CHF">CHF Schweizer Franken</option>
-                  <option value="USD">$ US Dollar</option>
-                  <option value="GBP">£ Britisches Pfund</option>
+                  <option value="EUR">{t('settings.currencies.EUR')}</option>
+                  <option value="CHF">{t('settings.currencies.CHF')}</option>
+                  <option value="USD">{t('settings.currencies.USD')}</option>
+                  <option value="GBP">{t('settings.currencies.GBP')}</option>
                 </select>
               </div>
             </div>
@@ -409,7 +454,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
           <div className={styles.formGrid}>
             <div className={styles.formGroup}>
               <label htmlFor="companyTimezone" className={styles.formLabel}>
-                Zeitzone
+                {t('settings.company.data.timezoneLabel')}
               </label>
               <div className={styles.selectWrapper}>
                 <select
@@ -419,10 +464,10 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                   className={styles.formInput}
                   disabled={companyLoading}
                 >
-                  <option value="Europe/Berlin">Berlin (GMT+1)</option>
-                  <option value="Europe/London">London (GMT+0)</option>
-                  <option value="Europe/Paris">Paris (GMT+1)</option>
-                  <option value="America/New_York">New York (GMT-5)</option>
+                  <option value="Europe/Berlin">{t('settings.timezones.Europe/Berlin')}</option>
+                  <option value="Europe/London">{t('settings.timezones.Europe/London')}</option>
+                  <option value="Europe/Paris">{t('settings.timezones.Europe/Paris')}</option>
+                  <option value="America/New_York">{t('settings.timezones.America/New_York')}</option>
                 </select>
               </div>
             </div>
@@ -430,12 +475,12 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
 
           {/* Sección de dirección expandida */}
           <div className={styles.addressSection}>
-            <h5 className={styles.addressSectionTitle}>Adresse</h5>
+            <h5 className={styles.addressSectionTitle}>{t('settings.company.data.address.title')}</h5>
             
             <div className={styles.formGrid}>
               <div className={styles.formGroup}>
                 <label htmlFor="street" className={styles.formLabel}>
-                  Straße
+                  {t('settings.company.data.address.street')}
                 </label>
                 <input
                   type="text"
@@ -443,14 +488,14 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                   value={companyForm.street}
                   onChange={e => setCompanyForm({...companyForm, street: e.target.value})}
                   className={styles.formInput}
-                  placeholder="Musterstraße"
+                  placeholder={t('settings.company.data.address.streetPlaceholder')}
                   disabled={companyLoading}
                 />
               </div>
               
               <div className={styles.formGroup}>
                 <label htmlFor="number" className={styles.formLabel}>
-                  Hausnummer
+                  {t('settings.company.data.address.number')}
                 </label>
                 <input
                   type="text"
@@ -458,7 +503,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                   value={companyForm.number}
                   onChange={e => setCompanyForm({...companyForm, number: e.target.value})}
                   className={styles.formInput}
-                  placeholder="123"
+                  placeholder={t('settings.company.data.address.numberPlaceholder')}
                   disabled={companyLoading}
                 />
               </div>
@@ -466,7 +511,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
 
             <div className={styles.formGroup}>
               <label htmlFor="complement" className={styles.formLabel}>
-                Adresszusatz (optional)
+                {t('settings.company.data.address.complement')}
               </label>
               <input
                 type="text"
@@ -474,7 +519,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                 value={companyForm.complement}
                 onChange={e => setCompanyForm({...companyForm, complement: e.target.value})}
                 className={styles.formInput}
-                placeholder="3. Stock, Gebäude B, etc."
+                placeholder={t('settings.company.data.address.complementPlaceholder')}
                 disabled={companyLoading}
               />
             </div>
@@ -482,7 +527,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
             <div className={styles.formGrid}>
               <div className={styles.formGroup}>
                 <label htmlFor="postalCode" className={styles.formLabel}>
-                  Postleitzahl
+                  {t('settings.company.data.address.postalCode')}
                 </label>
                 <input
                   type="text"
@@ -490,14 +535,14 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                   value={companyForm.postalCode}
                   onChange={e => setCompanyForm({...companyForm, postalCode: e.target.value})}
                   className={styles.formInput}
-                  placeholder="12345"
+                  placeholder={t('settings.company.data.address.postalCodePlaceholder')}
                   disabled={companyLoading}
                 />
               </div>
               
               <div className={styles.formGroup}>
                 <label htmlFor="city" className={styles.formLabel}>
-                  Stadt
+                  {t('settings.company.data.address.city')}
                 </label>
                 <input
                   type="text"
@@ -505,7 +550,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                   value={companyForm.city}
                   onChange={e => setCompanyForm({...companyForm, city: e.target.value})}
                   className={styles.formInput}
-                  placeholder="Berlin"
+                  placeholder={t('settings.company.data.address.cityPlaceholder')}
                   disabled={companyLoading}
                 />
               </div>
@@ -514,7 +559,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
             <div className={styles.formGrid}>
               <div className={styles.formGroup}>
                 <label htmlFor="state" className={styles.formLabel}>
-                  Bundesland (optional)
+                  {t('settings.company.data.address.state')}
                 </label>
                 <input
                   type="text"
@@ -522,14 +567,14 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                   value={companyForm.state}
                   onChange={e => setCompanyForm({...companyForm, state: e.target.value})}
                   className={styles.formInput}
-                  placeholder="Berlin"
+                  placeholder={t('settings.company.data.address.statePlaceholder')}
                   disabled={companyLoading}
                 />
               </div>
               
               <div className={styles.formGroup}>
                 <label htmlFor="country" className={styles.formLabel}>
-                  Land
+                  {t('settings.company.data.address.country')}
                 </label>
                 <input
                   type="text"
@@ -537,17 +582,122 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                   value={companyForm.country}
                   onChange={e => setCompanyForm({...companyForm, country: e.target.value})}
                   className={styles.formInput}
-                  placeholder="Deutschland"
+                  placeholder={t('settings.company.data.address.countryPlaceholder')}
                   disabled={companyLoading}
                 />
               </div>
             </div>
 
-            {/* Preview de cómo se verá la dirección formateada */}
+            {/* Preview de dirección */}
             {Object.values(getFormattedAddress()).some(v => v) && (
               <div className={styles.addressPreview}>
-                <span className={styles.addressPreviewLabel}>Adressvorschau:</span>
+                <span className={styles.addressPreviewLabel}>{t('settings.company.data.address.preview')}</span>
                 <p className={styles.addressPreviewText}>{getFormattedAddress().full}</p>
+              </div>
+            )}
+          </div>
+
+          {/* SECCIÓN: Datos bancarios - CORREGIDA */}
+          <div className={styles.bankSection}>
+            <h5 className={styles.bankSectionTitle}>{t('settings.company.data.bank.title')}</h5>
+            
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label htmlFor="bankName" className={styles.formLabel}>
+                  {t('settings.company.data.bank.bankName')}
+                </label>
+                <input
+                  type="text"
+                  id="bankName"
+                  value={companyForm.bankName}
+                  onChange={e => setCompanyForm({...companyForm, bankName: e.target.value})}
+                  className={styles.formInput}
+                  placeholder={t('settings.company.data.bank.bankNamePlaceholder')}
+                  disabled={companyLoading}
+                />
+              </div>
+              
+              <div className={styles.formGroup}>
+                <label htmlFor="bankCurrency" className={styles.formLabel}>
+                  {t('settings.company.data.bank.currency')}
+                </label>
+                <div className={styles.selectWrapper}>
+                  <select
+                    id="bankCurrency"
+                    value={companyForm.bankCurrency}
+                    onChange={e => setCompanyForm({...companyForm, bankCurrency: e.target.value})}
+                    className={styles.formInput}
+                    disabled={companyLoading}
+                  >
+                    <option value="">{t('settings.company.data.bank.selectCurrency')}</option>
+                    <option value="EUR">EUR</option>
+                    <option value="CHF">CHF</option>
+                    <option value="USD">USD</option>
+                    <option value="GBP">GBP</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label htmlFor="accountHolder" className={styles.formLabel}>
+                {t('settings.company.data.bank.accountHolder')}
+              </label>
+              <input
+                type="text"
+                id="accountHolder"
+                value={companyForm.accountHolder}
+                onChange={e => setCompanyForm({...companyForm, accountHolder: e.target.value})}
+                className={styles.formInput}
+                placeholder={t('settings.company.data.bank.accountHolderPlaceholder')}
+                disabled={companyLoading}
+              />
+            </div>
+
+            <div className={styles.formGrid}>
+              <div className={styles.formGroup}>
+                <label htmlFor="iban" className={styles.formLabel}>
+                  {t('settings.company.data.bank.iban')}
+                </label>
+                <input
+                  type="text"
+                  id="iban"
+                  value={companyForm.iban}
+                  onChange={handleIBANChange}
+                  className={`${styles.formInput} ${styles.ibanInput} ${errors.iban ? styles.inputError : ''}`}
+                  placeholder={t('settings.company.data.bank.ibanPlaceholder')}
+                  disabled={companyLoading}
+                  maxLength="42"
+                />
+                {errors.iban && <div className={styles.fieldError}>{errors.iban}</div>}
+              </div>
+              
+              <div className={styles.formGroup}>
+                <label htmlFor="bic" className={styles.formLabel}>
+                  {t('settings.company.data.bank.bic')}
+                </label>
+                <input
+                  type="text"
+                  id="bic"
+                  value={companyForm.bic}
+                  onChange={e => setCompanyForm({...companyForm, bic: e.target.value.toUpperCase()})}
+                  className={styles.formInput}
+                  placeholder={t('settings.company.data.bank.bicPlaceholder')}
+                  disabled={companyLoading}
+                  maxLength="11"
+                />
+              </div>
+            </div>
+
+            {/* Preview de IBAN formateado */}
+            {companyForm.iban && (
+              <div className={styles.bankPreview}>
+                <span className={styles.bankPreviewLabel}>{t('settings.company.data.bank.preview')}</span>
+                <p className={styles.bankPreviewText}>
+                  {companyForm.bankName && <span className={styles.bankPreviewName}>{companyForm.bankName}</span>}
+                  <span className={styles.bankPreviewIban}>{companyForm.iban}</span>
+                  {companyForm.bic && <span className={styles.bankPreviewBic}>BIC: {companyForm.bic}</span>}
+                </p>
               </div>
             )}
           </div>
@@ -564,10 +714,10 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                     <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" strokeOpacity="0.3"/>
                     <path d="M12 2a10 10 0 0110 10" stroke="currentColor" strokeWidth="4" strokeLinecap="round"/>
                   </svg>
-                  Wird gespeichert...
+                  {t('settings.company.data.saving')}
                 </>
               ) : (
-                'Unternehmensdaten speichern'
+                t('settings.company.data.submit')
               )}
             </button>
           </div>

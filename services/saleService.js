@@ -19,7 +19,7 @@ const getAuthHeaders = () => {
 export async function getSales() {
   try {
     const API_URL = `${API_BASE_URL}/sales`;
-    console.log('Fetching sales from:', API_URL);
+    // console.log('Fetching sales from:', API_URL);
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -39,7 +39,7 @@ export async function getSales() {
     }
     
     const data = await res.json();
-    // console.log('Sales fetched with stats:', data); 
+    // // console.log('Sales fetched with stats:', data); 
 
     // return data;
         return {
@@ -64,7 +64,7 @@ export async function getSales() {
 export async function createSaleAPI(payload) {
   try {
     const API_URL = `${API_BASE_URL}/sales`;
-    console.log('Creating sale with data:', payload);
+    // console.log('Creating sale with data:', payload);
 
     const res = await fetch(API_URL, {
       method: 'POST',
@@ -73,7 +73,7 @@ export async function createSaleAPI(payload) {
     });
 
     const data = await res.json();
-    console.log('Sale creation response:', data);
+    // console.log('Sale creation response:', data);
 
     if (!res.ok) {
       if (res.status === 401) {
@@ -102,22 +102,26 @@ export async function createSaleAPI(payload) {
   }
 }
 
-// UPDATE sale
 export async function updateSaleAPI(saleId, payload) {
   try {
     const API_URL = `${API_BASE_URL}/sales/${saleId}`;
-    console.log('Updating sale:', saleId, payload);
+    // console.log('📤 Updating sale:', saleId, payload);
     
     const res = await fetch(API_URL, {
       method: 'PUT',
-      headers: getAuthHeaders(),
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeaders()
+      },
       body: JSON.stringify(payload)
     });
     
+    // console.log('📥 Response status:', res.status);
+    
+    const data = await res.json();
+    // console.log('📥 Response data:', data);
+    
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error('Error response:', errorText);
-      
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
@@ -125,21 +129,17 @@ export async function updateSaleAPI(saleId, payload) {
         return;
       }
       
-      let errorMessage = `Error ${res.status}`;
-      try {
-        const errorData = JSON.parse(errorText);
-        errorMessage = errorData.message || errorMessage;
-      } catch (e) {
-        // Si no es JSON, usar el texto
-      }
-      
-      throw new Error(errorMessage);
+      throw new Error(data.message || `Error ${res.status}`);
     }
     
-    return res.json();
+    // Asegurar que devolvemos la venta en la propiedad 'sale'
+    return {
+      sale: data.sale || data,
+      success: true
+    };
   } catch (error) {
-    console.error('Error in updateSaleAPI:', error);
-    throw new Error(`Error: ${error.message}`);
+    console.error('❌ Error in updateSaleAPI:', error);
+    throw error;
   }
 }
 
@@ -147,7 +147,7 @@ export async function updateSaleAPI(saleId, payload) {
 export async function deleteSaleAPI(saleId) {
   try {
     const API_URL = `${API_BASE_URL}/sales/${saleId}`;
-    console.log('Deleting sale:', saleId);
+    // console.log('Deleting sale:', saleId);
     
     const res = await fetch(API_URL, {
       method: 'DELETE',

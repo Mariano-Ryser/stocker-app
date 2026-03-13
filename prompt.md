@@ -1,5 +1,4 @@
-
-mira mi frontend.. /frontend
+ /frontend
 ├─ .next
 ├─ node_modules
 ├─ components
@@ -72,9 +71,11 @@ mira mi frontend.. /frontend
 ├─ hooks
 │   ├─ useApi.js
 │   ├─ useClients.js
+│   ├─ useCompany.js
 │   ├─ useInfiniteScroll.js
 │   ├─ useProducts.js
 │   ├─ useSale.js
+│   ├─ useStockEntry.js
 │   └─ useUser.js
 ├─ pages
 │   ├─ adminDash

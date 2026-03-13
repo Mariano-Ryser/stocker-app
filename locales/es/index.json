@@ -1,6 +1,59 @@
-  {
-    "index": {
-    "title": "Porque Alpina",
-    "p": "En un mundo cada vez más impulsado por los datos, es fundamental contar con las herramientas adecuadas para utilizarlos de forma segura, rápida y eficiente. Alpina ofrece una plataforma fácil de usar y potente que ayuda a las empresas a convertir sus datos en información valiosa. Con los más altos estándares de seguridad, procesos de análisis rápidos y control total sobre los flujos de mercancías y las cifras clave del negocio, Alpina permite tomar decisiones fundamentadas basadas en datos fiables. De este modo, podrá mantener en todo momento una visión general de su negocio y sentar las bases para un crecimiento sostenible y un éxito a largo plazo."
+{
+  "index": {
+    "welcome": "Bienvenido de nuevo,",
+    "loading": "Cargando dashboard...",
+    "refresh": "Actualizar",
+    "premiumBadge": "PREMIUM",
+    "premiumTitle": "Dashboard Analítico",
+    "premiumSubtitle": "Estadísticas avanzadas para usuarios Premium",
+    "quickActions": "Acciones Rápidas",
+    "quickActionsDesc": "Funciones de uso frecuente",
+    "stats": {
+      "products": "Productos",
+      "productsDesc": "En inventario",
+      "customers": "Clientes",
+      "customersDesc": "Perfiles activos",
+      "sales": "Ventas",
+      "salesDesc": "Ventas pagadas",
+      "pending": "pendiente",
+      "cancelled": "cancelado",
+      "revenue": "Ingresos",
+      "revenueDesc": "Ø {amount} / venta",
+      "revenueNote": "Solo ventas pagadas"
+    },
+    "actions": {
+      "scanner": "Escáner",
+      "scannerDesc": "Scan de código",
+      "product": "Producto",
+      "productDesc": "Nuevo registro",
+      "customers": "Clientes",
+      "customersDesc": "Gestionar",
+      "invoice": "Factura",
+      "invoiceDesc": "Venta",
+      "importExport": "Import/Export",
+      "importExportDesc": "Excel",
+      "soldItems": "Artículos Vendidos",
+      "soldItemsDesc": "Resumen",
+      "barcode": "Creador de Códigos",
+      "barcodeDesc": "Código de barras",
+      "goodsIn": "Entrada de Mercancía",
+      "goodsInDesc": "Agregar artículos"
+    },
+    "profile": {
+      "email": "Email:",
+      "date": "Fecha:",
+      "sales": "Ventas:",
+      "userId": "ID de usuario:",
+      "paid": "pagadas"
+    },
+    "tips": {
+      "title": "💡 Consejos",
+      "tip1": "Usa el escáner para ventas rápidas",
+      "tip2": "Exporta tus datos regularmente",
+      "tip3": "Revisa las estadísticas mensualmente",
+      "upgrade": "Actualiza a Premium",
+      "upgradeDesc": "para analytics avanzados",
+      "upgradeButton": "Actualizar ahora"
+    }
   }
 }

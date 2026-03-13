@@ -1,5 +1,6 @@
 /* Contenedor principal - Diseño 50/50 */
 .container {
+  margin-top: 5rem;
   display: flex;
   min-height: 100vh;
   width: 100%;
@@ -636,6 +637,7 @@
 
 @media (max-width: 480px) {
   .imageSection {
+    display: none;
     min-height: 300px;
     padding: 25px 15px;
   }
@@ -701,7 +703,7 @@
 @media (max-width: 360px) {
   .imageSection {
     min-height: 280px;
-    margin-top: 0px;
+    margin-top: 10px;
     
   }
  

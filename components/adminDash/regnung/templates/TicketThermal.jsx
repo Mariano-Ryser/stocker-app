@@ -10,7 +10,8 @@ export const TicketThermal = ({
   formatCurrency,
   calculateLineTotals,
   taxRate,
-  isPrintVersion = false 
+  isPrintVersion = false,
+  t
 }) => {
   const safeSale = sale || {};
   const items = safeSale.items || [];
@@ -47,6 +48,8 @@ export const TicketThermal = ({
     return styles[element] || '';
   };
 
+  const client = safeSale.clientSnapshot || safeSale.client;
+
   return (
     <div className={getClassName('ticketThermal')}>
       {/* Header del ticket */}
@@ -58,24 +61,24 @@ export const TicketThermal = ({
         <div className={getClassName('ticketContact')}>
           Tel: {company.phone}
         </div>
-        <div className={getClassName('ticketDivider')}>----------------------</div>
+        <div className={getClassName('ticketDivider')}>{t('invoice.ticket.divider')}</div>
       </div>
 
       {/* Información del ticket */}
       <div className={getClassName('ticketInfo')}>
         <div className={getClassName('ticketRow')}>
-          <span>Ticket #:</span>
+          <span>{t('invoice.ticket.ticketNumber')}</span>
           <span>{safeSale.lieferschein || 'N/A'}</span>
         </div>
         <div className={getClassName('ticketRow')}>
-          <span>Datum:</span>
+          <span>{t('invoice.ticket.date')}</span>
           <span>{formatDate(safeSale.createdAt)}</span>
         </div>
         <div className={getClassName('ticketRow')}>
-          <span>Kunde:</span>
-          <span>{safeSale.clientSnapshot?.name || 'Bar'}</span>
+          <span>{t('invoice.ticket.customer')}</span>
+          <span>{client?.name || client?.vorname || t('invoice.customerDirect')}</span>
         </div>
-        <div className={getClassName('ticketDivider')}>----------------------</div>
+        <div className={getClassName('ticketDivider')}>{t('invoice.ticket.divider')}</div>
       </div>
 
       {/* Items */}
@@ -85,49 +88,49 @@ export const TicketThermal = ({
             <div className={getClassName('itemNameLine')}>
               <span className={getClassName('itemName')}>{item.artikelName}</span>
               <span className={getClassName('itemPrice')}>
-                {formatCurrency(item.unitPrice)} €
+                {formatCurrency(item.unitPrice)} {company.currency}
               </span>
             </div>
             <div className={getClassName('itemQuantity')}>
-              {item.quantity} x {formatCurrency(item.unitPrice)} €
+              {item.quantity} x {formatCurrency(item.unitPrice)} {company.currency}
               <span className={getClassName('itemTotal')}>
-                = {formatCurrency(item.quantity * item.unitPrice)} €
+                = {formatCurrency(item.quantity * item.unitPrice)} {company.currency}
               </span>
             </div>
           </div>
         ))}
       </div>
 
-      <div className={getClassName('ticketDivider')}>======================</div>
+      <div className={getClassName('ticketDivider')}>{t('invoice.ticket.doubleDivider')}</div>
 
       {/* Totales */}
       <div className={getClassName('ticketTotals')}>
         <div className={getClassName('totalLine')}>
-          <span>Zwischensumme:</span>
-          <span>{formatCurrency(subtotal)} €</span>
+          <span>{t('invoice.totals.subtotal')}</span>
+          <span>{formatCurrency(subtotal)} {company.currency}</span>
         </div>
         {discount > 0 && (
           <div className={getClassName('totalLine')}>
-            <span>Rabatt:</span>
-            <span>-{formatCurrency(discount)} €</span>
+            <span>{t('invoice.totals.discount')}</span>
+            <span>-{formatCurrency(discount)} {company.currency}</span>
           </div>
         )}
         <div className={getClassName('totalLine')}>
-          <span>MWSt ({(taxRate * 100).toFixed(1)}%):</span>
-          <span>{formatCurrency(tax)} €</span>
+          <span>{t('invoice.totals.tax').replace('{rate}', (taxRate * 100).toFixed(1))}</span>
+          <span>{formatCurrency(tax)} {company.currency}</span>
         </div>
         <div className={`${getClassName('totalLine')} ${getClassName('grandTotal')}`}>
-          <span>GESAMT:</span>
-          <span>{formatCurrency(total)} €</span>
+          <span>{t('invoice.totals.total')}</span>
+          <span>{formatCurrency(total)} {company.currency}</span>
         </div>
       </div>
 
-      <div className={getClassName('ticketDivider')}>======================</div>
+      <div className={getClassName('ticketDivider')}>{t('invoice.ticket.doubleDivider')}</div>
 
       {/* Footer */}
       <div className={getClassName('ticketFooter')}>
-        <p>Vielen Dank für Ihren Einkauf!</p>
-        <div className={getClassName('barcode')}>||||||||||||||||||||</div>
+        <p>{t('invoice.thanksTicket')}</p>
+        <div className={getClassName('barcode')}>|||||</div>
       </div>
     </div>
   );

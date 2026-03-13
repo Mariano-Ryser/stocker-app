@@ -1,192 +1,195 @@
 {
-     "privacy": {
-    "title": "INGLEEEES",
-    "effectiveDate": "Zuletzt aktualisiert: {{date}}",
-    "backButton": "← Zurück",
-    "intro": "INGLEEEESmfang und Zweck der Verarbeitung personenbezogener Daten innerhalb unserer Online-Angebote und der damit verbundenen Webseiten, Funktionen und Inhalte.",
-    
+  "privacy": {
+    "title": "Privacy Policy",
+    "effectiveDate": "Last updated: {{date}}",
+    "backButton": "← Back",
+    "intro": "This privacy policy informs you about the nature, scope and purpose of the processing of personal data within our online services and the associated websites, functions and content.",
+
     "sections": {
       "responsible": {
-        "title": "INGLEEEESr",
-        "text": "Verantwortlich für die Datenverarbeitung ist:",
+        "title": "1. Controller",
+        "text": "Responsible for data processing:",
         "company": "Helvetika GmbH",
-        "address1": "Musterstraße 123",
+        "address1": "Sample Street 123",
         "address2": "10115 Berlin",
-        "address3": "Deutschland",
+        "address3": "Germany",
         "email": "Email: datenschutz@helvetika.de",
-        "phone": "Telefon: +49 (0)30 12345678"
+        "phone": "Phone: +49 (0)30 12345678"
       },
-      
+
       "principles": {
-        "title": "2. Grundsätze der Datenverarbeitung",
-        "text": "Wir verarbeiten personenbezogene Daten nach folgenden Grundsätzen:",
+        "title": "2. Principles of Data Processing",
+        "text": "We process personal data according to the following principles:",
         "items": {
-          "lawfulness": "Rechtmäßigkeit: Verarbeitung nach gesetzlichen Bestimmungen",
-          "goodFaith": "Treu und Glauben: Transparente Verarbeitung",
-          "purpose": "Zweckbindung: Daten nur für festgelegte Zwecke",
-          "minimization": "Datensparsamkeit: Erhebung auf das notwendige Minimum",
-          "storage": "Speicherbegrenzung: Zeitlich begrenzte Aufbewahrung",
-          "integrity": "Integrität und Vertraulichkeit: Sicherung der Daten"
+          "lawfulness": "Lawfulness: Processing in accordance with legal regulations",
+          "goodFaith": "Good faith: Transparent processing",
+          "purpose": "Purpose limitation: Data only for specified purposes",
+          "minimization": "Data minimization: Collection limited to the necessary minimum",
+          "storage": "Storage limitation: Data stored only for a limited time",
+          "integrity": "Integrity and confidentiality: Protection of data"
         }
       },
-      
+
       "dataTypes": {
-        "title": "3. Arten der verarbeiteten Daten",
+        "title": "3. Types of Data Processed",
+
         "inventory": {
-          "title": "3.1 Bestandsdaten",
+          "title": "3.1 Account Data",
           "items": {
-            "name": "Name, Vorname",
-            "email": "E-Mail-Adresse",
-            "company": "Unternehmensname",
-            "position": "Position im Unternehmen",
-            "contact": "Kontaktdaten"
+            "name": "First and last name",
+            "email": "Email address",
+            "company": "Company name",
+            "position": "Position in the company",
+            "contact": "Contact details"
           }
         },
+
         "usage": {
-          "title": "3.2 Nutzungsdaten",
+          "title": "3.2 Usage Data",
           "items": {
-            "ip": "IP-Adressen",
-            "access": "Zugriffszeiten",
-            "functions": "Genutzte Funktionen",
-            "device": "Geräteinformationen",
-            "browser": "Browser-Typ und Version"
+            "ip": "IP addresses",
+            "access": "Access times",
+            "functions": "Used features",
+            "device": "Device information",
+            "browser": "Browser type and version"
           }
         },
+
         "content": {
-          "title": "3.3 Inhaltsdaten",
+          "title": "3.3 Content Data",
           "items": {
-            "uploads": "Hochgeladene Daten und Dokumente",
-            "analytics": "Analysen und Berichte",
-            "settings": "Einstellungen und Präferenzen"
+            "uploads": "Uploaded data and documents",
+            "analytics": "Analyses and reports",
+            "settings": "Settings and preferences"
           }
         }
       },
-      
+
       "purposes": {
-        "title": "4. Zwecke der Verarbeitung",
+        "title": "4. Purposes of Processing",
         "items": {
-          "platform": "Bereitstellung der Plattform-Funktionalitäten",
-          "authentication": "Authentifizierung und Zugangskontrolle",
-          "support": "Kundenbetreuung und Support",
-          "billing": "Rechnungsstellung und Zahlungsabwicklung",
-          "improvement": "Verbesserung unserer Dienste",
-          "legal": "Einhaltung gesetzlicher Verpflichtungen",
-          "security": "Betrugsprävention und Sicherheit"
+          "platform": "Providing platform functionalities",
+          "authentication": "Authentication and access control",
+          "support": "Customer service and support",
+          "billing": "Billing and payment processing",
+          "improvement": "Improving our services",
+          "legal": "Compliance with legal obligations",
+          "security": "Fraud prevention and security"
         }
       },
-      
+
       "legalBasis": {
-        "title": "5. Rechtsgrundlagen der Verarbeitung",
-        "text": "Die Verarbeitung Ihrer Daten erfolgt auf folgenden Rechtsgrundlagen:",
+        "title": "5. Legal Basis for Processing",
+        "text": "Your data is processed on the following legal bases:",
         "items": {
-          "consent": "Art. 6 Abs. 1 lit. a DSGVO: Einwilligung",
-          "contract": "Art. 6 Abs. 1 lit. b DSGVO: Vertragserfüllung",
-          "legal": "Art. 6 Abs. 1 lit. c DSGVO: Rechtliche Verpflichtung",
-          "interest": "Art. 6 Abs. 1 lit. f DSGVO: Berechtigtes Interesse"
+          "consent": "Art. 6 (1) (a) GDPR: Consent",
+          "contract": "Art. 6 (1) (b) GDPR: Contract performance",
+          "legal": "Art. 6 (1) (c) GDPR: Legal obligation",
+          "interest": "Art. 6 (1) (f) GDPR: Legitimate interest"
         }
       },
-      
+
       "thirdParties": {
-        "title": "6. Datenweitergabe an Dritte",
-        "text": "Eine Weitergabe Ihrer Daten erfolgt nur:",
+        "title": "6. Data Sharing with Third Parties",
+        "text": "Your data will only be shared:",
         "items": {
-          "hosting": "An Dienstleister für Hosting und Wartung",
-          "payment": "An Zahlungsdienstleister für Transaktionen",
-          "authorities": "Bei gesetzlicher Verpflichtung an Behörden",
-          "business": "Bei Unternehmensverkauf oder -umstrukturierung"
+          "hosting": "With service providers for hosting and maintenance",
+          "payment": "With payment providers for transactions",
+          "authorities": "With authorities if legally required",
+          "business": "In case of company sale or restructuring"
         },
-        "note": "Alle Dienstleister unterliegen strengen vertraglichen Datenschutzpflichten."
+        "note": "All service providers are subject to strict contractual data protection obligations."
       },
-      
+
       "international": {
-        "title": "7. Internationale Datenübermittlungen",
-        "text": "Ihre Daten werden grundsätzlich innerhalb der EU/EWR verarbeitet. Sollten Daten außerhalb dieses Raums verarbeitet werden, erfolgt dies nur:",
+        "title": "7. International Data Transfers",
+        "text": "Your data is generally processed within the EU/EEA. If data is processed outside this area, this will only occur:",
         "items": {
-          "adequacy": "Gemäß Angemessenheitsbeschluss der EU-Kommission",
-          "guarantees": "Mit geeigneten Garantien (z.B. Standardvertragsklauseln)",
-          "consent": "Mit Ihrer ausdrücklichen Einwilligung"
+          "adequacy": "According to an adequacy decision of the EU Commission",
+          "guarantees": "With appropriate safeguards (e.g. Standard Contractual Clauses)",
+          "consent": "With your explicit consent"
         }
       },
-      
+
       "security": {
-        "title": "8. Datensicherheit",
-        "text": "Wir treffen umfassende technische und organisatorische Maßnahmen:",
+        "title": "8. Data Security",
+        "text": "We implement comprehensive technical and organizational measures:",
         "items": {
-          "encryption": "Verschlüsselung der Datenübertragung (TLS/SSL)",
-          "updates": "Regelmäßige Sicherheitsupdates",
-          "access": "Zugangskontrollen und Authentifizierung",
-          "audits": "Regelmäßige Sicherheitsaudits",
-          "backups": "Datensicherungen und Notfallkonzepte"
+          "encryption": "Encrypted data transmission (TLS/SSL)",
+          "updates": "Regular security updates",
+          "access": "Access controls and authentication",
+          "audits": "Regular security audits",
+          "backups": "Backups and disaster recovery plans"
         },
-        "note": "Unsere Server befinden sich in ISO 27001 zertifizierten Rechenzentren in Deutschland."
+        "note": "Our servers are located in ISO 27001 certified data centers in Germany."
       },
-      
+
       "storage": {
-        "title": "9. Speicherdauer",
-        "text": "Personenbezogene Daten werden nur so lange gespeichert, wie es erforderlich ist:",
+        "title": "9. Data Retention",
+        "text": "Personal data is only stored as long as necessary:",
         "items": {
-          "account": "Kontodaten: Bis zur Kündigung plus 3 Jahre",
-          "usage": "Nutzungsdaten: 24 Monate",
-          "invoices": "Rechnungsdaten: 10 Jahre (gesetzliche Aufbewahrung)",
-          "analytics": "Analysedaten: Nach Vertragsende 90 Tage"
+          "account": "Account data: Until cancellation plus 3 years",
+          "usage": "Usage data: 24 months",
+          "invoices": "Invoice data: 10 years (legal retention)",
+          "analytics": "Analytics data: 90 days after contract termination"
         }
       },
-      
+
       "rights": {
-        "title": "10. Ihre Rechte",
-        "text": "Gemäß DSGVO stehen Ihnen folgende Rechte zu:",
+        "title": "10. Your Rights",
+        "text": "According to the GDPR, you have the following rights:",
         "items": {
-          "information": "Auskunftsrecht: Über gespeicherte Daten informieren",
-          "correction": "Berichtigungsrecht: Falsche Daten korrigieren",
-          "deletion": "Löschungsrecht: Daten löschen lassen ('Recht auf Vergessenwerden')",
-          "restriction": "Einschränkungsrecht: Verarbeitung einschränken",
-          "objection": "Widerspruchsrecht: Verarbeitung widersprechen",
-          "portability": "Datenübertragbarkeit: Daten in strukturiertem Format erhalten",
-          "complaint": "Beschwerderecht: Bei Aufsichtsbehörde beschweren"
+          "information": "Right of access: Obtain information about stored data",
+          "correction": "Right to rectification: Correct inaccurate data",
+          "deletion": "Right to erasure: Request deletion of data ('right to be forgotten')",
+          "restriction": "Right to restriction: Restrict processing",
+          "objection": "Right to object: Object to processing",
+          "portability": "Right to data portability: Receive data in structured format",
+          "complaint": "Right to lodge a complaint with a supervisory authority"
         }
       },
-      
+
       "cookies": {
-        "title": "11. Cookies und Tracking",
-        "text": "Wir setzen folgende Arten von Cookies ein:",
+        "title": "11. Cookies and Tracking",
+        "text": "We use the following types of cookies:",
         "table": {
           "headers": {
-            "type": "Cookie-Typ",
-            "purpose": "Zweck",
-            "duration": "Speicherdauer"
+            "type": "Cookie Type",
+            "purpose": "Purpose",
+            "duration": "Storage Duration"
           },
           "rows": {
             "necessary": {
-              "type": "Notwendige Cookies",
-              "purpose": "Grundfunktionalität der Plattform",
-              "duration": "Sitzung"
+              "type": "Necessary Cookies",
+              "purpose": "Basic platform functionality",
+              "duration": "Session"
             },
             "preference": {
-              "type": "Präferenz-Cookies",
-              "purpose": "Benutzereinstellungen speichern",
-              "duration": "1 Jahr"
+              "type": "Preference Cookies",
+              "purpose": "Store user settings",
+              "duration": "1 year"
             },
             "statistics": {
-              "type": "Statistik-Cookies",
-              "purpose": "Nutzungsanalyse (anonymisiert)",
-              "duration": "24 Monate"
+              "type": "Statistics Cookies",
+              "purpose": "Usage analysis (anonymized)",
+              "duration": "24 months"
             }
           }
         }
       },
-      
+
       "contact": {
-        "title": "12. Kontaktaufnahme",
-        "text": "Bei Fragen zum Datenschutz kontaktieren Sie uns bitte:",
+        "title": "12. Contact",
+        "text": "If you have questions regarding data protection, please contact us:",
         "officer": {
-          "title": "Datenschutzbeauftragter",
+          "title": "Data Protection Officer",
           "name": "Mariano Ryser",
           "email": "Email: rysermariano@gmail.com",
-          "phone": "Telefon: +41 (0)78 874 79 74"
+          "phone": "Phone: +41 (0)78 874 79 74"
         },
         "authority": {
-          "title": "Aufsichtsbehörde",
-          "name": "Berliner Beauftragte für Datenschutz und Informationsfreiheit",
+          "title": "Supervisory Authority",
+          "name": "Berlin Commissioner for Data Protection and Freedom of Information",
           "address1": "Friedrichstraße 219",
           "address2": "10969 Berlin"
         }

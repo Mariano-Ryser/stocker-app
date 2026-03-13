@@ -2,8 +2,8 @@
 .hero {
   position: relative;
   width: 100%;
-  height: 80vh;
-  min-height: 520px;
+  height: 60vh;
+  min-height: 400px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -15,6 +15,7 @@
   inset: 0;
   z-index: 1;
   margin-top: 5rem;
+  
 }
 
 .heroImage {
@@ -35,29 +36,28 @@
 .heroContent {
   position: relative;
   z-index: 3;
-  max-width: 900px;
+  max-width: 800px;
   padding: 0 20px;
   text-align: center;
 }
 
 .heroContent h1 {
-  font-size: clamp(2.5rem, 5vw, 3.8rem);
+  font-size: clamp(2rem, 4vw, 3rem);
   font-weight: 700;
-  margin-bottom: 12px;
-  font-size: 4rem;
+  margin-bottom: 8px;
   color: rgb(224, 224, 224);
 }
 
 .heroContent p {
-  font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+  font-size: clamp(1rem, 2vw, 1.2rem);
   opacity: 0.95;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
   color: rgb(224, 224, 224);
 }
 
 .heroButton {
   display: inline-block;
-  padding: 14px 36px;
+  padding: 12px 32px;
   border-radius: 999px;
   background: #ffffff;
   color: #000;
@@ -75,44 +75,43 @@
 .section {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 90px 20px;
+  padding: 60px 20px;
 }
 
 .sectionAlt {
   background: #f8f9fb;
-  padding: 20px 20px 60px 20px;
+  padding: 60px 20px;
 }
 
 .section h2,
 .sectionAlt h2 {
-  font-size: clamp(2rem, 4vw, 2.6rem);
+  font-size: clamp(1.8rem, 3.5vw, 2.2rem);
   font-weight: 700;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
   text-align: center;
 }
 
 .section p,
 .sectionAlt p {
-  max-width: 900px;
-  margin: 0 auto 18px;
-  font-size: 1.05rem;
-  line-height: 1.7;
+  max-width: 800px;
+  margin: 0 auto 16px;
+  font-size: 1rem;
+  line-height: 1.6;
   color: #333;
 }
 
 .subtitle {
   text-align: center;
   opacity: 0.85;
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 /* ===== NUEVOS ESTILOS PARA IMÁGENES ===== */
 .sectionImage {
-  margin: 30px auto 40px;
-  max-width: 800px;
-  border-radius: 12px;
+  margin: 20px auto 30px;
+  max-width: 700px;
   overflow: hidden;
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .responsiveImage {
@@ -127,13 +126,13 @@
 }
 
 .profileImageContainer {
-  width: 150px;
-  height: 150px;
-  margin: 0 auto 20px;
+  width: 130px;
+  height: 130px;
+  margin: 0 auto 16px;
   border-radius: 50%;
   overflow: hidden;
-  border: 4px solid #fff;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  border: 3px solid #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
 }
 
 .profileImage {
@@ -146,49 +145,50 @@
 /* ===== SERVICES ===== */
 .servicesGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
   max-width: 1100px;
-  margin: 50px auto 0;
+  margin: 40px auto 0;
 }
 
 .serviceCard {
   background: #fff;
-  border-radius: 16px;
-  padding: 36px 28px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  border-radius: 14px;
+  padding: 28px 24px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease;
 }
 
 .serviceCard:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
 }
 
 .serviceCard h3 {
-  font-size: 1.35rem;
+  font-size: 1.25rem;
   font-weight: 600;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .serviceCard p {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #444;
+  line-height: 1.5;
 }
 
 /* ===== PROFESSIONAL LIST ===== */
 .professionalList {
-  max-width: 800px;
-  margin: 40px auto 0;
+  max-width: 700px;
+  margin: 30px auto 0;
   list-style: none;
   padding: 0;
 }
 
 .professionalList li {
   position: relative;
-  padding-left: 30px;
-  margin-bottom: 14px;
-  font-size: 1rem;
+  padding-left: 26px;
+  margin-bottom: 12px;
+  font-size: 0.95rem;
   color: #222;
 }
 
@@ -203,57 +203,57 @@
 
 /* ===== TEAM ===== */
 .teamCard {
-  max-width: 520px;
+  max-width: 480px;
   margin: 0 auto;
   background: #fff;
-  padding: 40px 32px;
-  border-radius: 18px;
+  padding: 32px 28px;
+  border-radius: 16px;
   text-align: center;
-  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
 
 .teamCard h3 {
-  font-size: 1.4rem;
-  margin-bottom: 16px;
+  font-size: 1.3rem;
+  margin-bottom: 12px;
 }
 
 .teamCard span {
   display: block;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #666;
-  margin-bottom: 18px;
+  margin-bottom: 16px;
 }
 
 .teamCard p {
-  font-size: 1rem;
-  line-height: 1.6;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 /* ===== CTA ===== */
 .cta {
   background: linear-gradient(135deg, #4294ff, #0055ffc5);
   text-align: center;
-  padding: 90px 20px;
+  padding: 60px 20px;
 }
 
 .cta h2 {
   color: #fff;
-  font-size: clamp(2rem, 4vw, 2.8rem);
-  margin-bottom: 18px;
+  font-size: clamp(1.8rem, 3.5vw, 2.4rem);
+  margin-bottom: 12px;
 }
 
 .cta p {
   color: #fff;
-  font-size: 1.1rem;
-  max-width: 720px;
-  margin: 0 auto 32px;
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0 auto 24px;
 }
 
 .ctaButton {
   display: inline-block;
   background: #fff;
   color: #000;
-  padding: 16px 40px;
+  padding: 14px 36px;
   border-radius: 999px;
   font-weight: 600;
   text-decoration: none;
@@ -264,26 +264,56 @@
 
 .ctaButton:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.2);
 }
 
 /* ===== RESPONSIVE ===== */
 @media (max-width: 768px) {
   .hero {
-    height: 70vh;
+    height: 50vh;
+    min-height: 350px;
   }
 
   .section,
   .sectionAlt {
-    padding: 70px 18px;
+    padding: 40px 16px;
   }
 
   .serviceCard {
-    padding: 30px 24px;
+    padding: 24px 20px;
   }
   
   .profileImageContainer {
-    width: 120px;
-    height: 120px;
+    width: 110px;
+    height: 110px;
+  }
+  
+  .sectionImage {
+    max-width: 100%;
+    margin: 15px auto 25px;
+  }
+  
+  .heroContent h1 {
+    font-size: 2.2rem;
+  }
+  
+  .heroContent p {
+    font-size: 1rem;
+  }
+}
+
+/* Ajuste adicional para pantallas muy pequeñas */
+@media (max-width: 480px) {
+  .heroContent h1 {
+    font-size: 1.8rem;
+  }
+  
+  .heroContent p {
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+  
+  .ctaButton {
+    padding: 12px 28px;
   }
 }

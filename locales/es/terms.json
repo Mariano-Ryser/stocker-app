@@ -1,95 +1,102 @@
 {
-    "terms": {
-    "title": "INGLEEEES",
-    "effectiveDate": "Zuletzt aktualisiert: {{date}}",
-    "backButton": "← Zurück",
-    
+  "terms": {
+    "title": "Términos y Condiciones",
+    "effectiveDate": "Última actualización: {{date}}",
+    "backButton": "← Volver",
     "sections": {
       "scope": {
-        "title": "1. Geltungsbereich",
+        "title": "1. Alcance",
         "paragraphs": [
-          "Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen der alpina GmbH (nachfolgend 'Anbieter') und den Nutzern (nachfolgend 'Kunden') der Intelligence-Plattform alpina.",
-          "Die Plattform bietet datenbasierte Analysen und Entscheidungsunterstützung für Unternehmen. Durch die Registrierung oder Nutzung der Dienste erkennen Kunden diese AGB als verbindlich an."
+          "Estos Términos y Condiciones (T&C) se aplican a todos los contratos entre alpina GmbH (en adelante el \"Proveedor\") y los usuarios (en adelante los \"Clientes\") de la plataforma alpina.",
+          "La plataforma ofrece análisis basados en datos y apoyo en la toma de decisiones para empresas. Al registrarse o utilizar los servicios, los clientes aceptan estos Términos y Condiciones como vinculantes."
         ]
       },
       "description": {
-        "title": "2. Leistungsbeschreibung",
-        "intro": "alpina stellt eine cloudbasierte Plattform zur Verfügung, die:",
+        "title": "2. Descripción del servicio",
+        "intro": "alpina proporciona una plataforma basada en la nube con las siguientes funciones:",
         "items": [
-          "Datenintegration aus verschiedenen Quellen",
-          "Erweiterte Datenanalyse und Visualisierung",
-          "Vorhersagemodelle und KI-gestützte Erkenntnisse",
-          "Berichterstattung und Dashboard-Funktionen",
-          "API-Zugang für Integrationen"
+          "Integración de datos de múltiples fuentes",
+          "Análisis avanzado de datos y visualización",
+          "Modelos de predicción y análisis con inteligencia artificial",
+          "Informes y paneles de control",
+          "Acceso API para integraciones externas"
         ],
-        "outro": "Die genauen Leistungsumfänge sind in den jeweiligen Servicepaketen definiert."
+        "outro": "El alcance concreto de los servicios depende del paquete seleccionado."
       },
       "registration": {
-        "title": "3. Registrierung und Konto",
+        "title": "3. Registro y cuenta de usuario",
         "paragraphs": [
-          "Für die Nutzung der Plattform ist eine Registrierung erforderlich. Der Kunde verpflichtet sich, wahrheitsgemäße und vollständige Angaben zu machen.",
-          "Jeder Kunde ist für die Sicherheit seiner Zugangsdaten verantwortlich und muss unverzüglich unbefugte Nutzung melden. Der Anbieter behält sich das Recht vor, Konten bei Verdacht auf Missbrauch zu sperren."
+          "Para utilizar la plataforma es necesario registrarse. El cliente se compromete a proporcionar información correcta y completa.",
+          "El cliente es responsable de la seguridad de sus credenciales de acceso y debe informar inmediatamente cualquier uso no autorizado. El proveedor tiene derecho a suspender temporalmente cuentas en caso de sospecha de uso indebido."
         ]
       },
       "termination": {
-        "title": "4. Vertragslaufzeit und Kündigung",
+        "title": "4. Duración del contrato y terminación",
         "paragraphs": [
-          "Die Vertragslaufzeit richtet sich nach dem gewählten Abrechnungsmodell (monatlich/jährlich).",
-          "Kündigungsfristen:"
+          "La duración del contrato depende del modelo de facturación elegido (mensual o anual).",
+          "Plazos de cancelación:"
         ],
         "items": [
-          "Monatliche Verträge: 30 Tage zum Monatsende",
-          "Jährliche Verträge: 90 Tage zum Vertragsende"
+          "Contratos mensuales: 30 días antes del final del mes",
+          "Contratos anuales: 90 días antes del final del contrato"
         ],
-        "outro": "Das Recht zur fristlosen Kündigung aus wichtigem Grund bleibt beiden Parteien vorbehalten."
+        "outro": "El derecho de ambas partes a rescindir el contrato sin previo aviso por causa justificada permanece intacto."
+      },
+      "cancellation": {
+        "title": "5. Derecho de cancelación en cualquier momento",
+        "paragraphs": [
+          "El cliente tiene derecho a cancelar el contrato en cualquier momento sin necesidad de respetar un período de aviso.",
+          "Tras la cancelación, la obligación de pago del cliente queda suspendida desde el momento de la cancelación. Los pagos realizados para el período de facturación actual serán reembolsados proporcionalmente.",
+          "Esta regla se aplica a todos los tipos de contrato y modelos de facturación. El cliente no necesita indicar un motivo para la cancelación y no se aplicarán tarifas adicionales.",
+          "La cancelación puede realizarse por escrito mediante correo electrónico a rysermariano@gmail.com o a través del portal del cliente. Después de la cancelación, el cliente seguirá teniendo acceso a sus datos durante un período de 30 días para exportarlos."
+        ]
       },
       "payment": {
-        "title": "5. Vergütung und Zahlung",
+        "title": "6. Precios y pagos",
         "paragraphs": [
-          "Die Preise sind in Euro zuzüglich gesetzlicher Mehrwertsteuer. Rechnungen werden elektronisch versendet und sind innerhalb von 14 Tagen zahlbar.",
-          "Bei Zahlungsverzug behält sich der Anbieter das Recht vor, den Dienstzugang einzuschränken oder zu sperren."
+          "Todos los precios se indican en euros más el IVA legal correspondiente. Las facturas se emiten electrónicamente y deben pagarse dentro de los 14 días.",
+          "En caso de retraso en el pago, el proveedor se reserva el derecho de restringir o suspender temporalmente el acceso a la plataforma."
         ]
       },
       "privacy": {
-        "title": "6. Datenschutz und Datensicherheit",
+        "title": "7. Protección y seguridad de datos",
         "paragraphs": [
-          "Der Anbieter verpflichtet sich zur Einhaltung der Datenschutz-Grundverordnung (DSGVO) und aller relevanten Datenschutzgesetze.",
-          "Kundendaten werden in hochsicheren Rechenzentren in Deutschland gespeichert. Details zur Datenverarbeitung sind in der separaten Datenschutzerklärung geregelt."
+          "El proveedor se compromete a cumplir con el Reglamento General de Protección de Datos (RGPD) y todas las leyes de protección de datos aplicables.",
+          "Los datos de los clientes se almacenan en centros de datos seguros dentro de Alemania. Más información se encuentra en la política de privacidad separada."
         ]
       },
       "warranty": {
-        "title": "7. Gewährleistung und Haftung",
+        "title": "8. Garantía y responsabilidad",
         "paragraphs": [
-          "Der Anbieter gewährleistet die vertragsgemäße Funktion der Plattform. Bei Verfügbarkeitsstörungen wird eine durchschnittliche Verfügbarkeit von 99,5% pro Monat angestrebt.",
-          "Die Haftung ist auf Vorsatz und grobe Fahrlässigkeit beschränkt. Für leichte Fahrlässigkeit haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten."
+          "El proveedor garantiza el funcionamiento contractual de la plataforma y busca una disponibilidad media mensual del 99,5%.",
+          "La responsabilidad del proveedor se limita al dolo y la negligencia grave. En casos de negligencia leve, el proveedor solo será responsable por el incumplimiento de obligaciones contractuales esenciales."
         ]
       },
       "intellectual": {
-        "title": "8. Geistiges Eigentum",
+        "title": "9. Propiedad intelectual",
         "paragraphs": [
-          "Alle Rechte an der Plattform, einschließlich Software, Algorithmen und Dokumentation, verbleiben beim Anbieter.",
-          "Der Kunde erhält ein nicht-exklusives, nicht-übertragbares Nutzungsrecht für die Vertragslaufzeit."
+          "Todos los derechos sobre la plataforma, incluidos el software, los algoritmos y la documentación, permanecen con el proveedor.",
+          "El cliente recibe un derecho de uso simple y no transferible durante la duración del contrato."
         ]
       },
       "final": {
-        "title": "9. Schlussbestimmungen",
+        "title": "10. Disposiciones finales",
         "paragraphs": [
-          "Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand ist der Sitz des Anbieters.",
-          "Änderungen dieser AGB werden dem Kunden mindestens 30 Tage vor Inkrafttreten mitgeteilt. Widerspruch führt zur ordentlichen Kündigung."
+          "Se aplica el derecho alemán, excluyendo la Convención de las Naciones Unidas sobre contratos de compraventa internacional de mercaderías. El lugar de jurisdicción es la sede del proveedor.",
+          "Los cambios en estos Términos y Condiciones se comunicarán a los clientes al menos 30 días antes de su entrada en vigor. Una objeción da derecho a la rescisión ordinaria del contrato."
         ]
       }
     },
-    
     "contact": {
-      "title": "Kontakt",
-      "company": "alpina GmbH",
+      "title": "Contacto",
+      "company": "Alpina Systems AG",
       "address": [
-        "Musterstraße 123",
-        "10115 Berlin",
-        "Deutschland"
+        "Hohlstrasse 405",
+        "8048 Zúrich",
+        "Suiza"
       ],
-      "email": "legal@helvetika.de",
-      "phone": "+49 (0)30 12345678"
+      "email": "rysermariano@gmail.com",
+      "phone": "+41 788 74 79 74"
     }
   }
 }

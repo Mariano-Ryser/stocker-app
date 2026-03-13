@@ -10,13 +10,13 @@ export const useBulkImportSales = () => {
         throw new Error('Nicht authentifiziert. Bitte erneut anmelden.');
       }
 
-      console.log('Starting bulk import of', sales.length, 'sales');
+      // console.log('Starting bulk import of', sales.length, 'sales');
       
       // VERIFICA QUE LA URL SEA CORRECTA
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
       const url = `${backendUrl}/sales/bulk`;
       
-      console.log('Sending request to:', url);
+      // console.log('Sending request to:', url);
       
       const response = await fetch(url, {
         method: 'POST',
@@ -27,8 +27,8 @@ export const useBulkImportSales = () => {
         body: JSON.stringify({ sales }) // Cambiado para ser consistente con productos
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
+      // console.log('Response status:', response.status);
+      // console.log('Response headers:', response.headers);
 
       // Verificar si la respuesta es JSON
       const contentType = response.headers.get('content-type');
@@ -45,11 +45,11 @@ export const useBulkImportSales = () => {
         throw new Error(data.message || `Import fehlgeschlagen (${response.status})`);
       }
 
-      console.log('Bulk import successful:', data);
+      // console.log('Bulk import successful:', data);
       return data;
 
     } catch (error) {
-      console.error('Bulk import error:', error);
+      // console.error('Bulk import error:', error);
       throw error;
     }
   };
@@ -155,7 +155,7 @@ export const useBulkImportSales = () => {
       }
     });
 
-    console.log('Validation results for sales:', validationResults);
+    // console.log('Validation results for sales:', validationResults);
     return validationResults;
   };
 

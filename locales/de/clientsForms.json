@@ -1,0 +1,75 @@
+{
+  "clientForm": {
+    "restricted": {
+      "title": "Zugriff eingeschränkt",
+      "message": "Sie müssen sich anmelden, um Kunden zu verwalten.",
+      "close": "Schließen"
+    },
+    "fields": {
+      "firstName": {
+        "label": "Vorname *",
+        "placeholder": "Vorname"
+      },
+      "lastName": {
+        "label": "Name *",
+        "placeholder": "Name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Email"
+      },
+      "address": {
+        "label": "Adresse",
+        "placeholder": "Adresse"
+      },
+      "phone": {
+        "label": "Telefon",
+        "placeholder": "Telefon"
+      }
+    },
+    "address": {
+      "title": "Adresse",
+      "street": "Straße",
+      "streetPlaceholder": "Musterstraße",
+      "number": "Hausnummer",
+      "numberPlaceholder": "123",
+      "complement": "Adresszusatz",
+      "complementPlaceholder": "3. Stock, Gebäude B, etc.",
+      "postalCode": "Postleitzahl",
+      "postalCodePlaceholder": "12345",
+      "city": "Stadt",
+      "cityPlaceholder": "Berlin",
+      "state": "Bundesland",
+      "statePlaceholder": "Berlin",
+      "country": "Land",
+      "countryPlaceholder": "Deutschland",
+      "company": "Firmenname",
+      "companyPlaceholder": "Firma GmbH"
+    },
+    "buttons": {
+      "cancel": "Abbrechen",
+      "creating": "Wird erstellt...",
+      "create": "Kunde erstellen",
+      "updating": "Wird aktualisiert...",
+      "save": "Änderungen speichern"
+    },
+    "errors": {
+       "emailExists": "Diese E-Mail-Adresse ist bereits registriert",
+        "requiredFields": "Bitte füllen Sie alle Pflichtfelder aus",
+        "clientNotFound": "Kunde nicht gefunden",
+        "validationError": "Validierungsfehler",
+        "serverError": "Serverfehler. Bitte versuchen Sie es später erneut",
+        "networkError": "Verbindungsfehler. Bitte überprüfen Sie Ihre Internetverbindung",
+        "createFailed": "Fehler beim Erstellen des Kunden",
+        "updateFailed": "Fehler beim Aktualisieren des Kunden",
+        "unknown": "Unbekannter Fehler"
+    },
+    "creator": {
+      "title": "Neuer Kunde"
+    },
+    "editor": {
+      "title": "Kunde bearbeiten",
+      "id": "ID: {id}"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "clients": {
+    "title": "Kunden",
+    "subtitle": "Verwalten Sie Ihre Kundenliste",
+    "newClient": "Neuer Kunde",
+    "loading": "Laden...",
+    "loadingAuth": "Authentifizierung wird geladen...",
+    "search": {
+      "placeholder": "Kunden suchen... (Name, Vorname, Email, Adresse, Telefon)",
+      "results": "{visible} von {total} Kunden angezeigt",
+      "moreAvailable": " ({remaining} mehr verfügbar)",
+      "clear": "Suche zurücksetzen"
+    },
+    "table": {
+      "email": "Email:",
+      "phone": "Telefon:",
+      "company": "Firma:",
+      "address": "Adresse:"
+    },
+    "address": {
+      "full": "{street} {number}{complement}, {postalCode} {city}",
+      "street": "{street} {number}",
+      "cityLine": "{postalCode} {city}",
+      "withCountry": "{street} {number}{complement}, {postalCode} {city}, {country}",
+      "noAddress": "Keine Adresse"
+    },
+    "actions": {
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "deleting": "Löschen…",
+      "confirmDelete": "Sind Sie sicher, dass Sie diesen Kunden löschen möchten?"
+    },
+    "empty": {
+      "restricted": {
+        "title": "Zugriff eingeschränkt",
+        "text": "Sie müssen sich anmelden, um Kunden zu sehen"
+      },
+      "notFound": {
+        "title": "Keine Kunden gefunden",
+        "text": "Keine Ergebnisse für \"{search}\""
+      },
+      "noClients": {
+        "title": "Keine Kunden vorhanden",
+        "text": "Erstellen Sie Ihren ersten Kunden"
+      }
+    },
+    "loadMore": "Mehr Kunden laden"
+  }
+}

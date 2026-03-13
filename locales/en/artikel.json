@@ -1,0 +1,89 @@
+{
+  "artikel": {
+    "title": "Article List",
+    "subtitle": "Manage your product list",
+    "newArticle": "New Article",
+    "view": {
+      "table": "Table view",
+      "grid": "Grid view"
+    },
+    "search": {
+      "placeholder": "Name or article number",
+      "button": "Search",
+      "activeSearch": "Active search: \"{term}\"",
+      "clear": "Clear search",
+      "results": "{count} articles shown",
+      "resultsOf": "of {total} total",
+      "for": "for \"{term}\""
+    },
+    "filter": {
+      "stock": "Stock filter:",
+      "all": "All articles",
+      "inStock": "In stock (≥50)",
+      "lowStock": "Low stock (1-49)",
+      "outOfStock": "Out of stock (0)",
+      "sort": "Sort:",
+      "sortNone": "Default",
+      "sortAsc": "Stock: Ascending ⬆️ (low → high)",
+      "sortDesc": "Stock: Descending ⬇️ (high → low)",
+      "activeFilter": "Filter: {filter}",
+      "activeSort": "Sort: {sort}",
+      "filterInStock": "In stock",
+      "filterLowStock": "Low stock",
+      "filterOutOfStock": "Out of stock",
+      "sortAscLabel": "Low to High",
+      "sortDescLabel": "High to Low",
+      "resetAll": "Reset all filters",
+      "clear": "Clear"
+    },
+    "table": {
+      "name": "Article name",
+      "number": "Number",
+      "price": "Price",
+      "stock": "Stock"
+    },
+    "card": {
+      "number": "N°: {number}",
+      "location": "📍 {location}",
+      "units": "units",
+      "unit": "unit"
+    },
+    "stock": {
+      "outOfStock": "Out of stock",
+      "lowStock": "Low stock",
+      "inStock": "In stock",
+      "status": {
+        "outOfStock": "Out of stock",
+        "lowStock": "Low stock",
+        "inStock": "In stock"
+      }
+    },
+    "loading": {
+      "auth": "Loading authentication...",
+      "products": "Loading..."
+    },
+    "empty": {
+      "restricted": {
+        "title": "Access restricted",
+        "text": "You must log in to view products"
+      },
+      "notFound": {
+        "title": "No articles found",
+        "text": "No results for \"{term}\"",
+        "textWithFilters": " with selected filters"
+      },
+      "noProducts": {
+        "title": "No articles available",
+        "text": "Create your first article"
+      },
+      "resetButton": "Reset all filters"
+    },
+    "pagination": {
+      "page": "Page {current} of {total}",
+      "total": "({total} articles total)"
+    },
+    "errors": {
+      "loadFailed": "Error loading articles"
+    }
+  }
+}

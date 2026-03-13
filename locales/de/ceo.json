@@ -1,0 +1,75 @@
+
+{
+  "ceo": {
+    "title": "CEO Dashboard",
+    "subtitle": "Verwalten Sie alle Benutzer und Unternehmen auf der Plattform",
+    "refresh": "Aktualisieren",
+    "loading": "Lade Benutzerdaten...",
+    "stats": {
+      "totalUsers": "Benutzer gesamt",
+      "totalCompanies": "Unternehmen gesamt",
+      "totalProducts": "Artikel gesamt",
+      "totalSales": "Verkäufe gesamt",
+      "totalClients": "Kunden gesamt",
+      "plans": "Pläne"
+    },
+    "filters": {
+      "placeholder": "Suche nach Name, E-Mail oder Unternehmen...",
+      "allStatus": "Alle Status",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "allPlans": "Alle Pläne",
+      "basic": "Basic",
+      "medium": "Medium",
+      "pro": "Pro",
+      "results": "{count} Ergebnisse"
+    },
+    "search": {
+      "placeholder": "Benutzer suchen..."
+    },
+    "table": {
+      "user": "Benutzer",
+      "company": "Unternehmen",
+      "created": "Erstellt am",
+      "stats": "Statistiken",
+      "plan": "Plan",
+      "status": "Status",
+      "actions": "Aktionen",
+      "products": "Artikel",
+      "sales": "Verkäufe",
+      "clients": "Kunden",
+      "revenue": "Umsatz",
+      "usersLimit": "{current}/{max} Benutzer"
+    },
+    "status": {
+      "active": "Aktiv",
+      "inactive": "Inaktiv"
+    },
+    "actions": {
+      "edit": "Benutzer bearbeiten",
+      "activate": "Benutzer aktivieren",
+      "deactivate": "Benutzer deaktivieren",
+      "changePlan": "Plan ändern"
+    },
+    "modal": {
+      "title": "Benutzerdetails",
+      "plan": "Abonnement-Plan",
+      "details": "Detaillierte Informationen",
+      "role": "Rolle",
+      "created": "Registrierungsdatum",
+      "products": "Artikel",
+      "sales": "Verkäufe",
+      "clients": "Kunden",
+      "revenue": "Gesamtumsatz",
+      "close": "Schließen"
+    },
+    "empty": {
+      "title": "Keine Benutzer gefunden",
+      "text": "Versuchen Sie es mit anderen Suchfiltern"
+    },
+    "errors": {
+      "statusChange": "Fehler beim Ändern des Benutzerstatus",
+      "planChange": "Fehler beim Ändern des Benutzerplans"
+    }
+  }
+}

@@ -12,7 +12,42 @@ const getAuthHeaders = () => {
   
   return headers;
 };
+// 🔹 NUEVA: Obtener TODOS los productos para el escáner (sin paginación)
+export async function getAllProductsForScanner() {
+  try {
+    const API_URL = `${API_BASE_URL}/products/scanner`;
+    // // console.log('Fetching all products for scanner from:', API_URL);
+    
+    const res = await fetch(API_URL, {
+      headers: getAuthHeaders()
+    });
+    
+    if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+        return;
+      }
+      
+      const errorText = await res.text();
+      console.error('Error response:', errorText);
+      throw new Error(`Error al obtener productos para escáner: ${res.status} ${res.statusText}`);
+    }
+    
+    const data = await res.json();
+    
+    // // console.log('Products for scanner fetched successfully:', {
+    //   count: data.products?.length,
+    //   total: data.total
+    // });
 
+    return data; // { products, total }
+  } catch (error) {
+    console.error('Error in getAllProductsForScanner:', error);
+    throw new Error(`Network error: ${error.message}`);
+  }
+}
 // Helper para FormData (sin Content-Type)
 const getAuthHeadersForFormData = () => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
@@ -29,7 +64,7 @@ const getAuthHeadersForFormData = () => {
 export async function getProductsPaginated(queryParams) {
   try {
     const API_URL = `${API_BASE_URL}/products/paginated?${queryParams.toString()}`;
-    console.log('Fetching paginated products from:', API_URL);
+    // // console.log('Fetching paginated products from:', API_URL);
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -50,11 +85,11 @@ export async function getProductsPaginated(queryParams) {
     
     const data = await res.json();
     
-    console.log('Products fetched successfully:', {
-      count: data.products?.length,
-      pagination: data.pagination,
-      totalInventoryValue: data.totalInventoryValue
-    });
+    // console.log('Products fetched successfully:', {
+    //   count: data.products?.length,
+    //   pagination: data.pagination,
+    //   totalInventoryValue: data.totalInventoryValue
+    // });
 
     return data; // Ahora esperamos { products, pagination, totalInventoryValue }
   } catch (error) {
@@ -67,7 +102,7 @@ export async function getProductsPaginated(queryParams) {
 export async function getProducts() {
   try {
     const API_URL = `${API_BASE_URL}/products`;
-    console.log('Fetching all products from:', API_URL);
+    // // console.log('Fetching all products from:', API_URL);
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -103,7 +138,7 @@ export async function getProducts() {
 export async function createProductAPI(product) {
   try {
     const API_URL = `${API_BASE_URL}/products`;
-    console.log('Creating product with data:', product);
+    // // console.log('Creating product with data:', product);
     
     const formData = new FormData();
 
@@ -115,7 +150,7 @@ export async function createProductAPI(product) {
     formData.append('price', product.price ? Number(product.price) : 0);
     
     if (product.imagen && product.imagen instanceof File) {
-      console.log('Adding image file:', product.imagen.name);
+      // // console.log('Adding image file:', product.imagen.name);
       formData.append('imagen', product.imagen);
     }
 
@@ -127,7 +162,7 @@ export async function createProductAPI(product) {
       body: formData,
     });
 
-    console.log('Response status:', res.status);
+    // // console.log('Response status:', res.status);
     
     if (!res.ok) {
       const errorText = await res.text();
@@ -144,11 +179,11 @@ export async function createProductAPI(product) {
     }
     
     const result = await res.json();
-    console.log('Product created successfully:', result);
+    // // console.log('Product created successfully:', result);
     return result;
     
   } catch (error) {
-    console.error('Error in createProductAPI:', error);
+    // console.error('Error in createProductAPI:', error);
     throw new Error(`Error: ${error.message}`);
   }
 }
@@ -157,7 +192,7 @@ export async function createProductAPI(product) {
 export async function updateProductAPI(id, updatedData) {
   try {
     const API_URL = `${API_BASE_URL}/products/${id}`;
-    console.log('Updating product:', id, updatedData);
+    // // console.log('Updating product:', id, updatedData);
     
     const formData = new FormData();
 
@@ -233,8 +268,8 @@ export async function deleteProductImageAPI(id) {
       method: "DELETE",
       headers: getAuthHeaders()
     });
-    
-    if (!res.ok) {
+
+    if (!res.ok){
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');

@@ -7,16 +7,25 @@ import { useProduct } from "../../hooks/useProducts";
 import { useClients } from "../../hooks/useClients";
 import { useSales } from "../../hooks/useSales";
 import { useDashboard } from "../../contexts/DashboardContext";
+import { useLanguage } from "../../contexts/LanguageContext"; 
 import LogoutButton from "../../components/ui/LogoutButton";
 import QuickStats from "../../components/premium/QuickStats";
 import PremiumSalesChart from '../../components/premium/salesChart';
-import { IconBox, IconUsers, IconInvoice, IconChart } from '../../components/icons/DashboardIcons';
+import {StockMovementsIcon, 
+  GoodsInIcon,
+   IconBox, 
+   IconUsers,
+    IconInvoice, 
+    IconChart  } from '../../components/icons/DashboardIcons';
+    
 import styles from './DashboardHome.module.css';
 
 // Importar tipos desde el archivo compartido
 import { User, Sale } from '../../types';
 
 export default function DashboardHome() {
+  const { t } = useLanguage(); 
+  
   useEffect(()=>{
     preloadDashboardOnce()
   },[])
@@ -33,7 +42,7 @@ export default function DashboardHome() {
 
   // Inicializar hooks
   const {
-    products,
+    // products,
     loading: productsLoading, 
     refreshProducts, 
     totalProducts, 
@@ -82,7 +91,7 @@ export default function DashboardHome() {
       console.log("Dashboard: All data loaded, updating stats");
       setStats({
         produkte: totalProducts || 0,
-        kunden: clientsStats?.total || 0, // Usar stats del backend
+        kunden: clientsStats?.total || 0,
         verkäufe: salesStats.paidCount || 0,
         umsatz: salesStats.totalUmsatz || 0,
         durchschnitt: salesStats.durchschnitt || 0,
@@ -166,7 +175,7 @@ export default function DashboardHome() {
     return (
       <div className={styles.loadingWrapper}>
         <div className={styles.spinner}></div>
-        <p>Dashboard wird geladen...</p>
+        <p>{t('index.loading')}</p>
       </div>
     );
   }
@@ -180,48 +189,18 @@ export default function DashboardHome() {
     
       <div className={styles.dashboardContainer}>
         
-        {/* Header Section */}
-        {/* <header className={styles.headerSection}>
-          <div className={styles.headerContent}>
-            <h1 className={styles.welcomeTitle}>
-             {t('index.welcome')} <span className={styles.highlight}>{user.name}</span>
-            </h1>
-             
-            <p className={styles.welcomeSubtitle}>
-              {user.company || "Management Dashboard"} &bull; Überblick
-              <button 
-                className={styles.refreshButton}
-                onClick={handleRefreshAllData}
-                disabled={allLoading}
-                title="Daten aktualisieren"
-              >
-                {allLoading ? '⏳' : '🔄'} Aktualisieren
-              </button>
-            </p>
-          </div>
+        {/* Header Section - COMENTADO COMO EN TU ORIGINAL */}
 
-          <button
-            className={styles.ctaButton}
-            onClick={() => router.push("/adminDash/regnung")}
-            aria-label="Tagesbericht öffnen"
-          >
-            <IconChart className={styles.btnIcon} />
-            Tagesbericht
-          </button>
-        </header>
-
-        */}
         {/* Premium Analytics Section - Solo para usuarios premium */}
-
-        {/* {isPremiumUser && (
+         {/* {isPremiumUser && (
           <section className={styles.premiumSection}>
             <div className={styles.premiumSectionHeader}>
               <h2 className={styles.premiumSectionTitle}>
-                <span className={styles.premiumBadge}>PREMIUM</span>
-                Analytics Dashboard
+                <span className={styles.premiumBadge}>{t('index.premiumBadge')}</span>
+                {t('index.premiumTitle')}
               </h2>
               <p className={styles.premiumSectionSubtitle}>
-                Erweiterte Statistiken und Einblicke für Premium-Benutzer
+                {t('index.premiumSubtitle')}
               </p>
             </div>
             <PremiumSalesChart 
@@ -233,7 +212,7 @@ export default function DashboardHome() {
               loading={salesLoading}
             />
           </section>
-        )} */}
+        )}  */}
 
         {/* Main Layout Grid */}
         <div className={styles.mainLayout}>
@@ -241,10 +220,10 @@ export default function DashboardHome() {
           {/* Left Column - Quick Actions */}
           <div className={styles.leftColumn}>
             <section className={`${styles.card} ${styles.actionSection}`}>
-              {/* <div className={styles.cardHeader}>
-                <h2>settings</h2>
-                <p>Häufig genutzte Funktiones</p>
-              </div> */}
+              <div className={styles.cardHeader}>
+                <h2>{t('index.quickActions')}</h2>
+                <p>{t('index.quickActionsDesc')}</p>
+              </div>
 
               <div className={styles.actionsGrid}>
                 
@@ -255,8 +234,8 @@ export default function DashboardHome() {
                     </svg>
                   </div>
                   <div className={styles.actionDetails}>
-                    <strong>Scanner</strong>
-                    <small>Barcode Scan</small>
+                    <strong>{t('index.actions.scanner')}</strong>
+                    <small>{t('index.actions.scannerDesc')}</small>
                   </div>
                 </button>
 
@@ -265,8 +244,8 @@ export default function DashboardHome() {
                     <svg viewBox="0 0 24 24" className={styles.svgIcon}><path d="M12 5v14M5 12h14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/></svg>
                   </div>
                   <div className={styles.actionDetails}>
-                    <strong>Produkt </strong>
-                    <small>Neu erfassen</small>
+                    <strong>{t('index.actions.product')}</strong>
+                    <small>{t('index.actions.productDesc')}</small>
                   </div>
                 </button>
  
@@ -275,8 +254,8 @@ export default function DashboardHome() {
                     <IconUsers className={styles.svgIcon} />
                   </div>
                   <div className={styles.actionDetails}>
-                    <strong>Kunden</strong>
-                    <small>Verwalten</small>
+                    <strong>{t('index.actions.customers')}</strong>
+                    <small>{t('index.actions.customersDesc')}</small>
                   </div>
                 </button>
 
@@ -285,13 +264,11 @@ export default function DashboardHome() {
                     <IconInvoice className={styles.svgIcon} />
                   </div>
                   <div className={styles.actionDetails}>
-                    <strong>Rechnung</strong>
-                    <small>Verkauf</small>
+                    <strong>{t('index.actions.invoice')}</strong>
+                    <small>{t('index.actions.invoiceDesc')}</small>
                   </div>
                 </button>
                 
-                
-
                 {isPremiumUser && (
                   <button className={`${styles.actionItem} ${styles.highlightAction}`} onClick={() => router.push("/adminDash/importExport")}>
                     <div className={styles.actionIconBox}>
@@ -304,8 +281,8 @@ export default function DashboardHome() {
                       </svg>
                     </div>
                     <div className={styles.actionDetails}>
-                      <strong>Import/Export</strong>
-                      <small>Excel</small>
+                      <strong>{t('index.actions.importExport')}</strong>
+                      <small>{t('index.actions.importExportDesc')}</small>
                     </div>
                   </button>
                 )}
@@ -317,35 +294,39 @@ export default function DashboardHome() {
                     </svg>
                   </div>
                   <div className={styles.actionDetails}>
-                    <strong>Verkaufte Artikel</strong>
-                    <small>Übersicht</small>
+                    <strong>{t('index.actions.soldItems')}</strong>
+                    <small>{t('index.actions.soldItemsDesc')}</small>
                   </div>
                 </button>
 
-               <button className={styles.actionItem} onClick={() => router.push("/adminDash/code")}>
-  <div className={styles.actionIconBox}>
-    <svg className={styles.svgIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      {/* Código de barras principal */}
-      <rect x="4" y="6" width="2" height="15" fill="currentColor" rx="0.5" />
-      <rect x="7" y="6" width="3" height="15" fill="currentColor" rx="0.5" />
-      <rect x="11" y="6" width="1.5" height="15" fill="currentColor" rx="0.3" />
-      <rect x="13.5" y="6" width="2.5" height="15" fill="currentColor" rx="0.5" />
-      <rect x="17" y="6" width="1" height="15" fill="currentColor" rx="0.3" />
-      <rect x="19" y="6" width="2" height="15" fill="currentColor" rx="0.5" />
-      
-   </svg>
-  </div>
-  <div className={styles.actionDetails}>
-    <strong>Barcode Creator</strong>
-    <small>codebar</small>
-  </div>
-</button>
+                <button className={styles.actionItem} onClick={() => router.push("/adminDash/code")}>
+                  <div className={styles.actionIconBox}>
+                    <svg className={styles.svgIcon} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect x="4" y="6" width="2" height="15" fill="currentColor" rx="0.5" />
+                      <rect x="7" y="6" width="3" height="15" fill="currentColor" rx="0.5" />
+                      <rect x="11" y="6" width="1.5" height="15" fill="currentColor" rx="0.3" />
+                      <rect x="13.5" y="6" width="2.5" height="15" fill="currentColor" rx="0.5" />
+                      <rect x="17" y="6" width="1" height="15" fill="currentColor" rx="0.3" />
+                      <rect x="19" y="6" width="2" height="15" fill="currentColor" rx="0.5" />
+                    </svg>
+                  </div>
+                  <div className={styles.actionDetails}>
+                    <strong>{t('index.actions.barcode')}</strong>
+                    <small>{t('index.actions.barcodeDesc')}</small>
+                  </div>
+                </button>
 
-                
+                <button className={styles.actionItem} onClick={() => router.push("/adminDash/wareneigang")}>
+                  <div className={styles.actionIconBox}>
+                    <GoodsInIcon />
+                  </div>
+                  <div className={styles.actionDetails}>
+                    <strong>{t('index.actions.goodsIn')}</strong>
+                    <small>{t('index.actions.goodsInDesc')}</small>
+                  </div>
+                </button>
               </div>
             </section>
-
-            
           </div>
 
           {/* Right Column - Profile & Info */}
@@ -358,32 +339,30 @@ export default function DashboardHome() {
                 <div className={styles.profileText}>
                   <h3>{user.name}</h3>
                   <span className={`${styles.roleBadge} ${styles[user.plan]}`}>
-                    {user.plan === "basic" ? "Basic" : // si es "basic", mostrar "Basic" los 2 puntos significan "si no"
-                     user.plan === "medium" ? "Medium" :  // si es "medium", mostrar "Medium"
-                     user.plan === "pro" ? "Pro" : "Basic"
-                     }    
-
+                    {user.plan === "basic" ? "Basic" : 
+                     user.plan === "medium" ? "Medium" :  
+                     user.plan === "pro" ? "Pro" : "Basic"}
                   </span>
                 </div>
               </div>
 
               <div className={styles.profileDetails}>
                 <div className={styles.detailRow}>
-                  <span>Email:</span>
+                  <span>{t('index.profile.email')}</span>
                   <span className={styles.detailVal}>{user.email}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span>Datum:</span>
+                  <span>{t('index.profile.date')}</span>
                   <span className={styles.detailVal}>{new Date().toLocaleDateString("de-DE")}</span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span>Verkäufe:</span>
+                  <span>{t('index.profile.sales')}</span>
                   <span className={styles.detailVal}>
-                    {formatted.verkaeufe} bezahlt
+                    {formatted.verkaeufe} {t('index.profile.paid')}
                   </span>
                 </div>
                 <div className={styles.detailRow}>
-                  <span>Benutzer-ID:</span>
+                  <span>{t('index.profile.userId')}</span>
                   <span className={styles.detailVal}>{user._id?.substring(0, 8)}...</span>
                 </div>
               </div>
@@ -395,83 +374,83 @@ export default function DashboardHome() {
 
             {/* Recent Activity / Tips */}
             <div className={`${styles.card} ${styles.tipsCard}`}>
-              <h3>💡 Tipps & Hinweise</h3>
+              <h3>{t('index.tips.title')}</h3>
               <ul className={styles.tipsList}>
-                <li>Verwende den Scanner für schnelle Verkäufe</li>
-                <li>Exportiere regelmäßig deine datos</li>
-                <li>Überprüfe die Verkaufsstatistiken monatlich</li>
+                <li>{t('index.tips.tip1')}</li>
+                <li>{t('index.tips.tip2')}</li>
+                <li>{t('index.tips.tip3')}</li>
                 {!isPremiumUser && (
                   <li>
-                    <strong>Upgrade auf Premium</strong> für erweiterte Analytics
+                    <strong>{t('index.tips.upgrade')}</strong> {t('index.tips.upgradeDesc')}
                     <button 
                       className={styles.upgradeButton}
                       onClick={() => router.push("/settings")}
                     >
-                      Jetzt upgraden
+                      {t('index.tips.upgradeButton')}
                     </button>
                   </li>
                 )}
               </ul>
             </div>
-             {/* Stats Grid */}
-        <section className={styles.statsGrid}>
-          <article className={styles.statCard}>
-            <div className={`${styles.iconWrapper} ${styles.blue}`}>
-              <IconBox className={styles.icon} />
-            </div>
-            <div className={styles.statInfo} onClick={() => router.push('./adminDash/artikel')}>
-              <h3>Produkte</h3>
-              <p className={styles.statValue}>{allLoading ? "..." : formatted.produkte}</p>
-              <span className={styles.statLabel}>Im Inventar</span>
-            </div>
-          </article>
 
-          <article className={styles.statCard}>
-            <div className={`${styles.iconWrapper} ${styles.purple}`}>
-              <IconUsers className={styles.icon} />
-            </div>
-            <div className={styles.statInfo} onClick={() => router.push('./adminDash/clients')}>
-              <h3>Kunden</h3>
-              <p className={styles.statValue}>{allLoading ? "..." : formatted.kunden}</p>
-              <span className={styles.statLabel}>Aktive Profile</span>
-            </div>
-          </article>
+            {/* Stats Grid */}
+            <section className={styles.statsGrid}>
+              <article className={styles.statCard}>
+                <div className={`${styles.iconWrapper} ${styles.blue}`}>
+                  <IconBox className={styles.icon} />
+                </div>
+                <div className={styles.statInfo} onClick={() => router.push('./adminDash/artikel')}>
+                  <h3>{t('index.stats.products')}</h3>
+                  <p className={styles.statValue}>{allLoading ? "..." : formatted.produkte}</p>
+                  <span className={styles.statLabel}>{t('index.stats.productsDesc')}</span>
+                </div>
+              </article>
 
-          <article className={styles.statCard}>
-            <div className={`${styles.iconWrapper} ${styles.orange}`}>
-              <IconInvoice className={styles.icon} />
-            </div>
-            <div className={styles.statInfo} onClick={() => router.push('./adminDash/regnung')}>
-              <h3>Verkäufe</h3>
-              <p className={styles.statValue}>{allLoading ? "..." : formatted.verkaeufe}</p>
-              <span className={styles.statLabel}>Bezahlte Verkäufe</span>
-              <div className={styles.extraInfo}>
-                {stats.pendingCount > 0 && (
-                  <span className={styles.pendingInfo}>{formatted.pending} ausstehend</span>
-                )}
-                {stats.cancelledCount > 0 && (
-                  <span className={styles.cancelledInfo}>{formatted.cancelled} storniert</span>
-                )}
-              </div>
-            </div>
-          </article>
+              <article className={styles.statCard}>
+                <div className={`${styles.iconWrapper} ${styles.purple}`}>
+                  <IconUsers className={styles.icon} />
+                </div>
+                <div className={styles.statInfo} onClick={() => router.push('./adminDash/clients')}>
+                  <h3>{t('index.stats.customers')}</h3>
+                  <p className={styles.statValue}>{allLoading ? "..." : formatted.kunden}</p>
+                  <span className={styles.statLabel}>{t('index.stats.customersDesc')}</span>
+                </div>
+              </article>
 
-          <article className={`${styles.statCard} ${styles.revenueCard}`}>
-            <div className={`${styles.iconWrapper} ${styles.green}`}>
-              <IconChart className={styles.icon} />
-            </div>
-            <div className={styles.statInfo} onClick={() => router.push('./adminDash/verkaufteArtikel')}>
-              <h3>Umsatz</h3>
-              <p className={`${styles.statValue} ${styles.money}`}>{allLoading ? "..." : formatted.umsatz}</p>
-              <span className={styles.statLabel}>
-                Ø {allLoading ? "..." : formatted.durchschnitt} / Verkauf
-                <br/>
-                <small className={styles.infoText}>Nur bezahlte Verkäufe</small>
-              </span>
-            </div>
-          </article>
-        </section>
-        
+              <article className={styles.statCard}>
+                <div className={`${styles.iconWrapper} ${styles.orange}`}>
+                  <IconInvoice className={styles.icon} />
+                </div>
+                <div className={styles.statInfo} onClick={() => router.push('./adminDash/regnung')}>
+                  <h3>{t('index.stats.sales')}</h3>
+                  <p className={styles.statValue}>{allLoading ? "..." : formatted.verkaeufe}</p>
+                  <span className={styles.statLabel}>{t('index.stats.salesDesc')}</span>
+                  <div className={styles.extraInfo}>
+                    {stats.pendingCount > 0 && (
+                      <span className={styles.pendingInfo}>{formatted.pending} {t('index.stats.pending')}</span>
+                    )}
+                    {stats.cancelledCount > 0 && (
+                      <span className={styles.cancelledInfo}>{formatted.cancelled} {t('index.stats.cancelled')}</span>
+                    )}
+                  </div>
+                </div>
+              </article>
+
+              <article className={`${styles.statCard} ${styles.revenueCard}`}>
+                <div className={`${styles.iconWrapper} ${styles.green}`}>
+                  <IconChart className={styles.icon} />
+                </div>
+                <div className={styles.statInfo} onClick={() => router.push('./adminDash/verkaufteArtikel')}>
+                  <h3>{t('index.stats.revenue')}</h3>
+                  <p className={`${styles.statValue} ${styles.money}`}>{allLoading ? "..." : formatted.umsatz}</p>
+                  <span className={styles.statLabel}>
+                    {t('index.stats.revenueDesc').replace('{amount}', allLoading ? "..." : formatted.durchschnitt)}
+                    <br/>
+                    <small className={styles.infoText}>{t('index.stats.revenueNote')}</small>
+                  </span>
+                </div>
+              </article>
+            </section>
           </aside>
         </div>
       </div>

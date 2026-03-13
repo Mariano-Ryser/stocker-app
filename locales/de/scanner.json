@@ -1,0 +1,113 @@
+{
+  "scanner": {
+    "loading": {
+      "app": "App wird geladen...",
+      "cache": "Initialer Cache wird aufgebaut...",
+      "cacheHint": "Dies geschieht nur einmal",
+      "products": "Produkte werden geladen..."
+    },
+    "header": {
+      "title": "Kiosk-Verkauf",
+      "subtitle": "Schnelles Scannen und Bezahlen",
+      "productsAvailable": "📦 {count} Produkte verfügbar",
+      "updating": "Aktualisiere...",
+      "indexedDB": "(IndexedDB: {count})",
+      "total": "Gesamt:",
+      "scanMode": "🔍 Scan-Modus",
+      "editMode": "✏️ Bearbeiten-Modus"
+    },
+    "scanner": {
+      "title": "Barcode-Scanner",
+      "itemsCount": "{count} Artikel",
+      "placeholder": "Barcode scannen oder Artikelnummer...",
+      "button": "Hinzufügen",
+      "manualAdd": "Produkt manuell hinzufügen",
+      "feedback": {
+        "added": "{quantity}x {name} hinzugefügt",
+        "notFound": "Produkt nicht gefunden: {barcode}",
+        "searchError": "Fehler bei der Suche"
+      }
+    },
+    "manualSearch": {
+      "title": "Produktsuche",
+      "placeholder": "Mindestens 2 Zeichen...",
+      "searching": "Suche...",
+      "noResults": "Keine Produkte gefunden",
+      "minChars": "Bitte mindestens 2 Zeichen eingeben",
+      "articleNumber": "Art.-Nr: {number}",
+      "available": "{stock} verfügbar",
+      "outOfStock": "Ausverkauft"
+    },
+    "client": {
+      "title": "Kunde",
+      "placeholder": "Kunde suchen...",
+      "randomClient": "ClienteRandom",
+      "clear": "Löschen"
+    },
+    "totals": {
+      "subtotal": "Zwischensumme:",
+      "tax": "10% MwSt.:",
+      "total": "Gesamtsumme:",
+      "cancel": "Verkauf abbrechen",
+      "checkout": "Zur Kasse",
+      "processing": "Wird bearbeitet..."
+    },
+    "items": {
+      "title": "Gescannte Artikel",
+      "count": "{count} Artikel",
+      "empty": {
+        "title": "Keine Artikel gescannt",
+        "text": "Scannen Sie Artikel, um sie hier anzuzeigen"
+      },
+      "articleNumber": "Art.-Nr: {number}",
+      "available": "{stock} verfügbar",
+      "quantity": "Menge",
+      "unitPrice": "Einzelpreis {symbol}",
+      "total": "Gesamt",
+      "lowStock": "Stock unzureichend! Nur {stock} Einheiten verfügbar"
+    },
+    "payment": {
+      "title": "Kassieren",
+      "due": "ZU ZAHLEN:",
+      "cash": "💵 BARZAHLUNG",
+      "card": "💳 KARTE",
+      "received": "ERHALTEN:",
+      "change": "RÜCKGELD:",
+      "processing": "Wird verarbeitet...",
+      "cardPayment": {
+        "processing": "Kartenzahlung wird verarbeitet...",
+        "amount": "Betrag: {amount} {symbol}",
+        "confirm": "Kartenzahlung bestätigen",
+        "backToCash": "Zurück zu Barzahlung"
+      },
+      "quickCash": {
+        "5": "5 {symbol}",
+        "10": "10 {symbol}",
+        "20": "20 {symbol}",
+        "50": "50 {symbol}",
+        "100": "100 {symbol}",
+        "200": "200 {symbol}"
+      }
+    },
+    "receipt": {
+      "success": "✅ VERKAUF ERFOLGREICH!",
+      "newSale": "Neue Verkauf starten",
+      "autoReset": "Automatische Rückstellung in 5 Sekunden..."
+    },
+    "alerts": {
+      "lowStock": {
+        "title": "Stock unzureichend!",
+        "text": "Für <strong>{name}</strong> sind nur <strong>{available} Einheiten</strong> verfügbar.",
+        "detail": "Sie benötigen {requested} Einheiten."
+      },
+      "insufficientAmount": "Unzureichender Betrag erhalten. Total: {total} {symbol}",
+      "noItems": "Bitte fügen Sie zuerst Artikel hinzu",
+      "confirmCancel": "Möchten Sie den aktuellen Verkauf wirklich abbrechen?",
+      "stockError": "Stock unzureichend",
+      "saleError": "Fehler beim Erstellen der Rechnung"
+    },
+    "cache": {
+      "refresh": "Cache aktualisieren"
+    }
+  }
+}

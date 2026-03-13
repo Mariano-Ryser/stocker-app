@@ -191,15 +191,15 @@ const handleUpdate = async (e: React.FormEvent) => {
       price: priceValue,
     };
     
-    console.log('ProductEditor: Updating product', productToUpdate);
+    // console.log('ProductEditor: Updating product', productToUpdate);
     
     const result = await onUpdateProduct(productToUpdate);
     
     if (result?.success) {
-      console.log('ProductEditor: Update successful');
+      // console.log('ProductEditor: Update successful');
       onClose();
     } else {
-      console.log('ProductEditor: Update failed', result?.error);
+      // console.log('ProductEditor: Update failed', result?.error);
     }
   } finally {
     setIsSubmitting(false);

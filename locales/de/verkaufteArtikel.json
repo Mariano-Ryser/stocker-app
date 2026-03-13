@@ -1,0 +1,69 @@
+{
+  "verkaufteArtikel": {
+    "title": "Verkaufte Artikel",
+    "subtitle": "Übersicht aller verkauften Artikel",
+    "loading": "Verkaufte Artikel werden geladen...",
+    "loadingData": "Lade Verkaufsdaten...",
+    "loadingShort": "Lade...",
+    "error": {
+      "general": "Fehler",
+      "title": "Fehler beim Laden der Artikel"
+    },
+    "actions": {
+      "retry": "Erneut versuchen",
+      "refresh": "Aktualisieren",
+      "clearFilters": "Filter zurücksetzen",
+      "loadMore": "Mehr laden ({remaining})"
+    },
+    "stats": {
+      "revenue": "Umsatz",
+      "units": "Einheiten",
+      "articles": "Artikel",
+      "items": "Artikel",
+      "of": "von"
+    },
+    "filters": {
+      "product": "Artikel suchen...",
+      "client": "Kunde",
+      "lieferschein": "Lieferschein",
+      "dateFrom": "Von",
+      "dateTo": "Bis",
+      "dateSeparator": "—",
+      "showCancelled": "Stornierte anzeigen",
+      "showPending": "Ausstehende anzeigen"
+    },
+    "table": {
+      "article": "Artikel",
+      "quantity": "Menge",
+      "price": "Preis",
+      "total": "Gesamt",
+      "client": "Kunde",
+      "date": "Datum",
+      "lieferschein": "Lieferschein: {number}"
+    },
+    "card": {
+      "client": "Kunde:",
+      "lieferschein": "Lieferschein:",
+      "date": "Datum:",
+      "price": "Preis:",
+      "total": "Gesamt:"
+    },
+    "client": {
+      "unknown": "Kunde unbekannt"
+    },
+    "empty": {
+      "notFound": {
+        "title": "Keine Artikel gefunden",
+        "text": "Keine Ergebnisse für Ihre Suchkriterien"
+      },
+      "noSales": {
+        "title": "Keine verkauften Artikel",
+        "text": "Es wurden noch keine Artikel verkauft"
+      }
+    },
+    "status": {
+      "cancelled": "Storniert",
+      "pending": "Ausstehend"
+    }
+  }
+}

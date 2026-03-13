@@ -126,7 +126,7 @@ const updateUser = async (id, userData) => {
   
   setLoading(true);
   try {
-     console.log('🔄 Enviando actualización para ID:', id, 'Datos:', userData);
+     // console.log('🔄 Enviando actualización para ID:', id, 'Datos:', userData);
     const res = await updateUserAPI(id, userData);
 
       if (!res || !res.user) {
@@ -153,7 +153,7 @@ const updateUser = async (id, userData) => {
     
  // Actualizar contexto global si es el usuario actual
       if (currentUserId === id) {
-        console.log('✅ Actualizando usuario en contexto:', res.user);
+        // console.log('✅ Actualizando usuario en contexto:', res.user);
         updateAuthUser({
           ...currentUser,
           ...res.user,

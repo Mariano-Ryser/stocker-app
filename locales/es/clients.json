@@ -1,0 +1,41 @@
+{
+  "clients": {
+    "title": "Clientes",
+    "subtitle": "Administre su lista de clientes",
+    "newClient": "Nuevo Cliente",
+    "loading": "Cargando...",
+    "loadingAuth": "Cargando autenticación...",
+    "search": {
+      "placeholder": "Buscar clientes... (Nombre, Email, Dirección, Teléfono)",
+      "results": "{visible} de {total} clientes mostrados",
+      "moreAvailable": " ({remaining} más disponibles)",
+      "clear": "Limpiar búsqueda"
+    },
+    "table": {
+      "email": "Email:",
+      "address": "Dirección:",
+      "phone": "Teléfono:"
+    },
+    "actions": {
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "deleting": "Eliminando…",
+      "confirmDelete": "¿Está seguro de que desea eliminar este cliente?"
+    },
+    "empty": {
+      "restricted": {
+        "title": "Acceso restringido",
+        "text": "Debe iniciar sesión para ver los clientes"
+      },
+      "notFound": {
+        "title": "No se encontraron clientes",
+        "text": "Sin resultados para \"{search}\""
+      },
+      "noClients": {
+        "title": "No hay clientes disponibles",
+        "text": "Cree su primer cliente"
+      }
+    },
+    "loadMore": "Cargar más clientes"
+  }
+}

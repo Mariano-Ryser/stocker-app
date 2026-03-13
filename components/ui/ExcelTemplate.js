@@ -12,7 +12,6 @@ export default function ExcelTemplateButton({ type = 'products' }) {
           'Lagerbestand': 100,
           'Preis (CHF)': 19.99,
           'Bild-URL': 'https://example.com/bild.jpg',
-          'Gelöscht': 'Nein'
         },
         {
           'Artikelnummer': 'ART-002',
@@ -22,7 +21,6 @@ export default function ExcelTemplateButton({ type = 'products' }) {
           'Lagerbestand': 50,
           'Preis (CHF)': 29.99,
           'Bild-URL': '',
-          'Gelöscht': 'Nein'
         }
       ],
       instructions: [

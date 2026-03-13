@@ -2,11 +2,12 @@
   "menu": {
     "home": "Dashboard",
     "articles": "Artikel suche",
+    "wareneigang": "Wareneingang",
     "clients": "Kunden",
     "invoices": "Rechnungen",
     "scanner": "Scanner",
     "sold": "Verkaufte Artikel",
-    "inventory": "Lagerbewegungen",
+    "inventory": "Bewegungen",
     "settings": "Settings",
     "ceo": "CEO",
     "logout":"Logout"

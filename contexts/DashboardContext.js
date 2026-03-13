@@ -10,13 +10,13 @@ export function DashboardProvider({ children }) {
   // Coordinar refresh de todos los datos
   const refreshAllData = useCallback(async (refreshFunctions = []) => {
     if (isRefreshing) {
-      console.log('Already refreshing, skipping...');
+      // console.log('Already refreshing, skipping...');
       return;
     }
 
     setIsRefreshing(true);
     try {
-      console.log('Coordinated refresh started');
+      // console.log('Coordinated refresh started');
       await Promise.all(refreshFunctions.map(fn => fn?.()));
       setLastRefresh(new Date());
     } catch (error) {

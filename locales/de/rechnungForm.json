@@ -1,0 +1,91 @@
+{
+  "rechnungForm": {
+    "common": {
+      "cancel": "Abbrechen",
+      "close": "Schließen",
+      "save": "Speichern",
+      "saving": "Speichern...",
+      "loading": "Lade...",
+      "error": "Fehler"
+    },
+    "creator": {
+      "title": "Neue Rechnung",
+      "submit": "Rechnung Erstellen"
+    },
+    "editor": {
+      "title": "Rechnung bearbeiten",
+      "submit": "Änderungen speichern",
+      "loadingData": "Lade Rechnungsdaten..."
+    },
+    "restricted": {
+      "title": "Zugriff eingeschränkt",
+      "message": "Sie müssen sich anmelden, um Rechnungen zu verwalten.",
+      "close": "Schließen"
+    },
+    "client": {
+      "label": "Kunde",
+      "placeholder": "Kunden suchen oder auswählen...",
+      "search": "Kunden suchen...",
+      "random": "Random Kunde (Standard)",
+      "randomBadge": "🎯",
+      "noClients": "No hay clientes disponibles",
+      "moreClients": "... y {count} clientes más",
+      "clientCount": "{count} cliente{plural} disponible{plural}",
+      "showingFirst": "(mostrando primeros {count})",
+      "info": "Selecciona un cliente de la lista o usa \"Random Kunde\"",
+      "clearTitle": "Limpiar selección (usar ClienteRandom)"
+    },
+    "status": {
+      "label": "Status",
+      "paid": "Bezahlt",
+      "pending": "Ausstehend",
+      "cancelled": "Storniert"
+    },
+    "items": {
+      "title": "Artikel ({count})",
+      "add": "+ Artikel hinzufügen",
+      "item": "Artikel {number}",
+      "searchPlaceholder": "Artikel suchen... (mind. 2 Zeichen)",
+      "noResults": "Keine Artikel gefunden für \"{search}\"",
+      "minChars": "Geben Sie mindestens 2 Zeichen ein, um zu suchen",
+      "searchHint": "Suchergebnisse für: \"{search}\"",
+      "searching": "Suche...",
+      "removeTitle": "Artikel entfernen",
+      "fields": {
+        "article": "Artikel",
+        "quantity": "Menge",
+        "unitPrice": "Einzelpreis",
+        "total": "Gesamt"
+      },
+      "stock": {
+        "label": "Lager: {stock} | Benötigt: {needed} | Verbleibend: {remaining}",
+        "otherLines": "Andere Zeilen: {count}",
+        "error": "⚠️ {message}",
+        "badge": {
+          "inStock": "Ausreichend",
+          "lowStock": "Wenig Lager",
+          "outOfStock": "Nicht genug Lager"
+        }
+      },
+      "errors": {
+        "selectAll": "Bitte wählen Sie alle Artikel aus",
+        "quantityPositive": "Die Menge muss größer als 0 sein",
+        "priceNegative": "Der Preis darf nicht negativ sein",
+        "stock": "Bitte korrigieren Sie die Lagerbestandsfehler",
+        "minOneItem": "Mindestens ein Artikel ist erforderlich"
+      }
+    },
+    "totals": {
+      "subtotal": "Zwischensumme:",
+      "tax": "1% MwSt.:",
+      "total": "Gesamtsumme:"
+    },
+    "messages": {
+      "createSuccess": "Rechnung erfolgreich erstellt",
+      "updateSuccess": "Rechnung erfolgreich aktualisiert",
+      "createError": "Fehler beim Erstellen der Rechnung",
+      "updateError": "Fehler beim Aktualisieren der Rechnung",
+      "unknownError": "Unbekannter Fehler"
+    }
+  }
+}

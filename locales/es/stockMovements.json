@@ -1,0 +1,56 @@
+{
+  "stockMovements": {
+    "title": "Movimientos de Stock",
+    "subtitle": "Vista general de entradas y salidas",
+    "loading": "Cargando movimientos…",
+    "loadingAuth": "Cargando…",
+    "error": "Error al cargar",
+    "noMovements": "Sin movimientos",
+    "refresh": "↻",
+    "filters": {
+      "allTypes": "Todos los tipos",
+      "startDate": "Fecha inicio",
+      "endDate": "Fecha fin",
+      "search": "Buscar artículos…",
+      "clear": "Limpiar"
+    },
+    "table": {
+      "date": "Fecha",
+      "article": "Artículo",
+      "type": "Tipo",
+      "quantity": "Cantidad",
+      "stock": "Stock",
+      "user": "Usuario",
+      "reference": "Ref"
+    },
+    "movementTypes": {
+      "WAREHOUSE_IN": {
+        "label": "Entrada",
+        "icon": "↓"
+      },
+      "WAREHOUSE_OUT": {
+        "label": "Salida",
+        "icon": "↑"
+      },
+      "MANUAL_ADJUSTMENT": {
+        "label": "Ajuste",
+        "icon": "✎"
+      },
+      "RETURN": {
+        "label": "Devolución",
+        "icon": "↩"
+      },
+      "DAMAGED": {
+        "label": "Dañado",
+        "icon": "⚠"
+      },
+      "INITIAL_STOCK": {
+        "label": "Stock inicial",
+        "icon": "●"
+      }
+    },
+    "pagination": {
+      "page": "Página {current} de {total}"
+    }
+  }
+}

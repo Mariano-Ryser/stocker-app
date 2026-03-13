@@ -1,0 +1,60 @@
+{
+  "invoice": {
+    "title": "Invoice",
+    "invoice": "INVOICE",
+    "invoiceNumber": "No:",
+    "date": "Date:",
+    "dueDate": "Due:",
+    "status": {
+      "paid": "Paid",
+      "cancelled": "Cancelled",
+      "pending": "Pending",
+      "label": "Status:"
+    },
+    "seller": "Seller",
+    "customer": "Customer",
+    "customerRecipient": "Bill To",
+    "customerDirect": "Cash",
+    "invoiceDetails": "Invoice Details",
+    "paymentInfo": "Payment Information",
+    "bank": "Bank:",
+    "iban": "IBAN:",
+    "bic": "BIC/SWIFT:",
+    "accountHolder": "Account Holder:",
+    "bankName": "Bank:",
+    "thanks": "Thank you for your order!",
+    "thanksTicket": "Thank you for your purchase!",
+    "actions": {
+      "print": "Print"
+    },
+    "table": {
+      "pos": "No.",
+      "item": "Item",
+      "description": "Description",
+      "quantity": "Qty",
+      "unitPrice": "Unit Price",
+      "total": "Total"
+    },
+    "totals": {
+      "subtotal": "Subtotal:",
+      "discount": "Discount:",
+      "tax": "VAT ({rate}%):",
+      "total": "Total:"
+    },
+    "ticket": {
+      "title": "Tickets",
+      "ticketNumber": "Ticket #:",
+      "date": "Date:",
+      "customer": "Customer:",
+      "divider": "----------------------",
+      "doubleDivider": "======================"
+    },
+    "footer": {
+      "bankInfo": "Bank Details",
+      "bankName": "Bank",
+      "accountHolder": "Account Holder",
+      "currency": "Currency",
+      "bankInfoLegacy": "Bank: | IBAN: "
+    }
+  }
+}

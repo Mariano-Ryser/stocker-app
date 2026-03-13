@@ -5,12 +5,15 @@ import LoadMoreTrigger from "../../../components/shared/LoadMoreTrigger";
 import RechnungCreator from "../../../components/adminDash/regnung/RechnungCreator";
 import RechnungPrint from "../../../components/adminDash/regnung/RechnungPrint";
 import RechnungUpdate from "../../../components/adminDash/regnung/RechnungUpdate";
+import StockMovementsModal from "../../../components/adminDash/regnung/SalesMovementsModal";
 import { useAuth } from "../../../components/auth/AuthProvider";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import styles from "./SalesPage.module.css";
 
 export default function SalesPage() {
+  const { t } = useLanguage();
   const {company, isAuthenticated, loading: authLoading } = useAuth();
-    const currencySymbol = company?.currency || 'USD';
+  const currencySymbol = company?.currency || 'USD';
   const salesApi = useSales();
   const {
     sales,
@@ -28,6 +31,7 @@ export default function SalesPage() {
   const [saleToEdit, setSaleToEdit] = useState(null);
   const [sortField, setSortField] = useState("createdAt");
   const [sortDirection, setSortDirection] = useState("desc");
+  const [saleForMovements, setSaleForMovements] = useState(null); // ← ESTADO NUEVO
 
   // Verificar autenticación
   useEffect(() => {
@@ -121,9 +125,9 @@ export default function SalesPage() {
 
   const getStatusText = (status: string) => {
     const texts = {
-      "paid": "Bezahlt",
-      "cancelled": "Storniert",
-      "pending": "Ausstehend"
+      "paid": t('sales.status.paid'),
+      "cancelled": t('sales.status.cancelled'),
+      "pending": t('sales.status.pending')
     };
     return texts[status] || status;
   };
@@ -145,11 +149,13 @@ export default function SalesPage() {
 
   const handleCreateSuccess = () => {
     setOpenModal(false);
+    refreshSales();
   };
 
   const handleUpdateSuccess = () => {
     setUpdateModalOpen(false);
     setSaleToEdit(null);
+    refreshSales();
   }; 
 
   const handleUpdateClose = () => {
@@ -159,275 +165,287 @@ export default function SalesPage() {
 
   if (authLoading) {
     return (
-        <div className={styles.loadingContainer}>
-          <div className={styles.spinner}></div>
-          <p>Cargando autenticación...</p>
-        </div>
+      <div className={styles.loadingContainer}>
+        <div className={styles.spinner}></div>
+        <p>{t('sales.loading.auth')}</p>
+      </div>
     );
   }
 
   return (
-      <div className={styles.container}>
-        {/* Header */}
-        <div className={styles.header}>
-          <div className={styles.headerLeft}>
-            <h1>Rechnungen</h1>
-            <p>Verwalten Sie Ihre Rechnungen und Verkäufe</p>
-            
-            {salesLoading && (
-              <div className={styles.loadingMessage}>
-                🔄 Lade Rechnungen...
-              </div>
-            )}
-            {error && (
-              <div className={styles.errorMessage}>
-                ❌ Fehler: {error}
-                <button onClick={handleRefresh} className={styles.retryButton}>
-                  Erneut versuchen
-                </button>
-              </div>
-            )}
-          </div>
+    <div className={styles.container}>
+      {/* Header */}
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
+          <h1>{t('sales.title')}</h1>
+          <p>{t('sales.subtitle')}</p>
           
-         {isAuthenticated && (
+          {salesLoading && (
+            <div className={styles.loadingMessage}>
+              🔄 {t('sales.loading.invoices')}
+            </div>
+          )}
+          {error && (
+            <div className={styles.errorMessage}>
+              ❌ {t('sales.error.general')}: {error}
+              <button onClick={handleRefresh} className={styles.retryButton}>
+                {t('sales.actions.retry')}
+              </button>
+            </div>
+          )}
+        </div>
+        
+        {isAuthenticated && (
+          <button 
+            className={styles.createButton} 
+            onClick={() => setOpenModal(true)}
+            disabled={salesLoading}
+          >
+            <span>+</span>
+            {t('sales.actions.new')}
+          </button>
+        )}
+      </div>
+
+      {/* Search and Filters */}
+      <div className={styles.filtersSection}>
+        <div className={styles.searchBox}>
+          <svg className={styles.searchIcon} viewBox="0 0 24 24" width="20" height="20">
+            <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+          </svg>
+          <input
+            type="text"
+            placeholder={t('sales.search.placeholder')}
+            className={styles.searchInput}
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            disabled={salesLoading}
+          />
+          {search && (
             <button 
-              className={styles.createButton} 
-              onClick={() => setOpenModal(true)}
+              className={styles.clearButton}
+              onClick={() => setSearch('')}
               disabled={salesLoading}
             >
-              <span>+</span>
-              Neue Rechnung
+              ✕
             </button>
           )}
         </div>
-
-        {/* Search and Filters */}
-        <div className={styles.filtersSection}>
-          <div className={styles.searchBox}>
-            <svg className={styles.searchIcon} viewBox="0 0 24 24" width="20" height="20">
-              <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
-            </svg>
-            <input
-              type="text"
-              placeholder="Kunde oder Rechnungsnummer suchen..."
-              className={styles.searchInput}
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              disabled={salesLoading}
-            />
-            {search && (
-              <button 
-                className={styles.clearButton}
-                onClick={() => setSearch('')}
-                disabled={salesLoading}
-              >
-                ✕
-              </button>
+        
+        <div className={styles.filterControls}>
+          <input
+            type="date"
+            value={dateFilter}
+            className={styles.filterInput}
+            onChange={e => setDateFilter(e.target.value)}
+            disabled={salesLoading}
+          />
+          <select
+            className={styles.filterInput}
+            value={statusFilter}
+            onChange={e => setStatusFilter(e.target.value)}
+            disabled={salesLoading}
+          >
+            <option value="">{t('sales.filter.allStatus')}</option>
+            <option value="paid">{t('sales.status.paid')}</option>
+            <option value="pending">{t('sales.status.pending')}</option>
+            <option value="cancelled">{t('sales.status.cancelled')}</option>
+          </select>
+          
+          <select
+            className={styles.filterInput}
+            value={`${sortField}-${sortDirection}`}
+            onChange={(e) => {
+              const [field, direction] = e.target.value.split('-');
+              setSortField(field);
+              setSortDirection(direction);
+            }}
+            disabled={salesLoading}
+          >
+            <option value="createdAt-desc">{t('sales.sort.newest')}</option>
+            <option value="createdAt-asc">{t('sales.sort.oldest')}</option>
+            <option value="total-desc">{t('sales.sort.priceHigh')}</option>
+            <option value="total-asc">{t('sales.sort.priceLow')}</option>
+            <option value="clientName-asc">{t('sales.sort.clientAZ')}</option>
+            <option value="clientName-desc">{t('sales.sort.clientZA')}</option>
+          </select>
+        </div>
+        
+        <div className={styles.resultsInfo}>
+          <span>
+            {salesLoading ? (
+              t('sales.loading.short')
+            ) : (
+              <>
+                {t('sales.search.results')
+                  .replace('{visible}', visibleSales.length)
+                  .replace('{total}', filtered.length)}
+                {hasMore && t('sales.search.moreAvailable')
+                  .replace('{remaining}', filtered.length - visibleSales.length)}
+              </>
+            )}
+          </span>
+          
+          <div className={styles.activeFilters}>
+            {(sortField !== "createdAt" || sortDirection !== "desc") && (
+              <span className={styles.activeFilter}>
+                {t('sales.filter.sortBy')}: {
+                  sortField === "total" 
+                    ? `${t('sales.sort.price')} ${sortDirection === "asc" ? "⬆️" : "⬇️"}`
+                    : sortField === "clientName"
+                    ? `${t('sales.sort.client')} ${sortDirection === "asc" ? "A-Z" : "Z-A"}`
+                    : `${t('sales.sort.date')} ${sortDirection === "asc" ? "⬆️" : "⬇️"}`
+                }
+                <button 
+                  className={styles.clearFilter}
+                  onClick={() => {
+                    setSortField("createdAt");
+                    setSortDirection("desc");
+                  }}
+                >
+                  ✕
+                </button>
+              </span>
+            )}
+            {statusFilter && (
+              <span className={styles.activeFilter}>
+                {t('sales.filter.status')}: {getStatusText(statusFilter)}
+                <button 
+                  className={styles.clearFilter}
+                  onClick={() => setStatusFilter("")}
+                >
+                  ✕
+                </button>
+              </span>
+            )}
+            {dateFilter && (
+              <span className={styles.activeFilter}>
+                {t('sales.filter.date')}: {dateFilter}
+                <button 
+                  className={styles.clearFilter}
+                  onClick={() => setDateFilter("")}
+                >
+                  ✕
+                </button>
+              </span>
             )}
           </div>
-          
-          <div className={styles.filterControls}>
-            <input
-              type="date"
-              value={dateFilter}
-              className={styles.filterInput}
-              onChange={e => setDateFilter(e.target.value)}
-              disabled={salesLoading}
-            />
-            <select
-              className={styles.filterInput}
-              value={statusFilter}
-              onChange={e => setStatusFilter(e.target.value)}
-              disabled={salesLoading}
-            >
-              <option value="">Alle Status</option>
-              <option value="paid">Bezahlt</option>
-              <option value="pending">Ausstehend</option>
-              <option value="cancelled">Storniert</option>
-            </select>
-            
-            {/* 🎯 NUEVO: Filtro de ordenamiento */}
-            <select
-              className={styles.filterInput}
-              value={`${sortField}-${sortDirection}`}
-              onChange={(e) => {
-                const [field, direction] = e.target.value.split('-');
-                setSortField(field);
-                setSortDirection(direction);
-              }}
-              disabled={salesLoading}
-            >
-              <option value="createdAt-desc">Neueste zuerst</option>
-              <option value="createdAt-asc">Älteste zuerst</option>
-              <option value="total-desc">Preis: Hoch zu Niedrig</option>
-              <option value="total-asc">Preis: Niedrig zu Hoch</option>
-              <option value="clientName-asc">Kunde: A-Z</option>
-              <option value="clientName-desc">Kunde: Z-A</option>
-            </select>
-          </div>
-          
-          <div className={styles.resultsInfo}>
-            <span>
-              {salesLoading ? (
-                "Lade..."
-              ) : (
-                <>
-                  <strong>{visibleSales.length}</strong> von <strong>{filtered.length}</strong> Rechnungen
-                  {hasMore && ` (${filtered.length - visibleSales.length} mehr verfügbar)`}
-                </>
-              )}
-            </span>
-            
-            {/* 🎯 NUEVO: Filtros activos */}
-            <div className={styles.activeFilters}>
-              {(sortField !== "createdAt" || sortDirection !== "desc") && (
-                <span className={styles.activeFilter}>
-                  Sortierung: {
-                    sortField === "total" 
-                      ? `Preis ${sortDirection === "asc" ? "⬆️" : "⬇️"}`
-                      : sortField === "clientName"
-                      ? `Kunde ${sortDirection === "asc" ? "A-Z" : "Z-A"}`
-                      : `Datum ${sortDirection === "asc" ? "⬆️" : "⬇️"}`
-                  }
-                  <button 
-                    className={styles.clearFilter}
-                    onClick={() => {
-                      setSortField("createdAt");
-                      setSortDirection("desc");
-                    }}
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
-              {statusFilter && (
-                <span className={styles.activeFilter}>
-                  Status: {getStatusText(statusFilter)}
-                  <button 
-                    className={styles.clearFilter}
-                    onClick={() => setStatusFilter("")}
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
-              {dateFilter && (
-                <span className={styles.activeFilter}>
-                  Datum: {dateFilter}
-                  <button 
-                    className={styles.clearFilter}
-                    onClick={() => setDateFilter("")}
-                  >
-                    ✕
-                  </button>
-                </span>
-              )}
-            </div>
-          </div>
         </div>
+      </div>
 
-        {/* Main Content */}
-        {salesLoading ? (
-          <div className={styles.loadingContainer}>
-            <div className={styles.spinner}></div>
-            <p>Rechnungen werden geladen...</p>
-          </div>
-        ) : error ? (
-          <div className={styles.errorContainer}>
-            <div className={styles.errorIcon}>⚠️</div>
-            <h3>Fehler beim Laden der Rechnungen</h3>
-            <p>{error}</p>
-            <button onClick={handleRefresh} className={`${styles.retryButton} ${styles.retryButtonLarge}`}>
-              Erneut versuchen
-            </button>
-          </div>
-        ) : (
-          <>
-            {/* Desktop Table */}
-            <div className={styles.desktopTable}>
-              {visibleSales.length === 0 ? (
-                <div className={styles.emptyState}>
-                  {search || dateFilter || statusFilter ? (
-                    <>
-                      <div className={styles.emptyIcon}>🔍</div>
-                      <h3>Keine Rechnungen gefunden</h3>
-                      <p>Keine Ergebnisse für Ihre Suchkriterien</p>
-                      <button 
-                        className={styles.clearFiltersButton}
-                        onClick={() => {
-                          setSearch('');
-                          setDateFilter('');
-                          setStatusFilter('');
-                          setSortField('createdAt');
-                          setSortDirection('desc');
-                        }}
-                      >
-                        Alle Filter zurücksetzen
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <div className={styles.emptyIcon}>🧾</div>
-                      <h3>Keine Rechnungen vorhanden</h3>
-                      <p>Erstellen Sie Ihre erste Rechnung</p>
-                      <button 
-                        className={`${styles.createButton} ${styles.createButtonOutline}`}
-                        onClick={() => setOpenModal(true)}
-                      >
-                        Erste Rechnung erstellen
-                      </button>
-                    </>
-                  )}
-                </div>
-              ) : (
-                <table className={styles.salesTable}>
-                  <thead>
-                    <tr>
-                      <th 
-                        className={`${styles.sortable} ${sortField === 'createdAt' ? styles.active : ''}`}
-                        onClick={() => handleSort('createdAt')}
-                      >
-                        Datum {getSortIcon('createdAt')}
-                      </th>
-                      <th 
-                        className={`${styles.sortable} ${sortField === 'clientName' ? styles.active : ''}`}
-                        onClick={() => handleSort('clientName')}
-                      >
-                        Kunde {getSortIcon('clientName')}
-                      </th>
-                      <th>Lieferschein</th>
-                      <th 
-                        className={`${styles.sortable} ${sortField === 'total' ? styles.active : ''}`}
-                        onClick={() => handleSort('total')}
-                      >
-                        Total {getSortIcon('total')}
-                      </th>
-                      <th>Status</th>
-                      <th>Aktionen</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {visibleSales.map(s => (
-                      <tr 
-                        key={s._id} 
-                        className={styles.tableRow}
-                        onClick={() => setSelectedSale(s)}
-                      >
-                        <td>{formatDate(s.createdAt)}</td>
-                        <td className={styles.clientName}>
-                          {s.clientSnapshot?.name || s.client?.name || 'Unbekannt'}
-                        </td>
-                        <td>{s.lieferschein || '-'}</td>
-                        <td className={styles.totalAmount}>{formatCurrency(s.total)} {currencySymbol}</td>
-                        <td>
-                          <span 
-                            className={styles.statusTag}
-                            style={{ backgroundColor: getStatusColor(s.status) }}
+      {/* Main Content */}
+      {salesLoading ? (
+        <div className={styles.loadingContainer}>
+          <div className={styles.spinner}></div>
+          <p>{t('sales.loading.invoices')}</p>
+        </div>
+      ) : error ? (
+        <div className={styles.errorContainer}>
+          <div className={styles.errorIcon}>⚠️</div>
+          <h3>{t('sales.error.title')}</h3>
+          <p>{error}</p>
+          <button onClick={handleRefresh} className={`${styles.retryButton} ${styles.retryButtonLarge}`}>
+            {t('sales.actions.retry')}
+          </button>
+        </div>
+      ) : (
+        <>
+          {/* Desktop Table */}
+          <div className={styles.desktopTable}>
+            {visibleSales.length === 0 ? (
+              <div className={styles.emptyState}>
+                {search || dateFilter || statusFilter ? (
+                  <>
+                    <div className={styles.emptyIcon}>🔍</div>
+                    <h3>{t('sales.empty.notFound.title')}</h3>
+                    <p>{t('sales.empty.notFound.text')}</p>
+                    <button 
+                      className={styles.clearFiltersButton}
+                      onClick={() => {
+                        setSearch('');
+                        setDateFilter('');
+                        setStatusFilter('');
+                        setSortField('createdAt');
+                        setSortDirection('desc');
+                      }}
+                    >
+                      {t('sales.actions.resetFilters')}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.emptyIcon}>🧾</div>
+                    <h3>{t('sales.empty.noInvoices.title')}</h3>
+                    <p>{t('sales.empty.noInvoices.text')}</p>
+                    <button 
+                      className={`${styles.createButton} ${styles.createButtonOutline}`}
+                      onClick={() => setOpenModal(true)}
+                    >
+                      {t('sales.actions.createFirst')}
+                    </button>
+                  </>
+                )}
+              </div>
+            ) : (
+              <table className={styles.salesTable}>
+                <thead>
+                  <tr>
+                    <th 
+                      className={`${styles.sortable} ${sortField === 'createdAt' ? styles.active : ''}`}
+                      onClick={() => handleSort('createdAt')}
+                    >
+                      {t('sales.table.date')} {getSortIcon('createdAt')}
+                    </th>
+                    <th 
+                      className={`${styles.sortable} ${sortField === 'clientName' ? styles.active : ''}`}
+                      onClick={() => handleSort('clientName')}
+                    >
+                      {t('sales.table.client')} {getSortIcon('clientName')}
+                    </th>
+                    <th>{t('sales.table.invoiceNumber')}</th>
+                    <th 
+                      className={`${styles.sortable} ${sortField === 'total' ? styles.active : ''}`}
+                      onClick={() => handleSort('total')}
+                    >
+                      {t('sales.table.total')} {getSortIcon('total')}
+                    </th>
+                    <th>{t('sales.table.status')}</th>
+                    <th>{t('sales.table.actions')}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visibleSales.map(s => (
+                    <tr 
+                      key={s._id} 
+                      className={styles.tableRow}
+                      onClick={() => setSelectedSale(s)}
+                    >
+                      <td>{formatDate(s.createdAt)}</td>
+                      <td className={styles.clientName}>
+                        {s.clientSnapshot?.name || s.client?.name || t('sales.client.unknown')}
+                      </td>
+                      <td>{s.lieferschein || '-'}</td>
+                      <td className={styles.totalAmount}>{formatCurrency(s.total)} {currencySymbol}</td>
+                      <td>
+                        <span 
+                          className={styles.statusTag}
+                          style={{ backgroundColor: getStatusColor(s.status) }}
+                        >
+                          {getStatusText(s.status)}
+                        </span>
+                      </td>
+                      <td>
+                        <div className={styles.actionButtons}>
+                          <button
+                            className={styles.stockButton}
+                            onClick={(e) => {
+                              setSaleForMovements(s);
+                              e.stopPropagation();
+                            }}
+                            title={t('sales.actions.stock')}
                           >
-                            {getStatusText(s.status)}
-                          </span>
-                        </td>
-                        <td>
+                            📦 {t('sales.buttons.stock')}
+                          </button>
                           <button
                             className={styles.editButton}
                             onClick={(e) => {
@@ -436,147 +454,165 @@ export default function SalesPage() {
                               e.stopPropagation();
                             }}
                           >
-                            Bearbeiten
+                            {t('sales.buttons.edit')}
                           </button>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )}
-            </div>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            )}
+          </div>
 
-            {/* Mobile Cards */}
-            <div className={styles.mobileCards}>
-              {visibleSales.length === 0 ? (
-                <div className={`${styles.emptyState} ${styles.emptyStateMobile}`}>
-                  {search || dateFilter || statusFilter ? (
-                    <>
-                      <div className={styles.emptyIcon}>🔍</div>
-                      <h3>Keine Rechnungen gefunden</h3>
-                      <p>Keine Ergebnisse für Ihre Suchkriterien</p>
-                      <button 
-                        className={styles.clearFiltersButton}
-                        onClick={() => {
-                          setSearch('');
-                          setDateFilter('');
-                          setStatusFilter('');
-                          setSortField('createdAt');
-                          setSortDirection('desc');
-                        }}
-                      >
-                        Alle Filter zurücksetzen
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <div className={styles.emptyIcon}>🧾</div>
-                      <h3>Keine Rechnungen vorhanden</h3>
-                      <p>Erstellen Sie Ihre erste Rechnung</p>
-                      <button 
-                        className={`${styles.createButton} ${styles.createButtonOutline}`}
-                        onClick={() => setOpenModal(true)}
-                      >
-                        Erste Rechnung erstellen
-                      </button>
-                    </>
-                  )}
-                </div>
-              ) : (
-                visibleSales.map(s => (
-                  <div 
-                    key={s._id} 
-                    className={styles.saleCard}
-                    onClick={() => setSelectedSale(s)}
-                    style={{ borderLeftColor: getStatusColor(s.status) }}
-                  >
-                    <div className={styles.cardHeader}>
-                      <div className={styles.cardClient}>
-                        <h3>{s.clientSnapshot?.name || s.client?.name || 'Unbekannt'}</h3>
-                        <span className={styles.cardDate}>{formatDate(s.createdAt)}</span>
-                      </div>
-                      <span 
-                        className={`${styles.statusTag} ${styles.statusTagMobile}`}
-                        style={{ backgroundColor: getStatusColor(s.status) }}
-                      >
-                        {getStatusText(s.status)}
-                      </span>
+          {/* Mobile Cards */}
+          <div className={styles.mobileCards}>
+            {visibleSales.length === 0 ? (
+              <div className={`${styles.emptyState} ${styles.emptyStateMobile}`}>
+                {search || dateFilter || statusFilter ? (
+                  <>
+                    <div className={styles.emptyIcon}>🔍</div>
+                    <h3>{t('sales.empty.notFound.title')}</h3>
+                    <p>{t('sales.empty.notFound.text')}</p>
+                    <button 
+                      className={styles.clearFiltersButton}
+                      onClick={() => {
+                        setSearch('');
+                        setDateFilter('');
+                        setStatusFilter('');
+                        setSortField('createdAt');
+                        setSortDirection('desc');
+                      }}
+                    >
+                      {t('sales.actions.resetFilters')}
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <div className={styles.emptyIcon}>🧾</div>
+                    <h3>{t('sales.empty.noInvoices.title')}</h3>
+                    <p>{t('sales.empty.noInvoices.text')}</p>
+                    <button 
+                      className={`${styles.createButton} ${styles.createButtonOutline}`}
+                      onClick={() => setOpenModal(true)}
+                    >
+                      {t('sales.actions.createFirst')}
+                    </button>
+                  </>
+                )}
+              </div>
+            ) : (
+              visibleSales.map(s => (
+                <div 
+                  key={s._id} 
+                  className={styles.saleCard}
+                  onClick={() => setSelectedSale(s)}
+                  style={{ borderLeftColor: getStatusColor(s.status) }}
+                >
+                  <div className={styles.cardHeader}>
+                    <div className={styles.cardClient}>
+                      <h3>{s.clientSnapshot?.name || s.client?.name || t('sales.client.unknown')}</h3>
+                      <span className={styles.cardDate}>{formatDate(s.createdAt)}</span>
                     </div>
-                    
-                    <div className={styles.cardDetails}>
-                      <div className={styles.detailRow}>
-                        <span>Lieferschein:</span>
-                        <span>{s.lieferschein || '-'}</span>
-                      </div>
-                      <div className={styles.detailRow}>
-                        <span>Total:</span>
-                        <span className={styles.cardTotal}>{formatCurrency(s.total)} {currencySymbol}</span>
-                      </div>
+                    <span 
+                      className={`${styles.statusTag} ${styles.statusTagMobile}`}
+                      style={{ backgroundColor: getStatusColor(s.status) }}
+                    >
+                      {getStatusText(s.status)}
+                    </span>
+                  </div>
+                  
+                  <div className={styles.cardDetails}>
+                    <div className={styles.detailRow}>
+                      <span>{t('sales.table.invoiceNumber')}:</span>
+                      <span>{s.lieferschein || '-'}</span>
                     </div>
-
-                    <div className={styles.cardActions}>
-                      <button
-                        className={`${styles.editButton} ${styles.editButtonMobile}`}
-                        onClick={(e) => {
-                          setSaleToEdit(s);
-                          setUpdateModalOpen(true);
-                          e.stopPropagation();
-                        }}
-                      >
-                        Bearbeiten
-                      </button>
+                    <div className={styles.detailRow}>
+                      <span>{t('sales.table.total')}:</span>
+                      <span className={styles.cardTotal}>{formatCurrency(s.total)} {currencySymbol}</span>
                     </div>
                   </div>
-                ))
-              )}
-            </div>
 
-            {/* Load More Trigger */}
-            {hasMore && (
-              <div className={styles.loadMoreSection}>
-                <LoadMoreTrigger
-                  loadingMore={loadingMore}
-                  hasMore={hasMore}
-                  loadMoreRef={loadMoreRef}
-                  customMessage={`Mehr Rechnungen laden (${filtered.length - visibleSales.length} verfügbar)`}
-                />
-              </div>
+                  <div className={styles.cardActions}>
+                    <button
+                      className={`${styles.stockButton} ${styles.stockButtonMobile}`}
+                      onClick={(e) => {
+                        setSaleForMovements(s);
+                        e.stopPropagation();
+                      }}
+                    >
+                      📦 {t('sales.buttons.stock')}
+                    </button>
+                    <button
+                      className={`${styles.editButton} ${styles.editButtonMobile}`}
+                      onClick={(e) => {
+                        setSaleToEdit(s);
+                        setUpdateModalOpen(true);
+                        e.stopPropagation();
+                      }}
+                    >
+                      {t('sales.buttons.edit')}
+                    </button>
+                  </div>
+                </div>
+              ))
             )}
-          </>
-        )}
+          </div>
 
-        {/* Modals con verificación de autenticación */}
-        {selectedSale && (
-          <RechnungPrint
-            sale={selectedSale}
-            onClose={() => setSelectedSale(null)}
-          />
-        )}
-
-        {openModal && isAuthenticated && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-              <button 
-                className={styles.modalClose} 
-                onClick={() => setOpenModal(false)}
-              >
-                ✖
-              </button>
-              <RechnungCreator 
-                onDone={handleCreateSuccess}
-                salesApi={salesApi}
+          {/* Load More Trigger */}
+          {hasMore && (
+            <div className={styles.loadMoreSection}>
+              <LoadMoreTrigger
+                loadingMore={loadingMore}
+                hasMore={hasMore}
+                loadMoreRef={loadMoreRef}
+                customMessage={t('sales.actions.loadMore')
+                  .replace('{remaining}', filtered.length - visibleSales.length)}
               />
             </div>
-          </div>
-        )}
+          )}
+        </>
+      )}
 
-        {updateModalOpen && saleToEdit && isAuthenticated && (
-          <RechnungUpdate
-            sale={saleToEdit}
-            onClose={handleUpdateClose}
-            onSaved={handleUpdateSuccess}
-          />
-        )}
-      </div>
+      {/* Modals con verificación de autenticación */}
+      {selectedSale && (
+        <RechnungPrint
+          sale={selectedSale}
+          onClose={() => setSelectedSale(null)}
+        />
+      )}
+
+      {openModal && isAuthenticated && (
+        <div className={styles.modalOverlay}>
+          <div className={styles.modalContent}>
+            <button 
+              className={styles.modalClose} 
+              onClick={() => setOpenModal(false)}
+            >
+              ✖
+            </button>
+            <RechnungCreator 
+              onDone={handleCreateSuccess}
+              salesApi={salesApi}
+            />
+          </div>
+        </div>
+      )}
+
+      {updateModalOpen && saleToEdit && isAuthenticated && (
+        <RechnungUpdate
+          sale={saleToEdit}
+          onClose={handleUpdateClose}
+          onSaved={handleUpdateSuccess}
+        />
+      )}
+
+      {saleForMovements && (
+        <StockMovementsModal
+          sale={saleForMovements}
+          onClose={() => setSaleForMovements(null)}
+        />
+      )}
+    </div>
   );
 }

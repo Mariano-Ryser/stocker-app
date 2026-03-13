@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useAuth } from "../../components/auth/AuthProvider";
 import { useLanguage } from "../../contexts/LanguageContext";
 import styles from "./login.module.css";
-
+ 
 export default function LoginPage() {
 
   const [email, setEmail] = useState("");
@@ -61,10 +61,9 @@ export default function LoginPage() {
     <div className={styles.container}>
       {/* Sección izquierda: Imagen corporativa */}
       <div className={styles.imageSection}>
-        <div className={styles.imageOverlay}></div>
         <div className={styles.imageContent}>
           <img 
-            src="/img/logo78.png" 
+            src="/img/logo80.webp" 
             alt="Alpina Logo" 
             className={styles.companyLogo}
           />
@@ -238,7 +237,7 @@ export default function LoginPage() {
                 Jetzt registrieren
               </span>
             </div>
-
+{/* 
             <div className={styles.supportInfo}>
               <svg className={styles.supportIcon} viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
@@ -247,7 +246,7 @@ export default function LoginPage() {
               <a href="mailto:rysermariano@gmail.com" className={styles.supportLink}>
                 rysermariano@gmail.com
               </a>
-            </div>
+            </div> */}
           </form>
 
           <div className={styles.copyright}>

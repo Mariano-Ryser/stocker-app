@@ -49,6 +49,8 @@ const currencySymbol = company?.currency || 'USD';
           <div className={styles.modalHeader}>
             <h2 className={styles.modalTitle}>Acceso restringido</h2>
             <button className={styles.closeBtn} onClick={onClose}>✕</button>
+
+             
           </div>
           <div className={styles.modalBody}>
             <p>Debe iniciar sesión para crear productos.</p>

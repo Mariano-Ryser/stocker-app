@@ -1,0 +1,76 @@
+{
+  "wareneingang": {
+    "title": "Goods Receipt",
+    "subtitle": "Record new deliveries and increase stock levels",
+    "loading": "Loading...",
+    "search": {
+      "title": "Search Articles",
+      "placeholder": "Enter article name or number...",
+      "button": "Search",
+      "searching": "Searching...",
+      "noResults": "No articles found",
+      "clearSearch": "Clear search"
+    },
+    "product": {
+      "number": "No: {number}",
+      "currentStock": "Current stock: {stock}",
+      "price": "{price}",
+      "selectIndicator": "✓"
+    },
+    "form": {
+      "title": "Record Goods Receipt",
+      "selectedProduct": {
+        "title": "{name}",
+        "number": "Article number: {number}",
+        "currentStock": "Current stock: <strong>{stock}</strong>"
+      },
+      "fields": {
+        "quantity": {
+          "label": "Quantity *",
+          "placeholder": "0"
+        },
+        "supplier": {
+          "label": "Supplier (optional)",
+          "placeholder": "e.g., Metro, Selgros, etc."
+        },
+        "reference": {
+          "label": "Invoice / Delivery note (optional)",
+          "placeholder": "e.g., INV-2024-001"
+        },
+        "expiration": {
+          "label": "Expiration date (optional)"
+        },
+        "batch": {
+          "label": "Batch / Lot number (optional)",
+          "placeholder": "e.g., L2305"
+        },
+        "notes": {
+          "label": "Notes (optional)",
+          "placeholder": "Additional information..."
+        }
+      },
+      "preview": {
+        "text": "New stock after receipt:",
+        "newStock": "{current} + {add} = <strong>{total}</strong>"
+      },
+      "success": "✅ {message}",
+      "error": "❌ {message}",
+      "actions": {
+        "cancel": "Cancel",
+        "submit": "Book goods receipt",
+        "submitting": "Processing..."
+      },
+      "successMessage": "Goods receipt successfully booked!"
+    },
+    "emptyState": {
+      "title": "No article selected",
+      "text": "Search for an article on the left and select it to record a goods receipt.",
+      "icon": "📦"
+    },
+    "stock": {
+      "inStock": "In stock",
+      "outOfStock": "Out of stock",
+      "badge": "Current stock: {stock}"
+    }
+  }
+}

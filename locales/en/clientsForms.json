@@ -1,0 +1,75 @@
+{
+  "clientForm": {
+    "restricted": {
+      "title": "Access Restricted",
+      "message": "You must be logged in to manage customers.",
+      "close": "Close"
+    },
+    "fields": {
+      "firstName": {
+        "label": "First Name *",
+        "placeholder": "First name"
+      },
+      "lastName": {
+        "label": "Last Name *",
+        "placeholder": "Last name"
+      },
+      "email": {
+        "label": "Email",
+        "placeholder": "Email"
+      },
+      "address": {
+        "label": "Address",
+        "placeholder": "Address"
+      },
+      "phone": {
+        "label": "Phone",
+        "placeholder": "Phone"
+      }
+    },
+    "address": {
+      "title": "Address",
+      "street": "Street",
+      "streetPlaceholder": "Main Street",
+      "number": "Number",
+      "numberPlaceholder": "123",
+      "complement": "Address complement",
+      "complementPlaceholder": "3rd floor, Building B, etc.",
+      "postalCode": "Postal Code",
+      "postalCodePlaceholder": "12345",
+      "city": "City",
+      "cityPlaceholder": "Berlin",
+      "state": "State",
+      "statePlaceholder": "Berlin",
+      "country": "Country",
+      "countryPlaceholder": "Germany",
+      "company": "Company Name",
+      "companyPlaceholder": "Company Ltd."
+    },
+    "buttons": {
+      "cancel": "Cancel",
+      "creating": "Creating...",
+      "create": "Create Customer",
+      "updating": "Updating...",
+      "save": "Save Changes"
+    },
+    "errors": {
+     "emailExists": "This email is already registered",
+      "requiredFields": "Please fill in all required fields",
+      "clientNotFound": "Customer not found",
+      "validationError": "Validation error",
+      "serverError": "Server error. Please try again later",
+      "networkError": "Connection error. Please check your internet connection",
+      "createFailed": "Error creating customer",
+      "updateFailed": "Error updating customer",
+      "unknown": "Unknown error"
+    },
+    "creator": {
+      "title": "New Customer"
+    },
+    "editor": {
+      "title": "Edit Customer",
+      "id": "ID: {id}"
+    }
+  }
+}

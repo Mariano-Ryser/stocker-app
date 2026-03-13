@@ -1,0 +1,76 @@
+{
+  "wareneingang": {
+    "title": "Wareneingang",
+    "subtitle": "Erfassen Sie neue Lieferungen und erhöhen Sie den Lagerbestand",
+    "loading": "Laden...",
+    "search": {
+      "title": "Artikel suchen",
+      "placeholder": "Artikelname oder Nummer eingeben...",
+      "button": "Suchen",
+      "searching": "Suche...",
+      "noResults": "Keine Artikel gefunden",
+      "clearSearch": "Suche zurücksetzen"
+    },
+    "product": {
+      "number": "Nr: {number}",
+      "currentStock": "Aktueller Bestand: {stock}",
+      "price": "{price}",
+      "selectIndicator": "✓"
+    },
+    "form": {
+      "title": "Wareneingang erfassen",
+      "selectedProduct": {
+        "title": "{name}",
+        "number": "Artikelnummer: {number}",
+        "currentStock": "Aktueller Bestand: <strong>{stock}</strong>"
+      },
+      "fields": {
+        "quantity": {
+          "label": "Menge *",
+          "placeholder": "0"
+        },
+        "supplier": {
+          "label": "Lieferant (optional)",
+          "placeholder": "z.B. Metro, Selgros, etc."
+        },
+        "reference": {
+          "label": "Rechnungsnummer / Lieferschein (optional)",
+          "placeholder": "z.B. RE-2024-001"
+        },
+        "expiration": {
+          "label": "Ablaufdatum (optional)"
+        },
+        "batch": {
+          "label": "Losnummer / Charge (optional)",
+          "placeholder": "z.B. L2305"
+        },
+        "notes": {
+          "label": "Notizen (optional)",
+          "placeholder": "Weitere Informationen..."
+        }
+      },
+      "preview": {
+        "text": "Neuer Bestand nach Eingang:",
+        "newStock": "{current} + {add} = <strong>{total}</strong>"
+      },
+      "success": "✅ {message}",
+      "error": "❌ {message}",
+      "actions": {
+        "cancel": "Abbrechen",
+        "submit": "Wareneingang buchen",
+        "submitting": "Wird verarbeitet..."
+      },
+      "successMessage": "Wareneingang erfolgreich gebucht!"
+    },
+    "emptyState": {
+      "title": "Kein Artikel ausgewählt",
+      "text": "Suchen Sie links einen Artikel und wählen Sie ihn aus, um einen Wareneingang zu erfassen.",
+      "icon": "📦"
+    },
+    "stock": {
+      "inStock": "Auf Lager",
+      "outOfStock": "Ausverkauft",
+      "badge": "Aktueller Bestand: {stock}"
+    }
+  }
+}

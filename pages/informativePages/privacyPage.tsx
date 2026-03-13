@@ -20,7 +20,7 @@ export default function PrivacyPage() {
       <div className={styles.background}>
         <div className={styles.logoWatermark}>
           <img
-            src="/img/logo78.png"
+            src="/img/logo80.webp"
             alt="Alpina Logo"
             className={styles.watermarkLogo}
           />
@@ -199,36 +199,54 @@ export default function PrivacyPage() {
             </section>
 
             {/* Sección 11: Cookies und Tracking */}
-            <section className={styles.section}>
-              <h2>{t("privacy.sections.cookies.title")}</h2>
-              <p>{t("privacy.sections.cookies.text")}</p>
-              <table className={styles.cookiesTable}>
-                <thead>
-                  <tr>
-                    <th>{t("privacy.sections.cookies.table.headers.type")}</th>
-                    <th>{t("privacy.sections.cookies.table.headers.purpose")}</th>
-                    <th>{t("privacy.sections.cookies.table.headers.duration")}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>{t("privacy.sections.cookies.table.rows.necessary.type")}</td>
-                    <td>{t("privacy.sections.cookies.table.rows.necessary.purpose")}</td>
-                    <td>{t("privacy.sections.cookies.table.rows.necessary.duration")}</td>
-                  </tr>
-                  <tr>
-                    <td>{t("privacy.sections.cookies.table.rows.preference.type")}</td>
-                    <td>{t("privacy.sections.cookies.table.rows.preference.purpose")}</td>
-                    <td>{t("privacy.sections.cookies.table.rows.preference.duration")}</td>
-                  </tr>
-                  <tr>
-                    <td>{t("privacy.sections.cookies.table.rows.statistics.type")}</td>
-                    <td>{t("privacy.sections.cookies.table.rows.statistics.purpose")}</td>
-                    <td>{t("privacy.sections.cookies.table.rows.statistics.duration")}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </section>
+        <section className={styles.section}>
+  <h2>{t("privacy.sections.cookies.title")}</h2>
+  <p>{t("privacy.sections.cookies.text")}</p>
+  <table className={styles.cookiesTable}>
+    <thead>
+      <tr>
+        <th>{t("privacy.sections.cookies.table.headers.type")}</th>
+        <th>{t("privacy.sections.cookies.table.headers.purpose")}</th>
+        <th>{t("privacy.sections.cookies.table.headers.duration")}</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td data-label={t("privacy.sections.cookies.table.headers.type")}>
+          {t("privacy.sections.cookies.table.rows.necessary.type")}
+        </td>
+        <td data-label={t("privacy.sections.cookies.table.headers.purpose")}>
+          {t("privacy.sections.cookies.table.rows.necessary.purpose")}
+        </td>
+        <td data-label={t("privacy.sections.cookies.table.headers.duration")}>
+          {t("privacy.sections.cookies.table.rows.necessary.duration")}
+        </td>
+      </tr>
+      <tr>
+        <td data-label={t("privacy.sections.cookies.table.headers.type")}>
+          {t("privacy.sections.cookies.table.rows.preference.type")}
+        </td>
+        <td data-label={t("privacy.sections.cookies.table.headers.purpose")}>
+          {t("privacy.sections.cookies.table.rows.preference.purpose")}
+        </td>
+        <td data-label={t("privacy.sections.cookies.table.headers.duration")}>
+          {t("privacy.sections.cookies.table.rows.preference.duration")}
+        </td>
+      </tr>
+      <tr>
+        <td data-label={t("privacy.sections.cookies.table.headers.type")}>
+          {t("privacy.sections.cookies.table.rows.statistics.type")}
+        </td>
+        <td data-label={t("privacy.sections.cookies.table.headers.purpose")}>
+          {t("privacy.sections.cookies.table.rows.statistics.purpose")}
+        </td>
+        <td data-label={t("privacy.sections.cookies.table.headers.duration")}>
+          {t("privacy.sections.cookies.table.rows.statistics.duration")}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+        </section>
 
             {/* Sección 12: Kontaktaufnahme */}
             <section className={styles.section}>
@@ -249,8 +267,8 @@ export default function PrivacyPage() {
           </div>
         </main>
 
-        <Footer />
       </div>
+      <Footer />
     </div>
   );
 }

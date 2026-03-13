@@ -1,0 +1,75 @@
+
+{
+  "ceo": {
+    "title": "CEO Dashboard",
+    "subtitle": "Manage all users and companies on the platform",
+    "refresh": "Refresh",
+    "loading": "Loading user data...",
+    "stats": {
+      "totalUsers": "Total Users",
+      "totalCompanies": "Total Companies",
+      "totalProducts": "Total Products",
+      "totalSales": "Total Sales",
+      "totalClients": "Total Clients",
+      "plans": "Plans"
+    },
+    "filters": {
+      "placeholder": "Search by name, email or company...",
+      "allStatus": "All status",
+      "active": "Active",
+      "inactive": "Inactive",
+      "allPlans": "All plans",
+      "basic": "Basic",
+      "medium": "Medium",
+      "pro": "Pro",
+      "results": "{count} results"
+    },
+    "search": {
+      "placeholder": "Search users..."
+    },
+    "table": {
+      "user": "User",
+      "company": "Company",
+      "created": "Created",
+      "stats": "Statistics",
+      "plan": "Plan",
+      "status": "Status",
+      "actions": "Actions",
+      "products": "Products",
+      "sales": "Sales",
+      "clients": "Clients",
+      "revenue": "Revenue",
+      "usersLimit": "{current}/{max} users"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Inactive"
+    },
+    "actions": {
+      "edit": "Edit user",
+      "activate": "Activate user",
+      "deactivate": "Deactivate user",
+      "changePlan": "Change plan"
+    },
+    "modal": {
+      "title": "User Details",
+      "plan": "Subscription Plan",
+      "details": "Detailed Information",
+      "role": "Role",
+      "created": "Registration date",
+      "products": "Products",
+      "sales": "Sales",
+      "clients": "Clients",
+      "revenue": "Total revenue",
+      "close": "Close"
+    },
+    "empty": {
+      "title": "No users found",
+      "text": "Try with different search filters"
+    },
+    "errors": {
+      "statusChange": "Error changing user status",
+      "planChange": "Error changing user plan"
+    }
+  }
+}

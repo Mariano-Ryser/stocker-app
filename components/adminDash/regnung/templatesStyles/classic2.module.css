@@ -1,0 +1,260 @@
+/* frontend/components/adminDash/regnung/templatesStyles/classic2.module.css */
+
+.invoiceClassic2 {
+  font-family: 'Times New Roman', Times, serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  background: white;
+  color: #000;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.companySection {
+  flex: 1;
+}
+
+.logo {
+  max-width: 220px;  /* Aún más grande */
+  max-height: 150px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+.companyDetails {
+  font-size: 11px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.companyName {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #000;
+}
+
+.invoiceInfo {
+  text-align: right;
+}
+
+.invoiceTitle {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.invoiceNumber {
+  font-size: 14px;
+  color: #666;
+}
+
+.divider {
+  height: 2px;
+  background: linear-gradient(to right, #000 0%, #000 50%, transparent 100%);
+  margin: 20px 0;
+}
+
+.clientBox {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-left: 4px solid #000;
+}
+
+.clientTitle {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.clientName {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.clientAddress {
+  margin: 5px 0;
+}
+
+.clientContact {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #ccc;
+  font-size: 11px;
+  color: #666;
+}
+
+.metaGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 25px 0;
+  padding: 15px;
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+.metaItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metaLabel {
+  font-weight: bold;
+  color: #666;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.metaValue {
+  color: #000;
+  font-size: 12px;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 11px;
+}
+
+.table th {
+  background: #f0f0f0;
+  border: 1px solid #000;
+  padding: 10px 8px;
+  text-align: left;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.table td {
+  border: 1px solid #000;
+  padding: 8px;
+}
+
+.table tbody tr:last-child td {
+  border-bottom: 1px solid #000;
+}
+
+.textCenter {
+  text-align: center;
+}
+
+.textRight {
+  text-align: right;
+}
+
+.totals {
+  margin-top: 25px;
+  width: 320px;
+  margin-left: auto;
+  border: 1px solid #000;
+  padding: 15px;
+  background: #fafafa;
+}
+
+.totalRow {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dotted #ccc;
+  font-size: 11px;
+}
+
+.totalRow:last-child {
+  border-bottom: none;
+}
+
+.totalRow.final {
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #000;
+  border-bottom: none;
+}
+
+.footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
+  text-align: center;
+  font-size: 10px;
+  color: #666;
+  position: relative;
+}
+
+.legalInfo {
+  margin-top: 10px;
+  font-size: 8px;
+  color: #999;
+}
+
+.page {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 8px;
+  color: #999;
+}
+
+/* Estilos para impresión */
+@media print {
+  .invoiceClassic2 {
+    padding: 20px;
+  }
+  
+  .table th,
+  .clientBox,
+  .totals {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .metaGrid {
+    border: 1px solid #000;
+  }
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .invoiceClassic2 {
+    padding: 15px;
+  }
+  
+  .header {
+    flex-direction: column;
+  }
+  
+  .invoiceInfo {
+    text-align: left;
+    margin-top: 15px;
+  }
+  
+  .metaGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .totals {
+    width: 100%;
+    margin-left: 0;
+  }
+}

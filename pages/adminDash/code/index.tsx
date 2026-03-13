@@ -1,10 +1,8 @@
+// adminDash/code/index.jsx
 import { useEffect, useRef, useState } from "react";
-import JsBarcode from "jsbarcode";
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import JsBarcode from "jsbarcode"; // Esta es pequeña, podemos mantenerla
+import { useBarcodeExporter } from "../../../hooks/useBarcodeExporter";
 import styles from "./EjemploPage.module.css";
-
-/* ================= CONFIG ================= */
 
 const FORMATOS = {
   CODE128: {
@@ -31,9 +29,10 @@ export default function CodigoDeBarras() {
   const [valor, setValor] = useState("123456789012");
   const [formato, setFormato] = useState("CODE128");
   const [error, setError] = useState("");
+  
+  const { isLoading, descargarPDF, descargarPNG } = useBarcodeExporter();
 
-  /* ================= LOGIC ================= */
-
+  // Efecto para generar código (jsbarcode es pequeño, ok mantenerlo)
   useEffect(() => {
     if (!svgRef.current || !valor) return;
 
@@ -57,9 +56,8 @@ export default function CodigoDeBarras() {
     });
   }, [valor, formato]);
 
-  /* ================= EXPORTS ================= */
-
-  const descargar = (blob:any, filename:any) => {
+  // Funciones simples - estas no pesan
+  const descargar = (blob, filename) => {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
@@ -76,26 +74,17 @@ export default function CodigoDeBarras() {
     descargar(blob, "codigo-barras.svg");
   };
 
-  const descargarPNG = async () => {
-    const canvas = await html2canvas(containerRef.current, { scale: 2 });
-    canvas.toBlob((blob) => {
-      descargar(blob, "codigo-barras.png");
-    });
+  const handleDescargarPNG = async () => {
+    if (containerRef.current) {
+      await descargarPNG(containerRef.current);
+    }
   };
 
-  const descargarPDF = async () => {
-    const canvas = await html2canvas(containerRef.current, { scale: 2 });
-    const imgData = canvas.toDataURL("image/png");
-
-    const pdf = new jsPDF("p", "mm", "a4");
-    const width = 180;
-    const height = (canvas.height * width) / canvas.width;
-
-    pdf.addImage(imgData, "PNG", 15, 30, width, height);
-    pdf.save("codigo-barras.pdf");
+  const handleDescargarPDF = async () => {
+    if (containerRef.current) {
+      await descargarPDF(containerRef.current);
+    }
   };
-
-  /* ================= UI ================= */
 
   return (
     <div className={styles.page}>
@@ -129,9 +118,25 @@ export default function CodigoDeBarras() {
 
         <div className={styles.actions}>
           <button onClick={descargarSVG}>SVG</button>
-          <button onClick={descargarPNG}>PNG</button>
-          <button onClick={descargarPDF}>PDF</button>
+          <button 
+            onClick={handleDescargarPNG}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Cargando...' : 'PNG'}
+          </button>
+          <button 
+            onClick={handleDescargarPDF}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Cargando...' : 'PDF'}
+          </button>
         </div>
+        
+        {isLoading && (
+          <div className={styles.loadingHint}>
+            Cargando librerías de exportación...
+          </div>
+        )}
       </div>
     </div>
   );

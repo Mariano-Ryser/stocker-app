@@ -3,18 +3,22 @@ import { useAuth } from "../../auth/AuthProvider";
 import { useSales } from "../../../hooks/useSales";
 import { useClients } from "../../../hooks/useClients";
 import { useProduct } from "../../../hooks/useProducts";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import styles from './Update.module.css';
 
 export default function RechnungUpdate({ sale, onClose, onSaved }) {
-  const { isAuthenticated } = useAuth();
+  const { t } = useLanguage();
+  const {company, isAuthenticated } = useAuth();
   const { updateSale } = useSales();
   const { clients } = useClients();
-  const { products, fetchProducts } = useProduct();
+  const { products, refreshProducts } = useProduct();
   const [editableSale, setEditableSale] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [stockErrors, setStockErrors] = useState({});
   const [originalItems, setOriginalItems] = useState([]);
   const [hasStockErrors, setHasStockErrors] = useState(false);
+
+  const currencySymbol = company?.currency || 'USD';
 
   useEffect(() => {
     if (sale) {
@@ -32,7 +36,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
       });
       
       setOriginalItems(mappedItems);
-      fetchProducts();
+      refreshProducts();
     }
   }, [sale]);
 
@@ -78,12 +82,14 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
       
       if (netChange > 0 && product.stock < netChange) {
         currentProductTotals[productId].lines.forEach(lineIndex => {
-          errors[lineIndex] = `Nicht genug Lagerbestand: ${product.stock} verfügbar, benötigt +${netChange} mehr`;
+          errors[lineIndex] = t('rechnungForm.items.stock.error')
+            .replace('{message}', `${product.stock} ${t('rechnungForm.items.stock.available')}, +${netChange} ${t('rechnungForm.items.stock.needed')}`);
           hasErrors = true;
         });
       } else if (currentTotal > product.stock + originalTotal) {
         currentProductTotals[productId].lines.forEach(lineIndex => {
-          errors[lineIndex] = `Nicht genug Lagerbestand: ${product.stock} verfügbar, benötigt ${currentTotal} (${originalTotal} original)`;
+          errors[lineIndex] = t('rechnungForm.items.stock.error')
+            .replace('{message}', `${product.stock} ${t('rechnungForm.items.stock.available')}, ${currentTotal} ${t('rechnungForm.items.stock.needed')} (${originalTotal} original)`);
           hasErrors = true;
         });
       } else {
@@ -124,7 +130,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
 
   const removeLine = idx => {
     if (!editableSale || editableSale.items.length <= 1) {
-      alert("Mindestens ein Artikel ist erforderlich");
+      alert(t('rechnungForm.items.errors.minOneItem'));
       return;
     }
     
@@ -178,8 +184,12 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
           product.stock - currentTotal < 10 ? styles.lowStock : 
           styles.inStock
         }`}>
-          Lager: {product.stock} | In Rechnung: {currentTotal} ({netChange >= 0 ? '+' : ''}{netChange})
-          {quantityInOtherLines > 0 && ` | Andere Zeilen: ${quantityInOtherLines}`}
+          {t('rechnungForm.items.stock.label')
+            .replace('{stock}', product.stock)
+            .replace('{needed}', currentTotal)
+            .replace('{remaining}', product.stock - currentTotal)}
+          {netChange !== 0 && ` (${netChange >= 0 ? '+' : ''}${netChange})`}
+          {quantityInOtherLines > 0 && ` | ${t('rechnungForm.items.stock.otherLines').replace('{count}', quantityInOtherLines)}`}
         </span>
       </div>
     );
@@ -192,31 +202,31 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
 
     try {
       if (!editableSale.client?._id && !editableSale.clientSnapshot?._id) {
-        alert("Bitte wählen Sie einen Kunden aus");
+        alert(t('rechnungForm.client.selectRequired'));
         setIsSubmitting(false);
         return;
       }
 
       if (editableSale.items.some(i => !i.productId)) {
-        alert("Bitte wählen Sie alle Artikel aus");
+        alert(t('rechnungForm.items.errors.selectAll'));
         setIsSubmitting(false);
         return;
       }
 
       if (editableSale.items.some(i => i.quantity <= 0)) {
-        alert("Die Menge muss größer als 0 sein");
+        alert(t('rechnungForm.items.errors.quantityPositive'));
         setIsSubmitting(false);
         return;
       }
 
       if (editableSale.items.some(i => i.unitPrice < 0)) {
-        alert("Der Preis darf nicht negativ sein");
+        alert(t('rechnungForm.items.errors.priceNegative'));
         setIsSubmitting(false);
         return;
       }
 
       if (!validateAllStock()) {
-        alert("Bitte korrigieren Sie die Lagerbestandsfehler");
+        alert(t('rechnungForm.items.errors.stock'));
         setIsSubmitting(false);
         return;
       }
@@ -248,17 +258,17 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
         tax: 10
       };
       
-      console.log("Updating sale with payload:", payload);
+      // console.log("Updating sale with payload:", payload);
       
       const res = await updateSale(editableSale._id, payload);
       if (res.success) {
         if (onSaved) onSaved();
       } else {
-        alert("Fehler beim Speichern: " + (res.message || "Unbekannter Fehler"));
+        alert(t('rechnungForm.messages.updateError') + ": " + (res.message || t('rechnungForm.common.error')));
       }
     } catch (err) {
       console.error("Error updating sale:", err);
-      alert("Fehler beim Speichern: " + err.message);
+      alert(t('rechnungForm.messages.updateError') + ": " + err.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -269,14 +279,16 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
       <div className={styles.modalBackdrop}>
         <div className={styles.modal}>
           <div className={styles.modalHeader}>
-            <h2>Acceso restringido</h2>
+            <h2>{t('rechnungForm.restricted.title')}</h2>
             <button className={styles.closeBtn} onClick={onClose}>×</button>
           </div>
           <div className={styles.modalBody}>
-            <p>Debe iniciar sesión para editar facturas.</p>
+            <p>{t('rechnungForm.restricted.message')}</p>
           </div>
           <div className={styles.modalFooter}>
-            <button className={`${styles.btn} ${styles.btnCancel}`} onClick={onClose}>Cerrar</button>
+            <button className={`${styles.btn} ${styles.btnCancel}`} onClick={onClose}>
+              {t('rechnungForm.restricted.close')}
+            </button>
           </div>
         </div>
       </div>
@@ -288,7 +300,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
       <div className={styles.modalBackdrop}>
         <div className={`${styles.modal} ${styles.loadingModal}`}>
           <div className={styles.loadingSpinner}></div>
-          <p>Lade Rechnungsdaten...</p>
+          <p>{t('rechnungForm.editor.loadingData')}</p>
         </div>
       </div>
     );
@@ -303,7 +315,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
       <div className={styles.modal}>
         {/* Header */}
         <div className={styles.modalHeader}>
-          <h2>Rechnung bearbeiten</h2>
+          <h2>{t('rechnungForm.editor.title')}</h2>
           <button 
             className={styles.closeBtn} 
             onClick={onClose}
@@ -317,7 +329,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
           {/* Kunde & Status */}
           <div className={styles.formSection}>
             <div className={styles.formGroup}>
-              <label>Kunde</label>
+              <label>{t('rechnungForm.client.label')}</label>
               <select
                 value={editableSale.client?._id || editableSale.clientSnapshot?._id || ""}
                 onChange={e => {
@@ -326,7 +338,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
                 }}
                 disabled={isSubmitting}
               >
-                <option value="">-- Kunde auswählen --</option>
+                <option value="">-- {t('rechnungForm.client.select')} --</option>
                 {clients.map(c => (
                   <option key={c._id} value={c._id}>
                     {c.name} {c.vorname ? `(${c.vorname})` : ''}
@@ -336,31 +348,31 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
             </div>
 
             <div className={styles.formGroup}>
-              <label>Status</label>
+              <label>{t('rechnungForm.status.label')}</label>
               <select
                 value={editableSale.status}
                 onChange={e => setEditableSale(prev => ({ ...prev, status: e.target.value }))}
                 disabled={isSubmitting}
               >
-                <option value="paid">Bezahlt</option>
-                <option value="pending">Ausstehend</option>
-                <option value="cancelled">Storniert</option>
+                <option value="paid">{t('rechnungForm.status.paid')}</option>
+                <option value="pending">{t('rechnungForm.status.pending')}</option>
+                <option value="cancelled">{t('rechnungForm.status.cancelled')}</option>
               </select>
             </div>
           </div>
 
           {/* Artikel Table */}
           <div className={styles.tableSection}>
-            <h3>Artikel ({editableSale.items.length})</h3>
+            <h3>{t('rechnungForm.items.title').replace('{count}', editableSale.items.length)}</h3>
             
             <div className={styles.tableContainer}>
               <table className={styles.itemsTable}>
                 <thead>
                   <tr>
-                    <th>Artikel</th>
-                    <th>Menge</th>
-                    <th>Einzelpreis (CHF)</th>
-                    <th>Gesamt (CHF)</th>
+                    <th>{t('rechnungForm.items.fields.article')}</th>
+                    <th>{t('rechnungForm.items.fields.quantity')}</th>
+                    <th>{t('rechnungForm.items.fields.unitPrice')} {currencySymbol}</th>
+                    <th>{t('rechnungForm.items.fields.total')}{currencySymbol}</th>
                     <th></th>
                   </tr>
                 </thead>
@@ -385,10 +397,10 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
                             disabled={isSubmitting}
                             className={hasError ? styles.inputError : ""}
                           >
-                            <option value="">-- Artikel auswählen --</option>
+                            <option value="">-- {t('rechnungForm.items.selectArticle')} --</option>
                             {products.map(p => (
                               <option key={p._id} value={p._id}>
-                                {p.artikelName} (Lager: {p.stock})
+                                {p.artikelName} ({t('rechnungForm.items.stock.badge.inStock')}: {p.stock})
                               </option>
                             ))}
                           </select>
@@ -440,14 +452,14 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
                           />
                         </td>
                         <td className={styles.totalColumn}>
-                          {(item.quantity * item.unitPrice).toFixed(2)} CHF
+                          {(item.quantity * item.unitPrice).toFixed(2)} {currencySymbol}
                         </td>
                         <td className={styles.actionsColumn}>
                           <button 
                             onClick={() => removeLine(idx)}
                             disabled={editableSale.items.length <= 1 || isSubmitting}
                             className={styles.removeBtn}
-                            title="Artikel entfernen"
+                            title={t('rechnungForm.items.removeTitle')}
                           >
                             ✕
                           </button>
@@ -464,23 +476,23 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
               onClick={addLine}
               disabled={isSubmitting}
             >
-              + Artikel hinzufügen
+              {t('rechnungForm.items.add')}
             </button>
           </div>
 
           {/* Totals */}
           <div className={styles.totalsSection}>
             <div className={styles.totalRow}>
-              <span>Zwischensumme:</span>
-              <span>{subtotal.toFixed(2)} CHF</span>
+              <span>{t('rechnungForm.totals.subtotal')}</span>
+              <span>{subtotal.toFixed(2)} {currencySymbol}</span>
             </div>
             <div className={styles.totalRow}>
-              <span>10% MwSt.:</span>
-              <span>{taxAmount.toFixed(2)} CHF</span>
+              <span>{t('rechnungForm.totals.tax')}</span>
+              <span>{taxAmount.toFixed(2)} {currencySymbol}</span>
             </div>
             <div className={`${styles.totalRow} ${styles.grandTotal}`}>
-              <span>Gesamtsumme:</span>
-              <span>{total.toFixed(2)} CHF</span>
+              <span>{t('rechnungForm.totals.total')}</span>
+              <span>{total.toFixed(2)} {currencySymbol}</span>
             </div>
           </div>
         </div>
@@ -492,7 +504,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
             onClick={onClose}
             disabled={isSubmitting}
           >
-            Abbrechen
+            {t('rechnungForm.common.cancel')}
           </button>
           <button 
             className={`${styles.btn} ${styles.btnSave}`} 
@@ -502,10 +514,10 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
             {isSubmitting ? (
               <>
                 <div className={`${styles.loadingSpinner} ${styles.small}`}></div>
-                Speichern...
+                {t('rechnungForm.common.saving')}
               </>
             ) : (
-              "Änderungen speichern"
+              t('rechnungForm.editor.submit')
             )}
           </button>
         </div>

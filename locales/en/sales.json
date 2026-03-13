@@ -1,0 +1,75 @@
+{
+  "sales": {
+    "title": "Invoices",
+    "subtitle": "Manage your invoices and sales",
+    "loading": {
+      "auth": "Loading authentication...",
+      "invoices": "Loading invoices...",
+      "short": "Loading..."
+    },
+    "error": {
+      "general": "Error",
+      "title": "Error loading invoices"
+    },
+    "actions": {
+      "new": "New Invoice",
+      "retry": "Try again",
+      "resetFilters": "Reset all filters",
+      "createFirst": "Create first invoice",
+      "loadMore": "Load more invoices ({remaining} available)",
+      "stock": "View stock movements"
+    },
+    "buttons": {
+      "stock": "Stock",
+      "edit": "Edit"
+    },
+    "search": {
+      "placeholder": "Search customer or invoice number...",
+      "results": "{visible} of {total} invoices",
+      "moreAvailable": " ({remaining} more available)"
+    },
+    "filter": {
+      "allStatus": "All status",
+      "status": "Status",
+      "date": "Date",
+      "sortBy": "Sort by"
+    },
+    "sort": {
+      "newest": "Newest first",
+      "oldest": "Oldest first",
+      "priceHigh": "Price: High to Low",
+      "priceLow": "Price: Low to High",
+      "clientAZ": "Customer: A-Z",
+      "clientZA": "Customer: Z-A",
+      "price": "Price",
+      "client": "Customer",
+      "date": "Date"
+    },
+    "status": {
+      "paid": "Paid",
+      "cancelled": "Cancelled",
+      "pending": "Pending"
+    },
+    "table": {
+      "date": "Date",
+      "client": "Customer",
+      "invoiceNumber": "Invoice No.",
+      "total": "Total",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "client": {
+      "unknown": "Unknown"
+    },
+    "empty": {
+      "notFound": {
+        "title": "No invoices found",
+        "text": "No results for your search criteria"
+      },
+      "noInvoices": {
+        "title": "No invoices available",
+        "text": "Create your first invoice"
+      }
+    }
+  }
+}

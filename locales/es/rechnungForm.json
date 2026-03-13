@@ -1,0 +1,91 @@
+{
+  "rechnungForm": {
+    "common": {
+      "cancel": "Cancelar",
+      "close": "Cerrar",
+      "save": "Guardar",
+      "saving": "Guardando...",
+      "loading": "Cargando...",
+      "error": "Error"
+    },
+    "creator": {
+      "title": "Nueva Factura",
+      "submit": "Crear Factura"
+    },
+    "editor": {
+      "title": "Editar Factura",
+      "submit": "Guardar Cambios",
+      "loadingData": "Cargando datos de la factura..."
+    },
+    "restricted": {
+      "title": "Acceso restringido",
+      "message": "Debe iniciar sesión para gestionar facturas.",
+      "close": "Cerrar"
+    },
+    "client": {
+      "label": "Cliente",
+      "placeholder": "Buscar o seleccionar cliente...",
+      "search": "Buscar clientes...",
+      "random": "Cliente Aleatorio (Por defecto)",
+      "randomBadge": "🎯",
+      "noClients": "No hay clientes disponibles",
+      "moreClients": "... y {count} clientes más",
+      "clientCount": "{count} cliente{plural} disponible{plural}",
+      "showingFirst": "(mostrando primeros {count})",
+      "info": "Selecciona un cliente de la lista o usa \"Cliente Aleatorio\"",
+      "clearTitle": "Limpiar selección (usar ClienteAleatorio)"
+    },
+    "status": {
+      "label": "Estado",
+      "paid": "Pagada",
+      "pending": "Pendiente",
+      "cancelled": "Cancelada"
+    },
+    "items": {
+      "title": "Artículos ({count})",
+      "add": "+ Agregar artículo",
+      "item": "Artículo {number}",
+      "searchPlaceholder": "Buscar artículos... (mín. 2 caracteres)",
+      "noResults": "No se encontraron artículos para \"{search}\"",
+      "minChars": "Ingrese al menos 2 caracteres para buscar",
+      "searchHint": "Resultados de búsqueda para: \"{search}\"",
+      "searching": "Buscando...",
+      "removeTitle": "Eliminar artículo",
+      "fields": {
+        "article": "Artículo",
+        "quantity": "Cantidad",
+        "unitPrice": "Precio Unitario",
+        "total": "Total"
+      },
+      "stock": {
+        "label": "Stock: {stock} | Necesario: {needed} | Restante: {remaining}",
+        "otherLines": "Otras líneas: {count}",
+        "error": "⚠️ {message}",
+        "badge": {
+          "inStock": "Suficiente",
+          "lowStock": "Stock Bajo",
+          "outOfStock": "Stock Insuficiente"
+        }
+      },
+      "errors": {
+        "selectAll": "Por favor seleccione todos los artículos",
+        "quantityPositive": "La cantidad debe ser mayor a 0",
+        "priceNegative": "El precio no puede ser negativo",
+        "stock": "Por favor corrija los errores de stock",
+        "minOneItem": "Se requiere al menos un artículo"
+      }
+    },
+    "totals": {
+      "subtotal": "Subtotal:",
+      "tax": "1% IVA:",
+      "total": "Total:"
+    },
+    "messages": {
+      "createSuccess": "Factura creada exitosamente",
+      "updateSuccess": "Factura actualizada exitosamente",
+      "createError": "Error al crear la factura",
+      "updateError": "Error al actualizar la factura",
+      "unknownError": "Error desconocido"
+    }
+  }
+}

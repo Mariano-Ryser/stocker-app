@@ -1,0 +1,75 @@
+
+{
+  "ceo": {
+    "title": "Panel de Control - CEO",
+    "subtitle": "Gestiona todos los usuarios y empresas de la plataforma",
+    "refresh": "Actualizar",
+    "loading": "Cargando datos de usuarios...",
+    "stats": {
+      "totalUsers": "Total Usuarios",
+      "totalCompanies": "Total Empresas",
+      "totalProducts": "Total Artículos",
+      "totalSales": "Total Ventas",
+      "totalClients": "Total Clientes",
+      "plans": "Planes"
+    },
+    "filters": {
+      "placeholder": "Buscar por nombre, email o empresa...",
+      "allStatus": "Todos los estados",
+      "active": "Activos",
+      "inactive": "Inactivos",
+      "allPlans": "Todos los planes",
+      "basic": "Básico",
+      "medium": "Medio",
+      "pro": "Pro",
+      "results": "{count} resultados"
+    },
+    "search": {
+      "placeholder": "Buscar usuarios..."
+    },
+    "table": {
+      "user": "Usuario",
+      "company": "Empresa",
+      "created": "Fecha Creación",
+      "stats": "Estadísticas",
+      "plan": "Plan",
+      "status": "Estado",
+      "actions": "Acciones",
+      "products": "Artículos",
+      "sales": "Ventas",
+      "clients": "Clientes",
+      "revenue": "Ingresos",
+      "usersLimit": "{current}/{max} usuarios"
+    },
+    "status": {
+      "active": "Activo",
+      "inactive": "Inactivo"
+    },
+    "actions": {
+      "edit": "Editar usuario",
+      "activate": "Activar usuario",
+      "deactivate": "Desactivar usuario",
+      "changePlan": "Cambiar plan"
+    },
+    "modal": {
+      "title": "Detalles del Usuario",
+      "plan": "Plan de Suscripción",
+      "details": "Información Detallada",
+      "role": "Rol",
+      "created": "Fecha registro",
+      "products": "Artículos",
+      "sales": "Ventas",
+      "clients": "Clientes",
+      "revenue": "Ingresos totales",
+      "close": "Cerrar"
+    },
+    "empty": {
+      "title": "No se encontraron usuarios",
+      "text": "Prueba con otros filtros de búsqueda"
+    },
+    "errors": {
+      "statusChange": "Error al cambiar el estado del usuario",
+      "planChange": "Error al cambiar el plan del usuario"
+    }
+  }
+}

@@ -20,9 +20,12 @@
 }
 
 .logo {
-  max-width: 120px;
-  max-height: 120px;
+    max-width: 220px;  /* Aún más grande */
+  max-height: 150px;
+  width: auto;
+  height: auto;
   object-fit: contain;
+  margin-bottom: 15px;
 }
 
 .logoPlaceholder {

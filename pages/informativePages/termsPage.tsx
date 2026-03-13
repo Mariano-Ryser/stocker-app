@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 import Footer from "../../components/footer/Footer";
 import { useLanguage } from "../../contexts/LanguageContext";
-import styles from "./TermsPage.module.css";
+import styles from "./termsPage.module.css";
 import { useEffect } from "react";
 
 /**
@@ -25,12 +25,14 @@ export default function TermsPage() {
     });
 
   return (
+    <>
+  
     <div className={styles.termsContainer}>
       {/* Background / watermark */}
       <div className={styles.termsBackground}>
         <div className={styles.logoWatermark}>
           <img
-            src="/img/logo78.png"
+            src="/img/logo80.webp"
             alt="Alpina Logo"
             className={styles.watermarkLogo}
           />
@@ -128,7 +130,19 @@ export default function TermsPage() {
               <p>{t("terms.sections.termination.outro")}</p>
             </section>
 
-            {/* 5. Payment */}
+            {/* 5. Jederzeitiges Kündigungsrecht (NUEVA SECCIÓN) */}
+            <section className={`${styles.termsSection} ${styles.cancellationSection}`}>
+              <h2>{t("terms.sections.cancellation.title")}</h2>
+              {asArray(
+                t("terms.sections.cancellation.paragraphs", {
+                  returnObjects: true,
+                })
+              ).map((para, idx) => (
+                <p key={idx}>{para}</p>
+              ))}
+            </section>
+
+            {/* 6. Payment */}
             <section className={styles.termsSection}>
               <h2>{t("terms.sections.payment.title")}</h2>
               {asArray(
@@ -140,7 +154,7 @@ export default function TermsPage() {
               ))}
             </section>
 
-            {/* 6. Privacy */}
+            {/* 7. Privacy */}
             <section className={styles.termsSection}>
               <h2>{t("terms.sections.privacy.title")}</h2>
               {asArray(
@@ -152,7 +166,7 @@ export default function TermsPage() {
               ))}
             </section>
 
-            {/* 7. Warranty */}
+            {/* 8. Warranty */}
             <section className={styles.termsSection}>
               <h2>{t("terms.sections.warranty.title")}</h2>
               {asArray(
@@ -164,7 +178,7 @@ export default function TermsPage() {
               ))}
             </section>
 
-            {/* 8. Intellectual Property */}
+            {/* 9. Intellectual Property */}
             <section className={styles.termsSection}>
               <h2>{t("terms.sections.intellectual.title")}</h2>
               {asArray(
@@ -176,7 +190,7 @@ export default function TermsPage() {
               ))}
             </section>
 
-            {/* 9. Final */}
+            {/* 10. Final */}
             <section className={styles.termsSection}>
               <h2>{t("terms.sections.final.title")}</h2>
               {asArray(
@@ -207,8 +221,9 @@ export default function TermsPage() {
           </div>
         </main>
 
-        <Footer />
       </div>
+        <Footer />
     </div>
+      </>
   );
 }

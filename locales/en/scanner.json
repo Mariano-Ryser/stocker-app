@@ -1,0 +1,113 @@
+{
+  "scanner": {
+    "loading": {
+      "app": "Loading application...",
+      "cache": "Building initial cache...",
+      "cacheHint": "This happens only once",
+      "products": "Loading products..."
+    },
+    "header": {
+      "title": "Kiosk Sale",
+      "subtitle": "Fast scanning and payment",
+      "productsAvailable": "📦 {count} products available",
+      "updating": "Updating...",
+      "indexedDB": "(IndexedDB: {count})",
+      "total": "Total:",
+      "scanMode": "🔍 Scan Mode",
+      "editMode": "✏️ Edit Mode"
+    },
+    "scanner": {
+      "title": "Barcode Scanner",
+      "itemsCount": "{count} items",
+      "placeholder": "Scan barcode or article number...",
+      "button": "Add",
+      "manualAdd": "Add product manually",
+      "feedback": {
+        "added": "{quantity}x {name} added",
+        "notFound": "Product not found: {barcode}",
+        "searchError": "Search error"
+      }
+    },
+    "manualSearch": {
+      "title": "Product Search",
+      "placeholder": "At least 2 characters...",
+      "searching": "Searching...",
+      "noResults": "No products found",
+      "minChars": "Please enter at least 2 characters",
+      "articleNumber": "Art. No: {number}",
+      "available": "{stock} available",
+      "outOfStock": "Out of stock"
+    },
+    "client": {
+      "title": "Customer",
+      "placeholder": "Search customer...",
+      "randomClient": "Random Customer",
+      "clear": "Clear"
+    },
+    "totals": {
+      "subtotal": "Subtotal:",
+      "tax": "10% VAT:",
+      "total": "Total:",
+      "cancel": "Cancel Sale",
+      "checkout": "Checkout",
+      "processing": "Processing..."
+    },
+    "items": {
+      "title": "Scanned Items",
+      "count": "{count} items",
+      "empty": {
+        "title": "No items scanned",
+        "text": "Scan items to display them here"
+      },
+      "articleNumber": "Art. No: {number}",
+      "available": "{stock} available",
+      "quantity": "Quantity",
+      "unitPrice": "Unit price {symbol}",
+      "total": "Total",
+      "lowStock": "Insufficient stock! Only {stock} units available"
+    },
+    "payment": {
+      "title": "Checkout",
+      "due": "DUE:",
+      "cash": "💵 CASH",
+      "card": "💳 CARD",
+      "received": "RECEIVED:",
+      "change": "CHANGE:",
+      "processing": "Processing...",
+      "cardPayment": {
+        "processing": "Processing card payment...",
+        "amount": "Amount: {amount} {symbol}",
+        "confirm": "Confirm card payment",
+        "backToCash": "Back to cash"
+      },
+      "quickCash": {
+        "5": "5 {symbol}",
+        "10": "10 {symbol}",
+        "20": "20 {symbol}",
+        "50": "50 {symbol}",
+        "100": "100 {symbol}",
+        "200": "200 {symbol}"
+      }
+    },
+    "receipt": {
+      "success": "✅ SALE SUCCESSFUL!",
+      "newSale": "Start new sale",
+      "autoReset": "Automatic reset in 5 seconds..."
+    },
+    "alerts": {
+      "lowStock": {
+        "title": "Insufficient stock!",
+        "text": "Only <strong>{available} units</strong> available for <strong>{name}</strong>.",
+        "detail": "You need {requested} units."
+      },
+      "insufficientAmount": "Insufficient amount received. Total: {total} {symbol}",
+      "noItems": "Please add items first",
+      "confirmCancel": "Do you really want to cancel the current sale?",
+      "stockError": "Insufficient stock",
+      "saleError": "Error creating invoice"
+    },
+    "cache": {
+      "refresh": "Refresh cache"
+    }
+  }
+}

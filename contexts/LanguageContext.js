@@ -18,22 +18,35 @@ const languageOptions = [
   { code: 'es', name: 'Español', flag: 'es' }
 ];
 
-const DEFAULT_LANGUAGE = 'de';
+const DEFAULT_LANGUAGE = 'en';
 
 // 👉 Todos los módulos de la app
 const ALL_MODULES = [
+  'artikel',
+  'clients',
+  'clientsForms',
   'CTASection',
   'featuresSection',
   'footer',
   'header',
+  'home',
   'homeHero',
   'index',
   'login',
+  'logoutButton',
   'privacy',
+  'rechnungForm',
+  'sales',
+  'scanner',
   'settings',
   'sideBar',
+  'stockMovements',
   'terms',
-  'uns'
+  'uns',
+  'invoice',
+  'verkaufteArtikel',
+  'wareneigang',
+  'ceo',
 ];
 
 export const LanguageProvider = ({ children }) => {

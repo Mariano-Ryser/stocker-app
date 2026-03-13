@@ -19,7 +19,7 @@ const getAuthHeaders = () => {
 export async function getUsers() {
   try {
     const API_URL = `${API_BASE_URL}/users`;
-    console.log('Fetching users from:', "API_URL");
+    // console.log('Fetching users from:', "API_URL");
   
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -381,7 +381,7 @@ export async function createCompanyUserAPI(userData) {
 export async function getCompanyUsersAPI() {
   try {
     const API_URL = `${API_BASE_URL}/users/company/users`;
-    console.log('Obteniendo usuarios de empresa desde:', API_URL);
+    // console.log('Obteniendo usuarios de empresa desde:', API_URL);
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -401,7 +401,7 @@ export async function getCompanyUsersAPI() {
     }
     
     const data = await res.json();
-    console.log('Usuarios de empresa recibidos:', data);
+    // console.log('Usuarios de empresa recibidos:', data);
     return data;
   } catch (error) {
     console.error('Error in getCompanyUsersAPI:', error);
@@ -541,7 +541,7 @@ export async function uploadCompanyLogoAPI(id, formData) {
       throw new Error('No autenticado. Por favor, inicia sesión.');
     }
 
-    console.log('📦 Subiendo logo para usuario:', id);
+    // console.log('📦 Subiendo logo para usuario:', id);
 
     const res = await fetch(API_URL, {
       method: 'PUT',

@@ -13,6 +13,48 @@
   font-size: 16px;
 }
 
+.autocompleteHint {
+  position: absolute;
+  right: 36px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 12px;
+  color: #999;
+}
+
+.autocompleteEmpty {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #f8d7da;
+  color: #721c24;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.activeSearchInfo {
+  left: 0;
+  right: 0;
+  background: #d1ecf1;
+  color: #0c5460;
+  padding: 8px;
+  border-radius: 4px;
+  margin-top: 4px;
+  font-size: 12px;
+}
+
+.loadingSmall {
+  border: 2px solid #f3f3f3;
+  border-top: 2px solid #3b82f6;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  animation: spin 1s linear infinite;
+}
+
 .clearClientBtn:hover {
   color: #ff4444;
 }
@@ -530,16 +572,37 @@
   100% { transform: rotate(360deg); }
 }
 
-/* Responsive Design */
+/* ========== MEJORAS RESPONSIVE PARA TELÉFONOS ========== */
+
+/* Tablets y móviles grandes (hasta 1024px) */
+@media (max-width: 1024px) {
+  .modal {
+    max-width: 90%;
+  }
+}
+
+/* Móviles y tablets pequeñas (hasta 768px) */
 @media (max-width: 768px) {
   .modalBackdrop {
-    padding: 12px;
+    padding: 0;
     align-items: flex-end;
   }
 
   .modal {
-    max-height: 90vh;
-    border-radius: 16px 16px 0 0;
+    max-height: 92vh;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px 20px 0 0;
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
 
   .modalHeader {
@@ -551,90 +614,413 @@
   }
 
   .modalBody {
-    padding: 20px;
+    padding: 16px;
   }
 
   .formSection {
     grid-template-columns: 1fr;
     gap: 16px;
+    margin-bottom: 20px;
   }
 
-  .itemDetails {
-    grid-template-columns: 1fr;
-    gap: 12px;
+  .formGroup input,
+  .formGroup select {
+    padding: 14px 12px;
+    font-size: 16px; /* Previene zoom automático en iOS */
   }
 
-  .modalFooter {
-    padding: 16px 20px;
-    flex-direction: column-reverse;
-    gap: 12px;
-  }
-
-  .btn {
-    width: 100%;
-    min-width: auto;
-  }
-
+  /* Autocomplete en móvil - ocupa toda la pantalla */
   .autocompleteDropdown {
     position: fixed;
     top: auto;
     bottom: 0;
     left: 0;
     right: 0;
-    max-height: 50vh;
-    border-radius: 16px 16px 0 0;
+    max-height: 60vh;
+    border-radius: 20px 20px 0 0;
     margin-top: 0;
-    z-index: 1002;
-  }
-}
-
-@media (max-width: 480px) {
-  .modalBackdrop {
-    padding: 8px;
+    z-index: 2000;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    animation: slideUpDropdown 0.25s ease-out;
   }
 
-  .modalHeader {
-    padding: 14px 16px;
+  @keyframes slideUpDropdown {
+    from {
+      transform: translateY(100%);
+    }
+    to {
+      transform: translateY(0);
+    }
   }
 
-  .modalBody {
+  .autocompleteItem {
     padding: 16px;
+    font-size: 1rem;
+    border-bottom: 1px solid #edf2f7;
   }
 
-  .formGroup input,
-  .formGroup select {
-    padding: 14px 12px;
-    font-size: 16px;
+  .autocompleteItem:active {
+    background: #3b82f6;
+    color: white;
   }
 
+  /* Ajustes para los mensajes de autocomplete */
+  .autocompleteHint {
+    right: 40px;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
+  .autocompleteEmpty {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+    text-align: center;
+    font-size: 14px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.1);
+  }
+
+  .activeSearchInfo {
+    margin: 8px 0;
+    padding: 10px;
+    font-size: 13px;
+    text-align: center;
+  }
+
+  /* Items de factura en móvil */
   .itemCard {
-    padding: 12px;
+    padding: 14px;
+    border-radius: 16px;
+  }
+
+  .itemHeader {
+    margin-bottom: 14px;
+    padding-bottom: 14px;
+  }
+
+  .itemNumber {
+    font-size: 0.9rem;
+  }
+
+  .removeBtn {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+  }
+
+  .itemDetails {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .totalDisplay {
+    padding: 14px;
+    font-size: 1rem;
+  }
+
+  .addBtn {
+    padding: 16px;
+    font-size: 1rem;
+    border-radius: 12px;
   }
 
   .totalsSection {
     padding: 16px;
+    border-radius: 16px;
   }
 
   .totalRow {
+    padding: 10px 0;
     font-size: 0.95rem;
   }
 
   .grandTotal {
-    font-size: 1.05rem;
+    font-size: 1.1rem;
+    padding-top: 14px;
+    margin-top: 6px;
+  }
+
+  /* Footer en móvil */
+  .modalFooter {
+    padding: 16px;
+    flex-direction: column-reverse;
+    gap: 12px;
+    border-top-width: 2px;
+  }
+
+  .btn {
+    width: 100%;
+    min-width: auto;
+    padding: 16px;
+    border-radius: 12px;
+    font-size: 1rem;
+  }
+
+  .btnCancel {
+    order: 2;
+  }
+
+  .btnSave {
+    order: 1;
   }
 }
 
-@media (max-width: 320px) {
+/* Móviles pequeños (hasta 480px) */
+@media (max-width: 480px) {
+  .modalHeader {
+    padding: 14px 16px;
+  }
+
   .modalHeader h2 {
-    font-size: 1.1rem;
+    font-size: 1.15rem;
+  }
+
+  .closeBtn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .modalBody {
+    padding: 14px;
   }
 
   .formGroup label {
     font-size: 0.85rem;
   }
 
+  .formGroup input,
+  .formGroup select {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .autocompleteHint {
+    font-size: 10px;
+    right: 38px;
+  }
+
+  .itemCard {
+    padding: 12px;
+  }
+
+  .itemNumber {
+    font-size: 0.85rem;
+    padding: 4px 8px;
+    background: #e9ecef;
+    border-radius: 16px;
+  }
+
+  .removeBtn {
+    width: 36px;
+    height: 36px;
+  }
+
+  .totalRow {
+    font-size: 0.9rem;
+    padding: 8px 0;
+  }
+
+  .grandTotal {
+    font-size: 1rem;
+  }
+
   .btn {
-    padding: 12px 20px;
+    padding: 14px;
     font-size: 0.95rem;
+  }
+
+  /* Stock badges más compactos */
+  .stockBadge {
+    padding: 3px 8px;
+    font-size: 11px;
+  }
+
+  .stockError {
+    font-size: 11px;
+    padding: 6px 8px;
+  }
+
+  .productDetails {
+    font-size: 10px;
+  }
+
+  .productPrice,
+  .productStock {
+    font-size: 10px;
+  }
+}
+
+/* Móviles muy pequeños (hasta 360px) */
+@media (max-width: 360px) {
+  .modalHeader h2 {
+    font-size: 1rem;
+  }
+
+  .modalHeader {
+    padding: 12px;
+  }
+
+  .closeBtn {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+
+  .modalBody {
+    padding: 12px;
+  }
+
+  .formGroup input,
+  .formGroup select {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .autocompleteHint {
+    display: none; /* Ocultar hint en pantallas muy pequeñas */
+  }
+
+  .autocompleteItem {
+    padding: 14px;
+    font-size: 0.95rem;
+  }
+
+  .clientName {
+    font-size: 0.95rem;
+  }
+
+  .email {
+    font-size: 0.8rem;
+  }
+
+  .itemCard {
+    padding: 10px;
+  }
+
+  .itemHeader {
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+  }
+
+  .itemNumber {
+    font-size: 0.8rem;
+  }
+
+  .removeBtn {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+  }
+
+  .totalsSection {
+    padding: 12px;
+  }
+
+  .totalRow {
+    font-size: 0.85rem;
+    padding: 6px 0;
+  }
+
+  .grandTotal {
+    font-size: 0.95rem;
+  }
+
+  .btn {
+    padding: 12px;
+    font-size: 0.9rem;
+  }
+
+  .addBtn {
+    padding: 14px;
+    font-size: 0.95rem;
+  }
+}
+
+/* Ajustes para pantallas muy altas en móviles */
+@media (max-height: 600px) and (max-width: 768px) {
+  .modal {
+    max-height: 98vh;
+  }
+
+  .modalBody {
+    padding: 12px;
+  }
+
+  .autocompleteDropdown {
+    max-height: 70vh;
+  }
+
+  .itemCard {
+    padding: 10px;
+  }
+
+  .itemDetails {
+    gap: 10px;
+  }
+}
+
+/* Mejoras de usabilidad táctil */
+@media (hover: none) and (pointer: coarse) {
+  .btn,
+  .addBtn,
+  .removeBtn,
+  .autocompleteItem,
+  .closeBtn {
+    cursor: default;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .btn:active,
+  .addBtn:active,
+  .autocompleteItem:active {
+    opacity: 0.8;
+  }
+
+  .removeBtn:active {
+    background: #dc2626;
+    transform: scale(0.95);
+  }
+
+  /* Área táctil más grande */
+  .clearClientBtn {
+    padding: 12px;
+    right: 4px;
+  }
+
+  .autocompleteHint {
+    right: 44px;
+  }
+}
+
+/* Prevención de zoom en inputs en iOS */
+@supports (-webkit-touch-callout: none) {
+  .formGroup input,
+  .formGroup select,
+  .btn,
+  .addBtn {
+    font-size: 16px;
+  }
+}
+
+/* Soporte para notch en iPhones modernos */
+@supports (padding: max(0px)) {
+  @media (max-width: 768px) {
+    .modal {
+      padding-bottom: constant(safe-area-inset-bottom);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+
+    .modalFooter {
+      padding-bottom: max(16px, constant(safe-area-inset-bottom));
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+
+    .autocompleteDropdown {
+      padding-bottom: constant(safe-area-inset-bottom);
+      padding-bottom: env(safe-area-inset-bottom);
+    }
   }
 }

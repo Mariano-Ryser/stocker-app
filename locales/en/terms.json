@@ -1,95 +1,102 @@
 {
-    "terms": {
-    "title": "INGLEEEES",
-    "effectiveDate": "Zuletzt aktualisiert: {{date}}",
-    "backButton": "← Zurück",
-    
+  "terms": {
+    "title": "Terms and Conditions",
+    "effectiveDate": "Last updated: {{date}}",
+    "backButton": "← Back",
     "sections": {
       "scope": {
-        "title": "1. Geltungsbereich",
+        "title": "1. Scope",
         "paragraphs": [
-          "Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen der alpina GmbH (nachfolgend 'Anbieter') und den Nutzern (nachfolgend 'Kunden') der Intelligence-Plattform alpina.",
-          "Die Plattform bietet datenbasierte Analysen und Entscheidungsunterstützung für Unternehmen. Durch die Registrierung oder Nutzung der Dienste erkennen Kunden diese AGB als verbindlich an."
+          "These Terms and Conditions (T&C) apply to all agreements between alpina GmbH (hereinafter the \"Provider\") and the users (hereinafter the \"Customers\") of the alpina platform.",
+          "The platform provides data-driven analysis and decision support for businesses. By registering or using the services, customers accept these Terms and Conditions as binding."
         ]
       },
       "description": {
-        "title": "2. Leistungsbeschreibung",
-        "intro": "alpina stellt eine cloudbasierte Plattform zur Verfügung, die:",
+        "title": "2. Description of Services",
+        "intro": "alpina provides a cloud-based platform with the following features:",
         "items": [
-          "Datenintegration aus verschiedenen Quellen",
-          "Erweiterte Datenanalyse und Visualisierung",
-          "Vorhersagemodelle und KI-gestützte Erkenntnisse",
-          "Berichterstattung und Dashboard-Funktionen",
-          "API-Zugang für Integrationen"
+          "Integration of data from multiple sources",
+          "Advanced data analysis and visualization",
+          "Forecasting models and AI-powered analytics",
+          "Reports and dashboard functions",
+          "API access for external integrations"
         ],
-        "outro": "Die genauen Leistungsumfänge sind in den jeweiligen Servicepaketen definiert."
+        "outro": "The specific scope of services depends on the selected service package."
       },
       "registration": {
-        "title": "3. Registrierung und Konto",
+        "title": "3. Registration and User Account",
         "paragraphs": [
-          "Für die Nutzung der Plattform ist eine Registrierung erforderlich. Der Kunde verpflichtet sich, wahrheitsgemäße und vollständige Angaben zu machen.",
-          "Jeder Kunde ist für die Sicherheit seiner Zugangsdaten verantwortlich und muss unverzüglich unbefugte Nutzung melden. Der Anbieter behält sich das Recht vor, Konten bei Verdacht auf Missbrauch zu sperren."
+          "Registration is required to use the platform. The customer agrees to provide accurate and complete information.",
+          "The customer is responsible for the security of their access credentials and must report any unauthorized use immediately. The provider is entitled to temporarily suspend accounts if misuse is suspected."
         ]
       },
       "termination": {
-        "title": "4. Vertragslaufzeit und Kündigung",
+        "title": "4. Contract Duration and Termination",
         "paragraphs": [
-          "Die Vertragslaufzeit richtet sich nach dem gewählten Abrechnungsmodell (monatlich/jährlich).",
-          "Kündigungsfristen:"
+          "The contract duration depends on the selected billing model (monthly or yearly).",
+          "Termination periods:"
         ],
         "items": [
-          "Monatliche Verträge: 30 Tage zum Monatsende",
-          "Jährliche Verträge: 90 Tage zum Vertragsende"
+          "Monthly contracts: 30 days before the end of the month",
+          "Annual contracts: 90 days before the end of the contract"
         ],
-        "outro": "Das Recht zur fristlosen Kündigung aus wichtigem Grund bleibt beiden Parteien vorbehalten."
+        "outro": "The right to terminate without notice for good cause remains unaffected for both parties."
+      },
+      "cancellation": {
+        "title": "5. Right to Cancel at Any Time",
+        "paragraphs": [
+          "The customer has the right to cancel the contract at any time without observing a notice period.",
+          "Upon cancellation, the customer's payment obligation is suspended from the time of cancellation. Payments already made for the current billing period will be refunded proportionally.",
+          "This rule applies to all contract types and billing models. The customer is not required to provide a reason for cancellation and no additional fees will be charged.",
+          "Cancellation may be submitted in writing by email to rysermariano@gmail.com or through the customer portal. After cancellation, the customer will continue to have access to their data for a period of 30 days in order to export it."
+        ]
       },
       "payment": {
-        "title": "5. Vergütung und Zahlung",
+        "title": "6. Prices and Payment",
         "paragraphs": [
-          "Die Preise sind in Euro zuzüglich gesetzlicher Mehrwertsteuer. Rechnungen werden elektronisch versendet und sind innerhalb von 14 Tagen zahlbar.",
-          "Bei Zahlungsverzug behält sich der Anbieter das Recht vor, den Dienstzugang einzuschränken oder zu sperren."
+          "All prices are stated in euros plus the applicable statutory value-added tax. Invoices are issued electronically and must be paid within 14 days.",
+          "In the event of late payment, the provider reserves the right to restrict or temporarily suspend access to the platform."
         ]
       },
       "privacy": {
-        "title": "6. Datenschutz und Datensicherheit",
+        "title": "7. Data Protection and Security",
         "paragraphs": [
-          "Der Anbieter verpflichtet sich zur Einhaltung der Datenschutz-Grundverordnung (DSGVO) und aller relevanten Datenschutzgesetze.",
-          "Kundendaten werden in hochsicheren Rechenzentren in Deutschland gespeichert. Details zur Datenverarbeitung sind in der separaten Datenschutzerklärung geregelt."
+          "The provider commits to complying with the General Data Protection Regulation (GDPR) and all applicable data protection laws.",
+          "Customer data is stored in secure data centers within Germany. Further details are governed by the separate privacy policy."
         ]
       },
       "warranty": {
-        "title": "7. Gewährleistung und Haftung",
+        "title": "8. Warranty and Liability",
         "paragraphs": [
-          "Der Anbieter gewährleistet die vertragsgemäße Funktion der Plattform. Bei Verfügbarkeitsstörungen wird eine durchschnittliche Verfügbarkeit von 99,5% pro Monat angestrebt.",
-          "Die Haftung ist auf Vorsatz und grobe Fahrlässigkeit beschränkt. Für leichte Fahrlässigkeit haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten."
+          "The provider ensures the contractual operation of the platform and aims for an average monthly availability of 99.5%.",
+          "The provider’s liability is limited to intent and gross negligence. In cases of slight negligence, the provider is only liable for the breach of essential contractual obligations."
         ]
       },
       "intellectual": {
-        "title": "8. Geistiges Eigentum",
+        "title": "9. Intellectual Property",
         "paragraphs": [
-          "Alle Rechte an der Plattform, einschließlich Software, Algorithmen und Dokumentation, verbleiben beim Anbieter.",
-          "Der Kunde erhält ein nicht-exklusives, nicht-übertragbares Nutzungsrecht für die Vertragslaufzeit."
+          "All rights to the platform, including software, algorithms and documentation, remain with the provider.",
+          "The customer receives a simple, non-transferable right of use for the duration of the contract."
         ]
       },
       "final": {
-        "title": "9. Schlussbestimmungen",
+        "title": "10. Final Provisions",
         "paragraphs": [
-          "Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand ist der Sitz des Anbieters.",
-          "Änderungen dieser AGB werden dem Kunden mindestens 30 Tage vor Inkrafttreten mitgeteilt. Widerspruch führt zur ordentlichen Kündigung."
+          "German law applies, excluding the UN Convention on Contracts for the International Sale of Goods. The place of jurisdiction is the provider’s registered office.",
+          "Changes to these Terms and Conditions will be communicated to customers at least 30 days before they take effect. An objection entitles the customer to ordinary termination."
         ]
       }
     },
-    
     "contact": {
-      "title": "Kontakt",
-      "company": "alpina GmbH",
+      "title": "Contact",
+      "company": "Alpina Systems AG",
       "address": [
-        "Musterstraße 123",
-        "10115 Berlin",
-        "Deutschland"
+        "Hohlstrasse 405",
+        "8048 Zurich",
+        "Switzerland"
       ],
-      "email": "legal@helvetika.de",
-      "phone": "+49 (0)30 12345678"
+      "email": "rysermariano@gmail.com",
+      "phone": "+41 788 74 79 74"
     }
   }
 }

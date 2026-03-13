@@ -48,7 +48,7 @@ export default function ForgotPasswordPage() {
       <div className={styles.formContainer}>
         <div className={styles.logoSection}>
           <img 
-            src="/img/logo78.png" 
+            src="/img/logo80.webp" 
             alt="Alpina Logo" 
             className={styles.logo}
           />

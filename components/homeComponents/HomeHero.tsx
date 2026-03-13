@@ -38,7 +38,7 @@ export default function HomeHero() {
         </div>
         <div className="image">
           <Image
-            src="/img/homeHero3.png"
+            src="/img/homeHero3.webp" 
             alt="Alpina Dashboard"
             width={760}
             height={30}
@@ -213,7 +213,7 @@ export default function HomeHero() {
         @media (max-width: 787px) {
           
           .hero {
-            padding: 4rem 0 6rem;
+            padding: 6rem 0 6rem;
           }
           
           .container {
@@ -246,7 +246,7 @@ export default function HomeHero() {
 
         @media (max-width: 480px) {
           .hero {
-            padding: 3rem 0 4rem;
+            padding: 6rem 0 4rem;
           }
           
           .content h1 {

@@ -1,13 +1,13 @@
 {
-    "featuresSection": {
-    "heading": "INGLEEEES",
-    "title1": "INGLEEEES",
-    "f1": "INGLEEEES.",
-    "title2": "AINGLEEEES",
-    "f2": "INGLEEEES INGLEEEES",
-    "title3": "AINGLEEEES",
-    "f3": "INGLEEEES",
-    "title4": "INGLEEEES",
-    "f4": "INGLEEEES."
+  "featuresSection": {
+    "heading": "Core Features",
+    "title1": "Business Intelligence",
+    "f1": "Gain full visibility into your business through structured analytics and clear, easy-to-understand data visualizations.",
+    "title2": "Automation",
+    "f2": "Reduce manual work with intelligent automation and improve efficiency across all your processes.",
+    "title3": "Analytics & Reporting",
+    "f3": "Make informed decisions with precise reports, real-time analytics, and clearly defined key metrics.",
+    "title4": "Data Security",
+    "f4": "Protect your sensitive business and corporate data with modern security and access control concepts."
   }
-} 
+}

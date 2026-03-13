@@ -1,10 +1,14 @@
+// frontend/components/adminDash/regnung/RechnungCreator.jsx
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { useClients } from "../../../hooks/useClients";
 import { useProduct } from "../../../hooks/useProducts";
+import { useLanguage } from "../../../contexts/LanguageContext";
 import styles from './Creator.module.css';
 
 export default function RechnungCreator({ onDone, salesApi }) {
+  const { t } = useLanguage();
+  
   if (!salesApi) {
     console.error("RechnungCreator renderizado sin salesApi");
     return null;
@@ -12,9 +16,15 @@ export default function RechnungCreator({ onDone, salesApi }) {
  
   const { createSale } = salesApi;
 
-  const { isAuthenticated } = useAuth();
+  const { company, isAuthenticated } = useAuth();
   const { clients } = useClients();
-  const { products, fetchProducts } = useProduct();
+  const { 
+    products, 
+    refreshProducts,
+    searchProductsInCache, // 👈 IMPORTANTE: usar la función de caché
+    loading: productsLoading
+  } = useProduct();
+  
   const [clientId, setClientId] = useState("");
   const [clientSearch, setClientSearch] = useState("");
   const [showClientAutocomplete, setShowClientAutocomplete] = useState(false);
@@ -25,17 +35,21 @@ export default function RechnungCreator({ onDone, salesApi }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [stockErrors, setStockErrors] = useState({});
   const [hasStockErrors, setHasStockErrors] = useState(false);
-
+  const [searchTimeouts, setSearchTimeouts] = useState({});
+  const [searchResults, setSearchResults] = useState({}); // 👈 Resultados por línea
+  const [isSearching, setIsSearching] = useState({}); // 👈 Estado de búsqueda por línea
+  
+  const currencySymbol = company?.currency || 'USD';
   const autocompleteRefs = useRef([]);
   const clientAutocompleteRef = useRef(null);
 
   // Cargar productos solo una vez al montar
   useEffect(() => {
     if (isAuthenticated && products.length === 0) {
-      console.log("RechnungCreator: Fetching products on mount");
-      fetchProducts();
+      // console.log("RechnungCreator: Fetching products on mount");
+      refreshProducts();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, refreshProducts, products.length]);
 
   // Validar stock cuando cambian las líneas
   useEffect(() => {
@@ -49,14 +63,16 @@ export default function RechnungCreator({ onDone, salesApi }) {
       <div className={styles.modalBackdrop}>
         <div className={styles.modal}>
           <div className={styles.modalHeader}>
-            <h2>Acceso restringido</h2>
+            <h2>{t('rechnungForm.restricted.title')}</h2>
             <button className={styles.closeBtn} onClick={onDone}>×</button>
           </div>
           <div className={styles.modalBody}>
-            <p>Debe iniciar sesión para crear facturas.</p>
+            <p>{t('rechnungForm.restricted.message')}</p>
           </div>
           <div className={styles.modalFooter}>
-            <button className={`${styles.btn} ${styles.btnCancel}`} onClick={onDone}>Cerrar</button>
+            <button className={`${styles.btn} ${styles.btnCancel}`} onClick={onDone}>
+              {t('rechnungForm.restricted.close')}
+            </button>
           </div>
         </div>
       </div>
@@ -85,7 +101,11 @@ export default function RechnungCreator({ onDone, salesApi }) {
 
   const filteredClients = () => {
     const query = clientSearch?.toLowerCase() || "";
-    if (!query) return [];
+    
+    if (!query) {
+      return clients.slice(0, 20);
+    }
+    
     return clients.filter(c =>
       c.name?.toLowerCase().includes(query) ||
       c.vorname?.toLowerCase().includes(query) ||
@@ -93,25 +113,123 @@ export default function RechnungCreator({ onDone, salesApi }) {
     ).slice(0, 8);
   };
 
+  // 🔥 BÚSQUEDA RÁPIDA - similar al Scanner
+  const handleProductSearch = async (index, value) => {
+    setSearches(prev => prev.map((s, idx) => idx === index ? value : s));
+    updateLine(index, { productId: "" });
+    setShowAutocomplete(prev => prev.map((s, idx) => idx === index ? true : s));
+    
+    if (value.length >= 2) {
+      // Cancelar timeout anterior
+      if (searchTimeouts[index]) {
+        clearTimeout(searchTimeouts[index]);
+      }
+      
+      // Mostrar resultados inmediatos de memoria mientras llega la búsqueda
+      const immediateResults = products.filter(p => {
+        const name = p.artikelName?.toLowerCase() || "";
+        const description = p.description?.toLowerCase() || "";
+        const artikelNumber = p.artikelNumber?.toString().toLowerCase() || "";
+        const searchTerm = value.toLowerCase();
+        
+        return name.includes(searchTerm) || 
+               description.includes(searchTerm) || 
+               artikelNumber.includes(searchTerm);
+      }).slice(0, 8);
+      
+      setSearchResults(prev => ({
+        ...prev,
+        [index]: immediateResults
+      }));
+      
+      setIsSearching(prev => ({
+        ...prev,
+        [index]: true
+      }));
+      
+      const timeout = setTimeout(async () => {
+        try {
+          // console.log(`🔍 Buscando: "${value}" en caché...`);
+          
+          // 🔥 Usar la función optimizada del hook (IndexedDB)
+          const cachedResults = await searchProductsInCache(value);
+          
+          setSearchResults(prev => ({
+            ...prev,
+            [index]: cachedResults.slice(0, 8) // Mostrar máximo 8 resultados
+          }));
+          
+        } catch (error) {
+          console.error('Error en búsqueda:', error);
+        } finally {
+          setIsSearching(prev => ({
+            ...prev,
+            [index]: false
+          }));
+          
+          setSearchTimeouts(prev => {
+            const newTimeouts = { ...prev };
+            delete newTimeouts[index];
+            return newTimeouts;
+          });
+        }
+      }, 300); // 300ms debounce
+      
+      setSearchTimeouts(prev => ({
+        ...prev,
+        [index]: timeout
+      }));
+    } else {
+      // Si menos de 2 caracteres, mostrar productos recientes
+      const recentResults = products.slice(0, 5);
+      setSearchResults(prev => ({
+        ...prev,
+        [index]: recentResults
+      }));
+    }
+  };
+
   const filteredProducts = (index) => {
+    // Usar resultados de búsqueda si existen
+    if (searchResults[index]) {
+      return searchResults[index];
+    }
+    
+    // Fallback: filtrado en memoria
     const query = searches[index]?.toLowerCase() || "";
-    if (!query) return [];
-    return products.filter(p => 
-      p.artikelName?.toLowerCase().includes(query)
-    ).slice(0, 8);
+    
+    if (!query) {
+      return products.slice(0, 5);
+    }
+    
+    return products.filter(p => {
+      const name = p.artikelName?.toLowerCase() || "";
+      const description = p.description?.toLowerCase() || "";
+      const artikelNumber = p.artikelNumber?.toString().toLowerCase() || "";
+      
+      return name.includes(query) || 
+             description.includes(query) || 
+             artikelNumber.includes(query);
+    }).slice(0, 8);
   };
 
   const addLine = () => {
     setLines(prev => [...prev, { productId: "", quantity: 1, unitPrice: 0, stock: 0 }]);
     setSearches(prev => [...prev, ""]);
     setShowAutocomplete(prev => [...prev, false]);
+    setSearchResults(prev => ({ ...prev, [lines.length]: [] }));
+    setIsSearching(prev => ({ ...prev, [lines.length]: false }));
     autocompleteRefs.current.push(null);
   };
 
   const removeLine = (i) => {
     if (lines.length <= 1) {
-      alert("Mindestens ein Artikel ist erforderlich");
+      alert(t('rechnungForm.items.errors.minOneItem'));
       return;
+    }
+    
+    if (searchTimeouts[i]) {
+      clearTimeout(searchTimeouts[i]);
     }
     
     setLines(prev => prev.filter((_, idx) => idx !== i));
@@ -123,6 +241,24 @@ export default function RechnungCreator({ onDone, salesApi }) {
       const newErrors = { ...prev };
       delete newErrors[i];
       return newErrors;
+    });
+    
+    setSearchTimeouts(prev => {
+      const newTimeouts = { ...prev };
+      delete newTimeouts[i];
+      return newTimeouts;
+    });
+
+    setSearchResults(prev => {
+      const newResults = { ...prev };
+      delete newResults[i];
+      return newResults;
+    });
+
+    setIsSearching(prev => {
+      const newSearching = { ...prev };
+      delete newSearching[i];
+      return newSearching;
     });
   };
 
@@ -141,6 +277,12 @@ export default function RechnungCreator({ onDone, salesApi }) {
         setShowAutocomplete(prev => prev.map((s, idx) => 
           idx === i ? false : s
         ));
+        // Limpiar resultados de búsqueda para esta línea
+        setSearchResults(prev => {
+          const newResults = { ...prev };
+          delete newResults[i];
+          return newResults;
+        });
       }
     }
   };
@@ -168,7 +310,8 @@ export default function RechnungCreator({ onDone, salesApi }) {
         if (product.stock < requiredQuantity) {
           lines.forEach((line, index) => {
             if (line.productId === productId) {
-              errors[index] = `Nicht genug Lagerbestand für ${product.artikelName}: ${product.stock} verfügbar, ${requiredQuantity} benötigt`;
+              errors[index] = t('rechnungForm.items.stock.error')
+                .replace('{message}', `${product.artikelName}: ${product.stock} ${t('rechnungForm.items.stock.available')}, ${requiredQuantity} ${t('rechnungForm.items.stock.needed')}`);
               hasErrors = true;
             }
           });
@@ -194,7 +337,7 @@ export default function RechnungCreator({ onDone, salesApi }) {
   };
 
   const getSelectedClientName = () => {
-    if (!clientId) return ""; // ← CAMBIO IMPORTANTE: devolver vacío en lugar de "ClienteRandom"
+    if (!clientId) return "";
     const client = clients.find(c => c._id === clientId);
     return client ? `${client.vorname} ${client.name}` : "";
   };
@@ -208,12 +351,15 @@ export default function RechnungCreator({ onDone, salesApi }) {
     const value = e.target.value;
     setClientSearch(value);
     
-    // Si el usuario borra todo el texto, usar ClienteRandom
-    if (value === "") {
-      setClientId(""); // Esto activará ClienteRandom en el backend
+    if (value !== "") {
+      setShowClientAutocomplete(true);
     } else {
       setShowClientAutocomplete(true);
     }
+  };
+
+  const handleClientFocus = () => {
+    setShowClientAutocomplete(true);
   };
 
   const subtotal = Number(lines.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0).toFixed(2));
@@ -228,25 +374,25 @@ export default function RechnungCreator({ onDone, salesApi }) {
     setIsSubmitting(true);
     
     if (lines.some(l => !l.productId)) {
-      alert("Bitte wählen Sie alle Artikel aus");
+      alert(t('rechnungForm.items.errors.selectAll'));
       setIsSubmitting(false);
       return;
     }
 
     if (lines.some(l => l.quantity <= 0)) {
-      alert("Die Menge muss größer als 0 sein");
+      alert(t('rechnungForm.items.errors.quantityPositive'));
       setIsSubmitting(false);
       return;
     }
 
     if (lines.some(l => l.unitPrice < 0)) {
-      alert("Der Preis darf nicht negativ sein");
+      alert(t('rechnungForm.items.errors.priceNegative'));
       setIsSubmitting(false);
       return;
     }
 
     if (!validateAllStock()) {
-      alert("Bitte korrigieren Sie die Lagerbestandsfehler");
+      alert(t('rechnungForm.items.errors.stock'));
       setIsSubmitting(false);
       return;
     }
@@ -267,43 +413,41 @@ export default function RechnungCreator({ onDone, salesApi }) {
       groupedItems[line.productId].quantity += line.quantity;
     });
 
-const payload = {
-  clientId: clientId || null,
-  items: Object.values(groupedItems).map(item => ({
-    productId: item.productId,
-    quantity: Number(item.quantity),
-    unitPrice: Number(item.unitPrice)
-  })),
-  status
-};
-    console.log("RechnungCreator: Submitting sale:", payload);
-    console.log("ClientId enviado:", clientId, "¿Usará ClienteRandom?:", !clientId);
+    const payload = {
+      clientId: clientId || null,
+      items: Object.values(groupedItems).map(item => ({
+        productId: item.productId,
+        quantity: Number(item.quantity),
+        unitPrice: Number(item.unitPrice)
+      })),
+      status
+    };
+    
+    // console.log("RechnungCreator: Submitting sale:", payload);
 
     try {
       const res = await createSale(payload);
 
       if (res.success && res.sale) {
-        console.log("RechnungCreator: Sale created successfully");
-        console.log("Cliente asignado:", res.sale.client);
+        // console.log("RechnungCreator: Sale created successfully");
         
-        // Enviar notificación para Dashboard
         if (typeof BroadcastChannel !== 'undefined') {
           try {
             const channel = new BroadcastChannel('dashboard_updates');
             channel.postMessage({ type: 'new_sale', sale: res.sale });
             setTimeout(() => channel.close(), 100);
           } catch (err) {
-            console.log('BroadcastChannel error:', err);
+            // console.log('BroadcastChannel error:', err);
           }
         }
         
         onDone();
       } else {
-        alert(res.message || "Fehler beim Erstellen der Rechnung");
+        alert(res.message || t('rechnungForm.messages.createError'));
       }
     } catch (error) {
       console.error("Error creating sale:", error);
-      alert("Fehler beim Erstellen der Rechnung: " + error.message);
+      alert(t('rechnungForm.messages.createError') + ": " + error.message);
     } finally {
       setIsSubmitting(false);
     }
@@ -333,7 +477,10 @@ const payload = {
           remainingStock < 10 ? styles.lowStock : 
           styles.inStock
         }`}>
-          Lager: {product.stock} | Benötigt: {totalQuantityForProduct} | Verbleibend: {remainingStock}
+          {t('rechnungForm.items.stock.label')
+            .replace('{stock}', product.stock)
+            .replace('{needed}', totalQuantityForProduct)
+            .replace('{remaining}', remainingStock)}
         </span>
       </div>
     );
@@ -343,7 +490,7 @@ const payload = {
     <div className={styles.modalBackdrop}>
       <div className={styles.modal}>
         <div className={styles.modalHeader}>
-          <h2>Neue Rechnung</h2>
+          <h2>{t('rechnungForm.creator.title')}</h2>
           <button 
             className={styles.closeBtn} 
             onClick={onDone}
@@ -356,21 +503,21 @@ const payload = {
         <div className={styles.modalBody}>
           <div className={styles.formSection}>
             <div className={styles.formGroup}>
-              <label>Kunde</label>
+              <label>{t('rechnungForm.client.label')}</label>
               <div ref={clientAutocompleteRef} className={styles.autocompleteWrapper}>
                 <input
                   type="text"
-                  placeholder="Random Kunden..."
+                  placeholder={t('rechnungForm.client.placeholder')}
                   value={clientSearch || getSelectedClientName()}
                   onChange={handleClientInputChange}
-                  onFocus={() => setShowClientAutocomplete(true)}
+                  onFocus={handleClientFocus}
                   disabled={isSubmitting}
                 />
                 {clientId && (
                   <button 
                     className={styles.clearClientBtn}
                     onClick={clearClientSelection}
-                    title="Limpiar selección (usar ClienteRandom)"
+                    title={t('rechnungForm.client.clearTitle')}
                     disabled={isSubmitting}
                   >
                     ✕
@@ -378,7 +525,6 @@ const payload = {
                 )}
                 {showClientAutocomplete && (
                   <div className={styles.autocompleteDropdown}>
-                    {/* Opción especial para usar ClienteRandom */}
                     <div 
                       className={`${styles.autocompleteItem} ${!clientId ? styles.selected : ''}`}
                       onClick={() => {
@@ -389,60 +535,77 @@ const payload = {
                     >
                       <span className={styles.clientName}>
                         <span className={styles.randomClientIcon}>🎯</span>
-                        Random Kunde
+                        {t('rechnungForm.client.random')}
                       </span>
-                      <span className={styles.clientNote}> </span>
                     </div>
                     
-                    {/* Separador */}
                     <div className={styles.autocompleteSeparator}></div>
                     
-                    {/* Lista de clientes existentes */}
-                    {filteredClients().map(c => (
-                      <div 
-                        key={c._id} 
-                        className={`${styles.autocompleteItem} ${clientId === c._id ? styles.selected : ''}`}
-                        onClick={() => {
-                          setClientId(c._id);
-                          setClientSearch(`${c.vorname} ${c.name}`);
-                          setShowClientAutocomplete(false);
-                        }}
-                      >
-                        <span className={styles.clientName}>
-                          {c.vorname} {c.name}
-                          {c.isRandomClient && <span className={styles.randomBadge}>🎯</span>}
-                        </span>
-                        {c.email && <span className={styles.email}>({c.email})</span>}
+                    {filteredClients().length > 0 ? (
+                      filteredClients().map(c => (
+                        <div 
+                          key={c._id} 
+                          className={`${styles.autocompleteItem} ${clientId === c._id ? styles.selected : ''}`}
+                          onClick={() => {
+                            setClientId(c._id);
+                            setClientSearch(`${c.vorname} ${c.name}`);
+                            setShowClientAutocomplete(false);
+                          }}
+                        >
+                          <span className={styles.clientName}>
+                            {c.vorname} {c.name}
+                            {c.isRandomClient && <span className={styles.randomBadge}>{t('rechnungForm.client.randomBadge')}</span>}
+                          </span>
+                          {c.email && <span className={styles.email}>({c.email})</span>}
+                        </div>
+                      ))
+                    ) : (
+                      <div className={styles.autocompleteEmpty}>
+                        {t('rechnungForm.client.noClients')}
                       </div>
-                    ))}
+                    )}
+                    
+                    {!clientSearch && clients.length > 20 && (
+                      <div className={styles.autocompleteMore}>
+                        {t('rechnungForm.client.moreClients').replace('{count}', clients.length - 20)}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
               {!clientId && clientSearch === "" && (
                 <div className={styles.infoNote}>
                   <span className={styles.infoIcon}>💡</span>
-                  Esta venta se asignará al cliente "ClienteRandom" único de la empresa
+                  {t('rechnungForm.client.info')}
+                </div>
+              )}
+              {showClientAutocomplete && !clientSearch && (
+                <div className={styles.clientCount}>
+                  {t('rechnungForm.client.clientCount')
+                    .replace('{count}', clients.length)
+                    .replace('{plural}', clients.length !== 1 ? 's' : '')}
+                  {clients.length > 20 && ` ${t('rechnungForm.client.showingFirst').replace('{count}', 20)}`}
                 </div>
               )}
             </div>
 
             <div className={styles.formGroup}>
-              <label>Status</label>
+              <label>{t('rechnungForm.status.label')}</label>
               <select 
                 value={status} 
                 onChange={e => setStatus(e.target.value)}
                 disabled={isSubmitting}
               >
-                <option value="paid">Bezahlt</option>
-                <option value="pending">Ausstehend</option>
-                <option value="cancelled">Storniert</option>
+                <option value="paid">{t('rechnungForm.status.paid')}</option>
+                <option value="pending">{t('rechnungForm.status.pending')}</option>
+                <option value="cancelled">{t('rechnungForm.status.cancelled')}</option>
               </select>
             </div>
           </div>
 
           <div className={styles.tableSection}>
             <div className={styles.sectionHeader}>
-              <h3>Artikel ({lines.length})</h3>
+              <h3>{t('rechnungForm.items.title').replace('{count}', lines.length)}</h3>
             </div>
             
             <div className={styles.itemsContainer}>
@@ -450,18 +613,21 @@ const payload = {
                 const matches = filteredProducts(i);
                 const lineTotal = line.quantity && line.unitPrice ? (line.quantity * line.unitPrice).toFixed(2) : '0.00';
                 const stockInfo = getStockInfo(line.productId, i);
+                const isSearchingLine = isSearching[i];
                 
                 return (
                   <div key={i} className={`${styles.itemCard} ${
                     isSubmitting ? styles.rowDisabled : ""
                   } ${stockErrors[i] ? styles.rowError : ""}`}>
                     <div className={styles.itemHeader}>
-                      <span className={styles.itemNumber}>Artikel {i + 1}</span>
+                      <span className={styles.itemNumber}>
+                        {t('rechnungForm.items.item').replace('{number}', i + 1)}
+                      </span>
                       <button 
                         onClick={() => removeLine(i)}
                         disabled={lines.length <= 1 || isSubmitting}
                         className={styles.removeBtn}
-                        title="Artikel entfernen"
+                        title={t('rechnungForm.items.removeTitle')}
                       >
                         ✕
                       </button>
@@ -469,43 +635,64 @@ const payload = {
                     
                     <div className={styles.itemContent}>
                       <div className={styles.formGroup}>
-                        <label>Artikel</label>
+                        <label>{t('rechnungForm.items.fields.article')}</label>
                         <div className={styles.autocompleteWrapper} ref={el => autocompleteRefs.current[i] = el}>
                           <input
                             type="text"
-                            placeholder="Artikel suchen..."
+                            placeholder={t('rechnungForm.items.searchPlaceholder')}
                             value={searches[i]}
-                            onChange={e => {
-                              const val = e.target.value;
-                              setSearches(prev => prev.map((s, idx) => idx === i ? val : s));
-                              updateLine(i, { productId: "" });
-                              setShowAutocomplete(prev => prev.map((s, idx) => idx === i ? true : s));
-                            }}
+                            onChange={e => handleProductSearch(i, e.target.value)}
                             onFocus={() => setShowAutocomplete(prev => prev.map((s, idx) => idx === i ? true : s))}
                             disabled={isSubmitting}
                           />
-                          {showAutocomplete[i] && matches.length > 0 && (
-                            <div className={styles.autocompleteDropdown}>
-                              {matches.map(p => (
-                                <div 
-                                  key={p._id}
-                                  className={styles.autocompleteItem}
-                                  onClick={() => {
-                                    updateLine(i, { 
-                                      productId: p._id, 
-                                      unitPrice: p.price,
-                                      stock: p.stock 
-                                    });
-                                  }}
-                                >
-                                  <div className={styles.productName}>{p.artikelName}</div>
-                                  <div className={styles.productDetails}>
-                                    <span className={styles.productPrice}>({p.price} CHF)</span>
-                                    <span className={styles.productStock}>Lager: {p.stock}</span>
-                                  </div>
+                          
+                          {showAutocomplete[i] && (
+                            <>
+                              {isSearchingLine && (
+                                <div className={styles.autocompleteLoading}>
+                                  <div className={styles.spinnerSmall}></div>
+                                  <span>{t('rechnungForm.items.searching')}</span>
                                 </div>
-                              ))}
-                            </div>
+                              )}
+                              
+                              {!isSearchingLine && matches.length > 0 && (
+                                <div className={styles.autocompleteDropdown}>
+                                  {matches.map(p => (
+                                    <div 
+                                      key={p._id}
+                                      className={styles.autocompleteItem}
+                                      onClick={() => {
+                                        updateLine(i, { 
+                                          productId: p._id, 
+                                          unitPrice: p.price,
+                                          stock: p.stock 
+                                        });
+                                      }}
+                                    >
+                                      <div className={styles.productName}>{p.artikelName}</div>
+                                      <div className={styles.productDetails}>
+                                        <span className={styles.productPrice}>{p.price} {currencySymbol}</span>
+                                        <span className={styles.productStock}>
+                                          {t('rechnungForm.items.stock.badge.inStock')}: {p.stock}
+                                        </span>
+                                      </div>
+                                    </div>
+                                  ))}
+                                </div>
+                              )}
+                              
+                              {!isSearchingLine && searches[i].length >= 2 && matches.length === 0 && !productsLoading && (
+                                <div className={styles.autocompleteEmpty}>
+                                  {t('rechnungForm.items.noResults').replace('{search}', searches[i])}
+                                </div>
+                              )}
+                              
+                              {!isSearchingLine && searches[i].length < 2 && (
+                                <div className={styles.autocompleteHint}>
+                                  {t('rechnungForm.items.minChars')}
+                                </div>
+                              )}
+                            </>
                           )}
                         </div>
                         
@@ -520,7 +707,7 @@ const payload = {
                       
                       <div className={styles.itemDetails}>
                         <div className={styles.formGroup}>
-                          <label>Menge</label>
+                          <label>{t('rechnungForm.items.fields.quantity')}</label>
                           <input
                             type="number"
                             min="1"
@@ -546,7 +733,7 @@ const payload = {
                         </div>
                         
                         <div className={styles.formGroup}>
-                          <label>Einzelpreis (CHF)</label>
+                          <label>{t('rechnungForm.items.fields.unitPrice')} {currencySymbol}</label> 
                           <input
                             type="number"
                             min="0"
@@ -573,8 +760,8 @@ const payload = {
                         </div>
                         
                         <div className={`${styles.formGroup} ${styles.totalGroup}`}>
-                          <label>Gesamt (CHF)</label>
-                          <div className={styles.totalDisplay}>{lineTotal} CHF</div>
+                          <label>{t('rechnungForm.items.fields.total')}</label>
+                          <div className={styles.totalDisplay}>{lineTotal} {currencySymbol}</div>
                         </div>
                       </div>
                     </div>
@@ -588,22 +775,22 @@ const payload = {
               onClick={addLine}
               disabled={isSubmitting}
             >
-              + Artikel hinzufügen
+              {t('rechnungForm.items.add')}
             </button>
           </div>
 
           <div className={styles.totalsSection}>
             <div className={styles.totalRow}>
-              <span>Zwischensumme:</span>
-              <span>{subtotal.toFixed(2)} CHF</span>
+              <span>{t('rechnungForm.totals.subtotal')}</span>
+              <span>{subtotal.toFixed(2)} {currencySymbol}</span>
             </div>
             <div className={styles.totalRow}>
-              <span>1% MwSt.:</span>
-              <span>{taxAmount.toFixed(2)} CHF</span>
+              <span>{t('rechnungForm.totals.tax')}</span>
+              <span>{taxAmount.toFixed(2)} {currencySymbol} </span>
             </div>
             <div className={`${styles.totalRow} ${styles.grandTotal}`}>
-              <span>Gesamtsumme:</span>
-              <span>{total.toFixed(2)} CHF</span>
+              <span>{t('rechnungForm.totals.total')}</span>
+              <span>{total.toFixed(2)} {currencySymbol}</span>
             </div>
           </div>
         </div>
@@ -614,7 +801,7 @@ const payload = {
             onClick={onDone}
             disabled={isSubmitting}
           >
-            Abbrechen
+            {t('rechnungForm.common.cancel')}
           </button>
           <button 
             className={`${styles.btn} ${styles.btnSave}`} 
@@ -624,10 +811,10 @@ const payload = {
             {isSubmitting ? (
               <>
                 <div className={`${styles.loadingSpinner} ${styles.small}`}></div>
-                Speichern...
+                {t('rechnungForm.common.saving')}
               </>
             ) : (
-              "Rechnung Erstellen"
+              t('rechnungForm.creator.submit')
             )}
           </button>
         </div>

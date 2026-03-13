@@ -33,7 +33,7 @@ export function useSalesForImport() {
 
     try {
       const API_URL = `${API_BASE_URL}/sales`;
-      console.log('Fetching sales for import/export from:', API_URL);
+      // console.log('Fetching sales for import/export from:', API_URL);
       
       const res = await fetch(API_URL, {
         headers: getAuthHeaders()

@@ -1,0 +1,113 @@
+{
+  "scanner": {
+    "loading": {
+      "app": "Cargando aplicación...",
+      "cache": "Construyendo caché inicial...",
+      "cacheHint": "Esto ocurre solo una vez",
+      "products": "Cargando productos..."
+    },
+    "header": {
+      "title": "Venta en Kiosko",
+      "subtitle": "Escaneo y pago rápido",
+      "productsAvailable": "📦 {count} productos disponibles",
+      "updating": "Actualizando...",
+      "indexedDB": "(IndexedDB: {count})",
+      "total": "Total:",
+      "scanMode": "🔍 Modo Escáner",
+      "editMode": "✏️ Modo Edición"
+    },
+    "scanner": {
+      "title": "Escáner de Código",
+      "itemsCount": "{count} artículos",
+      "placeholder": "Escanear código o número de artículo...",
+      "button": "Agregar",
+      "manualAdd": "Agregar producto manualmente",
+      "feedback": {
+        "added": "{quantity}x {name} agregado",
+        "notFound": "Producto no encontrado: {barcode}",
+        "searchError": "Error en la búsqueda"
+      }
+    },
+    "manualSearch": {
+      "title": "Búsqueda de Productos",
+      "placeholder": "Mínimo 2 caracteres...",
+      "searching": "Buscando...",
+      "noResults": "No se encontraron productos",
+      "minChars": "Por favor ingrese al menos 2 caracteres",
+      "articleNumber": "Art. N°: {number}",
+      "available": "{stock} disponibles",
+      "outOfStock": "Agotado"
+    },
+    "client": {
+      "title": "Cliente",
+      "placeholder": "Buscar cliente...",
+      "randomClient": "Cliente Aleatorio",
+      "clear": "Limpiar"
+    },
+    "totals": {
+      "subtotal": "Subtotal:",
+      "tax": "10% IVA:",
+      "total": "Total:",
+      "cancel": "Cancelar Venta",
+      "checkout": "Pagar",
+      "processing": "Procesando..."
+    },
+    "items": {
+      "title": "Artículos Escaneados",
+      "count": "{count} artículos",
+      "empty": {
+        "title": "No hay artículos escaneados",
+        "text": "Escanee artículos para mostrarlos aquí"
+      },
+      "articleNumber": "Art. N°: {number}",
+      "available": "{stock} disponibles",
+      "quantity": "Cantidad",
+      "unitPrice": "Precio unitario {symbol}",
+      "total": "Total",
+      "lowStock": "¡Stock insuficiente! Solo {stock} unidades disponibles"
+    },
+    "payment": {
+      "title": "Cobro",
+      "due": "A PAGAR:",
+      "cash": "💵 EFECTIVO",
+      "card": "💳 TARJETA",
+      "received": "RECIBIDO:",
+      "change": "CAMBIO:",
+      "processing": "Procesando...",
+      "cardPayment": {
+        "processing": "Procesando pago con tarjeta...",
+        "amount": "Monto: {amount} {symbol}",
+        "confirm": "Confirmar pago con tarjeta",
+        "backToCash": "Volver a efectivo"
+      },
+      "quickCash": {
+        "5": "5 {symbol}",
+        "10": "10 {symbol}",
+        "20": "20 {symbol}",
+        "50": "50 {symbol}",
+        "100": "100 {symbol}",
+        "200": "200 {symbol}"
+      }
+    },
+    "receipt": {
+      "success": "✅ ¡VENTA EXITOSA!",
+      "newSale": "Iniciar nueva venta",
+      "autoReset": "Reinicio automático en 5 segundos..."
+    },
+    "alerts": {
+      "lowStock": {
+        "title": "¡Stock insuficiente!",
+        "text": "Solo hay <strong>{available} unidades</strong> disponibles de <strong>{name}</strong>.",
+        "detail": "Necesita {requested} unidades."
+      },
+      "insufficientAmount": "Monto insuficiente. Total: {total} {symbol}",
+      "noItems": "Por favor agregue artículos primero",
+      "confirmCancel": "¿Realmente desea cancelar la venta actual?",
+      "stockError": "Stock insuficiente",
+      "saleError": "Error al crear la factura"
+    },
+    "cache": {
+      "refresh": "Actualizar caché"
+    }
+  }
+}

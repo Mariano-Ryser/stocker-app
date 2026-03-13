@@ -10,13 +10,13 @@ export const useBulkImport = () => {
         throw new Error('Nicht authentifiziert. Bitte erneut anmelden.');
       }
 
-      console.log('Starting bulk import of', products.length, 'products');
+      // console.log('Starting bulk import of', products.length, 'products');
       
       // VERIFICA QUE LA URL SEA CORRECTA
       const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:5000';
       const url = `${backendUrl}/products/bulk`;
       
-      console.log('Sending request to:', url);
+      // console.log('Sending request to:', url);
       
       const response = await fetch(url, {
         method: 'POST',
@@ -27,8 +27,8 @@ export const useBulkImport = () => {
         body: JSON.stringify({ products })
       });
 
-      console.log('Response status:', response.status);
-      console.log('Response headers:', response.headers);
+      // console.log('Response status:', response.status);
+      // console.log('Response headers:', response.headers);
 
       // Verificar si la respuesta es JSON
       const contentType = response.headers.get('content-type');
@@ -45,7 +45,7 @@ export const useBulkImport = () => {
         throw new Error(data.message || `Import fehlgeschlagen (${response.status})`);
       }
 
-      console.log('Bulk import successful:', data);
+      // console.log('Bulk import successful:', data);
       return data;
 
     } catch (error) {
@@ -99,7 +99,7 @@ export const useBulkImport = () => {
       }
     });
 
-    console.log('Validation results:', validationResults);
+    // console.log('Validation results:', validationResults);
     return validationResults;
   };
 

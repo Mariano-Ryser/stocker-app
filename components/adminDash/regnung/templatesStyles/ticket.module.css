@@ -1,0 +1,126 @@
+/* Estilos para Ticket Térmico */
+.ticketThermal {
+  font-family: 'Courier New', monospace;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 10px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.ticketHeader {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.ticketHeader h2 {
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0 0 5px 0;
+  text-transform: uppercase;
+}
+
+.ticketAddress {
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.ticketContact {
+  font-size: 11px;
+  margin-bottom: 5px;
+}
+
+.ticketDivider {
+  text-align: center;
+  margin: 8px 0;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+
+.ticketInfo {
+  margin-bottom: 10px;
+}
+
+.ticketRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.ticketItems {
+  margin-bottom: 10px;
+}
+
+.ticketItem {
+  margin-bottom: 8px;
+  border-bottom: 1px dotted #ccc;
+  padding-bottom: 5px;
+}
+
+.itemNameLine {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-bottom: 3px;
+}
+
+.itemName {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.itemPrice {
+  font-weight: normal;
+}
+
+.itemQuantity {
+  font-size: 10px;
+  color: #555;
+  display: flex;
+  justify-content: space-between;
+}
+
+.itemTotal {
+  font-weight: bold;
+}
+
+.ticketTotals {
+  margin-bottom: 10px;
+}
+
+.totalLine {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-bottom: 3px;
+}
+
+.grandTotal {
+  font-weight: bold;
+  font-size: 13px;
+  margin-top: 5px;
+  border-top: 1px solid #000;
+  padding-top: 5px;
+}
+
+.ticketFooter {
+  text-align: center;
+  font-size: 11px;
+  margin-top: 10px;
+}
+
+.ticketFooter p {
+  margin: 5px 0;
+}
+
+.barcode {
+  font-family: 'Courier New', monospace;
+  font-size: 20px;
+  letter-spacing: 5px;
+  margin-top: 5px;
+}
+
+

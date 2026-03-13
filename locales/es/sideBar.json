@@ -2,6 +2,7 @@
   "menu": {
     "home": "Panel de control",
     "articles": "Búsqueda de artículos",
+    "wareneigang": "Entrada de mercancías",
     "clients": "Clientes",
     "invoices": "Facturas",
     "scanner": "Escáner",

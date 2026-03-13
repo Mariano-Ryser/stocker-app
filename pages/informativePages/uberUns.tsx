@@ -39,7 +39,7 @@ const UberUns = () => {
       <section ref={heroRef} className={styles.hero}>
         <div className={styles.heroImageContainer}>
           <Image
-            src="/img/alpinaYo.jpg"
+            src="/img/alpinaYo.webp" 
             alt="Professional team"
             fill
             priority
@@ -66,7 +66,7 @@ const UberUns = () => {
         {/* PRIMERA IMAGEN AGREGADA */}
         <div className={styles.sectionImage}>
           <Image
-            src="/img/stapler.jpg" /* CAMBIA ESTA RUTA */
+            src="/img/stapler.webp" 
             alt="Equipo trabajando"
             width={800}
             height={400}
@@ -107,7 +107,7 @@ const UberUns = () => {
         {/* SEGUNDA IMAGEN AGREGADA */}
         <div className={styles.sectionImage}>
           <Image
-            src="/img/alpinaYo.jpg" /* CAMBIA ESTA RUTA */
+            src="/img/alpinaYo.webp" /* CAMBIA ESTA RUTA */
             alt="Oficina moderna"
             width={800}
             height={400}
@@ -133,10 +133,9 @@ const UberUns = () => {
         <p className={styles.subtitle}>{t('uns.section4Subtitle')}</p>
 
         <div className={styles.teamCard}>
-          {/* IMAGEN CIRCULAR PARA MARIANO RYSER */}
           <div className={styles.profileImageContainer}>
             <Image
-              src="/img/me.jpg" /* CAMBIA ESTA RUTA */
+              src="/img/Mariano.webp" 
               alt="Mariano Ryser"
               width={150}
               height={150}

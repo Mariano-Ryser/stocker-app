@@ -218,7 +218,7 @@ export default function ExcelImportExport({
         const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
         const jsonData = XLSX.utils.sheet_to_json(firstSheet, { defval: '' });
 
-        console.log('Raw Excel data:', jsonData);
+        // console.log('Raw Excel data:', jsonData);
 
         let transformedData = [];
 
@@ -293,7 +293,7 @@ export default function ExcelImportExport({
           transformedData = Object.values(groupedSales);
         }
 
-        console.log('Transformed data:', transformedData);
+        // console.log('Transformed data:', transformedData);
 
         if (onImport && transformedData.length > 0) {
           onImport(transformedData);

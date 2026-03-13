@@ -1,0 +1,76 @@
+{
+  "wareneingang": {
+    "title": "Entrada de Mercancía",
+    "subtitle": "Registre nuevas entregas y aumente el stock",
+    "loading": "Cargando...",
+    "search": {
+      "title": "Buscar Artículos",
+      "placeholder": "Ingrese nombre o número de artículo...",
+      "button": "Buscar",
+      "searching": "Buscando...",
+      "noResults": "No se encontraron artículos",
+      "clearSearch": "Limpiar búsqueda"
+    },
+    "product": {
+      "number": "N°: {number}",
+      "currentStock": "Stock actual: {stock}",
+      "price": "{price}",
+      "selectIndicator": "✓"
+    },
+    "form": {
+      "title": "Registrar Entrada",
+      "selectedProduct": {
+        "title": "{name}",
+        "number": "Número de artículo: {number}",
+        "currentStock": "Stock actual: <strong>{stock}</strong>"
+      },
+      "fields": {
+        "quantity": {
+          "label": "Cantidad *",
+          "placeholder": "0"
+        },
+        "supplier": {
+          "label": "Proveedor (opcional)",
+          "placeholder": "Ej: Metro, Selgros, etc."
+        },
+        "reference": {
+          "label": "Factura / Albarán (opcional)",
+          "placeholder": "Ej: FAC-2024-001"
+        },
+        "expiration": {
+          "label": "Fecha de vencimiento (opcional)"
+        },
+        "batch": {
+          "label": "N° de lote (opcional)",
+          "placeholder": "Ej: L2305"
+        },
+        "notes": {
+          "label": "Notas (opcional)",
+          "placeholder": "Información adicional..."
+        }
+      },
+      "preview": {
+        "text": "Stock después de la entrada:",
+        "newStock": "{current} + {add} = <strong>{total}</strong>"
+      },
+      "success": "✅ {message}",
+      "error": "❌ {message}",
+      "actions": {
+        "cancel": "Cancelar",
+        "submit": "Registrar entrada",
+        "submitting": "Procesando..."
+      },
+      "successMessage": "¡Entrada registrada exitosamente!"
+    },
+    "emptyState": {
+      "title": "Ningún artículo seleccionado",
+      "text": "Busque un artículo a la izquierda y selecciónelo para registrar una entrada.",
+      "icon": "📦"
+    },
+    "stock": {
+      "inStock": "En stock",
+      "outOfStock": "Sin stock",
+      "badge": "Stock actual: {stock}"
+    }
+  }
+}

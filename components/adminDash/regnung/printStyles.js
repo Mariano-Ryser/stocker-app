@@ -1,4 +1,4 @@
-/* frontend/components/adminDash/regnung/printStyles.js */
+// frontend/components/adminDash/regnung/printStyles.js
 export const printStyles = `
 /* Estilos base para impresión */
 * {
@@ -48,11 +48,14 @@ body {
 }
 
 .invoice-classic .logo {
-  max-width: 120px;
-  max-height: 80px;
-  margin-bottom: 10px;
+  max-width: 220px;  /* Aún más grande */
+  max-height: 150px;
+  width: auto;
+  height: auto;
   object-fit: contain;
+  margin-bottom: 15px;
 }
+
 
 .invoice-classic .invoice-info {
   text-align: right;
@@ -146,10 +149,233 @@ body {
   color: #666;
 }
 
-/* Invoice Modern Styles */ /* Invoice Modern Styles */ /* Invoice Modern Styles */ /* Invoice Modern Styles */ /* Invoice Modern Styles */
-/* Invoice Modern Styles */ /* Invoice Modern Styles */ /* Invoice Modern Styles */ /* Invoice Modern Styles */ /* Invoice Modern Styles */
-/* Invoice Modern Styles */ /* Invoice Modern Styles */ /* Invoice Modern Styles */ /* Invoice Modern Styles */ /* Invoice Modern Styles */
-/* Invoice Modern Minimal Styles */
+// frontend/components/adminDash/regnung/printStyles.js
+// Agrega esta sección después de los otros estilos de facturas
+
+/* Invoice Classic2 Styles */
+.invoice-classic2 {
+  font-family: 'Times New Roman', Times, serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 30px;
+  background: white;
+  color: #000;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.invoice-classic2 .header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.invoice-classic2 .company-section {
+  flex: 1;
+}
+
+.invoice-classic2 .logo {
+   max-width: 220px;  /* Aún más grande */
+  max-height: 150px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  margin-bottom: 15px;
+}
+
+.invoice-classic2 .company-details {
+  font-size: 11px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.invoice-classic2 .company-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #000;
+}
+
+.invoice-classic2 .invoice-info {
+  text-align: right;
+}
+
+.invoice-classic2 .invoice-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.invoice-classic2 .invoice-number {
+  font-size: 14px;
+  color: #666;
+}
+
+.invoice-classic2 .divider {
+  height: 2px;
+  background: linear-gradient(to right, #000 0%, #000 50%, transparent 100%);
+  margin: 20px 0;
+}
+
+.invoice-classic2 .client-box {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: #f9f9f9;
+  border-left: 4px solid #000;
+}
+
+.invoice-classic2 .client-title {
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.invoice-classic2 .client-name {
+  font-weight: bold;
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.invoice-classic2 .client-address {
+  margin: 5px 0;
+}
+
+.invoice-classic2 .client-contact {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #ccc;
+  font-size: 11px;
+  color: #666;
+}
+
+.invoice-classic2 .meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin: 25px 0;
+  padding: 15px;
+  background: #fff;
+  border: 1px solid #ddd;
+}
+
+.invoice-classic2 .meta-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.invoice-classic2 .meta-label {
+  font-weight: bold;
+  color: #666;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.invoice-classic2 .meta-value {
+  color: #000;
+  font-size: 12px;
+}
+
+.invoice-classic2 .table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 11px;
+}
+
+.invoice-classic2 .table th {
+  background: #f0f0f0;
+  border: 1px solid #000;
+  padding: 10px 8px;
+  text-align: left;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 10px;
+}
+
+.invoice-classic2 .table td {
+  border: 1px solid #000;
+  padding: 8px;
+}
+
+.invoice-classic2 .table tbody tr:last-child td {
+  border-bottom: 1px solid #000;
+}
+
+.invoice-classic2 .text-center {
+  text-align: center;
+}
+
+.invoice-classic2 .text-right {
+  text-align: right;
+}
+
+.invoice-classic2 .totals {
+  margin-top: 25px;
+  width: 320px;
+  margin-left: auto;
+  border: 1px solid #000;
+  padding: 15px;
+  background: #fafafa;
+}
+
+.invoice-classic2 .total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dotted #ccc;
+  font-size: 11px;
+}
+
+.invoice-classic2 .total-row:last-child {
+  border-bottom: none;
+}
+
+.invoice-classic2 .total-row.final {
+  font-weight: bold;
+  font-size: 14px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #000;
+  border-bottom: none;
+}
+
+.invoice-classic2 .footer {
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid #ccc;
+  text-align: center;
+  font-size: 10px;
+  color: #666;
+  position: relative;
+}
+
+.invoice-classic2 .legal-info {
+  margin-top: 10px;
+  font-size: 8px;
+  color: #999;
+}
+
+.invoice-classic2 .page {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 8px;
+  color: #999;
+}
+
+/* ------------------------------- */
+/* ------------------------------- */
+/* ------------------------------- */
+
+
+/* Invoice Modern Styles */
+/* Invoice Modern Styles */
 .invoice-modern {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   max-width: 800px;
@@ -168,9 +394,12 @@ body {
 }
 
 .invoice-modern .logo {
-max-width: 120px;
-  max-height: 120px;
+  max-width: 220px;  /* Aún más grande */
+  max-height: 150px;
+  width: auto;
+  height: auto;
   object-fit: contain;
+  margin-bottom: 15px;
 }
 
 .invoice-modern .logo-placeholder {
@@ -359,9 +588,7 @@ max-width: 120px;
   border-top: 2px solid #e2e8f0;
 }
 
-/* Ticket Thermal Styles *//* Ticket Thermal Styles *//* Ticket Thermal Styles *//* Ticket Thermal Styles *//* Ticket Thermal Styles */
-/* Ticket Thermal Styles *//* Ticket Thermal Styles *//* Ticket Thermal Styles *//* Ticket Thermal Styles *//* Ticket Thermal Styles */
-/* Ticket Thermal Styles *//* Ticket Thermal Styles *//* Ticket Thermal Styles *//* Ticket Thermal Styles *//* Ticket Thermal Styles */
+/* Ticket Thermal Styles */
 .ticket-thermal {
   font-family: 'Courier New', Courier, monospace;
   max-width: 300px;
@@ -443,6 +670,223 @@ max-width: 120px;
   margin-top: 8px;
 }
 
+/* Invoice Letter Styles - CORREGIDO para que coincida EXACTAMENTE con letter.module.css */
+.invoice-letter {
+  font-family: 'Times New Roman', Times, serif;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 25px 30px;
+  background: white;
+  color: #000;
+  font-size: 11pt;
+  line-height: 1.4;
+  position: relative;
+}
+
+.invoice-letter .header {
+  position: relative;
+  min-height: 140px;
+  margin-bottom: 30px;
+}
+
+.invoice-letter .sender-info {
+  position: absolute;
+  top: 0;
+  right: 0;
+  text-align: right;
+  max-width: 350px;
+}
+
+.invoice-letter .logo-container {
+  margin-bottom: 10px;
+  text-align: right;
+}
+
+.invoice-letter .logo {
+  max-width: 180px;
+  max-height: 90px;
+  object-fit: contain;
+}
+
+.invoice-letter .company-details {
+  font-size: 10pt;
+  color: #333;
+  line-height: 1.4;
+}
+
+.invoice-letter .company-details .company-name {
+  font-weight: bold;
+  font-size: 12pt;
+  margin-bottom: 5px;
+  color: #000;
+}
+
+.invoice-letter .recipient-window {
+  position: absolute;
+  top: 50px;
+  left: 0;
+  width: 260px;
+  min-height: 100px;
+}
+
+.invoice-letter .recipient-address {
+  font-size: 11pt;
+  line-height: 1.4;
+  padding: 5px 0;
+}
+
+.invoice-letter .recipient-address div {
+  margin: 3px 0;
+}
+
+.invoice-letter .recipient-company {
+  font-weight: bold;
+  font-size: 12pt;
+  margin-bottom: 5px;
+}
+
+/* Metadatos de la factura - EXACTAMENTE IGUAL que en letter.module.css */
+.invoice-letter .invoice-meta {
+  margin: 25px 0 15px 0;
+  padding: 12px 0;
+  font-size: 11pt;
+  border-bottom: 1px solid #000;
+}
+
+.invoice-letter .metaRow {
+  display: flex;
+  justify-content: flex-end;
+  gap: 20px;
+  margin: 4px 0;
+  max-width: 320px;
+  margin-left: auto;
+}
+
+.invoice-letter .metaLabel {
+  font-weight: bold;
+  color: #333;
+}
+
+.invoice-letter .metaValue {
+  color: #000;
+}
+
+/* Asunto */
+.invoice-letter .subject {
+  margin: 20px 0 25px 0;
+  font-size: 12pt;
+  padding: 5px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Tabla */
+.invoice-letter .table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 11pt;
+}
+
+.invoice-letter .table th {
+  background: #f5f5f5;
+  border-bottom: 2px solid #000;
+  border-top: 1px solid #000;
+  padding: 10px 6px;
+  text-align: left;
+  font-weight: bold;
+  font-size: 10pt;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.invoice-letter .table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid #ddd;
+}
+
+.invoice-letter .table tbody tr:last-child td {
+  border-bottom: 1px solid #000;
+}
+
+.invoice-letter .text-center {
+  text-align: center;
+}
+
+.invoice-letter .text-right {
+  text-align: right;
+}
+
+/* Sección de totales */
+.invoice-letter .totals-section {
+  margin-top: 25px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.invoice-letter .totals {
+  width: 320px;
+  border: 1px solid #000;
+  padding: 18px;
+  background: #fafafa;
+}
+
+.invoice-letter .total-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 6px 0;
+  font-size: 11pt;
+  border-bottom: 1px dotted #ccc;
+}
+
+.invoice-letter .total-row:last-child {
+  border-bottom: none;
+}
+
+.invoice-letter .total-row.final {
+  font-weight: bold;
+  font-size: 12pt;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 2px solid #000;
+  border-bottom: none;
+}
+
+/* Footer */
+.invoice-letter .footer {
+  margin-top: 45px;
+  padding-top: 25px;
+  border-top: 1px solid #333;
+  font-size: 9pt;
+  color: #666;
+  text-align: center;
+  position: relative;
+}
+
+.invoice-letter .payment-info {
+  margin-bottom: 10px;
+}
+
+.invoice-letter .thanks {
+  font-size: 10pt;
+  color: #333;
+  margin: 12px 0;
+  font-style: italic;
+}
+
+.invoice-letter .legal-info {
+  margin-top: 10px;
+  font-size: 8pt;
+  color: #999;
+}
+
+.invoice-letter .page {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  font-size: 8pt;
+  color: #999;
+}
+
 /* Utilidades comunes */
 .text-center {
   text-align: center;
@@ -463,8 +907,16 @@ max-width: 120px;
   
   .invoice-classic .table th,
   .invoice-classic .client-box,
-  .invoice-modern .badge {
+  .invoice-modern .badge,
+  .invoice-letter .table th,
+  .invoice-letter .totals {
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
-}`;
+  
+  .invoice-letter .recipient-window {
+    top: 45px;
+    left: 0;
+  }
+}
+`;

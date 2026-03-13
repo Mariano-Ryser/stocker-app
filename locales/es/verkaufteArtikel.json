@@ -1,0 +1,69 @@
+{
+  "verkaufteArtikel": {
+    "title": "Artículos Vendidos",
+    "subtitle": "Resumen de todos los artículos vendidos",
+    "loading": "Cargando artículos vendidos...",
+    "loadingData": "Cargando datos de ventas...",
+    "loadingShort": "Cargando...",
+    "error": {
+      "general": "Error",
+      "title": "Error al cargar los artículos"
+    },
+    "actions": {
+      "retry": "Intentar de nuevo",
+      "refresh": "Actualizar",
+      "clearFilters": "Limpiar filtros",
+      "loadMore": "Cargar más ({remaining})"
+    },
+    "stats": {
+      "revenue": "Ingresos",
+      "units": "Unidades",
+      "articles": "Artículos",
+      "items": "artículos",
+      "of": "de"
+    },
+    "filters": {
+      "product": "Buscar artículos...",
+      "client": "Cliente",
+      "lieferschein": "N° Factura",
+      "dateFrom": "Desde",
+      "dateTo": "Hasta",
+      "dateSeparator": "—",
+      "showCancelled": "Mostrar cancelados",
+      "showPending": "Mostrar pendientes"
+    },
+    "table": {
+      "article": "Artículo",
+      "quantity": "Cant.",
+      "price": "Precio",
+      "total": "Total",
+      "client": "Cliente",
+      "date": "Fecha",
+      "lieferschein": "N° Factura: {number}"
+    },
+    "card": {
+      "client": "Cliente:",
+      "lieferschein": "N° Factura:",
+      "date": "Fecha:",
+      "price": "Precio:",
+      "total": "Total:"
+    },
+    "client": {
+      "unknown": "Cliente desconocido"
+    },
+    "empty": {
+      "notFound": {
+        "title": "No se encontraron artículos",
+        "text": "Sin resultados para sus criterios de búsqueda"
+      },
+      "noSales": {
+        "title": "Sin artículos vendidos",
+        "text": "Aún no se han vendido artículos"
+      }
+    },
+    "status": {
+      "cancelled": "Cancelado",
+      "pending": "Pendiente"
+    }
+  }
+}

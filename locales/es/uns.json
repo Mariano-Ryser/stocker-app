@@ -1,52 +1,50 @@
 {
-    "uns": {
-    "title": "INGLEEEES",
-    "description": "Entdecken Sie unser Unternehmen: Experten in SaaS-Entwicklung, Wartung und Beratung. Professionalität und Innovation für Ihre digitale Transformation.",
-    "keywords": "SaaS, Softwareentwicklung, Cloud-Lösungen, Digitalisierung, Beratung, IT-Dienstleistungen",
-    "ogTitle": "Über Uns | Professionelle SaaS-Lösungen",
-    "ogDescription": "Erfahren Sie mehr über unser erfahrenes Team und unsere Expertise in modernen SaaS-Lösungen.",
-    "heroTitle": "Über Uns",
-    "heroSubtitle": "Innovation, Professionalität und Exzellenz in modernen SaaS-Lösungen",
-    "heroButton": "Kontaktieren Sie uns",
-    "section1Title": "Wer wir sind",
-    "section1Text1": "Als führendes SaaS-Unternehmen kombinieren wir technologische Expertise mit tiefgreifendem Branchenwissen. Unser Team aus erfahrenen Entwicklern, Beratern und Strategen arbeitet mit Leidenschaft an der digitalen Transformation unserer Kunden.",
-    "section1Text2": "Wir glauben daran, dass großartige Software nicht nur funktional, sondern auch intuitiv, skalierbar und zukunftssicher sein muss. Mit diesem Ansatz unterstützen wir Unternehmen dabei, ihre Geschäftsprozesse zu optimieren und nachhaltige Wettbewerbsvorteile zu schaffen.",
-    "section2Title": "Was wir tun",
+  "uns": {
+    "title": "Sobre Nosotros | Soluciones SaaS Innovadoras para tu Empresa",
+    "description": "Descubre nuestra empresa: expertos en desarrollo, mantenimiento y consultoría SaaS. Profesionalismo e innovación para tu transformación digital.",
+    "keywords": "SaaS, Desarrollo de Software, Soluciones Cloud, Digitalización, Consultoría, Servicios IT",
+    "ogTitle": "Sobre Nosotros | Soluciones SaaS Profesionales",
+    "ogDescription": "Conoce más sobre nuestro equipo experimentado y nuestra experiencia en soluciones SaaS modernas.",
+    "heroTitle": "Sobre Nosotros",
+    "heroSubtitle": "Innovación, profesionalismo y excelencia en soluciones SaaS modernas",
+    "heroButton": "Contáctanos",
+    "section1Title": "Quiénes Somos",
+    "section1Text1": "Como empresa líder en SaaS, combinamos experiencia tecnológica con un profundo conocimiento del sector. Nuestro equipo de desarrolladores, consultores y estrategas trabaja con pasión en la transformación digital de nuestros clientes.",
+    "section1Text2": "Creemos que un gran software no solo debe ser funcional, sino también intuitivo, escalable y preparado para el futuro. Con este enfoque, ayudamos a las empresas a optimizar sus procesos y a crear ventajas competitivas sostenibles.",
+    "section2Title": "Qué Hacemos",
     "services": {
       "development": {
-        "title": "Entwicklung",
-        "text": "Individuelle SaaS-Lösungen mit modernsten Technologien. Wir entwickeln robuste, skalierbare und benutzerzentrierte Anwendungen, die perfekt auf Ihre Geschäftsanforderungen abgestimmt sind."
+        "title": "Desarrollo",
+        "text": "Soluciones SaaS a medida utilizando tecnologías de última generación. Desarrollamos aplicaciones robustas, escalables y centradas en el usuario, adaptadas a las necesidades de tu negocio."
       },
       "maintenance": {
-        "title": "Wartung & Support",
-        "text": "Kontinuierliche Betreuung, Sicherheitsupdates und Performance-Optimierung. Wir gewährleisten maximale Verfügbarkeit und langfristigen Erfolg Ihrer Softwarelösungen."
+        "title": "Mantenimiento y Soporte",
+        "text": "Soporte continuo, actualizaciones de seguridad y optimización del rendimiento. Garantizamos máxima disponibilidad y éxito a largo plazo de tus soluciones de software."
       },
       "consulting": {
-        "title": "Strategische Beratung",
-        "text": "Ganzheitliche Digitalisierungsstrategien für nachhaltigen Erfolg. Wir analysieren Ihre Prozesse und entwickeln gemeinsam maßgeschneiderte Lösungen für Ihre digitale Transformation."
+        "title": "Consultoría Estratégica",
+        "text": "Estrategias de digitalización integrales para un éxito sostenible. Analizamos tus procesos y desarrollamos soluciones personalizadas para tu transformación digital."
       }
     },
-    "section3Title": "Unsere Professionalität",
-    "section3Text": "Professionalität ist das Fundament unserer Arbeit. Wir setzen auf bewährte Methoden, transparente Kommunikation und höchste Qualitätsstandards in jedem Projektschritt.",
-    
-        "professionalList1": "Agile Entwicklung nach Scrum & Kanban Methoden",
-        "professionalList2": "Transparente Prozesse mit regelmäßigen Updates & Reviews",
-        "professionalList3": "Datenschutz & Security nach DSGVO & ISO 27001 Standards",
-        "professionalList4": "Cloud-native Architekturen für maximale Skalierbarkeit",
-        "professionalList5": "24/7 Enterprise Support mit garantierten SLAs",
-        "professionalList6": "Kontinuierliche Verbesserung und Innovation",
-
-    "section4Title": "Unser Team",
-    "section4Subtitle": "Hinter jeder innovativen Lösung stehen engagierte Experten, die Leidenschaft für Technologie mit tiefgreifendem Fachwissen verbinden.",
+    "section3Title": "Nuestra Profesionalidad",
+    "section3Text": "La profesionalidad es la base de nuestro trabajo. Aplicamos metodologías probadas, comunicación transparente y los más altos estándares de calidad en cada etapa del proyecto.",
+    "professionalList1": "Desarrollo ágil con metodologías Scrum y Kanban",
+    "professionalList2": "Procesos transparentes con actualizaciones y revisiones periódicas",
+    "professionalList3": "Protección de datos y seguridad según estándares GDPR e ISO 27001",
+    "professionalList4": "Arquitecturas cloud-native para máxima escalabilidad",
+    "professionalList5": "Soporte empresarial 24/7 con SLAs garantizados",
+    "professionalList6": "Mejora continua e innovación constante",
+    "section4Title": "Nuestro Equipo",
+    "section4Subtitle": "Detrás de cada solución innovadora hay expertos comprometidos que combinan pasión por la tecnología con un profundo conocimiento.",
     "team": {
-      "member1": {
+     "member1": {
         "name": "Mariano Ryser",
-        "role": "CTO & Technische Leitung",
-        "bio": "Experte für Cloud-Architekturen und skalierbare Systeme. Promovierte Informatikerin mit Fokus auf Security, Performance und innovative Technologien."
+        "role": "Fundador & Desarrollador Principal",
+        "bio": "Fundador y desarrollador principal de la plataforma. Responsable del diseño, desarrollo y mantenimiento completo de la aplicación, desde la arquitectura backend hasta la implementación del frontend. Especializado en sistemas SaaS escalables, soluciones en la nube y desarrollo de software orientado a negocios."
       }
     },
-    "ctaTitle": "Starte Deine digitale Transformation",
-    "ctaText": "Kontaktieren Sie uns für eine unverbindliche Beratung. Gemeinsam entwickeln wir die perfekte SaaS-Lösung für Ihr Unternehmen.",
-    "ctaButton": "Jetzt Gespräch vereinbaren"
+    "ctaTitle": "Comienza tu Transformación Digital",
+    "ctaText": "Contáctanos para una consulta sin compromiso. Juntos desarrollaremos la solución SaaS perfecta para tu empresa.",
+    "ctaButton": "Agendar una Reunión"
   }
 }

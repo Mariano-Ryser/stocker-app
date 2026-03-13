@@ -1,95 +1,102 @@
 {
-    "terms": {
+  "terms": {
     "title": "Allgemeine Geschäftsbedingungen",
     "effectiveDate": "Zuletzt aktualisiert: {{date}}",
     "backButton": "← Zurück",
-    
     "sections": {
       "scope": {
         "title": "1. Geltungsbereich",
         "paragraphs": [
-          "Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen der alpina GmbH (nachfolgend 'Anbieter') und den Nutzern (nachfolgend 'Kunden') der Intelligence-Plattform alpina.",
-          "Die Plattform bietet datenbasierte Analysen und Entscheidungsunterstützung für Unternehmen. Durch die Registrierung oder Nutzung der Dienste erkennen Kunden diese AGB als verbindlich an."
+          "Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen der alpina GmbH (nachfolgend der \"Anbieter\") und den Nutzern (nachfolgend die \"Kunden\") der alpina-Plattform.",
+          "Die Plattform bietet datenbasierte Analysen und Entscheidungsunterstützung für Unternehmen. Mit der Registrierung oder Nutzung der Dienste erkennen die Kunden diese AGB als verbindlich an."
         ]
       },
       "description": {
         "title": "2. Leistungsbeschreibung",
-        "intro": "alpina stellt eine cloudbasierte Plattform zur Verfügung, die:",
+        "intro": "alpina stellt eine cloudbasierte Plattform zur Verfügung, die folgende Funktionen umfasst:",
         "items": [
-          "Datenintegration aus verschiedenen Quellen",
+          "Integration von Daten aus verschiedenen Quellen",
           "Erweiterte Datenanalyse und Visualisierung",
-          "Vorhersagemodelle und KI-gestützte Erkenntnisse",
-          "Berichterstattung und Dashboard-Funktionen",
-          "API-Zugang für Integrationen"
+          "Prognosemodelle und KI-gestützte Auswertungen",
+          "Berichte und Dashboard-Funktionen",
+          "API-Zugang für externe Integrationen"
         ],
-        "outro": "Die genauen Leistungsumfänge sind in den jeweiligen Servicepaketen definiert."
+        "outro": "Der konkrete Leistungsumfang richtet sich nach dem jeweils gewählten Servicepaket."
       },
       "registration": {
-        "title": "3. Registrierung und Konto",
+        "title": "3. Registrierung und Benutzerkonto",
         "paragraphs": [
-          "Für die Nutzung der Plattform ist eine Registrierung erforderlich. Der Kunde verpflichtet sich, wahrheitsgemäße und vollständige Angaben zu machen.",
-          "Jeder Kunde ist für die Sicherheit seiner Zugangsdaten verantwortlich und muss unverzüglich unbefugte Nutzung melden. Der Anbieter behält sich das Recht vor, Konten bei Verdacht auf Missbrauch zu sperren."
+          "Für die Nutzung der Plattform ist eine Registrierung erforderlich. Der Kunde verpflichtet sich, korrekte und vollständige Angaben zu machen.",
+          "Der Kunde ist für die Sicherheit seiner Zugangsdaten verantwortlich und hat jede unbefugte Nutzung unverzüglich zu melden. Der Anbieter ist berechtigt, Konten bei Verdacht auf Missbrauch vorübergehend zu sperren."
         ]
       },
       "termination": {
         "title": "4. Vertragslaufzeit und Kündigung",
         "paragraphs": [
-          "Die Vertragslaufzeit richtet sich nach dem gewählten Abrechnungsmodell (monatlich/jährlich).",
+          "Die Vertragslaufzeit richtet sich nach dem gewählten Abrechnungsmodell (monatlich oder jährlich).",
           "Kündigungsfristen:"
         ],
         "items": [
           "Monatliche Verträge: 30 Tage zum Monatsende",
           "Jährliche Verträge: 90 Tage zum Vertragsende"
         ],
-        "outro": "Das Recht zur fristlosen Kündigung aus wichtigem Grund bleibt beiden Parteien vorbehalten."
+        "outro": "Das Recht zur fristlosen Kündigung aus wichtigem Grund bleibt für beide Parteien unberührt."
+      },
+      "cancellation": {
+        "title": "5. Jederzeitiges Kündigungsrecht",
+        "paragraphs": [
+          "Der Kunde hat das Recht, seinen Vertrag jederzeit ohne Einhaltung einer Kündigungsfrist zu kündigen.",
+          "Bei einer Kündigung wird die Zahlungspflicht des Kunden ab dem Zeitpunkt der Kündigung ausgesetzt. Bereits geleistete Zahlungen für den aktuellen Abrechnungszeitraum werden anteilig zurückerstattet.",
+          "Diese Regelung gilt für alle Vertragsarten und Abrechnungsmodelle. Der Kunde muss keine Gründe für die Kündigung angeben und es fallen keine zusätzlichen Gebühren an.",
+          "Die Kündigung kann schriftlich per E-Mail an rysermariano@gmail.com oder über das Kundenportal erfolgen. Nach der Kündigung hat der Kunde weiterhin Zugriff auf seine Daten für einen Zeitraum von 30 Tagen, um diese zu exportieren."
+        ]
       },
       "payment": {
-        "title": "5. Vergütung und Zahlung",
+        "title": "6. Preise und Zahlung",
         "paragraphs": [
-          "Die Preise sind in Euro zuzüglich gesetzlicher Mehrwertsteuer. Rechnungen werden elektronisch versendet und sind innerhalb von 14 Tagen zahlbar.",
-          "Bei Zahlungsverzug behält sich der Anbieter das Recht vor, den Dienstzugang einzuschränken oder zu sperren."
+          "Alle Preise verstehen sich in Euro zuzüglich der gesetzlichen Mehrwertsteuer. Rechnungen werden elektronisch gestellt und sind innerhalb von 14 Tagen zu begleichen.",
+          "Bei Zahlungsverzug behält sich der Anbieter das Recht vor, den Zugang zur Plattform einzuschränken oder vorübergehend zu sperren."
         ]
       },
       "privacy": {
-        "title": "6. Datenschutz und Datensicherheit",
+        "title": "7. Datenschutz und Datensicherheit",
         "paragraphs": [
-          "Der Anbieter verpflichtet sich zur Einhaltung der Datenschutz-Grundverordnung (DSGVO) und aller relevanten Datenschutzgesetze.",
-          "Kundendaten werden in hochsicheren Rechenzentren in Deutschland gespeichert. Details zur Datenverarbeitung sind in der separaten Datenschutzerklärung geregelt."
+          "Der Anbieter verpflichtet sich zur Einhaltung der Datenschutz-Grundverordnung (DSGVO) sowie aller anwendbaren Datenschutzgesetze.",
+          "Die Daten der Kunden werden in sicheren Rechenzentren innerhalb Deutschlands gespeichert. Weitere Informationen sind in der separaten Datenschutzerklärung geregelt."
         ]
       },
       "warranty": {
-        "title": "7. Gewährleistung und Haftung",
+        "title": "8. Gewährleistung und Haftung",
         "paragraphs": [
-          "Der Anbieter gewährleistet die vertragsgemäße Funktion der Plattform. Bei Verfügbarkeitsstörungen wird eine durchschnittliche Verfügbarkeit von 99,5% pro Monat angestrebt.",
-          "Die Haftung ist auf Vorsatz und grobe Fahrlässigkeit beschränkt. Für leichte Fahrlässigkeit haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten."
+          "Der Anbieter gewährleistet den vertragsgemäßen Betrieb der Plattform und strebt eine durchschnittliche monatliche Verfügbarkeit von 99,5 % an.",
+          "Die Haftung des Anbieters ist auf Vorsatz und grobe Fahrlässigkeit beschränkt. Bei leichter Fahrlässigkeit haftet der Anbieter nur bei Verletzung wesentlicher Vertragspflichten."
         ]
       },
       "intellectual": {
-        "title": "8. Geistiges Eigentum",
+        "title": "9. Geistiges Eigentum",
         "paragraphs": [
           "Alle Rechte an der Plattform, einschließlich Software, Algorithmen und Dokumentation, verbleiben beim Anbieter.",
-          "Der Kunde erhält ein nicht-exklusives, nicht-übertragbares Nutzungsrecht für die Vertragslaufzeit."
+          "Der Kunde erhält für die Dauer des Vertrags ein einfaches, nicht übertragbares Nutzungsrecht."
         ]
       },
       "final": {
-        "title": "9. Schlussbestimmungen",
+        "title": "10. Schlussbestimmungen",
         "paragraphs": [
           "Es gilt deutsches Recht unter Ausschluss des UN-Kaufrechts. Gerichtsstand ist der Sitz des Anbieters.",
-          "Änderungen dieser AGB werden dem Kunden mindestens 30 Tage vor Inkrafttreten mitgeteilt. Widerspruch führt zur ordentlichen Kündigung."
+          "Änderungen dieser AGB werden den Kunden mindestens 30 Tage vor Inkrafttreten mitgeteilt. Ein Widerspruch berechtigt zur ordentlichen Kündigung."
         ]
       }
     },
-    
     "contact": {
       "title": "Kontakt",
-      "company": "alpina GmbH",
+      "company": "Alpina Systems AG",
       "address": [
-        "Musterstraße 123",
-        "10115 Berlin",
-        "Deutschland"
+        "Hohlstrasse 405",
+        "8048 Zúrich",
+        "Schweiz"
       ],
-      "email": "legal@helvetika.de",
-      "phone": "+49 (0)30 12345678"
+      "email": "rysermariano@gmail.com",
+      "phone": "+41 788 74 79 74"
     }
   }
 }

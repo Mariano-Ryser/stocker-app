@@ -42,13 +42,13 @@ export default function Document() {
         <meta name="theme-color" content="#000000" />
         
         {/* Favicon - Asegúrate de tenerlo */}
-        <link rel="icon" href="/favicon.ico" />
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
       </Head>
-      <body>
+      <body className='box'>
         <Main />
         <NextScript />
       </body>
+      
     </Html>
   );
 }
