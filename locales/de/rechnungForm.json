@@ -51,7 +51,7 @@
       "searchHint": "Suchergebnisse für: \"{search}\"",
       "searching": "Suche...",
       "removeTitle": "Artikel entfernen",
-      "fields": {
+      "fields": { 
         "article": "Artikel",
         "quantity": "Menge",
         "unitPrice": "Einzelpreis",
@@ -77,7 +77,7 @@
     },
     "totals": {
       "subtotal": "Zwischensumme:",
-      "tax": "1% MwSt.:",
+      "tax": "{taxRate}% MwStt:",
       "total": "Gesamtsumme:"
     },
     "messages": {

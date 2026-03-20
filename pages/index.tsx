@@ -6,6 +6,7 @@ import FeaturesSection from '../components/homeComponents/FeaturesSection';
 import CTASection from '../components/homeComponents/CTASection';
 import Footer from '../components/footer/Footer';
 import TechCarrousel from '../components/homeComponents/TechCarrousel'
+import PricingSection from '../components/homeComponents/PricingSection'
 import { useLanguage } from '../contexts/LanguageContext';
 
 
@@ -13,21 +14,21 @@ export default function Home() {
   useEffect(()=>{
     preloadPublicPagesOnce()},
     [])
-
   const { t } = useLanguage();
-  
   return ( 
     <>
       <HomeHero />
       <FeaturesSection /> 
       <CTASection />
       <TechCarrousel />
+    
      <div className="about-page">
         <div className="container">
           <h2>{t('home.title')}</h2>
           <p>{t('home.p')}</p>
         </div>
       </div>
+      <PricingSection /> 
       <Footer />
       <style jsx>{`
         .privacy-background {

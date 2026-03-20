@@ -1,0 +1,795 @@
+/* salesPage.module.css */
+
+.container {
+  margin: 5rem 0;
+  padding: 0px;
+  min-height: 100vh;
+}
+
+/* Header Styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.headerLeft h1 {
+  margin: 0 0 8px 0;
+  font-size: 2rem;
+  color: #333;
+  font-weight: 700;
+}
+
+.headerLeft p {
+  margin: 0 0 10px 0;
+  color: #666;
+  font-size: 1rem;
+}
+
+.loadingMessage {
+  background: #e3f2fd;
+  color: #1565c0;
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+.errorMessage {
+  background: #ffebee;
+  color: #c62828;
+  padding: 10px 15px;
+  font-size: 0.9rem;
+  display: inline-block;
+}
+
+.createButton {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.createButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.createButton:not(:disabled):hover {
+  background: #45a049;
+  transform: translateY(-1px);
+}
+
+.createButtonOutline {
+  background: transparent;
+  color: #4caf50;
+  border: 2px solid #4caf50;
+}
+
+.createButtonOutline:hover {
+  background: #4caf50;
+  color: white;
+}
+
+/* Filters Section */
+.filtersSection {
+  margin-bottom: 24px;
+}
+
+.searchBox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 500px;
+  margin-bottom: 12px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  color: #666;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 12px 12px 40px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background: white;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #4caf50;
+}
+
+.clearButton {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 4px;
+}
+
+.filterControls {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.filterInput {
+  padding: 12px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+  background: white;
+  min-width: 150px;
+}
+
+.resultsInfo {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Filtros activos */
+.activeFilters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.activeFilter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.clearFilter {
+  background: none;
+  border: none;
+  color: #1976d2;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  font-size: 0.7rem;
+  transition: all 0.2s ease;
+}
+
+.clearFilter:hover {
+  background: #bbdefb;
+}
+
+/* Loading and Error States */
+.loadingContainer, .errorContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  background: white;
+}
+
+.spinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #4caf50;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+.errorIcon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  opacity: 0.7;
+}
+
+.retryButton {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.retryButtonLarge {
+  padding: 12px 24px;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+
+/* Desktop Table */
+.desktopTable {
+  background: white;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.salesTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.salesTable th {
+  background: #f8f9fa;
+  padding: 16px;
+  text-align: left;
+  font-weight: 600;
+  color: #333;
+  font-size: 0.85rem;
+  border-bottom: 2px solid #e9ecef;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* Encabezados ordenables */
+.sortable {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  user-select: none;
+  position: relative;
+}
+
+.sortable:hover {
+  background-color: #e9ecef;
+}
+
+.sortable.active {
+  background-color: #e3f2fd;
+  color: #1976d2;
+}
+
+.salesTable td {
+  padding: 16px;
+  border-bottom: 1px solid #e9ecef;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.tableRow {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.tableRow:hover {
+  background-color: #f8f9fa;
+}
+
+.clientName {
+  font-weight: 500;
+}
+
+.totalAmount {
+  font-weight: 600;
+  color: #333;
+}
+
+.statusTag {
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: inline-block;
+  min-width: 80px;
+  text-align: center;
+}
+
+.editButton {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.editButton:hover {
+  background: #5a6268;
+}
+
+/* Mobile Cards */
+.mobileCards {
+  display: none;
+}
+
+.saleCard {
+  background: white;
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-left: 4px solid #e9ecef;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.saleCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.cardClient h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.cardDate {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.statusTagMobile {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+}
+
+.cardDetails {
+  margin-bottom: 16px;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.detailRow span:first-child {
+  color: #666;
+  font-size: 0.85rem;
+}
+
+.cardTotal {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.editButtonMobile {
+  width: auto;
+}
+
+/* Empty States */
+.emptyState {
+  padding: 80px 20px;
+  text-align: center;
+  color: #666;
+}
+
+.emptyStateMobile {
+  padding: 60px 20px;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: 20px;
+  opacity: 0.5;
+}
+
+.emptyState h3 {
+  margin: 0 0 12px 0;
+  color: #333;
+  font-size: 1.25rem;
+}
+
+.emptyState p {
+  margin: 0 0 20px 0;
+  font-size: 0.95rem;
+}
+
+.clearFiltersButton {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+/* Load More Section */
+.loadMoreSection {
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modalContent {
+  background: white;
+  padding: 2rem;
+  position: relative;
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.modalClose {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #666;
+  padding: 0.5rem;
+}
+/* Agrega esto al final de tu archivo SalesPage.module.css */
+
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.stockButton {
+  padding: 0.25rem 0.75rem;
+  background: #e0f2fe;
+  color: #0369a1;
+  border: 1px solid #bae6fd;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.stockButton:hover {
+  background: #bae6fd;
+  border-color: #7dd3fc;
+}
+
+.stockButtonMobile {
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+}
+
+/* Ajuste para los botones en mobile */
+.cardActions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e5e7eb;
+}
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .headerLeft {
+    text-align: center;
+  }
+  
+  .headerLeft h1 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0;
+  }
+  
+  .headerLeft p {
+    display: none;
+  }
+  
+  .desktopTable {
+    display: none;
+  }
+
+  .mobileCards {
+    display: block;
+  }
+
+  .filterControls {
+    flex-direction: column;
+  }
+
+  .filterInput {
+    width: 100%;
+  }
+
+  .resultsInfo {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .activeFilters {
+    width: 100%;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ===== HEADER ACTIONS Y TOGGLE DE VISTA ===== */
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.viewToggle {
+  display: flex;
+  background: #f0f0f0;
+  padding: 2px;
+}
+
+.viewButton {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.viewButton.activeView {
+  background: white;
+  color: #3b82f6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ===== VISTA EXCEL ===== */
+.excelView {
+  overflow-x: auto;
+  background: white;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.excelTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-width: 1200px;
+}
+
+/* Cabecera Excel */
+.excelHeader {
+  background: #f3f4f6;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-right: 1px solid #d1d5db;
+  border-bottom: 2px solid #9ca3af;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.excelHeader:last-child {
+  border-right: none;
+}
+
+/* Filas Excel */
+.excelRow {
+  cursor: pointer;
+  transition: background-color 0.15s;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.excelRow:hover {
+  background-color: #f0f9ff;
+}
+
+.excelRow:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.excelRow:nth-child(even):hover {
+  background-color: #f0f9ff;
+}
+
+/* Celdas Excel */
+.excelCell {
+  padding: 0.6rem 1rem;
+  border-right: 1px solid #e5e7eb;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.excelCell:last-child {
+  border-right: none;
+}
+
+/* Fecha y hora */
+.excelDate {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  font-size: 0.85rem;
+  color: #4b5563;
+  white-space: nowrap;
+}
+
+.excelTime {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Cliente */
+.excelClient {
+  font-weight: 500;
+  color: #111827;
+  display: block;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.excelClientEmail {
+  font-size: 0.7rem;
+  color: #6b7280;
+  display: block;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Número de factura */
+.excelInvoiceNumber {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  font-size: 0.85rem;
+  color: #2563eb;
+  font-weight: 500;
+}
+
+/* Columnas numéricas */
+.excelNumber {
+  text-align: right;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+}
+
+.excelSubtotal {
+  color: #4b5563;
+  font-size: 0.9rem;
+}
+
+.excelTax {
+  color: #b45309;
+  font-weight: 500;
+}
+
+.excelTaxRate {
+  font-size: 0.7rem;
+  color: #9ca3af;
+  margin-left: 0.25rem;
+}
+
+.excelTotal {
+  color: #059669;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Estado */
+.excelStatus {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* Acciones en Excel */
+.excelActions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-start;
+}
+
+.excelStockButton {
+  background: #e0f2fe;
+  border: 1px solid #bae6fd;
+  color: #0369a1;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.excelStockButton:hover {
+  background: #bae6fd;
+  transform: translateY(-1px);
+}
+
+.excelEditButton {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.excelEditButton:hover {
+  background: #e5e7eb;
+  transform: translateY(-1px);
+}

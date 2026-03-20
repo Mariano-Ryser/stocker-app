@@ -1,7 +1,6 @@
-// services/clientService.js
+// services/clientService.js - VERSIÓN CORREGIDA
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-// Función helper para obtener headers con token
 const getAuthHeaders = () => {
   const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
   const headers = {
@@ -15,12 +14,53 @@ const getAuthHeaders = () => {
   return headers;
 };
 
-//  GET all clients 🔴 del usuario actual
+// 🔥 FUNCIÓN CORREGIDA: Obtener clientes con paginación
+export async function getClientsPaginated(params = {}) {
+  try {
+    const queryParams = new URLSearchParams();
+    
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+    if (params.search) queryParams.append('search', params.search);
+    
+    const API_URL = `${API_BASE_URL}/clients/paginated?${queryParams.toString()}`;
+    // console.log('Fetching paginated clients:', API_URL);
+    
+    const res = await fetch(API_URL, {
+      headers: getAuthHeaders()
+    });
+    
+    if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+        return { ok: false, clients: [], pagination: { total: 0, pages: 1 } };
+      }
+      
+      const errorText = await res.text();
+      console.error('Error response:', errorText);
+      return { ok: false, clients: [], pagination: { total: 0, pages: 1 } };
+    }
+    
+    const data = await res.json();
+    
+    // ✅ SIEMPRE devolver con ok: true y los datos
+    return { 
+      ok: true, 
+      clients: data.clients || [], 
+      pagination: data.pagination || { total: 0, pages: 1 } 
+    };
+  } catch (error) {
+    console.error('Error in getClientsPaginated:', error);
+    return { ok: false, clients: [], pagination: { total: 0, pages: 1 } };
+  }
+}
+
+// Las demás funciones se mantienen igual
 export async function getClients() {
   try {
     const API_URL = `${API_BASE_URL}/clients`;
-    // console.log('Fetching clients');
-    
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
     });
@@ -32,24 +72,20 @@ export async function getClients() {
         window.location.href = '/login';
         return { ok: false, message: 'Sesión expirada' };
       }
-      
-      const errorText = await res.text();
-      console.error('Error response:', errorText);
       return { ok: false, message: `Error al obtener clientes: ${res.status}` };
     }
     
     const data = await res.json();
-    return data;
+    return { ok: true, clients: data.clients || [], stats: data.stats || { total: 0 } };
   } catch (error) {
     console.error('Error in getClients:', error);
     return { ok: false, message: error.message };
   }
 }
-//  Get ClientsStats🔴
+
 export async function getClientsStats() {
   try {
     const API_URL = `${API_BASE_URL}/clients/stats`;
-    // console.log('Fetching clients stats');
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -69,14 +105,13 @@ export async function getClientsStats() {
     }
     
     const data = await res.json();
-    return data;
+    return { ok: true, stats: data.stats || { total: 0 } };
   } catch (error) {
     console.error('Error in getClientsStats:', error);
     return { ok: false, message: error.message };
   }
 }
 
-// CREATE client - 🔴 CORREGIDO: NO lanzar errores, devolver objeto con error
 export async function createClientAPI(client) {
   try {
     const API_URL = `${API_BASE_URL}/clients`;
@@ -99,10 +134,9 @@ export async function createClientAPI(client) {
         return { ok: false, message: 'Sesión expirada' };
       }
       
-      // ✅ Devolver el errorCode y el mensaje
       return { 
         ok: false, 
-        errorCode: responseData.errorCode || 'UNKNOWN_ERROR',  // <--- NUEVO
+        errorCode: responseData.errorCode || 'UNKNOWN_ERROR',
         message: responseData.message || `Error ${res.status}` 
       };
     }
@@ -118,11 +152,9 @@ export async function createClientAPI(client) {
   }
 }
 
-// UPDATE client - 🔴 CORREGIDO con errorCode
 export async function updateClientAPI(id, client) {
   try {
     const API_URL = `${API_BASE_URL}/clients/${id}`;
-    // console.log('Updating client:', id, client);
     
     const res = await fetch(API_URL, {
       method: 'PUT',
@@ -142,7 +174,6 @@ export async function updateClientAPI(id, client) {
         return { ok: false, message: 'Sesión expirada' };
       }
       
-      // ✅ Devolver errorCode y message
       return { 
         ok: false, 
         errorCode: responseData.errorCode || 'UNKNOWN_ERROR',
@@ -161,11 +192,9 @@ export async function updateClientAPI(id, client) {
   }
 }
 
-// DELETE client - 🔴 CORREGIDO: NO lanzar errores
 export async function deleteClientAPI(id) {
   try {
     const API_URL = `${API_BASE_URL}/clients/${id}`;
-    // console.log('Deleting client:', id);
     
     const res = await fetch(API_URL, {
       method: 'DELETE',

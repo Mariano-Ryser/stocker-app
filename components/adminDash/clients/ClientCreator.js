@@ -101,7 +101,7 @@ export default function ClientsCreator({ onClose, onCreated, createClient }) {
           postalCode: form.address.postalCode || undefined,
           city: form.address.city || undefined,
           state: form.address.state || undefined,
-          country: form.address.country || 'Deutschland'
+          country: form.address.country || ''
         }
       };
       

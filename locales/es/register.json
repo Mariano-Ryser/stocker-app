@@ -1,0 +1,70 @@
+{
+  "register": {
+    "loading": "Cargando...",
+    "welcome": "Únete a Stocker",
+    "subtitle": "Únete a nuestra comunidad de negocios exitosos",
+    "title": "Crear cuenta nueva",
+    "formTitle": "Regístrate para acceder a la plataforma Stocker",
+    "name": {
+      "label": "Nombre completo *",
+      "placeholder": "Juan Pérez"
+    },
+    "email": {
+      "label": "Email empresarial *",
+      "placeholder": "tu@empresa.com"
+    },
+    "password": {
+      "label": "Contraseña *",
+      "placeholder": "••••••••",
+      "hint": "Se valida mientras escribes"
+    },
+    "confirmPassword": {
+      "label": "Confirmar contraseña *",
+      "placeholder": "••••••••",
+      "hint": "Debe coincidir con la contraseña",
+      "match": "✓ Las contraseñas coinciden",
+      "mismatch": "Las contraseñas no coinciden"
+    },
+    "requirements": {
+      "title": "Requisitos de contraseña:",
+      "minLength": "Mínimo 6 caracteres",
+      "upperCase": "Al menos una letra mayúscula (A-Z)",
+      "number": "Al menos un número (0-9)",
+      "specialChar": "Opcional: Carácter especial (!@#$%^&*)"
+    },
+    "strength": {
+      "label": "Fortaleza de la contraseña:",
+      "none": " No ingresada",
+      "weak": " Débil",
+      "medium": " Media",
+      "strong": " Fuerte"
+    },
+    "termsSection": {
+      "text": "Acepto los {termsLink} y la {privacyLink} *",
+      "termsLabel": "Términos de Uso",
+      "privacyLabel": "Política de Privacidad"
+    },
+    "button": {
+      "register": "Crear cuenta",
+      "registering": "Registrando..."
+    },
+    "google": "Registrarse con Google",
+    "loginSection": {
+      "prompt": "¿Ya tienes una cuenta?",
+      "link": "Iniciar sesión"
+    },
+    "success": "¡Registro exitoso! Redirigiendo...",
+    "errors": {
+      "passwordMismatch": "Las contraseñas no coinciden",
+      "passwordMinLength": "La contraseña debe tener al menos 6 caracteres",
+      "passwordUpperCase": "La contraseña debe contener al menos una letra mayúscula",
+      "passwordNumber": "La contraseña debe contener al menos un número",
+      "termsRequired": "Por favor, acepta los términos y condiciones",
+      "registrationFailed": "Registro fallido",
+      "connectionError": "Error de conexión con el servidor"
+    },
+    "copyright": "© {year} Stocker. Todos los derechos reservados.",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Uso"
+  }
+}

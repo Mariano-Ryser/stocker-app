@@ -1,0 +1,49 @@
+{
+  "pricing": {
+    "title": "Planes simples que crecen con tu negocio",
+    "subtitle": "Empieza pequeño y escala sin límites",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "month": "mes",
+    "year": "año",
+    "popular": "MÁS POPULAR",
+    "subscribe": "Empezar ahora",
+    "trial": "Prueba gratis 14 días • Sin tarjeta de crédito",
+    "trialBtn": "Probar gratis",
+    "save": "Ahorra 2 meses",
+
+    "starter": {
+      "name": "Starter",
+      "desc": "Perfecto para pequeños negocios",
+      "f1": "Hasta 500 productos",
+      "f2": "Escaneo de códigos de barras",
+      "f3": "2 usuarios"
+    },
+    "basic": {
+      "name": "Básico",
+      "desc": "Para negocios en crecimiento",
+      "f1": "Hasta 2000 productos",
+      "f2": "Escaneo de códigos de barras",
+      "f3": "3 usuarios",
+      "f4": "Historial de ventas"
+    },
+    "pro": {
+      "name": "Profesional",
+      "desc": "Mejor relación calidad-precio 🚀",
+      "f1": "Productos ilimitados",
+      "f2": "Escaneo de códigos de barras",
+      "f3": "5 usuarios",
+      "f4": "Informes avanzados",
+      "f5": "Soporte prioritario"
+    },
+    "enterprise": {
+      "name": "Empresa",
+      "desc": "Para operaciones grandes y en expansión",
+      "f1": "Productos ilimitados",
+      "f2": "Usuarios ilimitados",
+      "f3": "API personalizada",
+      "f4": "Soporte 24/7",
+      "f5": "Onboarding dedicado"
+    }
+  }
+}

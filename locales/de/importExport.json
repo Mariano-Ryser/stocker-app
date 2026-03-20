@@ -1,0 +1,119 @@
+{
+  "title": "Excel Import & Export",
+  "subtitle": "Verwalten Sie {dataType} effizient – {action}",
+  "productLabel": "Produkte",
+  "salesLabel": "Verkäufe",
+  "importExport": "Import/Export",
+  "exportOnly": "Nur Export",
+  "stats": {
+    "items": "{dataType}",
+    "status": "Status",
+    "loading": "Lädt...",
+    "ready": "Bereit",
+    "functions": "Funktionen",
+    "importExport": "Import & Export",
+    "exportOnly": "Nur Export"
+  },
+  "template": {
+    "download": "Vorlage herunterladen",
+    "subtitle": {
+      "sales": "Exportvorlage für Verkaufsdaten",
+      "products": "Importvorlage für konsistente Produktdaten"
+    },
+    "format": "Format für {dataType}:",
+    "fields": {
+      "product": {
+        "articleNumber": "Artikelnummer",
+        "articleNumberHint": "eindeutig (optional)",
+        "name": "Artikelname",
+        "nameHint": "Produktbezeichnung",
+        "required": "Pflicht",
+        "location": "Lagerplatz",
+        "locationHint": "z.B. A-01",
+        "stock": "Lagerbestand",
+        "stockHint": "Zahl ≥ 0",
+        "price": "Preis",
+        "priceHint": "ohne Währungssymbol",
+        "imageUrl": "Bild-URL",
+        "imageUrlHint": "Link zum Produktbild"
+      },
+      "sale": {
+        "deliveryNote": "Lieferschein Nr.",
+        "deliveryNoteHint": "eindeutige Nummer",
+        "customer": "Kunde",
+        "customerHint": "Name des Kunden",
+        "productName": "Artikelname",
+        "productNameHint": "verkauftes Produkt",
+        "quantity": "Menge",
+        "quantityHint": "verkaufte Anzahl",
+        "unitPrice": "Einzelpreis (CHF)",
+        "unitPriceHint": "Preis pro Einheit",
+        "status": "Status",
+        "statusHint": "pending/paid/cancelled",
+        "total": "Total (CHF)",
+        "totalHint": "Gesamtbetrag"
+      }
+    }
+  },
+  "importExportCard": {
+    "title": {
+      "sales": "Export",
+      "products": "Import & Export"
+    },
+    "subtitle": {
+      "sales": "Verkaufsdaten exportieren",
+      "products": "Daten austauschen und verwalten"
+    }
+  },
+  "actions": {
+    "supported": "Unterstützt: .xlsx, .xls, .csv",
+    "maxRecords": "Bis zu 10.000 Datensätze",
+    "sameFormat": "Gleiches Format für Import/Export",
+    "exportFormat": "Exportformat kompatibel mit Excel",
+    "salesDetails": "Enthält alle Verkaufsdetails"
+  },
+  "import": {
+    "notAvailable": "Import für Verkäufe ist nicht verfügbar. Nur Export möglich.",
+    "noValidProducts": "Keine gültigen Produkte zum Importieren gefunden.",
+    "noValidSales": "Keine gültigen Verkäufe zum Importieren gefunden.",
+    "spaceCheck": {
+      "error": "❌ No hay suficiente espacio. Intentas importar {importCount} productos, pero solo tienes {remaining} espacios disponibles."
+    }
+  },
+  "modal": {
+    "validation": "Validierungsergebnis",
+    "importComplete": "Import abgeschlossen",
+    "error": "Fehler",
+    "subtitle": {
+      "products": "Produkte",
+      "sales": "Verkäufe"
+    },
+    "close": "Schliessen",
+    "cancel": "Abbrechen",
+    "done": "Fertig",
+    "importValidOnly": "Nur gültige importieren"
+  },
+  "validation": {
+    "valid": "Gültig",
+    "invalid": "Ungültig",
+    "errorDetails": "Fehlerdetails",
+    "errors": "Fehler",
+    "row": "Zeile {row}",
+    "errorsList": "Fehlerdetails:"
+  },
+  "importResult": {
+    "success": "Erfolgreich importiert",
+    "warning": "Import mit Warnungen",
+    "error": "Fehler beim Import",
+    "message": {
+      "success": "{imported} von {total} Produkten erfolgreich importiert",
+      "partial": "{imported} von {total} Produkten erfolgreich importiert"
+    },
+    "stats": {
+      "total": "Insgesamt:",
+      "success": "Erfolgreich:",
+      "failed": "Fehlgeschlagen:"
+    },
+    "moreErrors": "... und {count} weitere Fehler"
+  }
+}

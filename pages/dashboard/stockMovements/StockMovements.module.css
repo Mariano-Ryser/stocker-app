@@ -1,0 +1,530 @@
+/* Contenedor general */
+.container {
+  margin-top: 5rem;
+  background: #f9fafb;
+}
+
+/* Header */
+.header {
+  margin-bottom: 20px;
+}
+.title {
+  font-size: 22px;
+  font-weight: 600;
+}
+.subtitle {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+/* Filters */
+.filters {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  background: white;
+  padding: 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,.06);
+}
+
+.filters input,
+.filters select {
+  padding: 8px 10px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+}
+
+.clearBtn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+/* Tabla */
+.tableContainer {
+  background: white;
+  overflow-x: auto; /* scroll horizontal en móvil */
+  box-shadow: 0 4px 14px rgba(0,0,0,.08);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px; /* for mobile scroll */
+}
+
+.table thead th {
+  font-size: 12px;
+  color: #6b7280;
+  text-align: left;
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.row {
+  transition: background .15s ease;
+}
+
+.row:hover {
+  background: #f9fafb;
+}
+
+.table td {
+  padding: 14px 16px;
+  font-size: 14px;
+  border-bottom: 1px solid #f1f5f9;
+  vertical-align: middle; /* alinear stock correctamente */
+}
+
+/* Producto */
+.productName {
+  font-weight: 500;
+}
+
+.productSku {
+  font-size: 12px;
+  color: #9ca3af;
+}
+
+/* Tipo */
+.typeBadge {
+  font-size: 12px;
+  padding: 4px 10px;
+  font-weight: 500;
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Cantidad */
+.quantity {
+  font-weight: 600;
+}
+
+.positive {
+  color: #059669;
+}
+
+.negative {
+  color: #b91c1c;
+}
+
+/* Stock */
+.stock {
+  gap: 6px;
+}
+
+.stockOld {
+  color: #6b7280;
+}
+
+.stockArrow {
+  color: #9ca3af;
+}
+
+.stockNew {
+  font-weight: 600;
+}
+
+/* Usuario */
+.userName {
+  font-size: 13px;
+}
+
+/* Referencia */
+.ref {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.refNumber {
+  font-size: 12px;
+  background: #f3f4f6;
+  padding: 3px 8px;
+}
+
+/* Paginación */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  padding: 16px;
+}
+
+.pagination button {
+  border: none;
+  background: #f3f4f6;
+  padding: 6px 10px;
+  cursor: pointer;
+}
+
+.pagination button:disabled {
+  opacity: .4;
+  cursor: not-allowed;
+}
+
+/* Centro / Cargando / Empty */
+.center {
+  padding: 40px;
+  text-align: center;
+}
+
+.spinner {
+  width: 28px;
+  height: 28px;
+  border: 3px solid #e5e7eb;
+  border-top: 3px solid #3b82f6;
+  animation: spin 1s linear infinite;
+  margin: auto;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Responsive móvil */
+@media (max-width: 768px) {
+  .filters {
+    flex-direction: column;
+  }
+
+  .filters input,
+  .filters select,
+  .clearBtn {
+    width: 100%;
+  }
+
+  .table {
+    min-width: 600px; /* scroll horizontal en móvil */
+  }
+
+  .table td {
+    padding: 12px 10px;
+    font-size: 13px;
+  }
+
+  .title {
+    font-size: 18px;
+  }
+
+  .subtitle {
+    font-size: 12px;
+  }
+}/* ===== HEADER CON TOGGLE ===== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.headerContent {
+  flex: 1;
+}
+
+.viewToggle {
+  display: flex;
+  background: #f0f0f0;
+  padding: 2px;
+}
+
+.viewButton {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.viewButton.activeView {
+  background: white;
+  color: #3b82f6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* ===== VISTA EXCEL ===== */
+.excelView {
+  overflow-x: auto;
+  background: white;
+  border: 1px solid #e5e7eb;
+  margin: 0;
+}
+
+.excelTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-width: 1200px;
+}
+
+/* Cabecera Excel */
+.excelHeader {
+  background: #f3f4f6;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-right: 1px solid #d1d5db;
+  border-bottom: 2px solid #9ca3af;
+  white-space: nowrap;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.excelHeader:last-child {
+  border-right: none;
+}
+
+/* Filas Excel */
+.excelRow {
+  cursor: default;
+  transition: background-color 0.15s;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.excelRow:hover {
+  background-color: #f0f9ff;
+}
+
+.excelRow:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.excelRow:nth-child(even):hover {
+  background-color: #f0f9ff;
+}
+
+/* Celdas Excel */
+.excelCell {
+  padding: 0.6rem 1rem;
+  border-right: 1px solid #e5e7eb;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.excelCell:last-child {
+  border-right: none;
+}
+
+/* Fecha */
+.excelDate {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  font-size: 0.85rem;
+  color: #4b5563;
+  white-space: nowrap;
+}
+
+/* Nombre artículo */
+.excelArtikelName {
+  font-weight: 500;
+  color: #111827;
+  max-width: 250px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+/* Número artículo */
+.excelArtikelNumber {
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+/* Badge de tipo */
+.excelTypeBadge {
+  font-size: 0.8rem;
+  padding: 0.25rem 0.75rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+/* Cantidad */
+.excelQuantity {
+  text-align: right;
+  font-weight: 600;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+}
+
+.excelPositive {
+  color: #059669;
+}
+
+.excelNegative {
+  color: #b91c1c;
+}
+
+/* Stock */
+.excelStock {
+  text-align: right;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+}
+
+.excelStockValue {
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Usuario */
+.excelUser {
+  font-size: 0.85rem;
+  color: #4b5563;
+  white-space: nowrap;
+}
+
+/* Referencia */
+.excelReference {
+  font-size: 0.8rem;
+  background: #f3f4f6;
+  padding: 0.2rem 0.6rem;
+  color: #374151;
+  font-family: 'JetBrains Mono', 'SF Mono', Monaco, monospace;
+  white-space: nowrap;
+}
+
+/* Notas */
+.excelNotes {
+  cursor: help;
+  font-size: 1rem;
+  display: inline-block;
+}
+
+/* Alineación de headers */
+.excelHeader:nth-child(5),
+.excelHeader:nth-child(6),
+.excelHeader:nth-child(7) {
+  text-align: right;
+}
+
+/* Scrollbar personalizado */
+.excelView::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+.excelView::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.excelView::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border: 2px solid #f1f1f1;
+}
+
+.excelView::-webkit-scrollbar-thumb:hover {
+  background: #a1a1a1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .viewToggle {
+    width: 100%;
+  }
+
+  .viewButton {
+    flex: 1;
+  }
+
+  .excelView {
+    margin: 0.5rem 0;
+  }
+  
+  .excelTable {
+    font-size: 0.8rem;
+  }
+  
+  .excelHeader {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.7rem;
+  }
+  
+  .excelCell {
+    padding: 0.4rem 0.75rem;
+  }
+}
+
+/* Agrega al final de StockMovements.module.css */
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.viewToggle {
+  display: flex;
+  background: #f0f0f0;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.viewButton {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.viewButton.activeView {
+  background: white;
+  color: #3b82f6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.paginationInfo {
+  text-align: center;
+  padding: 1rem;
+  color: #6b7280;
+  font-size: 0.85rem;
+  border-top: 1px solid #e5e7eb;
+}

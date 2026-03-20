@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useProduct } from '../../hooks/useProducts';
-import Map from '../../components/adminDash/MapaAlmacen';
+import Map from '../../components/dashboard/MapaAlmacen';
 
 export function Mapa() {
   const { products, loading, error } = useProduct();

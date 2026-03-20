@@ -1,4 +1,4 @@
-// frontend/components/adminDash/regnung/printStyles.js
+// frontend/components/dashboard/regnung/printStyles.js
 export const printStyles = `
 /* Estilos base para impresión */
 * {
@@ -149,7 +149,7 @@ body {
   color: #666;
 }
 
-// frontend/components/adminDash/regnung/printStyles.js
+// frontend/components/dashboard/regnung/printStyles.js
 // Agrega esta sección después de los otros estilos de facturas
 
 /* Invoice Classic2 Styles */
@@ -540,7 +540,7 @@ body {
   text-align: center;
 }
 
-.invoice-modern .text-right {
+.invoice-modern tr .text-right {
   text-align: right;
 }
 

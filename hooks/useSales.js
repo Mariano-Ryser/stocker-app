@@ -1,4 +1,4 @@
-// hooks/useSales.js
+// hooks/useSales.js - VERSIÓN CON PAGINACIÓN
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
 import { 
@@ -19,100 +19,133 @@ export function useSales() {
     totalAllSales: 0
   });
   
+  // Estados de paginación
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [itemsPerPage] = useState(20);
+  const [hasMore, setHasMore] = useState(false);
+  
+  // Estados de filtros
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [dateFrom, setDateFrom] = useState('');
+  const [dateTo, setDateTo] = useState('');
+  const [statusFilter, setStatusFilter] = useState('');
+  const [sortField, setSortField] = useState('createdAt');
+  const [sortDirection, setSortDirection] = useState('desc');
+  
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
+  
   const { isAuthenticated } = useAuth();
   
-  // Use refs para controlar estado sin causar re-renders
-  const isFetchingRef = useRef(false);
-  const hasFetchedRef = useRef(false);
+  // Debounce para búsqueda
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearch(search);
+    }, 500);
+    
+    return () => clearTimeout(timer);
+  }, [search]);
 
-  // ✅ FUNCIÓN ÚNICA para fetch (elimina la lógica de paginación)
-  const fetchSales = useCallback(async (forceRefresh = false) => {
-    // Si no está autenticado, limpiar
+  // Resetear página cuando cambian filtros
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [debouncedSearch, dateFrom, dateTo, statusFilter, sortField, sortDirection]);
+
+  // Función principal para obtener ventas
+  const fetchSales = useCallback(async (page = 1, isLoadMore = false) => {
     if (!isAuthenticated) {
       setSales([]);
       setSalesStats({});
-      hasFetchedRef.current = false;
       return;
     }
 
-    // Evitar múltiples llamadas simultáneas
-    if (isFetchingRef.current && !forceRefresh) {
-      // console.log('Sales: Already fetching, skipping...');
-      return;
+    if (isLoadMore) {
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
     }
-
-    // Si ya fetchamos y no es force refresh, skip
-    if (hasFetchedRef.current && !forceRefresh) {
-      // console.log('Sales: Already fetched, skipping...');
-      return;
-    }
-
-    isFetchingRef.current = true;
-    setLoading(true);
+    
     setError(null);
     
     try {
-      // console.log('Sales: Fetching data...');
-      const data = await getSales(); // ✅ Esto ya devuelve {sales, stats}
+      const params = {
+        page,
+        limit: itemsPerPage,
+        search: debouncedSearch,
+        dateFrom,
+        dateTo,
+        status: statusFilter,
+        sortField,
+        sortDirection
+      };
+      
+      const data = await getSales(params);
       
       const newSales = data.sales || [];
-      const newStats = data.stats || {};
-
-      setSales(newSales);
-      setSalesStats(newStats);
-      hasFetchedRef.current = true;
+      const pagination = data.pagination || { pages: 1, total: 0 };
+      const stats = data.stats || {};
       
-      // console.log('Sales: Fetch completed');
+      if (isLoadMore) {
+        setSales(prev => [...prev, ...newSales]);
+      } else {
+        setSales(newSales);
+      }
+      
+      setSalesStats(stats);
+      setTotalPages(pagination.pages);
+      setTotalItems(pagination.total);
+      setHasMore(page < pagination.pages);
+      setCurrentPage(page);
       
     } catch (err) {
       console.error('Error fetching sales:', err);
       setError(err.message);
-      hasFetchedRef.current = false;
     } finally {
       setLoading(false);
-      isFetchingRef.current = false;
+      setLoadingMore(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, itemsPerPage, debouncedSearch, dateFrom, dateTo, statusFilter, sortField, sortDirection]);
 
-  // ✅ SOLO fetch cuando isAuthenticated cambia (montaje)
+  // Cargar primera página
   useEffect(() => {
-    if (isAuthenticated && !hasFetchedRef.current) {
-      // console.log('Sales: Initial fetch triggered');
-      fetchSales();
+    if (isAuthenticated) {
+      fetchSales(1, false);
     }
-    
-    // Cleanup cuando se desmonta o desautentica
-    return () => {
-      if (!isAuthenticated) {
-        setSales([]);
-        setSalesStats({});
-        hasFetchedRef.current = false;
-      }
-    };
   }, [isAuthenticated, fetchSales]);
 
-  // ✅ Función de refresh manual
+  // Cargar más (para infinite scroll)
+  const loadMore = useCallback(() => {
+    if (hasMore && !loadingMore && !loading) {
+      fetchSales(currentPage + 1, true);
+    }
+  }, [hasMore, loadingMore, loading, currentPage, fetchSales]);
+
+  // Cambiar página (para paginación tradicional)
+  const goToPage = useCallback((page) => {
+    if (page >= 1 && page <= totalPages) {
+      fetchSales(page, false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  }, [totalPages, fetchSales]);
+
+  // Función de refresh manual
   const refreshSales = useCallback(() => {
-    // console.log('Sales: Manual refresh triggered');
-    hasFetchedRef.current = false;
-    fetchSales(true);
+    fetchSales(1, false);
   }, [fetchSales]);
 
-  // ✅ Función createSale optimizada
+  // Función createSale optimizada
   const createSale = async (payload) => {
     if (!isAuthenticated) {
       return { success: false, message: 'Debe iniciar sesión' };
     }
     
     try {
-      // console.log('Creating sale...');
       const res = await createSaleAPI(payload);
-      
-      // console.log('API Response:', res);
 
-      // Si hay error
       if (!res.success) {
         return { 
           success: false, 
@@ -121,27 +154,12 @@ export function useSales() {
         };
       }
 
-      // Si es éxito, actualizar estado local
-      const saleData = res.data;
-      
-      if (saleData?.sale) {
-        // Añadir nueva venta al principio
-        setSales(prev => [saleData.sale, ...prev]);
-        
-        // Actualizar stats si es venta pagada
-        if (saleData.sale.status === 'paid') {
-          setSalesStats(prev => ({
-            ...prev,
-            paidCount: prev.paidCount + 1,
-            totalUmsatz: prev.totalUmsatz + (saleData.sale.total || 0),
-            totalAllSales: prev.totalAllSales + 1
-          }));
-        }
-      }
+      // Refrescar la primera página para ver la nueva venta
+      await fetchSales(1, false);
       
       return { 
         success: true, 
-        sale: saleData?.sale || saleData 
+        sale: res.data?.sale || res.data 
       };
       
     } catch (err) {
@@ -153,42 +171,38 @@ export function useSales() {
     }
   };
 
-  // ✅ Función updateSale optimizada
-const updateSale = async (id, payload) => {
-  if (!isAuthenticated) {
-    setError('Debe iniciar sesión para actualizar ventas');
-    return { success: false, message: 'No autenticado' };
-  }
-  
-  try {
-    // console.log('Updating sale...');
-    const res = await updateSaleAPI(id, payload);
-
-    // Actualizar lista local si tenemos respuesta
-    if (res.sale) {
-      setSales(prev => prev.map(sale => 
-        sale._id === id ? res.sale : sale
-      ));
-      // console.log('✅ Venta actualizada en estado local:', res.sale);
-    } else {
-      // console.log('⚠️ No se recibió sale en la respuesta');
+  // Función updateSale optimizada
+  const updateSale = async (id, payload) => {
+    if (!isAuthenticated) {
+      setError('Debe iniciar sesión para actualizar ventas');
+      return { success: false, message: 'No autenticado' };
     }
     
-    return { 
-      success: true, 
-      sale: res.sale 
-    };
-  } catch (err) {
-    console.error('Error updating sale:', err);
-    setError(err.message);
-    return { 
-      success: false, 
-      message: err.message 
-    };
-  }
-};
+    try {
+      const res = await updateSaleAPI(id, payload);
 
-  // ✅ Función deleteSale optimizada
+      if (res.sale) {
+        // Actualizar en la lista local
+        setSales(prev => prev.map(sale => 
+          sale._id === id ? res.sale : sale
+        ));
+      }
+      
+      return { 
+        success: true, 
+        sale: res.sale 
+      };
+    } catch (err) {
+      console.error('Error updating sale:', err);
+      setError(err.message);
+      return { 
+        success: false, 
+        message: err.message 
+      };
+    }
+  };
+
+  // Función deleteSale optimizada
   const deleteSale = async (id) => {
     if (!isAuthenticated) {
       setError('Debe iniciar sesión para eliminar ventas');
@@ -196,26 +210,15 @@ const updateSale = async (id, payload) => {
     }
     
     try {
-      // console.log('Deleting sale...');
       await deleteSaleAPI(id);
 
       // Eliminar de la lista local
-      const saleToDelete = sales.find(s => s._id === id);
-      
       setSales(prev => prev.filter(sale => sale._id !== id));
       
-      // Si era una venta pagada, actualizar stats
-      if (saleToDelete?.status === 'paid') {
-        setSalesStats(prev => ({
-          ...prev,
-          paidCount: Math.max(0, prev.paidCount - 1),
-          totalUmsatz: Math.max(0, prev.totalUmsatz - (saleToDelete.total || 0))
-        }));
-      }
+      // Refrescar estadísticas
+      await fetchSales(currentPage, false);
       
-      return { 
-        success: true 
-      };
+      return { success: true };
     } catch (err) {
       console.error('Error deleting sale:', err);
       setError(err.message);
@@ -226,12 +229,53 @@ const updateSale = async (id, payload) => {
     }
   };
 
+  // Función para limpiar filtros
+  const clearFilters = useCallback(() => {
+    setSearch('');
+    setDebouncedSearch('');
+    setDateFrom('');
+    setDateTo('');
+    setStatusFilter('');
+    setSortField('createdAt');
+    setSortDirection('desc');
+  }, []);
+
   return {
+    // Datos
     sales,
     salesStats,
+    
+    // Estados
     loading,
+    loadingMore,
     error,
-    fetchSales, // Exportar para coordinación
+    
+    // Paginación
+    currentPage,
+    totalPages,
+    totalItems,
+    itemsPerPage,
+    hasMore,
+    goToPage,
+    loadMore,
+    
+    // Filtros
+    search,
+    setSearch,
+    dateFrom,
+    setDateFrom,
+    dateTo,
+    setDateTo,
+    statusFilter,
+    setStatusFilter,
+    sortField,
+    setSortField,
+    sortDirection,
+    setSortDirection,
+    clearFilters,
+    
+    // Acciones
+    fetchSales,
     refreshSales,
     createSale,
     updateSale,

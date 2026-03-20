@@ -1,0 +1,119 @@
+{
+  "title": "Excel Import & Export",
+  "subtitle": "Manage your {dataType} efficiently – {action}",
+  "productLabel": "Products",
+  "salesLabel": "Sales",
+  "importExport": "Import/Export",
+  "exportOnly": "Export only",
+  "stats": {
+    "items": "{dataType}",
+    "status": "Status",
+    "loading": "Loading...",
+    "ready": "Ready",
+    "functions": "Functions",
+    "importExport": "Import & Export",
+    "exportOnly": "Export only"
+  },
+  "template": {
+    "download": "Download template",
+    "subtitle": {
+      "sales": "Export template for sales data",
+      "products": "Import template for consistent product data"
+    },
+    "format": "Format for {dataType}:",
+    "fields": {
+      "product": {
+        "articleNumber": "Article number",
+        "articleNumberHint": "unique (optional)",
+        "name": "Product name",
+        "nameHint": "product title",
+        "required": "Required",
+        "location": "Storage location",
+        "locationHint": "e.g. A-01",
+        "stock": "Stock",
+        "stockHint": "number ≥ 0",
+        "price": "Price",
+        "priceHint": "without currency symbol",
+        "imageUrl": "Image URL",
+        "imageUrlHint": "link to product image"
+      },
+      "sale": {
+        "deliveryNote": "Delivery note no.",
+        "deliveryNoteHint": "unique number",
+        "customer": "Customer",
+        "customerHint": "customer name",
+        "productName": "Product name",
+        "productNameHint": "sold product",
+        "quantity": "Quantity",
+        "quantityHint": "sold amount",
+        "unitPrice": "Unit price (CHF)",
+        "unitPriceHint": "price per unit",
+        "status": "Status",
+        "statusHint": "pending/paid/cancelled",
+        "total": "Total (CHF)",
+        "totalHint": "total amount"
+      }
+    }
+  },
+  "importExportCard": {
+    "title": {
+      "sales": "Export",
+      "products": "Import & Export"
+    },
+    "subtitle": {
+      "sales": "Export sales data",
+      "products": "Manage and exchange data"
+    }
+  },
+  "actions": {
+    "supported": "Supported: .xlsx, .xls, .csv",
+    "maxRecords": "Up to 10,000 records",
+    "sameFormat": "Same format for import/export",
+    "exportFormat": "Export format compatible with Excel",
+    "salesDetails": "Includes all sales details"
+  },
+  "import": {
+    "notAvailable": "Import for sales is not available. Only export is supported.",
+    "noValidProducts": "No valid products found for import.",
+    "noValidSales": "No valid sales found for import.",
+    "spaceCheck": {
+      "error": "❌ Not enough space. You are trying to import {importCount} products, but only {remaining} slots are available."
+    }
+  },
+  "modal": {
+    "validation": "Validation result",
+    "importComplete": "Import completed",
+    "error": "Error",
+    "subtitle": {
+      "products": "Products",
+      "sales": "Sales"
+    },
+    "close": "Close",
+    "cancel": "Cancel",
+    "done": "Done",
+    "importValidOnly": "Import valid only"
+  },
+  "validation": {
+    "valid": "Valid",
+    "invalid": "Invalid",
+    "errorDetails": "Error details",
+    "errors": "Errors",
+    "row": "Row {row}",
+    "errorsList": "Error details:"
+  },
+  "importResult": {
+    "success": "Successfully imported",
+    "warning": "Imported with warnings",
+    "error": "Import error",
+    "message": {
+      "success": "{imported} of {total} products successfully imported",
+      "partial": "{imported} of {total} products successfully imported"
+    },
+    "stats": {
+      "total": "Total:",
+      "success": "Successful:",
+      "failed": "Failed:"
+    },
+    "moreErrors": "... and {count} more errors"
+  }
+}

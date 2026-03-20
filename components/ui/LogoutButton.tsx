@@ -20,6 +20,13 @@ export default function LogoutButton({
   
   const handleLogout = () => {
     if (window.confirm(t('logout.confirm') || '¿Estás seguro de que quieres cerrar sesión?')) {
+      // Limpiar el flag del splash screen ANTES de hacer logout
+      if (typeof window !== 'undefined') {
+        sessionStorage.removeItem('splashShown');
+        // Opcional: limpiar otros items si los tienes
+        // sessionStorage.removeItem('otroItem');
+      }
+      
       logout();
     }
   };

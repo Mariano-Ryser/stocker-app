@@ -1,0 +1,541 @@
+/* pages/dashboard/clients/clients.module.css */
+
+.container {
+  margin: 5rem 0;
+  padding: 0rem;
+  min-height: 100vh;
+}
+
+/* Header */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.headerContent h1 {
+  font-size: 2rem;
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.headerContent p {
+  color: #666;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* View Toggle */
+.viewToggle {
+  display: flex;
+  background: #f0f0f0;
+  padding: 2px;
+  border-radius: 4px;
+}
+
+.viewButton {
+  background: transparent;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  color: #666;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.viewButton:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #333;
+}
+
+.viewButton.activeView {
+  background: white;
+  color: #3b82f6;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* New Button */
+.newBtn {
+  background: #4caf50;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+}
+
+.newBtn:hover:not(:disabled) {
+  background: #45a049;
+  transform: translateY(-1px);
+}
+
+.newBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.plus {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+
+/* Search Section */
+.searchSection {
+  margin-bottom: 1.5rem;
+}
+
+.searchContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 600px;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  color: #999;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 0.75rem 2.5rem 0.75rem 2.5rem;
+  border: 1px solid #ddd;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+  background: white;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.clearSearch {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.clearSearch:hover:not(:disabled) {
+  background: #f0f0f0;
+  color: #666;
+}
+
+.searchStats {
+  margin-top: 0.5rem;
+}
+
+.resultsCount {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+/* Error */
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #fecaca;
+}
+
+.error button {
+  background: #991b1b;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: background 0.2s ease;
+}
+
+.error button:hover {
+  background: #7f1d1d;
+}
+
+/* Loading States */
+.loadingContainer,
+.loading {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #666;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #3b82f6;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Empty State */
+.emptyState {
+  padding: 4rem 2rem;
+  text-align: center;
+  color: #666;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.emptyIcon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.emptyTitle {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.25rem;
+}
+
+.emptyText {
+  margin: 0 0 1.5rem 0;
+  font-size: 0.95rem;
+}
+
+.clearSearchBtn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.clearSearchBtn:hover {
+  background: #2563eb;
+}
+
+/* Clients List */
+.clientsList {
+  background: white;
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+/* Cards View */
+.clientsGrid {
+  display: flex;
+  flex-direction: column;
+}
+
+.clientCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  transition: background-color 0.15s ease;
+}
+
+.clientCard:hover {
+  background: #f9fafb;
+}
+
+.clientCard:last-child {
+  border-bottom: none;
+}
+
+.clientInfo {
+  flex: 1;
+}
+
+.clientName {
+  margin: 0 0 1rem 0;
+  font-size: 1.2rem;
+  color: #333;
+  font-weight: 600;
+}
+
+.clientDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.detail {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 0.95rem;
+}
+
+.label {
+  min-width: 80px;
+  color: #666;
+  font-weight: 500;
+}
+
+.value {
+  color: #333;
+}
+
+.clientActions {
+  display: flex;
+  gap: 0.5rem;
+  margin-left: 1rem;
+  flex-shrink: 0;
+}
+
+.editBtn {
+  background: #6c757d;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.editBtn:hover:not(:disabled) {
+  background: #5a6268;
+}
+
+.deleteBtn {
+  background: transparent;
+  color: #dc3545;
+  border: 1px solid #dc3545;
+  padding: 0.5rem 1rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deleteBtn:hover:not(:disabled) {
+  background: #dc3545;
+  color: white;
+}
+
+.deleteBtn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Excel View */
+.excelView {
+  overflow-x: auto;
+  background: white;
+}
+
+.excelTable {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  min-width: 1000px;
+}
+
+.excelHeader {
+  background: #f3f4f6;
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-right: 1px solid #d1d5db;
+  border-bottom: 2px solid #9ca3af;
+  white-space: nowrap;
+}
+
+.excelHeader:last-child {
+  border-right: none;
+}
+
+.excelRow {
+  transition: background-color 0.15s;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.excelRow:hover {
+  background-color: #f0f9ff;
+}
+
+.excelRow:nth-child(even) {
+  background-color: #fafafa;
+}
+
+.excelCell {
+  padding: 0.75rem 1rem;
+  border-right: 1px solid #e5e7eb;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.excelCell:last-child {
+  border-right: none;
+}
+
+.excelName,
+.excelVorname {
+  font-weight: 500;
+  color: #111827;
+}
+
+.excelEmail {
+  font-family: monospace;
+  color: #2563eb;
+}
+
+.excelPhone {
+  font-family: monospace;
+  color: #059669;
+}
+
+.excelCompany {
+  font-weight: 500;
+  color: #7b1fa2;
+}
+
+.excelAddress,
+.excelCity {
+  color: #4b5563;
+}
+
+.excelActions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.excelEditButton {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  color: #374151;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.excelEditButton:hover {
+  background: #e5e7eb;
+}
+
+.excelDeleteButton {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #991b1b;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 1rem;
+}
+
+.excelDeleteButton:hover:not(:disabled) {
+  background: #fecaca;
+}
+
+.excelDeleteButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Pagination */
+.paginationInfo {
+  text-align: center;
+  padding: 1rem;
+  color: #666;
+  font-size: 0.85rem;
+  border-top: 1px solid #e5e7eb;
+  background: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .headerActions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .viewToggle {
+    width: 100%;
+  }
+
+  .viewButton {
+    flex: 1;
+  }
+
+  .newBtn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .clientCard {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .clientActions {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .editBtn,
+  .deleteBtn {
+    flex: 1;
+  }
+
+  .detail {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+
+  .label {
+    min-width: auto;
+  }
+}

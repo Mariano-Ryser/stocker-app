@@ -1,7 +1,7 @@
 export default function TechCarousel() {
   const techStack = [
     { name: "Next.js", logo: "/tech/nextjs.svg", role: "Frontend" },
-    { name: "VisualStudioCode", logo: "/tech/visualStudioCode.png", role: "Design" },
+    { name: "VisualStudioCode", logo: "/tech/visualStudioCode.svg", role: "Design" },
     { name: "Node.js", logo: "/tech/nodejs.svg", role: "Backend" },
     { name: "MongoDB", logo: "/tech/mongodb.svg", role: "Database" },
     { name: "Vercel", logo: "/tech/vercel.svg", role: "Deployment" },
@@ -9,6 +9,7 @@ export default function TechCarousel() {
     { name: "Git", logo: "/tech/git.svg", role: "Version" },
     { name: "Azure", logo: "/tech/azure.svg", role: "Cloud" },
     { name: "Notion", logo: "/tech/notion.svg", role: "Organization" },
+    { name: "Stocker", logo: "/tech/stocker.webp", role: "Administration" },
   ];
 
   return (
@@ -48,7 +49,6 @@ export default function TechCarousel() {
         .carousel-wrapper {
           width: 100%;
           padding: 0rem 0;
-        background: #ffffff00;
           overflow: hidden;
           position: relative;
         }

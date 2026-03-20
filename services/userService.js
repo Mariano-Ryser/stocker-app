@@ -381,7 +381,7 @@ export async function createCompanyUserAPI(userData) {
 export async function getCompanyUsersAPI() {
   try {
     const API_URL = `${API_BASE_URL}/users/company/users`;
-    // console.log('Obteniendo usuarios de empresa desde:', API_URL);
+    console.log('Obteniendo usuarios de empresa desde:', API_URL);
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -392,20 +392,31 @@ export async function getCompanyUsersAPI() {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
-        return;
+        return { ok: false, message: 'Sesión expirada' };
       }
       
       const errorText = await res.text();
       console.error('Error response:', errorText);
+      
+      // ✅ MANEJO ESPECIAL PARA 404 (Empresa no encontrada)
+      if (res.status === 404) {
+        return { 
+          ok: false, 
+          message: 'Empresa no encontrada',
+          status: 404,
+          requiresLogout: true // Indicador para cerrar sesión
+        };
+      }
+      
       throw new Error(`Error al obtener usuarios de la empresa: ${res.status} - ${errorText}`);
     }
     
     const data = await res.json();
-    // console.log('Usuarios de empresa recibidos:', data);
-    return data;
+    console.log('Usuarios de empresa recibidos:', data);
+    return { ok: true, ...data };
   } catch (error) {
     console.error('Error in getCompanyUsersAPI:', error);
-    throw new Error(`Error: ${error.message}`);
+    return { ok: false, message: error.message };
   }
 }
 // Actualizar límite de usuarios

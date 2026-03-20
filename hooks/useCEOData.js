@@ -1,5 +1,4 @@
-// hooks/useCEOData.js - CORREGIDO
-
+// hooks/useCEOData.js - VERSIÓN SIMPLIFICADA
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
 
@@ -16,28 +15,23 @@ export const useCEOData = () => {
     totalProducts: 0,
     totalSales: 0,
     totalClients: 0,
-    plans: {
-      basic: 0,
-      medium: 0,
-      pro: 0
-    },
-    roles: {
-      ceo: 0,
-      admin: 0,
-      user: 0
-    }
+    totalRevenue: 0,
+    plans: { basic: 0, medium: 0, pro: 0 },
+    roles: { ceo: 0, admin: 0, user: 0 }
   });
 
   const URI = process.env.NEXT_PUBLIC_BACKEND_URL;
 
-  const fetchAllUsersWithStats = useCallback(async () => {
+  const fetchUsers = useCallback(async () => {
     if (!token || user?.role !== 'ceo') return;
 
     setLoading(true);
     setError(null);
 
     try {
-      // Obtener todos los usuarios
+      console.log('📊 Cargando usuarios...');
+      
+      // 1. Obtener todos los usuarios
       const usersRes = await fetch(`${URI}/users`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -47,85 +41,60 @@ export const useCEOData = () => {
       
       if (!usersData.ok) throw new Error(usersData.message);
 
-      console.log('📊 Usuarios obtenidos:', usersData.users.length);
+      console.log(`📦 Total usuarios: ${usersData.users.length}`);
 
-      // Para cada usuario, obtener sus estadísticas
-      const usersWithStats = await Promise.all(
-        usersData.users.map(async (userItem) => {
-          try {
-            // Obtener productos del usuario
-            const productsRes = await fetch(`${URI}/products/user/${userItem._id}`, {
-              headers: { 'Authorization': `Bearer ${token}` }
+      // 2. Obtener todas las empresas en una sola llamada (paralelo)
+      const companiesMap = new Map();
+      const companyIds = [...new Set(usersData.users.map(u => u.companyId).filter(Boolean))];
+      
+      await Promise.all(companyIds.map(async (companyId) => {
+        try {
+          const companyRes = await fetch(`${URI}/company/${companyId}`, {
+            headers: { 'Authorization': `Bearer ${token}` }
+          });
+          if (companyRes.ok) {
+            const companyData = await companyRes.json();
+            const company = companyData.company || companyData;
+            companiesMap.set(companyId, {
+              name: company?.name || 'Sin nombre',
+              maxUsers: company?.maxUsers || 3,
+              usersCount: company?.usersCount || 0
             });
-            const productsData = await productsRes.json();
-
-            // Obtener ventas del usuario
-            const salesRes = await fetch(`${URI}/sales/user/${userItem._id}`, {
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const salesData = await salesRes.json();
-
-            // Obtener clientes del usuario
-            const clientsRes = await fetch(`${URI}/clients/user/${userItem._id}`, {
-              headers: { 'Authorization': `Bearer ${token}` }
-            });
-            const clientsData = await clientsRes.json();
-
-            // 🔥 CORREGIDO: Usar userItem.companyId (NO userItem._id)
-            let companyData = { 
-              company: { 
-                name: 'Sin empresa', 
-                maxUsers: 3, 
-                usersCount: 0 
-              } 
-            };
-            
-            if (userItem.companyId) {
-              console.log(`🔍 Buscando empresa ${userItem.companyId} para usuario ${userItem._id}`);
-              
-              const companyRes = await fetch(`${URI}/company/${userItem.companyId}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
-              });
-              
-              if (companyRes.ok) {
-                companyData = await companyRes.json();
-                console.log(`✅ Empresa encontrada: ${companyData.company?.name}`);
-              } else {
-                console.warn(`❌ No se pudo obtener empresa ${userItem.companyId} para usuario ${userItem._id}`);
-              }
-            } else {
-              console.warn(`⚠️ Usuario ${userItem._id} no tiene companyId`);
-            }
-
-            return {
-              ...userItem,
-              stats: {
-                products: productsData.products?.length || 0,
-                sales: salesData.sales?.length || 0,
-                clients: clientsData.clients?.length || 0,
-                salesTotal: salesData.sales?.reduce((sum, sale) => sum + (sale.total || 0), 0) || 0
-              },
-              company: companyData.company || { 
-                name: 'Sin empresa', 
-                maxUsers: 3,
-                usersCount: 0 
-              }
-            };
-          } catch (err) {
-            console.error(`Error obteniendo stats para usuario ${userItem._id}:`, err);
-            return {
-              ...userItem,
-              stats: { products: 0, sales: 0, clients: 0, salesTotal: 0 },
-              company: { name: 'Error cargando', maxUsers: 3, usersCount: 0 }
-            };
           }
-        })
-      );
+        } catch (err) {
+          console.warn(`Error obteniendo empresa ${companyId}:`, err);
+        }
+      }));
 
-      setUsers(usersWithStats);
+      // 3. Construir usuarios con datos de empresa
+      const usersWithCompany = usersData.users.map(userItem => ({
+        _id: userItem._id,
+        name: userItem.name,
+        email: userItem.email,
+        role: userItem.role,
+        plan: userItem.plan,
+        isActive: userItem.isActive,
+        createdAt: userItem.createdAt,
+        updatedAt: userItem.updatedAt,
+        companyId: userItem.companyId,
+        company: companiesMap.get(userItem.companyId) || {
+          name: 'Sin empresa',
+          maxUsers: 3,
+          usersCount: 0
+        },
+        // Inicializamos stats vacías (se cargarán bajo demanda en el modal)
+        stats: {
+          products: 0,
+          sales: 0,
+          clients: 0,
+          revenue: 0
+        }
+      }));
 
-      // Calcular estadísticas globales
-      const globalStats = usersWithStats.reduce((acc, userItem) => {
+      setUsers(usersWithCompany);
+
+      // 4. Calcular estadísticas básicas (sin productos/ventas globales)
+      const globalStats = usersWithCompany.reduce((acc, userItem) => {
         acc.totalUsers++;
         if (userItem.isActive) acc.activeUsers++;
         else acc.inactiveUsers++;
@@ -133,25 +102,22 @@ export const useCEOData = () => {
         if (userItem.plan) acc.plans[userItem.plan] = (acc.plans[userItem.plan] || 0) + 1;
         if (userItem.role) acc.roles[userItem.role] = (acc.roles[userItem.role] || 0) + 1;
         
-        acc.totalProducts += userItem.stats?.products || 0;
-        acc.totalSales += userItem.stats?.sales || 0;
-        acc.totalClients += userItem.stats?.clients || 0;
-        
         return acc;
       }, {
         totalUsers: 0,
         activeUsers: 0,
         inactiveUsers: 0,
-        totalCompanies: new Set(usersWithStats.map(u => u.companyId).filter(Boolean)).size,
+        totalCompanies: companiesMap.size,
         totalProducts: 0,
         totalSales: 0,
         totalClients: 0,
+        totalRevenue: 0,
         plans: { basic: 0, medium: 0, pro: 0 },
         roles: { ceo: 0, admin: 0, user: 0 }
       });
 
       setStats(globalStats);
-      console.log('📈 Estadísticas calculadas:', globalStats);
+      console.log(`✅ Cargados ${usersWithCompany.length} usuarios`);
 
     } catch (err) {
       console.error('Error fetching CEO data:', err);
@@ -160,6 +126,13 @@ export const useCEOData = () => {
       setLoading(false);
     }
   }, [token, user, URI]);
+
+  // Funciones para actualizar usuario en la lista local
+  const updateUserInList = (userId, updates) => {
+    setUsers(prev => prev.map(u => 
+      u._id === userId ? { ...u, ...updates } : u
+    ));
+  };
 
   const toggleUserStatus = async (userId, currentStatus) => {
     try {
@@ -175,9 +148,7 @@ export const useCEOData = () => {
       const data = await res.json();
 
       if (data.ok) {
-        setUsers(prev => prev.map(u => 
-          u._id === userId ? { ...u, isActive: !currentStatus } : u
-        ));
+        updateUserInList(userId, { isActive: !currentStatus });
         
         setStats(prev => ({
           ...prev,
@@ -208,12 +179,10 @@ export const useCEOData = () => {
       const data = await res.json();
 
       if (data.ok) {
-        setUsers(prev => prev.map(u => 
-          u._id === userId ? { ...u, plan: newPlan } : u
-        ));
+        const oldPlan = users.find(u => u._id === userId)?.plan;
+        updateUserInList(userId, { plan: newPlan });
         
         setStats(prev => {
-          const oldPlan = users.find(u => u._id === userId)?.plan;
           const newStats = { ...prev };
           if (oldPlan) newStats.plans[oldPlan]--;
           newStats.plans[newPlan]++;
@@ -230,8 +199,8 @@ export const useCEOData = () => {
   };
 
   useEffect(() => {
-    fetchAllUsersWithStats();
-  }, [fetchAllUsersWithStats]);
+    fetchUsers();
+  }, [fetchUsers]);
 
   return {
     users,
@@ -240,6 +209,7 @@ export const useCEOData = () => {
     stats,
     toggleUserStatus,
     changeUserPlan,
-    refresh: fetchAllUsersWithStats
+    refresh: fetchUsers,
+    updateUserInList
   };
 };

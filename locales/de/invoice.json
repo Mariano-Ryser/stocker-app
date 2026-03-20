@@ -38,7 +38,7 @@
     "totals": {
       "subtotal": "Zwischensumme:",
       "discount": "Rabatt:",
-      "tax": "MwSt ({rate}%):",
+      "tax": "{taxName} {rate}%",
       "total": "Gesamtbetrag:"
     },
     "ticket": {

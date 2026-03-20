@@ -119,8 +119,8 @@ export default function DashboardLayout({ children }) {
           <ul>
             <li>
               <Link
-                href="/adminDash"
-                className={router.pathname === "/adminDash" ? styles.active : ""}
+                href="/dashboard"
+                className={router.pathname === "/dashboard" ? styles.active : ""}
                 onClick={handleLinkClick}
               >
                 <HomeIcon />
@@ -131,8 +131,8 @@ export default function DashboardLayout({ children }) {
 
             <li>
               <Link
-                href="/adminDash/artikel"
-                className={router.pathname === "/adminDash/artikel" ? styles.active : ""}
+                href="/dashboard/artikel"
+                className={router.pathname === "/dashboard/artikel" ? styles.active : ""}
                 prefetch={true}
                 onClick={handleLinkClick}
               >
@@ -144,8 +144,8 @@ export default function DashboardLayout({ children }) {
 
             <li>
               <Link
-                href="/adminDash/wareneigang"
-                className={router.pathname === "/adminDash/wareneigang" ? styles.active : ""}
+                href="/dashboard/wareneigang"
+                className={router.pathname === "/dashboard/wareneigang" ? styles.active : ""}
                 prefetch={true}
                 onClick={handleLinkClick}
               >
@@ -155,8 +155,8 @@ export default function DashboardLayout({ children }) {
             </li>
               <li>
               <Link
-                href="/adminDash/stockMovements"
-                className={router.pathname === "/adminDash/stockMovements" ? styles.active : ""}
+                href="/dashboard/stockMovements"
+                className={router.pathname === "/dashboard/stockMovements" ? styles.active : ""}
                 prefetch={true}
                 onClick={handleLinkClick}
               >
@@ -167,8 +167,8 @@ export default function DashboardLayout({ children }) {
 
             <li>
               <Link
-                href="/adminDash/clients"
-                className={router.pathname === "/adminDash/clients" ? styles.active : ""}
+                href="/dashboard/clients"
+                className={router.pathname === "/dashboard/clients" ? styles.active : ""}
                 prefetch={true}
                 onClick={handleLinkClick}
               >
@@ -178,8 +178,8 @@ export default function DashboardLayout({ children }) {
             </li>
             <li>
               <Link
-                href="/adminDash/regnung"
-                className={router.pathname === "/adminDash/regnung" ? styles.active : ""}
+                href="/dashboard/regnung"
+                className={router.pathname === "/dashboard/regnung" ? styles.active : ""}
                 prefetch={true}
                 onClick={handleLinkClick}
               >
@@ -189,8 +189,8 @@ export default function DashboardLayout({ children }) {
             </li>
             <li>
               <Link
-                href="/adminDash/scanner"
-                className={router.pathname === "/adminDash/scanner" ? styles.active : ""}
+                href="/dashboard/scanner"
+                className={router.pathname === "/dashboard/scanner" ? styles.active : ""}
                 prefetch={true}
                 onClick={handleLinkClick}
               >
@@ -200,8 +200,8 @@ export default function DashboardLayout({ children }) {
             </li>
             <li>
               <Link
-                href="/adminDash/verkaufteArtikel"
-                className={router.pathname === "/adminDash/verkaufteArtikel" ? styles.active : ""}
+                href="/dashboard/verkaufteArtikel"
+                className={router.pathname === "/dashboard/verkaufteArtikel" ? styles.active : ""}
                 prefetch={true}
                 onClick={handleLinkClick}
               >
@@ -214,8 +214,8 @@ export default function DashboardLayout({ children }) {
             {(user.role === "ceo" || user.role === "admin") && (
               <li>
                 <Link
-                  href="/adminDash/settings"
-                  className={router.pathname === "/adminDash/settings" ? styles.active : ""}
+                  href="/dashboard/settings"
+                  className={router.pathname === "/dashboard/settings" ? styles.active : ""}
                   onClick={handleLinkClick}
                 >
                   <SettingsIcon />
@@ -228,8 +228,8 @@ export default function DashboardLayout({ children }) {
             {(user.plan === "ceo" || user.role === "ceo") && (
               <li>
                 <Link
-                  href="/adminDash/CEO"
-                  className={router.pathname === "/adminDash/CEO" ? styles.active : ""}
+                  href="/dashboard/CEO"
+                  className={router.pathname === "/dashboard/CEO" ? styles.active : ""}
                   onClick={handleLinkClick}
                 >
                   <CEOIcon />

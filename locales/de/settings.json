@@ -1,14 +1,208 @@
 {
+  "common": {
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "save": "Speichern",
+    "close": "Schließen",
+    "confirm": "Bestätigen",
+    "loading": "Laden...",
+    "noChanges": "Keine Änderungen",
+    "yes": "Ja",
+    "no": "Nein"
+  },
   "settings": {
     "title": "Einstellungen",
     "subtitle": "Benutzer und Profil verwalten",
     "tabs": {
       "users": "Benutzer",
-      "profile": "Mein Profil"
+      "profile": "Mein Profil",
+      "company": "Unternehmen"
     },
     "alerts": {
       "success": "Erfolg",
       "error": "Fehler"
+    },
+    "countries": {
+      "DE": "Deutschland",
+      "CH": "Schweiz",
+      "ES": "Spanien",
+      "AR": "Argentinien"
+    },
+    "currencies": {
+      "EUR": "€ Euro",
+      "CHF": "CHF Schweizer Franken",
+      "USD": "$ US-Dollar",
+      "ARS": "$ Argentinischer Peso"
+    },
+    "timezones": {
+      "Europe/London": "London (GMT)",
+      "Europe/Zurich": "Zürich (MEZ)",
+      "Europe/Berlin": "Berlin (MEZ)",
+      "Europe/Madrid": "Madrid (MEZ)",
+      "Europe/Helsinki": "Helsinki (OEZ)",
+      "America/New_York": "New York (EST)",
+      "America/Chicago": "Chicago (CST)",
+      "America/Los_Angeles": "Los Angeles (PST)",
+      "America/Argentina/Buenos_Aires": "Buenos Aires (ART)",
+      "America/Santiago": "Santiago (CLT)",
+      "Australia/Sydney": "Sydney (AEDT)"
+    },
+    "company": {
+      "tabs": {
+        "general": "Allgemeine Informationen",
+        "tax": "Steuerinformationen",
+        "bank": "Bankverbindung"
+      },
+      "logo": {
+        "title": "Firmenlogo",
+        "noLogo": "Kein Logo hochgeladen",
+        "select": "Logo auswählen",
+        "upload": "Logo hochladen",
+        "uploading": "Hochladen...",
+        "remove": "Logo entfernen",
+        "help": "Empfohlene Größe: 300×300px. Max 5MB. Unterstützte Formate: JPG, PNG, GIF, WebP.",
+        "errors": {
+          "invalidType": "Nur Bilddateien sind erlaubt (jpeg, jpg, png, gif, webp)",
+          "tooLarge": "Das Bild darf nicht größer als 5MB sein",
+          "selectFile": "Bitte wählen Sie ein Logo aus",
+          "userNotLoaded": "Benutzer nicht geladen. Bitte melden Sie sich erneut an.",
+          "uploadFailed": "Upload fehlgeschlagen",
+          "deleteFailed": "Löschen fehlgeschlagen"
+        },
+        "confirmDelete": "Sind Sie sicher, dass Sie das Logo löschen möchten?"
+      },
+      "data": {
+        "title": "Unternehmensinformationen",
+        "nameLabel": "Firmenname *",
+        "namePlaceholder": "z.B., Meine Firma GmbH",
+        "legalName": "Rechtlicher Name",
+        "legalNamePlaceholder": "Vollständiger rechtlicher Firmenname",
+        "emailLabel": "E-Mail",
+        "emailPlaceholder": "info@meinefirma.de",
+        "phoneLabel": "Telefon",
+        "phonePlaceholder": "+49 123 456 789",
+        "website": "Webseite",
+        "websitePlaceholder": "https://www.meinefirma.de",
+        "currencyLabel": "Hauptwährung",
+        "timezoneLabel": "Zeitzone",
+        "countryLabel": "Rechnungsland",
+        "countryHelp": "Die Felder werden an die gesetzlichen Anforderungen von {country} angepasst",
+        
+        "🔥 NUEVO": "🔥 NUEVO",
+        "taxRateLabel": "Steuersatz (%)",
+        "taxRateHelp": "Mehrwertsteuersatz für dieses Land (z.B. 19 für Deutschland, 21 für Spanien, 8.1 für Schweiz)",
+        
+        "unsaved": "Nicht gespeicherte Änderungen",
+        "noChanges": "Keine Änderungen zu speichern",
+        "address": {
+          "title": "Adresse",
+          "street": "Straße",
+          "streetPlaceholder": "Straßenname",
+          "number": "Hausnummer",
+          "numberPlaceholder": "123",
+          "complement": "Zusatz",
+          "complementPlaceholder": "Gebäude, Etage, etc.",
+          "floor": "Etage",
+          "floorPlaceholder": "3.",
+          "apartment": "Wohnung",
+          "apartmentPlaceholder": "A",
+          "interior": "Intern",
+          "interiorPlaceholder": "Int. 5",
+          "colonia": "Kolonie",
+          "coloniaPlaceholder": "Kolonie-Name",
+          "neighborhood": "Viertel",
+          "neighborhoodPlaceholder": "Viertel-Name",
+          "urbanization": "Siedlung",
+          "urbanizationPlaceholder": "Siedlungs-Name",
+          "zone": "Zone",
+          "zonePlaceholder": "Industriezone",
+          "zipCode": "Postleitzahl",
+          "zipCodePlaceholder": "12345",
+          "city": "Stadt",
+          "cityPlaceholder": "Berlin",
+          "state": "Bundesland",
+          "statePlaceholder": "Berlin",
+          "province": "Provinz",
+          "provincePlaceholder": "Buenos Aires",
+          "region": "Region",
+          "regionPlaceholder": "Metropolregion",
+          "department": "Departement",
+          "departmentPlaceholder": "Antioquia",
+          "district": "Bezirk",
+          "districtPlaceholder": "Miraflores",
+          "county": "Grafschaft",
+          "countyPlaceholder": "Middlesex",
+          "country": "Land",
+          "countryPlaceholder": "Deutschland",
+          "preview": "Adressvorschau:"
+        },
+        "bank": {
+          "title": "Bankverbindung",
+          "bankName": "Bankname",
+          "bankNamePlaceholder": "z.B., Deutsche Bank",
+          "iban": "IBAN",
+          "ibanPlaceholder": "DE00 0000 0000 0000 0000 00",
+          "bic": "BIC / SWIFT",
+          "bicPlaceholder": "z.B., DEUTDEBB",
+          "accountHolder": "Kontoinhaber",
+          "accountHolderPlaceholder": "Firmen- oder Personenname",
+          "accountNumberPlaceholder": "1234567890",
+          "bankCodePlaceholder": "12345678",
+          "cbu": "CBU",
+          "cbuPlaceholder": "1234567890123456789012",
+          "alias": "CBU-Alias",
+          "aliasPlaceholder": "meinefirma.alias",
+          "currency": "Kontowährung",
+          "selectCurrency": "Währung auswählen",
+          "preview": "Bankdaten-Vorschau",
+          "errors": {
+            "ibanInvalidLength": "Die IBAN muss zwischen 15 und 34 Zeichen lang sein",
+            "ibanInvalidFormat": "Ungültiges IBAN-Format"
+          }
+        },
+        "tax": {
+          "title": "Steuerinformationen",
+          "help": "Diese Informationen sind für die Rechnungsstellung in diesem Land erforderlich",
+          "taxId": "Steuer-ID",
+          "taxIdPlaceholder": "Steuer-ID eingeben",
+          "cuit": "CUIT",
+          "cuitPlaceholder": "20-12345678-9",
+          "ingresosBrutos": "Bruttoeinkommen",
+          "ingresosBrutosPlaceholder": "123-456789-1",
+          "condicionIva": "MwSt.-Bedingung",
+          "condicionIvaPlaceholder": "Bedingung auswählen",
+          "ivaConditions": {
+            "responsableInscripto": "Registrierter Verantwortlicher",
+            "monotributo": "Monotribut",
+            "exento": "Befreit",
+            "consumidorFinal": "Endverbraucher"
+          },
+          "steuernummer": "Steuernummer",
+          "steuernummerPlaceholder": "123/456/78901",
+          "ustId": "USt-IdNr.",
+          "ustIdPlaceholder": "DE123456789",
+          "vatNumber": "VAT-Nummer",
+          "vatNumberPlaceholder": "GB123456789",
+          "companyRegister": "Handelsregister",
+          "companyRegisterPlaceholder": "HRB 12345",
+          "nif": "NIF",
+          "nifPlaceholder": "B12345678"
+        },
+        "submit": "Informationen speichern",
+        "saving": "Speichern...",
+        "errors": {
+          "nameRequired": "Firmenname ist erforderlich",
+          "emailInvalid": "Ungültige E-Mail",
+          "updateFailed": "Fehler beim Aktualisieren der Informationen"
+        },
+        "success": "✓ {message}"
+      },
+      "messages": {
+        "logoUploaded": "Logo erfolgreich hochgeladen",
+        "logoRemoved": "Logo erfolgreich entfernt",
+        "dataUpdated": "Informationen erfolgreich aktualisiert",
+        "noChanges": "Keine Änderungen zu speichern"
+      }
     },
     "users": {
       "title": "Benutzerverwaltung",
@@ -24,7 +218,7 @@
       "create": {
         "title": "Neuer Benutzer",
         "nameLabel": "Vollständiger Name *",
-        "namePlaceholder": "z.B. Max Mustermann",
+        "namePlaceholder": "z.B., Max Mustermann",
         "emailLabel": "E-Mail *",
         "emailPlaceholder": "beispiel@firma.de",
         "passwordLabel": "Passwort *",
@@ -37,7 +231,7 @@
           "emailInvalid": "Ungültige E-Mail",
           "passwordRequired": "Passwort ist erforderlich",
           "passwordMin": "Mindestens 6 Zeichen",
-          "userExists": "Ein Benutzer mit dieser E-Mail existiert bereits.",
+          "userExists": "Ein Benutzer mit dieser E-Mail existiert bereits",
           "emailTaken": "Diese E-Mail wird bereits verwendet",
           "limitReached": "Benutzerlimit erreicht. Es können keine weiteren Benutzer erstellt werden.",
           "createFailed": "Fehler beim Erstellen des Benutzers",
@@ -96,98 +290,6 @@
         "unknown": "Unbekannt",
         "noId": "Keine ID"
       }
-    },
-    "company": {
-      "logo": {
-        "title": "Firmenlogo",
-        "noLogo": "Kein Logo hochgeladen",
-        "select": "Logo auswählen",
-        "upload": "Logo hochladen",
-        "uploading": "Lade hoch...",
-        "remove": "Logo entfernen",
-        "help": "Empfohlene Größe: 300×300px. Max 5MB. Unterstützte Formate: JPG, PNG, GIF, WebP.",
-        "errors": {
-          "invalidType": "Nur Bilddateien sind erlaubt (jpeg, jpg, png, gif, webp)",
-          "tooLarge": "Das Bild darf nicht größer als 5MB sein",
-          "selectFile": "Bitte wählen Sie ein Logo aus",
-          "userNotLoaded": "Benutzer nicht geladen. Bitte melden Sie sich erneut an.",
-          "uploadFailed": "Upload fehlgeschlagen",
-          "deleteFailed": "Löschen fehlgeschlagen"
-        },
-        "confirmDelete": "Sind Sie sicher, dass Sie das Logo löschen möchten?"
-      },
-      "data": {
-        "title": "Unternehmensinformationen",
-        "nameLabel": "Firmenname *",
-        "namePlaceholder": "Ihre Firma GmbH",
-        "emailLabel": "E-Mail",
-        "emailPlaceholder": "info@firma.de",
-        "phoneLabel": "Telefon",
-        "phonePlaceholder": "+49 123 456789",
-        "currencyLabel": "Währung",
-        "timezoneLabel": "Zeitzone",
-        "address": {
-          "title": "Adresse",
-          "street": "Straße",
-          "streetPlaceholder": "Hauptstraße",
-          "number": "Hausnummer",
-          "numberPlaceholder": "123",
-          "complement": "Adresszusatz (optional)",
-          "complementPlaceholder": "3. Stock, Gebäude B, etc.",
-          "postalCode": "Postleitzahl",
-          "postalCodePlaceholder": "12345",
-          "city": "Stadt",
-          "cityPlaceholder": "Berlin",
-          "state": "Bundesland (optional)",
-          "statePlaceholder": "Berlin",
-          "country": "Land",
-          "countryPlaceholder": "Deutschland",
-          "preview": "Adressvorschau:"
-        },
-        "bank": {
-          "title": "Bankverbindung",
-          "bankName": "Bankname",
-          "bankNamePlaceholder": "z.B. Deutsche Bank",
-          "iban": "IBAN",
-          "ibanPlaceholder": "DE00 0000 0000 0000 0000 00",
-          "bic": "BIC / SWIFT",
-          "bicPlaceholder": "z.B. DEUTDEBB",
-          "accountHolder": "Kontoinhaber",
-          "accountHolderPlaceholder": "Firmen- oder Personenname",
-          "currency": "Kontowährung",
-          "selectCurrency": "Währung auswählen",
-          "preview": "Bankdaten-Vorschau",
-          "errors": {
-            "ibanInvalidLength": "Die IBAN muss zwischen 15 und 34 Zeichen lang sein",
-            "ibanInvalidFormat": "Ungültiges IBAN-Format"
-          }
-        },
-        "submit": "Informationen speichern",
-        "saving": "Speichere...",
-        "errors": {
-          "nameRequired": "Firmenname ist erforderlich",
-          "emailInvalid": "Ungültige E-Mail",
-          "updateFailed": "Fehler beim Aktualisieren der Informationen"
-        },
-        "success": "✓ {message}"
-      },
-      "messages": {
-        "logoUploaded": "Logo erfolgreich hochgeladen",
-        "logoRemoved": "Logo erfolgreich entfernt",
-        "dataUpdated": "Informationen erfolgreich aktualisiert"
-      }
-    },
-    "currencies": {
-      "EUR": "€ Euro",
-      "CHF": "CHF Schweizer Franken",
-      "USD": "$ US-Dollar",
-      "GBP": "£ Britisches Pfund"
-    },
-    "timezones": {
-      "Europe/Berlin": "Berlin (MEZ)",
-      "Europe/London": "London (GMT)",
-      "Europe/Paris": "Paris (MEZ)",
-      "America/New_York": "New York (EST)"
     }
   }
 }

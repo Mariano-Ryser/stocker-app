@@ -1,35 +1,228 @@
 {
+  "common": {
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "save": "Save",
+    "close": "Close",
+    "confirm": "Confirm",
+    "loading": "Loading...",
+    "noChanges": "No changes",
+    "yes": "Yes",
+    "no": "No"
+  },
   "settings": {
     "title": "Settings",
     "subtitle": "Manage users and profile",
     "tabs": {
       "users": "Users",
-      "profile": "My Profile"
+      "profile": "My Profile",
+      "company": "Company"
     },
     "alerts": {
       "success": "Success",
       "error": "Error"
     },
+    "countries": {
+      "DE": "Germany",
+      "CH": "Switzerland",
+      "ES": "Spain",
+      "AR": "Argentina"
+    },
+    "currencies": {
+      "EUR": "€ Euro",
+      "CHF": "CHF Swiss Franc",
+      "USD": "$ US Dollar",
+      "ARS": "$ Argentine Peso"
+    },
+    "timezones": {
+      "Europe/London": "London (GMT)",
+      "Europe/Zurich": "Zurich (CET)",
+      "Europe/Berlin": "Berlin (CET)",
+      "Europe/Madrid": "Madrid (CET)",
+      "Europe/Helsinki": "Helsinki (EET)",
+      "America/New_York": "New York (EST)",
+      "America/Chicago": "Chicago (CST)",
+      "America/Los_Angeles": "Los Angeles (PST)",
+      "America/Argentina/Buenos_Aires": "Buenos Aires (ART)",
+      "America/Santiago": "Santiago (CLT)",
+      "Australia/Sydney": "Sydney (AEDT)"
+    },
+    "company": {
+      "tabs": {
+        "general": "General Information",
+        "tax": "Tax Information",
+        "bank": "Bank Details"
+      },
+      "logo": {
+        "title": "Company Logo",
+        "noLogo": "No logo uploaded",
+        "select": "Select logo",
+        "upload": "Upload logo",
+        "uploading": "Uploading...",
+        "remove": "Remove logo",
+        "help": "Recommended size: 300×300px. Max 5MB. Supported formats: JPG, PNG, GIF, WebP.",
+        "errors": {
+          "invalidType": "Only image files are allowed (jpeg, jpg, png, gif, webp)",
+          "tooLarge": "Image cannot be larger than 5MB",
+          "selectFile": "Please select a logo",
+          "userNotLoaded": "User not loaded. Please log in again.",
+          "uploadFailed": "Upload failed",
+          "deleteFailed": "Delete failed"
+        },
+        "confirmDelete": "Are you sure you want to delete the logo?"
+      },
+      "data": {
+        "title": "Company Information",
+        "nameLabel": "Company name *",
+        "namePlaceholder": "e.g., My Company Ltd.",
+        "legalName": "Legal Name",
+        "legalNamePlaceholder": "Full legal company name",
+        "emailLabel": "Email",
+        "emailPlaceholder": "info@mycompany.com",
+        "phoneLabel": "Phone",
+        "phonePlaceholder": "+44 123 456 789",
+        "website": "Website",
+        "websitePlaceholder": "https://www.mycompany.com",
+        "currencyLabel": "Main currency",
+        "timezoneLabel": "Time zone",
+        "countryLabel": "Invoicing country",
+        "countryHelp": "Fields are adapted to the legal requirements of {country}",
+        
+        "taxRateLabel": "Tax Rate (%)",
+        "taxRateHelp": "Tax percentage for this country (e.g., 21 for Spain, 19 for Germany, 8.1 for Switzerland)",
+        
+        "unsaved": "Unsaved changes",
+        "noChanges": "No changes to save",
+        "address": {
+          "title": "Address",
+          "street": "Street",
+          "streetPlaceholder": "Street name",
+          "number": "Number",
+          "numberPlaceholder": "123",
+          "complement": "Complement",
+          "complementPlaceholder": "Building, floor, etc.",
+          "floor": "Floor",
+          "floorPlaceholder": "3rd",
+          "apartment": "Apartment",
+          "apartmentPlaceholder": "A",
+          "interior": "Interior",
+          "interiorPlaceholder": "Int. 5",
+          "colonia": "Colony",
+          "coloniaPlaceholder": "Colony name",
+          "neighborhood": "Neighborhood",
+          "neighborhoodPlaceholder": "Neighborhood name",
+          "urbanization": "Urbanization",
+          "urbanizationPlaceholder": "Urbanization name",
+          "zone": "Zone",
+          "zonePlaceholder": "Industrial zone",
+          "zipCode": "Postal Code",
+          "zipCodePlaceholder": "12345",
+          "city": "City",
+          "cityPlaceholder": "London",
+          "state": "State",
+          "statePlaceholder": "England",
+          "province": "Province",
+          "provincePlaceholder": "Buenos Aires",
+          "region": "Region",
+          "regionPlaceholder": "Metropolitan region",
+          "department": "Department",
+          "departmentPlaceholder": "Antioquia",
+          "district": "District",
+          "districtPlaceholder": "Miraflores",
+          "county": "County",
+          "countyPlaceholder": "Middlesex",
+          "country": "Country",
+          "countryPlaceholder": "United Kingdom",
+          "preview": "Address preview:"
+        },
+        "bank": {
+          "title": "Bank Details",
+          "bankName": "Bank name",
+          "bankNamePlaceholder": "e.g., Barclays",
+          "iban": "IBAN",
+          "ibanPlaceholder": "GB00 0000 0000 0000 0000 00",
+          "bic": "BIC / SWIFT",
+          "bicPlaceholder": "e.g., BARCGB22",
+          "accountHolder": "Account holder",
+          "accountHolderPlaceholder": "Company or person name",
+          "accountNumberPlaceholder": "1234567890",
+          "bankCodePlaceholder": "123456",
+          "cbu": "CBU",
+          "cbuPlaceholder": "1234567890123456789012",
+          "alias": "CBU Alias",
+          "aliasPlaceholder": "mycompany.alias",
+          "currency": "Account currency",
+          "selectCurrency": "Select currency",
+          "preview": "Bank details preview",
+          "errors": {
+            "ibanInvalidLength": "IBAN must be between 15 and 34 characters",
+            "ibanInvalidFormat": "Invalid IBAN format"
+          }
+        },
+        "tax": {
+          "title": "Tax Information",
+          "help": "This information is required for invoicing in this country",
+          "taxId": "Tax ID",
+          "taxIdPlaceholder": "Enter Tax ID",
+          "cuit": "CUIT",
+          "cuitPlaceholder": "20-12345678-9",
+          "ingresosBrutos": "Gross Income",
+          "ingresosBrutosPlaceholder": "123-456789-1",
+          "condicionIva": "VAT Condition",
+          "condicionIvaPlaceholder": "Select condition",
+          "ivaConditions": {
+            "responsableInscripto": "Registered Responsible",
+            "monotributo": "Monotax",
+            "exento": "Exempt",
+            "consumidorFinal": "Final Consumer"
+          },
+          "steuernummer": "Tax Number",
+          "steuernummerPlaceholder": "123/456/78901",
+          "ustId": "VAT ID",
+          "ustIdPlaceholder": "DE123456789",
+          "vatNumber": "VAT Number",
+          "vatNumberPlaceholder": "GB123456789",
+          "companyRegister": "Company Register",
+          "companyRegisterPlaceholder": "HRB 12345",
+          "nif": "NIF",
+          "nifPlaceholder": "B12345678"
+        },
+        "submit": "Save information",
+        "saving": "Saving...",
+        "errors": {
+          "nameRequired": "Company name is required",
+          "emailInvalid": "Invalid email",
+          "updateFailed": "Error updating information"
+        },
+        "success": "✓ {message}"
+      },
+      "messages": {
+        "logoUploaded": "Logo uploaded successfully",
+        "logoRemoved": "Logo removed successfully",
+        "dataUpdated": "Information updated successfully",
+        "noChanges": "No changes to save"
+      }
+    },
     "users": {
       "title": "User Management",
       "limits": {
-        "title": "User Limit",
+        "title": "User limit",
         "max": "Maximum",
         "created": "Created",
         "available": "Available",
         "reached": "Limit reached",
         "help": "You can create additional users for your company. Each user has access to the same products and customers.",
-        "ceoHelp": "As CEO, you can create users, activate/deactivate them, and adjust limits."
+        "ceoHelp": "As CEO you can create users, activate/deactivate and adjust limits."
       },
       "create": {
         "title": "New User",
-        "nameLabel": "Full Name *",
-        "namePlaceholder": "e.g., John Doe",
+        "nameLabel": "Full name *",
+        "namePlaceholder": "e.g., John Smith",
         "emailLabel": "Email *",
         "emailPlaceholder": "example@company.com",
         "passwordLabel": "Password *",
         "passwordPlaceholder": "Minimum 6 characters",
-        "submit": "Create User",
+        "submit": "Create user",
         "submitting": "Creating...",
         "errors": {
           "nameRequired": "Name is required",
@@ -37,17 +230,17 @@
           "emailInvalid": "Invalid email",
           "passwordRequired": "Password is required",
           "passwordMin": "Minimum 6 characters",
-          "userExists": "A user with this email already exists.",
+          "userExists": "A user with this email already exists",
           "emailTaken": "This email is already in use",
-          "limitReached": "User limit reached. Cannot create more users.",
+          "limitReached": "User limit reached. No more users can be created.",
           "createFailed": "Error creating user",
           "unexpected": "An unexpected error occurred. Please try again."
         }
       },
       "list": {
-        "title": "Company Users",
+        "title": "Company users",
         "empty": {
-          "title": "No Users",
+          "title": "No users",
           "text": "Create the first user to get started"
         },
         "table": {
@@ -81,7 +274,7 @@
       "form": {
         "nameLabel": "Name",
         "languageLabel": "Language",
-        "submit": "Save Changes",
+        "submit": "Save changes",
         "saving": "Saving...",
         "errors": {
           "userNotLoaded": "User not loaded",
@@ -96,98 +289,6 @@
         "unknown": "Unknown",
         "noId": "No ID"
       }
-    },
-    "company": {
-      "logo": {
-        "title": "Company Logo",
-        "noLogo": "No logo uploaded",
-        "select": "Select logo",
-        "upload": "Upload logo",
-        "uploading": "Uploading...",
-        "remove": "Remove logo",
-        "help": "Recommended size: 300×300px. Max 5MB. Supported formats: JPG, PNG, GIF, WebP.",
-        "errors": {
-          "invalidType": "Only image files are allowed (jpeg, jpg, png, gif, webp)",
-          "tooLarge": "Image cannot be larger than 5MB",
-          "selectFile": "Please select a logo",
-          "userNotLoaded": "User not loaded. Please log in again.",
-          "uploadFailed": "Upload failed",
-          "deleteFailed": "Delete failed"
-        },
-        "confirmDelete": "Are you sure you want to delete the logo?"
-      },
-      "data": {
-        "title": "Company Information",
-        "nameLabel": "Company Name *",
-        "namePlaceholder": "Your Company Ltd.",
-        "emailLabel": "Email",
-        "emailPlaceholder": "info@company.com",
-        "phoneLabel": "Phone",
-        "phonePlaceholder": "+44 123 456789",
-        "currencyLabel": "Currency",
-        "timezoneLabel": "Timezone",
-        "address": {
-          "title": "Address",
-          "street": "Street",
-          "streetPlaceholder": "Main Street",
-          "number": "Number",
-          "numberPlaceholder": "123",
-          "complement": "Complement (optional)",
-          "complementPlaceholder": "3rd floor, Building B, etc.",
-          "postalCode": "Postal Code",
-          "postalCodePlaceholder": "12345",
-          "city": "City",
-          "cityPlaceholder": "London",
-          "state": "State/County (optional)",
-          "statePlaceholder": "Greater London",
-          "country": "Country",
-          "countryPlaceholder": "United Kingdom",
-          "preview": "Address preview:"
-        },
-        "bank": {
-          "title": "Bank Details",
-          "bankName": "Bank Name",
-          "bankNamePlaceholder": "e.g., Barclays",
-          "iban": "IBAN",
-          "ibanPlaceholder": "GB00 0000 0000 0000 0000 00",
-          "bic": "BIC / SWIFT",
-          "bicPlaceholder": "e.g., BARCGB22",
-          "accountHolder": "Account Holder",
-          "accountHolderPlaceholder": "Company or person name",
-          "currency": "Account Currency",
-          "selectCurrency": "Select currency",
-          "preview": "Bank details preview",
-          "errors": {
-            "ibanInvalidLength": "IBAN must be between 15 and 34 characters",
-            "ibanInvalidFormat": "Invalid IBAN format"
-          }
-        },
-        "submit": "Save Information",
-        "saving": "Saving...",
-        "errors": {
-          "nameRequired": "Company name is required",
-          "emailInvalid": "Invalid email",
-          "updateFailed": "Error updating information"
-        },
-        "success": "✓ {message}"
-      },
-      "messages": {
-        "logoUploaded": "Logo uploaded successfully",
-        "logoRemoved": "Logo removed successfully",
-        "dataUpdated": "Information updated successfully"
-      }
-    },
-    "currencies": {
-      "EUR": "€ Euro",
-      "CHF": "CHF Swiss Franc",
-      "USD": "$ US Dollar",
-      "GBP": "£ British Pound"
-    },
-    "timezones": {
-      "Europe/Berlin": "Berlin (GMT+1)",
-      "Europe/London": "London (GMT+0)",
-      "Europe/Paris": "Paris (GMT+1)",
-      "America/New_York": "New York (GMT-5)"
     }
   }
 }

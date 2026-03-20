@@ -32,7 +32,7 @@ export default function ClientEditor({ client, onClose, onUpdated, updateClient 
       postalCode: "",
       city: "",
       state: "",
-      country: "Deutschland"
+      country: ""
     }
   });
   const [loading, setLoading] = useState(false);
@@ -53,7 +53,7 @@ export default function ClientEditor({ client, onClose, onUpdated, updateClient 
           postalCode: client.address?.postalCode || "",
           city: client.address?.city || "",
           state: client.address?.state || "",
-          country: client.address?.country || "Deutschland"
+          country: client.address?.country || ""
         }
       });
     }
@@ -124,7 +124,7 @@ export default function ClientEditor({ client, onClose, onUpdated, updateClient 
           postalCode: form.address.postalCode || undefined,
           city: form.address.city || undefined,
           state: form.address.state || undefined,
-          country: form.address.country || 'Deutschland'
+          country: form.address.country || ''
         }
       };
       

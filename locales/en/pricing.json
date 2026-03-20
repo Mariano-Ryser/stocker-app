@@ -1,0 +1,45 @@
+{
+  "pricing": {
+    "title": "Simple plans, clear pricing",
+    "subtitle": "Choose the plan that best fits your business",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "month": "mo",
+    "year": "yr",
+    "popular": "MOST POPULAR",
+    "subscribe": "Get started",
+    "trial": "Not sure? Try 14 days free, no credit card required",
+    "trialBtn": "Start free trial",
+    
+    "starter": {
+      "name": "Starter",
+      "f1": "Up to 500 products",
+      "f2": "Barcode scanning",
+      "f3": "1 user"
+    },
+    "basic": {
+      "name": "Basic",
+      "f1": "Up to 2000 products",
+      "f2": "Barcode scanning",
+      "f3": "3 users",
+      "f4": "Sales history"
+    },
+    "pro": {
+      "name": "Professional",
+      "f1": "Unlimited products",
+      "f2": "Barcode scanning",
+      "f3": "5 users",
+      "f4": "Advanced reports",
+      "f5": "Priority support"
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "f1": "Unlimited products",
+      "f2": "Barcode scanning",
+      "f3": "Unlimited users",
+      "f4": "Custom API",
+      "f5": "24/7 support",
+      "f6": "Dedicated onboarding"
+    }
+  }
+}

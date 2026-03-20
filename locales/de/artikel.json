@@ -58,6 +58,63 @@
         "inStock": "Auf Lager"
       }
     },
+    "creator": {
+      "title": "Neuen Artikel erstellen",
+      "form": {
+        "artikelName": "Artikelname *",
+        "artikelNamePlaceholder": "Artikelname eingeben",
+        "lagerPlatz": "Lagerplatz",
+        "lagerPlatzPlaceholder": "z.B. A-12",
+        "artikelNumber": "Artikelnummer",
+        "artikelNumberPlaceholder": "z.B. 345-AB",
+        "bestand": "Bestand",
+        "price": "Preis",
+        "pricePlaceholder": "0.00",
+        "description": "Beschreibung",
+        "descriptionPlaceholder": "Produktbeschreibung...",
+        "image": "Bild",
+        "imageSelect": "📷 Bild auswählen",
+        "imageChange": "📷 Neues Bild auswählen",
+        "imageDelete": "🗑️ Bild löschen",
+        "imagePreview": "Bildvorschau",
+        "required": "Pflichtfeld"
+      },
+      "buttons": {
+        "cancel": "Abbrechen",
+        "create": "Artikel erstellen",
+        "creating": "Erstellen..."
+      },
+      "messages": {
+        "success": "Artikel erfolgreich erstellt",
+        "error": "Fehler beim Erstellen des Artikels",
+        "validation": {
+          "nameRequired": "Der Artikelname ist erforderlich",
+          "priceInvalid": "Ungültiger Preis",
+          "stockInvalid": "Ungültiger Bestand"
+        }
+      }
+    },
+    "editor": {
+      "title": "Artikel bearbeiten",
+      "buttons": {
+        "cancel": "Abbrechen",
+        "save": "Änderungen speichern",
+        "saving": "Speichern...",
+        "delete": "Artikel löschen",
+        "deleteConfirm": "Löschen bestätigen",
+        "deleteImage": "Bild löschen"
+      },
+      "messages": {
+        "success": "Artikel erfolgreich aktualisiert",
+        "error": "Fehler beim Aktualisieren des Artikels",
+        "deleteConfirm": "Sind Sie sicher, dass Sie diesen Artikel löschen möchten?",
+        "deleteWarning": "Diese Aktion kann nicht rückgängig gemacht werden.",
+        "deleteImageConfirm": "Möchten Sie das Bild wirklich löschen?",
+        "deleteSuccess": "Artikel erfolgreich gelöscht",
+        "deleteImageSuccess": "Bild erfolgreich gelöscht"
+      },
+      "barcode": "Barcode"
+    },
     "loading": {
       "auth": "Authentifizierung wird geladen...",
       "products": "Laden..."

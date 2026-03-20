@@ -1,12 +1,43 @@
 {
-    "login": {
-    "title": "INGLEEEES",
-    "email": "E-Mail",
-    "password": "Passwort",
-    "forgotPassword": "Passwort vergessen?",
-    "noAccount": "Noch keinen Account?",
-    "register": "Registrieren",
-    "button": "Anmelden",
-    "error": "Ungültige E-Mail oder Passwort."
+  "login": {
+    "loading": "Cargando...",
+    "welcome": "Bienvenido a Stocker",
+    "subtitle": "Accede a tu panel y gestiona los datos de tu empresa",
+    "features": {
+      "dashboard": "Control de panel en tiempo real",
+      "security": "Autenticación segura",
+      "support": "Soporte prioritario al cliente",
+      "encryption": "Cifrado de datos de nivel industrial"
+    },
+    "title": "Iniciar Sesión",
+    "subtitle2": "Accede con tus credenciales",
+    "email": {
+      "label": "Correo Electrónico *",
+      "placeholder": "tu@email.com"
+    },
+    "password": {
+      "label": "Contraseña *",
+      "placeholder": "••••••••"
+    },
+    "rememberMe": "Mantenerme conectado",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "button": {
+      "login": "Iniciar Sesión",
+      "loggingIn": "Iniciando sesión..."
+    },
+    "google": "Iniciar sesión con Google",
+    "register": {
+      "prompt": "¿No tienes una cuenta?",
+      "link": "Regístrate ahora"
+    },
+    "success": "¡Inicio de sesión exitoso! Redirigiendo...",
+    "errors": {
+      "invalidCredentials": "Credenciales inválidas",
+      "connectionError": "Error de conexión con el servidor",
+      "generic": "Error al iniciar sesión"
+    },
+    "copyright": "© {year} Stocker. Todos los derechos reservados.",
+    "privacy": "Política de Privacidad",
+    "terms": "Términos de Uso"
   }
 }

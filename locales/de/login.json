@@ -1,12 +1,43 @@
 {
-    "login": {
-    "title": "Login",
-    "email": "E-Mail",
-    "password": "Passwort",
+  "login": {
+    "loading": "Laden...",
+    "welcome": "Willkommen bei Stocker",
+    "subtitle": "Greifen Sie auf Ihr Dashboard zu und verwalten Sie Ihre Unternehmensdaten",
+    "features": {
+      "dashboard": "Echtzeit-Dashboard-Kontrolle",
+      "security": "Sichere Authentifizierung",
+      "support": "Prioritärer Kundensupport",
+      "encryption": "Datenverschlüsselung nach Industriestandard"
+    },
+    "title": "Anmelden",
+    "subtitle2": "Melden Sie sich mit Ihren Zugangsdaten an",
+    "email": {
+      "label": "E-Mail Adresse *",
+      "placeholder": "ihre@email.de"
+    },
+    "password": {
+      "label": "Passwort *",
+      "placeholder": "••••••••"
+    },
+    "rememberMe": "Angemeldet bleiben",
     "forgotPassword": "Passwort vergessen?",
-    "noAccount": "Noch keinen Account?",
-    "register": "Registrieren",
-    "button": "Anmelden",
-    "error": "Ungültige E-Mail oder Passwort."
+    "button": {
+      "login": "Anmelden",
+      "loggingIn": "Wird angemeldet..."
+    },
+    "google": "Mit Google anmelden",
+    "register": {
+      "prompt": "Sie haben noch kein Konto?",
+      "link": "Jetzt registrieren"
+    },
+    "success": "Anmeldung erfolgreich! Weiterleitung...",
+    "errors": {
+      "invalidCredentials": "Ungültige Anmeldedaten",
+      "connectionError": "Verbindungsfehler mit dem Server",
+      "generic": "Fehler bei der Anmeldung"
+    },
+    "copyright": "© {year} Stocker. Alle Rechte vorbehalten.",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen"
   }
 }

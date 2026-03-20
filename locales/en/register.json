@@ -1,0 +1,70 @@
+{
+  "register": {
+    "loading": "Loading...",
+    "welcome": "Join Stocker",
+    "subtitle": "Join our community of successful businesses",
+    "title": "Create new account",
+    "formTitle": "Register to access the Stocker platform",
+    "name": {
+      "label": "Full Name *",
+      "placeholder": "John Doe"
+    },
+    "email": {
+      "label": "Business Email *",
+      "placeholder": "your@company.com"
+    },
+    "password": {
+      "label": "Password *",
+      "placeholder": "••••••••",
+      "hint": "Validated while typing"
+    },
+    "confirmPassword": {
+      "label": "Confirm Password *",
+      "placeholder": "••••••••",
+      "hint": "Must match password",
+      "match": "✓ Passwords match",
+      "mismatch": "Passwords do not match"
+    },
+    "requirements": {
+      "title": "Password requirements:",
+      "minLength": "Minimum 6 characters",
+      "upperCase": "At least one uppercase letter (A-Z)",
+      "number": "At least one number (0-9)",
+      "specialChar": "Optional: Special character (!@#$%^&*)"
+    },
+    "strength": {
+      "label": "Password strength:",
+      "none": " Not entered",
+      "weak": " Weak",
+      "medium": " Medium",
+      "strong": " Strong"
+    },
+     "termsSection": {
+      "text": "I agree to the {termsLink} and {privacyLink} *",
+      "termsLabel": "Terms of Use",
+      "privacyLabel": "Privacy Policy"
+    },
+    "button": {
+      "register": "Create account",
+      "registering": "Registering..."
+    },
+    "google": "Sign up with Google",
+    "loginSection": {
+      "prompt": "Already have an account?",
+      "link": "Sign in"
+    },
+    "success": "Registration successful! Redirecting...",
+    "errors": {
+      "passwordMismatch": "Passwords do not match",
+      "passwordMinLength": "Password must be at least 6 characters",
+      "passwordUpperCase": "Password must contain at least one uppercase letter",
+      "passwordNumber": "Password must contain at least one number",
+      "termsRequired": "Please accept the terms and conditions",
+      "registrationFailed": "Registration failed",
+      "connectionError": "Connection error with server"
+    },
+    "copyright": "© {year} Stocker. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
+  }
+}

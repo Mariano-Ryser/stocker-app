@@ -4,8 +4,8 @@
     "subtitle": "Administre su lista de productos",
     "newArticle": "Nuevo Artículo",
     "view": {
-      "table": "Vista tabla",
-      "grid": "Vista cuadrícula"
+      "table": "Vista Tabla",
+      "grid": "Vista Cuadrícula"
     },
     "search": {
       "placeholder": "Nombre o número de artículo",
@@ -31,9 +31,9 @@
       "filterInStock": "En stock",
       "filterLowStock": "Stock bajo",
       "filterOutOfStock": "Sin stock",
-      "sortAscLabel": "Bajo a Alto",
-      "sortDescLabel": "Alto a Bajo",
-      "resetAll": "Restablecer todos los filtros",
+      "sortAscLabel": "Menor a Mayor",
+      "sortDescLabel": "Mayor a Menor",
+      "resetAll": "Resetear filtros",
       "clear": "Limpiar"
     },
     "table": {
@@ -58,6 +58,63 @@
         "inStock": "En stock"
       }
     },
+    "creator": {
+      "title": "Crear nuevo artículo",
+      "form": {
+        "artikelName": "Nombre del artículo *",
+        "artikelNamePlaceholder": "Ingrese nombre del artículo",
+        "lagerPlatz": "Ubicación",
+        "lagerPlatzPlaceholder": "ej. A-12",
+        "artikelNumber": "Número de artículo",
+        "artikelNumberPlaceholder": "ej. 345-AB",
+        "bestand": "Stock",
+        "price": "Precio",
+        "pricePlaceholder": "0.00",
+        "description": "Descripción",
+        "descriptionPlaceholder": "Descripción del producto...",
+        "image": "Imagen",
+        "imageSelect": "📷 Seleccionar imagen",
+        "imageChange": "📷 Cambiar imagen",
+        "imageDelete": "🗑️ Eliminar imagen",
+        "imagePreview": "Vista previa",
+        "required": "Campo requerido"
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "create": "Crear artículo",
+        "creating": "Creando..."
+      },
+      "messages": {
+        "success": "Artículo creado exitosamente",
+        "error": "Error al crear el artículo",
+        "validation": {
+          "nameRequired": "El nombre del artículo es obligatorio",
+          "priceInvalid": "Precio inválido",
+          "stockInvalid": "Stock inválido"
+        }
+      }
+    },
+    "editor": {
+      "title": "Editar artículo",
+      "buttons": {
+        "cancel": "Cancelar",
+        "save": "Guardar cambios",
+        "saving": "Guardando...",
+        "delete": "Eliminar artículo",
+        "deleteConfirm": "Confirmar eliminación",
+        "deleteImage": "Eliminar imagen"
+      },
+      "messages": {
+        "success": "Artículo actualizado exitosamente",
+        "error": "Error al actualizar el artículo",
+        "deleteConfirm": "¿Está seguro de que desea eliminar este artículo?",
+        "deleteWarning": "Esta acción no se puede deshacer.",
+        "deleteImageConfirm": "¿Realmente desea eliminar esta imagen?",
+        "deleteSuccess": "Artículo eliminado exitosamente",
+        "deleteImageSuccess": "Imagen eliminada exitosamente"
+      },
+      "barcode": "Código de barras"
+    },
     "loading": {
       "auth": "Cargando autenticación...",
       "products": "Cargando..."
@@ -65,22 +122,22 @@
     "empty": {
       "restricted": {
         "title": "Acceso restringido",
-        "text": "Debe iniciar sesión para ver los productos"
+        "text": "Debe iniciar sesión para ver productos"
       },
       "notFound": {
         "title": "No se encontraron artículos",
-        "text": "Sin resultados para \"{term}\"",
+        "text": "No hay resultados para \"{term}\"",
         "textWithFilters": " con los filtros seleccionados"
       },
       "noProducts": {
-        "title": "No hay artículos disponibles",
+        "title": "No hay artículos",
         "text": "Cree su primer artículo"
       },
-      "resetButton": "Restablecer todos los filtros"
+      "resetButton": "Resetear todos los filtros"
     },
     "pagination": {
       "page": "Página {current} de {total}",
-      "total": "({total} artículos en total)"
+      "total": "({total} artículos total)"
     },
     "errors": {
       "loadFailed": "Error al cargar los artículos"

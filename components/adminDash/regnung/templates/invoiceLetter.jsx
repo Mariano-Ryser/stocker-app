@@ -1,4 +1,4 @@
-// frontend/components/adminDash/regnung/templates/InvoiceLetter.jsx
+// frontend/components/dashboard/regnung/templates/InvoiceLetter.jsx
 import React from 'react';
 import styles from '../templatesStyles/letter.module.css';
 

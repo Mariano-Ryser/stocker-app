@@ -22,7 +22,7 @@
       "selectedProduct": {
         "title": "{name}",
         "number": "Artikelnummer: {number}",
-        "currentStock": "Aktueller Bestand: <strong>{stock}</strong>"
+        "currentStock": "Aktueller Bestand: {stock}"
       },
       "fields": {
         "quantity": {
@@ -51,7 +51,7 @@
       },
       "preview": {
         "text": "Neuer Bestand nach Eingang:",
-        "newStock": "{current} + {add} = <strong>{total}</strong>"
+        "newStock": "{current} + {add} = {total}"
       },
       "success": "✅ {message}",
       "error": "❌ {message}",

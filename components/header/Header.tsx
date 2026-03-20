@@ -101,10 +101,7 @@ export default function Header() {
                 className={styles.logoImage}
               /> 
             </div>
-            <div className={styles.logoText}>
-              {/* <h1>Alpina<span className={styles.logoHighlight}></span></h1> */}
-              {/* <span className={styles.logoSubtitle}>Solutions</span> */}
-            </div>
+          
           </div>
 
           {/* Desktop nav */}
@@ -134,8 +131,8 @@ export default function Header() {
            
           {isAuthenticated && (
             <div className={styles.desktopActions}>
-              <button className={styles.btnText} onClick={() => Router.push("/adminDash")}>
-                {t("header.adminDash")}
+              <button className={styles.btnText} onClick={() => Router.push("/dashboard")}>
+                {t("header.dashboard")}
               </button>
              
             </div>
@@ -205,10 +202,10 @@ export default function Header() {
                 className={styles.mobileLoginBtn}
                 onClick={() => {
                   setMobileOpen(false);
-                  setTimeout(() => Router.push("/adminDash"), 100);
+                  setTimeout(() => Router.push("/dashboard"), 100);
                 }}
               >
-                {t("header.adminDash")}
+                {t("header.dashboard")}
               </button>
               <LogoutButton />
             </div>

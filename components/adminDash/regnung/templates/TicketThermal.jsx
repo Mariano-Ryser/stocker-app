@@ -1,4 +1,4 @@
-// frontend/components/adminDash/regnung/templates/TicketThermal.jsx
+// frontend/components/dashboard/regnung/templates/TicketThermal.jsx
 import styles from '../templatesStyles/ticket.module.css'
 import React from 'react';
 

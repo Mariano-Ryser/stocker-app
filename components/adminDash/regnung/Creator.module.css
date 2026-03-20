@@ -12,7 +12,32 @@
   padding: 4px;
   font-size: 16px;
 }
+/* En Creator.module.css y Update.module.css */
+.taxRateInput {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
 
+.taxInput {
+  flex: 1;
+  padding-right: 30px !important;
+}
+
+.taxRateSymbol {
+  position: absolute;
+  right: 10px;
+  color: #666;
+  font-weight: 500;
+}
+
+.taxNote {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.85rem;
+  color: #666;
+  font-style: italic;
+}
 .autocompleteHint {
   position: absolute;
   right: 36px;

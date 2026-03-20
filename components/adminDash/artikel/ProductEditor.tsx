@@ -1,6 +1,7 @@
-// ProductEditor.tsx - VERSIÓN CORREGIDA
+// ProductEditor.tsx
 import { useState, useEffect, useRef } from 'react';
 import { useAuth } from '../../auth/AuthProvider';
+import { useLanguage } from '../../../contexts/LanguageContext';
 import styles from './ProductEditor.module.css';
 import JsBarcode from "jsbarcode";
 
@@ -45,11 +46,13 @@ export const ProductEditor = ({
   onDeleteProductImage,
   onDeleteProduct
 }: ProductEditorProps) => {
+  const { t } = useLanguage();
   const { company, isAuthenticated } = useAuth();
 
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [localError, setLocalError] = useState<string | null>(null);
   const [localProduct, setLocalProduct] = useState<Product>(() => ({
     _id: product._id || '',
     artikelName: product.artikelName || '',
@@ -62,16 +65,14 @@ export const ProductEditor = ({
     publicId: product.publicId || ''
   }));
   
-const currencySymbol = company?.currency || 'USD';
-
-
-  const svgRef = useRef(null);
+  const currencySymbol = company?.currency || 'USD';
+  const svgRef = useRef<SVGSVGElement>(null);
   const [valor, setValor] = useState(localProduct.artikelNumber);
 
- useEffect(() => {
+  useEffect(() => {
     if (svgRef.current && valor) {
       JsBarcode(svgRef.current, valor, {
-        format: "CODE128",   // también EAN13, UPC, etc.
+        format: "CODE128",
         lineColor: "#000000",
         width: 2,
         height: 80,
@@ -170,47 +171,71 @@ const currencySymbol = company?.currency || 'USD';
     }
   };
 
-const handleUpdate = async (e: React.FormEvent) => {
-  e.preventDefault();
-  if (isSubmitting || !isAuthenticated) return;
+  const handleUpdate = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSubmitting || !isAuthenticated) return;
 
-  setIsSubmitting(true);
-  try {
-    // Convertir valores si son string
-    const stockValue = typeof localProduct.stock === 'string' 
-      ? (localProduct.stock === '' ? 0 : Number(localProduct.stock))
-      : localProduct.stock || 0;
+    setIsSubmitting(true);
+    setLocalError(null);
     
-    const priceValue = typeof localProduct.price === 'string'
-      ? (localProduct.price === '' ? 0 : Number(localProduct.price))
-      : localProduct.price || 0;
+    try {
+      // Validación básica
+      if (!localProduct.artikelName?.trim()) {
+        setLocalError(t('artikel.creator.messages.validation.nameRequired'));
+        setIsSubmitting(false);
+        return;
+      }
 
-    const productToUpdate = {
-      ...localProduct,
-      stock: stockValue,
-      price: priceValue,
-    };
-    
-    // console.log('ProductEditor: Updating product', productToUpdate);
-    
-    const result = await onUpdateProduct(productToUpdate);
-    
-    if (result?.success) {
-      // console.log('ProductEditor: Update successful');
-      onClose();
-    } else {
-      // console.log('ProductEditor: Update failed', result?.error);
+      // Convertir valores si son string
+      const stockValue = typeof localProduct.stock === 'string' 
+        ? (localProduct.stock === '' ? 0 : Number(localProduct.stock))
+        : localProduct.stock || 0;
+      
+      const priceValue = typeof localProduct.price === 'string'
+        ? (localProduct.price === '' ? 0 : Number(localProduct.price))
+        : localProduct.price || 0;
+
+      const productToUpdate = {
+        ...localProduct,
+        stock: stockValue,
+        price: priceValue,
+      };
+      
+      console.log('📝 ProductEditor: Actualizando producto', productToUpdate);
+      
+      const result = await onUpdateProduct(productToUpdate);
+      
+      console.log('📥 ProductEditor: Resultado de actualización', result);
+      
+      if (result) {
+        if (result.success === true) {
+          console.log('✅ ProductEditor: Actualización exitosa');
+          onClose();
+        } else if (result.product) {
+          console.log('✅ ProductEditor: Actualización exitosa (formato antiguo)');
+          onClose();
+        } else {
+          console.error('❌ ProductEditor: Error en actualización', result.error);
+          setLocalError(result.error || t('artikel.editor.messages.error'));
+        }
+      } else {
+        console.error('❌ ProductEditor: Resultado vacío');
+        setLocalError(t('artikel.editor.messages.error'));
+      }
+    } catch (err) {
+      console.error('❌ ProductEditor: Excepción en actualización', err);
+      setLocalError(err instanceof Error ? err.message : t('artikel.editor.messages.error'));
+    } finally {
+      setIsSubmitting(false);
     }
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+  };
 
   const handleDeleteImage = async () => {
     if (!isAuthenticated || !localProduct._id) return;
     
-    if (confirm("Möchten Sie das Bild wirklich löschen?")) {
+    if (confirm(t('artikel.editor.messages.deleteImageConfirm'))) {
       setIsSubmitting(true);
+      setLocalError(null);
       try {
         const result = await onDeleteProductImage(localProduct._id);
         if (result?.success) {
@@ -220,7 +245,11 @@ const handleUpdate = async (e: React.FormEvent) => {
             publicId: "" 
           }));
           setImagePreview(null);
+        } else {
+          setLocalError(result?.error || t('artikel.editor.messages.error'));
         }
+      } catch (err) {
+        setLocalError(err instanceof Error ? err.message : t('artikel.editor.messages.error'));
       } finally {
         setIsSubmitting(false);
       }
@@ -231,12 +260,17 @@ const handleUpdate = async (e: React.FormEvent) => {
     if (!isAuthenticated || !localProduct._id) return;
     
     setIsSubmitting(true);
+    setLocalError(null);
     try {
       const result = await onDeleteProduct(localProduct._id);
       if (result?.success) {
         setShowDeleteConfirm(false);
         onClose();
+      } else {
+        setLocalError(result?.error || t('artikel.editor.messages.error'));
       }
+    } catch (err) {
+      setLocalError(err instanceof Error ? err.message : t('artikel.editor.messages.error'));
     } finally {
       setIsSubmitting(false);
     }
@@ -247,15 +281,15 @@ const handleUpdate = async (e: React.FormEvent) => {
       <div className={styles.modalBackdrop}>
         <div className={styles.modal}>
           <div className={styles.modalHeader}>
-            <h2 className={styles.modalTitle}>Acceso restringido</h2>
+            <h2 className={styles.modalTitle}>{t('artikel.empty.restricted.title')}</h2>
             <button className={styles.closeBtn} onClick={onClose}>✕</button>
           </div>
           <div className={styles.modalBody}>
-            <p>Debe iniciar sesión para editar productos.</p>
+            <p>{t('artikel.empty.restricted.text')}</p>
           </div>
           <div className={styles.modalFooter}>
             <button className={`${styles.btn} ${styles.btnCancel}`} onClick={onClose}>
-              Cerrar
+              {t('artikel.editor.buttons.cancel')}
             </button>
           </div>
         </div>
@@ -263,12 +297,14 @@ const handleUpdate = async (e: React.FormEvent) => {
     );
   }
 
+  const displayError = localError || error;
+
   return (
     <>
       <div className={styles.modalBackdrop}>
         <div className={styles.modal}>
           <div className={styles.modalHeader}>
-            <h2 className={styles.modalTitle}>Artikel bearbeiten</h2>
+            <h2 className={styles.modalTitle}>{t('artikel.editor.title')}</h2>
             <button 
               className={styles.closeBtn} 
               onClick={onClose}
@@ -289,13 +325,22 @@ const handleUpdate = async (e: React.FormEvent) => {
               </div>
             )}
 
+            {displayError && (
+              <div className={styles.errorMessage}>
+                <div className={styles.errorIcon}>⚠️</div>
+                {displayError}
+              </div>
+            )}
+
             <form onSubmit={handleUpdate} className={styles.formSection}>
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Artikel Name *</label>
+                <label className={styles.formLabel}>
+                  {t('artikel.creator.form.artikelName')}
+                </label>
                 <input
                   type="text"
                   name="artikelName"
-                  placeholder="Artikel Name"
+                  placeholder={t('artikel.creator.form.artikelNamePlaceholder')}
                   value={localProduct.artikelName}
                   onChange={handleInputChange}
                   disabled={isSubmitting}
@@ -306,11 +351,13 @@ const handleUpdate = async (e: React.FormEvent) => {
 
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Lagerplatz</label>
+                  <label className={styles.formLabel}>
+                    {t('artikel.creator.form.lagerPlatz')}
+                  </label>
                   <input
                     type="text"
                     name="lagerPlatz"
-                    placeholder="Lagerplatz"
+                    placeholder={t('artikel.creator.form.lagerPlatzPlaceholder')}
                     value={localProduct.lagerPlatz}
                     onChange={handleInputChange}
                     disabled={isSubmitting}
@@ -319,25 +366,26 @@ const handleUpdate = async (e: React.FormEvent) => {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Artikelnummer</label>
+                  <label className={styles.formLabel}>
+                    {t('artikel.creator.form.artikelNumber')}
+                  </label>
                   <input
                     type="text"
                     name="artikelNumber"
-                    placeholder="Artikelnummer"
+                    placeholder={t('artikel.creator.form.artikelNumberPlaceholder')}
                     value={localProduct.artikelNumber}
                     onChange={handleInputChange}
                     disabled={isSubmitting}
                     className={styles.formInput}
                   />
-
-                  
-
                 </div>
               </div>
 
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Bestand</label>
+                  <label className={styles.formLabel}>
+                    {t('artikel.creator.form.bestand')}
+                  </label>
                   <input
                     type="number"
                     name="stock"
@@ -351,7 +399,9 @@ const handleUpdate = async (e: React.FormEvent) => {
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Preis ({currencySymbol})</label>
+                  <label className={styles.formLabel}>
+                    {t('artikel.creator.form.price')} ({currencySymbol})
+                  </label>
                   <input
                     type="number"
                     name="price"
@@ -361,17 +411,19 @@ const handleUpdate = async (e: React.FormEvent) => {
                     disabled={isSubmitting}
                     min="0"
                     step="0.01"
-                    placeholder="0.00"
+                    placeholder={t('artikel.creator.form.pricePlaceholder')}
                     className={styles.formInput}
                   />
                 </div>
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Beschreibung</label>
+                <label className={styles.formLabel}>
+                  {t('artikel.creator.form.description')}
+                </label>
                 <textarea
                   name="description"
-                  placeholder="Beschreibung"
+                  placeholder={t('artikel.creator.form.descriptionPlaceholder')}
                   value={localProduct.description}
                   onChange={handleInputChange}
                   disabled={isSubmitting}
@@ -381,10 +433,12 @@ const handleUpdate = async (e: React.FormEvent) => {
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Bild ändern</label>
+                <label className={styles.formLabel}>
+                  {t('artikel.creator.form.image')}
+                </label>
                 <div className={styles.fileUploadSection}>
                   <label className={styles.fileLabel}>
-                    <span>📷 Neues Bild auswählen</span>
+                    <span>{t('artikel.creator.form.imageChange')}</span>
                     <input 
                       type="file" 
                       name="imagen" 
@@ -402,21 +456,21 @@ const handleUpdate = async (e: React.FormEvent) => {
                       onClick={handleDeleteImage}
                       disabled={isSubmitting}
                     >
-                      🗑️ Bild löschen
+                      {t('artikel.editor.buttons.deleteImage')}
                     </button>
                   )}
-               {/* Codigo de barras  */}
-                <svg ref={svgRef} />
-
+                  
+                  {/* Código de barras */}
+                  {localProduct.artikelNumber && (
+                    <div className={styles.barcodeSection}>
+                      <label className={styles.formLabel}>
+                        {t('artikel.editor.barcode')}
+                      </label>
+                      <svg ref={svgRef} className={styles.barcode} />
+                    </div>
+                  )}
                 </div>
               </div>
-
-              {error && (
-                <div className={styles.errorMessage}>
-                  <div className={styles.errorIcon}>⚠️</div>
-                  {error}
-                </div>
-              )}
             </form>
           </div>
 
@@ -427,7 +481,7 @@ const handleUpdate = async (e: React.FormEvent) => {
               onClick={onClose}
               disabled={isSubmitting}
             >
-              Abbrechen
+              {t('artikel.editor.buttons.cancel')}
             </button>
             <div className={styles.actionButtons}>
               <button 
@@ -439,10 +493,10 @@ const handleUpdate = async (e: React.FormEvent) => {
                 {isSubmitting ? (
                   <>
                     <div className={`${styles.loadingSpinner} ${styles.spinnerSmall}`}></div>
-                    Speichern...
+                    {t('artikel.editor.buttons.saving')}
                   </>
                 ) : (
-                  "Änderungen speichern"
+                  t('artikel.editor.buttons.save')
                 )}
               </button>
               
@@ -452,7 +506,7 @@ const handleUpdate = async (e: React.FormEvent) => {
                 onClick={() => setShowDeleteConfirm(true)}
                 disabled={isSubmitting}
               >
-                Artikel löschen
+                {t('artikel.editor.buttons.delete')}
               </button>
             </div>
           </div>
@@ -463,11 +517,11 @@ const handleUpdate = async (e: React.FormEvent) => {
         <div className={`${styles.modalBackdrop} ${styles.confirmModal}`}>
           <div className={`${styles.modal} ${styles.confirmDialog}`}>
             <div className={styles.modalHeader}>
-              <h3 className={styles.modalSubtitle}>Artikel löschen</h3>
+              <h3 className={styles.modalSubtitle}>{t('artikel.editor.buttons.deleteConfirm')}</h3>
             </div>
             <div className={`${styles.modalBody} ${styles.confirmBody}`}>
-              <p>Sind Sie sicher, dass Sie diesen Artikel löschen möchten?</p>
-              <p className={styles.warningText}>Diese Aktion kann nicht rückgängig gemacht werden.</p>
+              <p>{t('artikel.editor.messages.deleteConfirm')}</p>
+              <p className={styles.warningText}>{t('artikel.editor.messages.deleteWarning')}</p>
             </div>
             <div className={styles.modalFooter}>
               <button 
@@ -476,7 +530,7 @@ const handleUpdate = async (e: React.FormEvent) => {
                 onClick={() => setShowDeleteConfirm(false)}
                 disabled={isSubmitting}
               >
-                Abbrechen
+                {t('artikel.editor.buttons.cancel')}
               </button>
               <button 
                 type="button"
@@ -484,7 +538,7 @@ const handleUpdate = async (e: React.FormEvent) => {
                 onClick={handleDeleteProduct}
                 disabled={isSubmitting}
               >
-                Löschen bestätigen
+                {t('artikel.editor.buttons.deleteConfirm')}
               </button>
             </div>
           </div>

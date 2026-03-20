@@ -1,4 +1,4 @@
-// frontend/components/adminDash/regnung/templates/InvoiceModern.jsx
+// frontend/components/dashboard/regnung/templates/InvoiceModern.jsx
 import styles from '../templatesStyles/modern.module.css'
 import React from 'react';
 
@@ -148,7 +148,11 @@ export const InvoiceModern = ({
             </div>
           )}
           <div className={getClassName('titleSection')}>
-            <h1 className={getClassName('invoiceTitle')}>{t('invoice.invoice')}</h1>
+            {/* TITUTLO */}
+            <h1 className={getClassName('invoiceTitle')}>
+              {/* {t('invoice.invoice')} */}
+              {company.name}
+              </h1>
             <div className={getClassName('invoiceNumber')}>
               <strong>{safeSale.lieferschein || 'NEW'}</strong>
             </div>
@@ -197,7 +201,7 @@ export const InvoiceModern = ({
         <thead>
           <tr>
             <th>{t('invoice.table.item')}</th>
-            <th className={getClassName('textCenter')}>{t('invoice.table.quantity')}</th>
+            <th className={getClassName('textRight')}>{t('invoice.table.quantity')}</th>
             <th className={getClassName('textRight')}>{t('invoice.table.unitPrice')}</th>
             <th className={getClassName('textRight')}>{t('invoice.table.total')}</th>
           </tr>
@@ -211,7 +215,7 @@ export const InvoiceModern = ({
                   <div className={getClassName('itemName')}>{item.artikelName}</div>
                   {item.description && <div className={getClassName('itemDesc')}>{item.description}</div>}
                 </td>
-                <td className={getClassName('textCenter')}>{item.quantity}</td>
+                <td className={getClassName('textRight')}>{item.quantity}</td>
                 <td className={getClassName('textRight')}>
                   {formatCurrency(item.unitPrice)} {company.currency}
                 </td>

@@ -15,11 +15,11 @@
   inset: 0;
   z-index: 1;
   margin-top: 5rem;
-  
 }
 
 .heroImage {
   object-fit: cover;
+  object-position: center 20%; 
 }
 
 .heroOverlay {

@@ -1,4 +1,4 @@
-// components/adminDash/regnung/StockMovementsModal.js
+// components/dashboard/regnung/StockMovementsModal.js
 import { useState, useEffect } from 'react';
 import { getSaleMovements } from '../../../services/stockMovementService';
 import styles from './StockMovementsModal.module.css';

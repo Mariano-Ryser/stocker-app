@@ -32,7 +32,7 @@ const {t} = useLanguage();
           
           // Redirigir después de 2 segundos
           setTimeout(() => {
-            router.push('/adminDash');
+            router.push('/dashboard');
           }, 2000);
         }
       } catch (error: any) {

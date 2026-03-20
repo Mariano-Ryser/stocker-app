@@ -1,4 +1,6 @@
+// components/ui/ExcelTemplate.jsx
 import * as XLSX from 'xlsx';
+import styles from './ExcelTemplate.module.css';
 
 export default function ExcelTemplateButton({ type = 'products' }) {
   const config = {
@@ -75,9 +77,9 @@ export default function ExcelTemplateButton({ type = 'products' }) {
         }
       ],
       instructions: [
-        ['INSTRUKTIONEN FÜR DEN IMPORT VON FACTURAS'],
+        ['INSTRUKTIONEN FÜR DEN EXPORT VON FACTURAS'],
         [''],
-        ['1. Füllen Sie diese Vorlage mit Ihren Verkaufsdaten aus'],
+        ['1. Dies ist eine Exportvorlage für Facturas'],
         ['2. Wichtig: Gleicher Lieferschein = gleiche Factura'],
         ['3. Eine Factura kann mehrere Artikel enthalten'],
         ['4. Felder:'],
@@ -90,7 +92,7 @@ export default function ExcelTemplateButton({ type = 'products' }) {
         [''],
         ['TIPP: Exportieren Sie zuerst bestehende Facturas um das Format zu sehen']
       ],
-      filename: 'Factura_Import_Vorlage.xlsx',
+      filename: 'Factura_Export_Vorlage.xlsx',
       title: 'Facturas'
     }
   };
@@ -109,14 +111,23 @@ export default function ExcelTemplateButton({ type = 'products' }) {
   };
 
   return (
-    <button onClick={downloadTemplate} className="template-button">
-      <svg className="template-icon" viewBox="0 0 24 24" fill="none">
-        <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2"/>
-        <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2"/>
-        <path d="M12 18V12" stroke="currentColor" strokeWidth="2"/>
-        <path d="M9 15H15" stroke="currentColor" strokeWidth="2"/>
-      </svg>
-      {type === 'sales' ? 'Factura Vorlage' : 'Produkt Vorlage'} herunterladen
+    <button 
+      onClick={downloadTemplate} 
+      className={styles.templateButton}
+      aria-label={`${type === 'sales' ? 'Factura' : 'Produkt'} Vorlage herunterladen`}
+    >
+      <span className={styles.templateIcon}>
+        <svg viewBox="0 0 24 24" fill="none" width="20" height="20">
+          <path d="M14 2H6C4.9 2 4 2.9 4 4V20C4 21.1 4.9 22 6 22H18C19.1 22 20 21.1 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M12 18V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          <path d="M9 15H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
+      </span>
+      <span className={styles.templateText}>
+        {type === 'sales' ? 'Factura Vorlage' : 'Produkt Vorlage'} herunterladen
+      </span>
+      <span className={styles.templateBadge}>XLSX</span>
     </button>
   );
 }

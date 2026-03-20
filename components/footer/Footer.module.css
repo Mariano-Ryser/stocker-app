@@ -6,7 +6,7 @@
   
   background: var(--light);
   border-top: 1px solid #e5e7eb;
-  padding-top: 0rem;
+  padding-top: 2.2rem;
   width: 100%;
   overflow: hidden; /* Previene desbordamientos */
 }
@@ -26,20 +26,20 @@
   flex-direction: column;
 }
 
-.logo {
+.logo { 
   margin-bottom: 0px;
   display: flex;
   align-items: center;
   justify-content: center; /* Centrado en móviles */
+  
 }
 
 .logoImg {
-  margin-bottom: -20px;
+  margin:10px 10px 10px 10px;
   width: 100%; /* Responsivo */
-  max-width: 17rem; /* Máximo tamaño */
-  height: auto; /* Mantiene proporción */
-  aspect-ratio: 17/13.5; /* Mantiene proporción original */
-  mask-image: linear-gradient(black 55%, transparent);
+  max-width: 10rem; /* Máximo tamaño */
+  height: 7.5rem; /* Mantiene proporción */
+  
 }
 
 .brandDesc {
@@ -47,7 +47,6 @@
   font-size: 0.95rem;
   color: var(--gray);
   line-height: 1.6;
-  padding: 0 8px; /* Padding interno */
 }
 
 /* COLUMNS */
@@ -140,8 +139,10 @@
   }
   
   .logoImg {
-    width: 15rem; /* Tamaño ajustado para tablets pequeñas */
-  }
+  max-width: 10rem; /* Máximo tamaño */
+  height: 7.5rem; /* Mantiene proporción */
+  
+}
   
   .loginBtn {
     width: fit-content; /* Botón ajustado a contenido */
@@ -164,7 +165,7 @@
 }
 
 @media (min-width: 768px) {
- 
+
   .container {
     grid-template-columns: 2.2fr 1fr 1fr 1.3fr;
     padding: 0 24px;
@@ -179,9 +180,7 @@
     justify-content: flex-start; /* Alineación izquierda en desktop */
   }
   
-  .logoImg {
-    width: 17rem;
-  }
+
 }
 
 @media (min-width: 1024px) {
@@ -198,10 +197,6 @@
   }
   
   
-  
-  .logoImg {
-    max-width: 14rem;
-  }
   
   .contactItem {
     font-size: 0.9rem;

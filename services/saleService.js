@@ -15,10 +15,22 @@ const getAuthHeaders = () => {
   return headers;
 };
 
-// GET all sales del usuario actual
-export async function getSales() {
+// GET sales con paginación y filtros
+export async function getSales(params = {}) {
   try {
-    const API_URL = `${API_BASE_URL}/sales`;
+    // Construir query string
+    const queryParams = new URLSearchParams();
+    
+    if (params.page) queryParams.append('page', params.page);
+    if (params.limit) queryParams.append('limit', params.limit);
+    if (params.search) queryParams.append('search', params.search);
+    if (params.dateFrom) queryParams.append('dateFrom', params.dateFrom);
+    if (params.dateTo) queryParams.append('dateTo', params.dateTo);
+    if (params.status) queryParams.append('status', params.status);
+    if (params.sortField) queryParams.append('sortField', params.sortField);
+    if (params.sortDirection) queryParams.append('sortDirection', params.sortDirection);
+    
+    const API_URL = `${API_BASE_URL}/sales?${queryParams.toString()}`;
     // console.log('Fetching sales from:', API_URL);
     
     const res = await fetch(API_URL, {
@@ -39,22 +51,25 @@ export async function getSales() {
     }
     
     const data = await res.json();
-    // // console.log('Sales fetched with stats:', data); 
-
-    // return data;
-        return {
+    
+    return {
       sales: data.sales || [],
-      total: data.total || 0,
+      pagination: data.pagination || {
+        page: 1,
+        limit: 20,
+        total: 0,
+        pages: 1
+      },
       stats: data.stats || {
         paidCount: 0,
         cancelledCount: 0,
         pendingCount: 0,
         totalUmsatz: 0,
-        durchschnitt: 0
+        durchschnitt: 0,
+        totalAllSales: 0
       }
     };
 
- 
   } catch (error) {
     console.error('Error in getSales:', error);
     throw new Error(`Error: ${error.message}`);
@@ -90,7 +105,6 @@ export async function createSaleAPI(payload) {
       };
     }
 
-    // ✅ Éxito
     return {
       success: true,
       data: data
@@ -98,7 +112,7 @@ export async function createSaleAPI(payload) {
 
   } catch (error) {
     console.error('Error in createSaleAPI:', error);
-    throw new Error('Error de conexión mit dem Server');
+    throw new Error('Error de conexión con el servidor');
   }
 }
 
@@ -109,10 +123,7 @@ export async function updateSaleAPI(saleId, payload) {
     
     const res = await fetch(API_URL, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        ...getAuthHeaders()
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(payload)
     });
     
@@ -132,7 +143,6 @@ export async function updateSaleAPI(saleId, payload) {
       throw new Error(data.message || `Error ${res.status}`);
     }
     
-    // Asegurar que devolvemos la venta en la propiedad 'sale'
     return {
       sale: data.sale || data,
       success: true
@@ -143,7 +153,6 @@ export async function updateSaleAPI(saleId, payload) {
   }
 }
 
-// DELETE sale
 export async function deleteSaleAPI(saleId) {
   try {
     const API_URL = `${API_BASE_URL}/sales/${saleId}`;

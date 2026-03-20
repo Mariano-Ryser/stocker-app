@@ -147,7 +147,7 @@ medida cel 380 x 700
 │   │   ├─ index.js
 │   │   └─ login.tsx
 ├─ pages
-│   ├─ adminDash
+│   ├─ dashboard
 │   │   ├─ artikel
 │   │   │    ├─ components
 │   │   │    │    ├─ ProductCreator.module.css

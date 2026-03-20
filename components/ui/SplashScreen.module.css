@@ -1,0 +1,407 @@
+/* components/ui/SplashScreen.module.css */
+
+/* ===== CONTENEDOR PRINCIPAL ===== */
+.splashContainer { 
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.3s ease-out;
+  
+}
+
+.fadeOut {
+  opacity: 0;
+}
+
+.content {
+  text-align: center;
+  max-width: 400px;
+  padding: 2rem;
+}
+
+/* ===== LOGO Y BARRAS ===== */
+.logoWrapper {
+  margin-bottom: 0rem;
+  animation: float 3s ease-in-out infinite;
+  cursor: pointer;
+  height: 10rem;
+  /* Añadir padding superior para dar espacio a la animación */
+  padding-top: 1.5rem;
+  /* O usar min-height en lugar de height fija */
+  min-height: 10rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.logo {
+  width: 140px;
+  height: 120px;
+  filter: drop-shadow(0 10px 15px -3px rgba(0, 0, 0, 0.1));
+  /* Asegurar que el SVG no se desborde */
+  overflow: visible;
+}
+
+/* Animaciones para las barras de diferentes alturas */
+.bar1 {
+  animation: barPulse1 2.5s ease-in-out infinite;
+  transform-origin: bottom;
+  transition: all 0.3s ease;
+}
+
+.bar2 {
+  animation: barPulse2 2.5s ease-in-out infinite 0.2s;
+  transform-origin: bottom;
+  transition: all 0.3s ease;
+}
+
+.bar3 {
+  animation: barPulse3 2.5s ease-in-out infinite 0.4s;
+  transform-origin: bottom;
+  transition: all 0.3s ease;
+}
+
+@keyframes barPulse1 {
+  0%, 100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scaleY(1.15);
+    opacity: 0.9;
+    filter: brightness(1.1);
+  }
+}
+
+@keyframes barPulse2 {
+  0%, 100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  40% {
+    transform: scaleY(1.2);
+    opacity: 0.9;
+    filter: brightness(1.15);
+  }
+}
+
+@keyframes barPulse3 {
+  0%, 100% {
+    transform: scaleY(1);
+    opacity: 1;
+  }
+  45% {
+    transform: scaleY(1.25);
+    opacity: 0.9;
+    filter: brightness(1.2);
+  }
+}
+
+
+
+@keyframes waveEffect {
+  0% {
+    transform: translateY(0);
+  }
+  25% {
+    transform: translateY(-5px);
+  }
+  50% {
+    transform: translateY(0);
+  }
+  75% {
+    transform: translateY(-3px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* ===== TEXTO PRINCIPAL ===== */
+.appName {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 1.5rem 0;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  animation: slideUp 0.5s ease;
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== LOADING INDICATOR ===== */
+.loadingContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 2rem;
+  color: #475569;
+  font-size: 1.2rem;
+}
+
+.loadingText {
+  font-weight: 600;
+  background: linear-gradient(135deg, #475569 0%, #64748b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.loadingDots {
+  display: inline-flex;
+  gap: 0.15rem;
+}
+
+.loadingDots span {
+  animation: bounce 1.4s infinite;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: #2563eb;
+  font-weight: 700;
+}
+
+.loadingDots span:nth-child(2) {
+  animation-delay: 0.2s;
+  color: #3b82f6;
+}
+
+.loadingDots span:nth-child(3) {
+  animation-delay: 0.4s;
+  color: #60a5fa;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% {
+    transform: scale(1);
+    opacity: 0.5;
+  }
+  40% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+/* ===== BARRA DE PROGRESO ===== */
+.progressBar {
+  width: 240px;
+  height: 6px;
+  background: #e2e8f0;
+  border-radius: 3px;
+  overflow: hidden;
+  margin: 0 auto;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #1e3a8a, #2563eb, #3b82f6, #60a5fa);
+  border-radius: 3px;
+  width: 0%;
+  animation: fillProgress linear forwards;
+  box-shadow: 0 0 10px rgba(37, 99, 235, 0.5);
+}
+
+@keyframes fillProgress {
+  from {
+    width: 0%;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+/* ===== ANIMACIONES GENERALES ===== */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05);
+  }
+}
+
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes drawCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* ===== VERSIÓN SIMPLIFICADA (sin animaciones) ===== */
+.simplified .logoWrapper {
+  animation: none;
+}
+
+.simplified .bar1,
+.simplified .bar2,
+.simplified .bar3 {
+  animation: none;
+}
+
+.simplified .logoWrapper:hover .bar1,
+.simplified .logoWrapper:hover .bar2,
+.simplified .logoWrapper:hover .bar3 {
+  animation: none;
+}
+
+.simplified .loadingDots span {
+  animation: none;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .content {
+    padding: 1.5rem;
+  }
+
+  .logo {
+    width: 120px;
+    height: 100px;
+  }
+
+  .appName {
+    font-size: 1.8rem;
+    letter-spacing: 2px;
+  }
+
+  .loadingContainer {
+    font-size: 1.1rem;
+  }
+
+  .loadingDots span {
+    font-size: 1.6rem;
+  }
+
+  .progressBar {
+    width: 200px;
+  }
+
+  /* Ajustar posición de las barras en móvil */
+  .logo rect[x="15"] { x: 12; }
+  .logo rect[x="47"] { x: 42; }
+  .logo rect[x="79"] { x: 72; }
+  .logo rect[x="15"][y="80"] { x: 12; width: 82; }
+  .logo rect[x="17"] { x: 14; }
+  .logo rect[x="49"] { x: 44; }
+  .logo rect[x="81"] { x: 74; }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 1rem;
+  }
+
+  .logo {
+    width: 100px;
+    height: 85px;
+  }
+
+  .appName {
+    font-size: 1.5rem;
+    letter-spacing: 1.5px;
+  }
+
+  .loadingContainer {
+    font-size: 1rem;
+  }
+
+  .loadingDots span {
+    font-size: 1.4rem;
+  }
+
+  .progressBar {
+    width: 160px;
+    height: 5px;
+  }
+
+  /* Ajustar posición de las barras en móvil pequeño */
+  .logo rect[x="15"] { x: 10; width: 18; }
+  .logo rect[x="47"] { x: 38; width: 18; }
+  .logo rect[x="79"] { x: 66; width: 18; }
+  .logo rect[x="15"][y="80"] { x: 10; width: 74; }
+  .logo rect[x="17"] { x: 12; width: 14; }
+  .logo rect[x="49"] { x: 40; width: 14; }
+  .logo rect[x="81"] { x: 68; width: 14; }
+}
+
+/* ===== SOPORTE PARA PANTALLAS GRANDES ===== */
+@media (min-width: 1440px) {
+  .logo {
+    width: 160px;
+    height: 140px;
+  }
+
+  .appName {
+    font-size: 2.5rem;
+  }
+
+  .loadingContainer {
+    font-size: 1.4rem;
+  }
+
+  .progressBar {
+    width: 280px;
+    height: 8px;
+  }
+}
+
+/* ===== PREFERENCIAS DE MOVIMIENTO REDUCIDO ===== */
+@media (prefers-reduced-motion: reduce) {
+  .logoWrapper,
+  .bar1,
+  .bar2,
+  .bar3,
+  .loadingDots span,
+  .progressFill,
+  .appName {
+    animation: none !important;
+    transition: none !important;
+  }
+  
+  .logoWrapper:hover .bar1,
+  .logoWrapper:hover .bar2,
+  .logoWrapper:hover .bar3 {
+    animation: none !important;
+  }
+}

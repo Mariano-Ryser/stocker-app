@@ -1,14 +1,16 @@
+// frontend/components/dashboard/regnung/RechnungUpdate.jsx
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { useSales } from "../../../hooks/useSales";
 import { useClients } from "../../../hooks/useClients";
 import { useProduct } from "../../../hooks/useProducts";
 import { useLanguage } from "../../../contexts/LanguageContext";
+import { COUNTRY_CONFIG } from '../../../utils/countryConfig';
 import styles from './Update.module.css';
 
 export default function RechnungUpdate({ sale, onClose, onSaved }) {
   const { t } = useLanguage();
-  const {company, isAuthenticated } = useAuth();
+  const { company, isAuthenticated } = useAuth();
   const { updateSale } = useSales();
   const { clients } = useClients();
   const { products, refreshProducts } = useProduct();
@@ -17,6 +19,21 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
   const [stockErrors, setStockErrors] = useState({});
   const [originalItems, setOriginalItems] = useState([]);
   const [hasStockErrors, setHasStockErrors] = useState(false);
+  
+  // 🔥 Obtener configuración del país de facturación (de la empresa) - IGUAL QUE INVOICECLASSIC
+  const countryCode = company?.invoiceSettings?.country || 'DE';
+  const countryConfig = COUNTRY_CONFIG[countryCode] || COUNTRY_CONFIG.DE;
+  
+  // 🔥 Obtener el nombre del impuesto según el país - IGUAL QUE INVOICECLASSIC
+  const taxName = countryConfig.taxName || 'MwSt';
+  
+  // 🔥 Obtener taxRate de la venta (solo lectura)
+  const taxRate = sale?.taxRate || company?.invoiceSettings?.taxRate || 19;
+  
+  // 🔥 Función para formatear moneda (igual que en InvoiceClassic)
+  const formatCurrency = (value) => {
+    return value?.toFixed(2) || '0.00';
+  };
 
   const currencySymbol = company?.currency || 'USD';
 
@@ -36,6 +53,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
       });
       
       setOriginalItems(mappedItems);
+      
       refreshProducts();
     }
   }, [sale]);
@@ -255,10 +273,8 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
           quantity: Number(item.quantity),
           unitPrice: Number(item.unitPrice),
         })),
-        tax: 10
+        taxRate: Number(taxRate) // Enviar taxRate existente (no editable)
       };
-      
-      // console.log("Updating sale with payload:", payload);
       
       const res = await updateSale(editableSale._id, payload);
       if (res.success) {
@@ -307,8 +323,10 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
   }
 
   const subtotal = editableSale.items.reduce((sum, i) => sum + i.quantity * i.unitPrice, 0);
-  const taxAmount = Number((subtotal * 0.10).toFixed(2));
-  const total = Number((subtotal + taxAmount).toFixed(2));
+  const discount = editableSale.discount || 0;
+  const taxableAmount = subtotal - discount;
+  const taxAmount = Number((taxableAmount * (taxRate / 100)).toFixed(2));
+  const total = Number((taxableAmount + taxAmount).toFixed(2));
 
   return (
     <div className={styles.modalBackdrop}>
@@ -452,7 +470,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
                           />
                         </td>
                         <td className={styles.totalColumn}>
-                          {(item.quantity * item.unitPrice).toFixed(2)} {currencySymbol}
+                          {formatCurrency(item.quantity * item.unitPrice)} {currencySymbol}
                         </td>
                         <td className={styles.actionsColumn}>
                           <button 
@@ -480,19 +498,28 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
             </button>
           </div>
 
-          {/* Totals */}
+          {/* 🔥 SECCIÓN DE TOTALES - IGUAL QUE INVOICECLASSIC */}
           <div className={styles.totalsSection}>
             <div className={styles.totalRow}>
               <span>{t('rechnungForm.totals.subtotal')}</span>
-              <span>{subtotal.toFixed(2)} {currencySymbol}</span>
+              <span>{formatCurrency(subtotal)} {currencySymbol}</span>
             </div>
+            
+            {discount > 0 && (
+              <div className={styles.totalRow}>
+                <span>{t('rechnungForm.totals.discount')}</span>
+                <span>-{formatCurrency(discount)} {currencySymbol}</span>
+              </div>
+            )}
+            
             <div className={styles.totalRow}>
-              <span>{t('rechnungForm.totals.tax')}</span>
-              <span>{taxAmount.toFixed(2)} {currencySymbol}</span>
+              <span>{taxName} {taxRate.toFixed(1)}%</span>
+              <span>{formatCurrency(taxAmount)} {currencySymbol}</span>
             </div>
+            
             <div className={`${styles.totalRow} ${styles.grandTotal}`}>
               <span>{t('rechnungForm.totals.total')}</span>
-              <span>{total.toFixed(2)} {currencySymbol}</span>
+              <span>{formatCurrency(total)} {currencySymbol}</span>
             </div>
           </div>
         </div>

@@ -7,13 +7,13 @@
       "scope": {
         "title": "1. Alcance",
         "paragraphs": [
-          "Estos Términos y Condiciones (T&C) se aplican a todos los contratos entre alpina GmbH (en adelante el \"Proveedor\") y los usuarios (en adelante los \"Clientes\") de la plataforma alpina.",
+          "Estos Términos y Condiciones (T&C) se aplican a todos los contratos entre Stocker GmbH (en adelante el \"Proveedor\") y los usuarios (en adelante los \"Clientes\") de la plataforma Stocker.",
           "La plataforma ofrece análisis basados en datos y apoyo en la toma de decisiones para empresas. Al registrarse o utilizar los servicios, los clientes aceptan estos Términos y Condiciones como vinculantes."
         ]
       },
       "description": {
         "title": "2. Descripción del servicio",
-        "intro": "alpina proporciona una plataforma basada en la nube con las siguientes funciones:",
+        "intro": "Stocker proporciona una plataforma basada en la nube con las siguientes funciones:",
         "items": [
           "Integración de datos de múltiples fuentes",
           "Análisis avanzado de datos y visualización",
@@ -89,7 +89,7 @@
     },
     "contact": {
       "title": "Contacto",
-      "company": "Alpina Systems AG",
+      "company": "Stocker Systems AG",
       "address": [
         "Hohlstrasse 405",
         "8048 Zúrich",

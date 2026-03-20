@@ -1,4 +1,4 @@
-/* frontend/components/adminDash/regnung/templateStyles/modern.module.css */
+/* frontend/components/dashboard/regnung/templateStyles/modern.module.css */
 
 .invoiceModern {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -173,7 +173,7 @@
   text-align: center;
 }
 
-.textRight {
+tr .textRight {
   text-align: right;
 }
 

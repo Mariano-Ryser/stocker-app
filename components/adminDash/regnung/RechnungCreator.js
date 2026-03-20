@@ -1,9 +1,10 @@
-// frontend/components/adminDash/regnung/RechnungCreator.jsx
+// frontend/components/dashboard/regnung/RechnungCreator.jsx
 import { useState, useRef, useEffect } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { useClients } from "../../../hooks/useClients";
 import { useProduct } from "../../../hooks/useProducts";
 import { useLanguage } from "../../../contexts/LanguageContext";
+import { COUNTRY_CONFIG } from '../../../utils/countryConfig';
 import styles from './Creator.module.css';
 
 export default function RechnungCreator({ onDone, salesApi }) {
@@ -21,7 +22,7 @@ export default function RechnungCreator({ onDone, salesApi }) {
   const { 
     products, 
     refreshProducts,
-    searchProductsInCache, // 👈 IMPORTANTE: usar la función de caché
+    searchProductsInCache,
     loading: productsLoading
   } = useProduct();
   
@@ -36,8 +37,23 @@ export default function RechnungCreator({ onDone, salesApi }) {
   const [stockErrors, setStockErrors] = useState({});
   const [hasStockErrors, setHasStockErrors] = useState(false);
   const [searchTimeouts, setSearchTimeouts] = useState({});
-  const [searchResults, setSearchResults] = useState({}); // 👈 Resultados por línea
-  const [isSearching, setIsSearching] = useState({}); // 👈 Estado de búsqueda por línea
+  const [searchResults, setSearchResults] = useState({});
+  const [isSearching, setIsSearching] = useState({});
+  
+  // 🔥 Obtener configuración del país de facturación (de la empresa) - IGUAL QUE INVOICECLASSIC
+  const countryCode = company?.invoiceSettings?.country || 'DE';
+  const countryConfig = COUNTRY_CONFIG[countryCode] || COUNTRY_CONFIG.DE;
+  
+  // 🔥 Obtener el nombre del impuesto según el país - IGUAL QUE INVOICECLASSIC
+  const taxName = countryConfig.taxName || 'MwSt';
+  
+  // 🔥 Obtener taxRate de la empresa - IGUAL QUE INVOICECLASSIC
+  const taxRate = company?.invoiceSettings?.taxRate || 19;
+  
+  // 🔥 Función para formatear moneda (igual que en InvoiceClassic)
+  const formatCurrency = (value) => {
+    return value?.toFixed(2) || '0.00';
+  };
   
   const currencySymbol = company?.currency || 'USD';
   const autocompleteRefs = useRef([]);
@@ -46,7 +62,6 @@ export default function RechnungCreator({ onDone, salesApi }) {
   // Cargar productos solo una vez al montar
   useEffect(() => {
     if (isAuthenticated && products.length === 0) {
-      // console.log("RechnungCreator: Fetching products on mount");
       refreshProducts();
     }
   }, [isAuthenticated, refreshProducts, products.length]);
@@ -113,19 +128,17 @@ export default function RechnungCreator({ onDone, salesApi }) {
     ).slice(0, 8);
   };
 
-  // 🔥 BÚSQUEDA RÁPIDA - similar al Scanner
+  // BÚSQUEDA RÁPIDA
   const handleProductSearch = async (index, value) => {
     setSearches(prev => prev.map((s, idx) => idx === index ? value : s));
     updateLine(index, { productId: "" });
     setShowAutocomplete(prev => prev.map((s, idx) => idx === index ? true : s));
     
     if (value.length >= 2) {
-      // Cancelar timeout anterior
       if (searchTimeouts[index]) {
         clearTimeout(searchTimeouts[index]);
       }
       
-      // Mostrar resultados inmediatos de memoria mientras llega la búsqueda
       const immediateResults = products.filter(p => {
         const name = p.artikelName?.toLowerCase() || "";
         const description = p.description?.toLowerCase() || "";
@@ -149,14 +162,11 @@ export default function RechnungCreator({ onDone, salesApi }) {
       
       const timeout = setTimeout(async () => {
         try {
-          // console.log(`🔍 Buscando: "${value}" en caché...`);
-          
-          // 🔥 Usar la función optimizada del hook (IndexedDB)
           const cachedResults = await searchProductsInCache(value);
           
           setSearchResults(prev => ({
             ...prev,
-            [index]: cachedResults.slice(0, 8) // Mostrar máximo 8 resultados
+            [index]: cachedResults.slice(0, 8)
           }));
           
         } catch (error) {
@@ -173,14 +183,13 @@ export default function RechnungCreator({ onDone, salesApi }) {
             return newTimeouts;
           });
         }
-      }, 300); // 300ms debounce
+      }, 300);
       
       setSearchTimeouts(prev => ({
         ...prev,
         [index]: timeout
       }));
     } else {
-      // Si menos de 2 caracteres, mostrar productos recientes
       const recentResults = products.slice(0, 5);
       setSearchResults(prev => ({
         ...prev,
@@ -190,12 +199,10 @@ export default function RechnungCreator({ onDone, salesApi }) {
   };
 
   const filteredProducts = (index) => {
-    // Usar resultados de búsqueda si existen
     if (searchResults[index]) {
       return searchResults[index];
     }
     
-    // Fallback: filtrado en memoria
     const query = searches[index]?.toLowerCase() || "";
     
     if (!query) {
@@ -277,7 +284,6 @@ export default function RechnungCreator({ onDone, salesApi }) {
         setShowAutocomplete(prev => prev.map((s, idx) => 
           idx === i ? false : s
         ));
-        // Limpiar resultados de búsqueda para esta línea
         setSearchResults(prev => {
           const newResults = { ...prev };
           delete newResults[i];
@@ -362,11 +368,12 @@ export default function RechnungCreator({ onDone, salesApi }) {
     setShowClientAutocomplete(true);
   };
 
-  const subtotal = Number(lines.reduce((sum, l) => sum + l.quantity * l.unitPrice, 0).toFixed(2));
-  
-  const TAX_RATE = 0.01;
-  const taxAmount = Number((subtotal * 0.01).toFixed(2));
-  const total = Number((subtotal + taxAmount).toFixed(2));
+  // Calcular totales con taxRate de la empresa
+  const subtotal = Number(lines.reduce((sum, l) => sum + (l.quantity * l.unitPrice), 0).toFixed(2));
+  const discount = 0; // Por ahora sin descuento
+  const taxableAmount = subtotal - discount;
+  const taxAmount = Number((taxableAmount * (taxRate / 100)).toFixed(2));
+  const total = Number((taxableAmount + taxAmount).toFixed(2));
 
   const submit = async () => {
     if (isSubmitting || !isAuthenticated) return;
@@ -420,17 +427,14 @@ export default function RechnungCreator({ onDone, salesApi }) {
         quantity: Number(item.quantity),
         unitPrice: Number(item.unitPrice)
       })),
-      status
+      status,
+      taxRate: Number(taxRate) // Enviar taxRate de la empresa
     };
     
-    // console.log("RechnungCreator: Submitting sale:", payload);
-
     try {
       const res = await createSale(payload);
 
       if (res.success && res.sale) {
-        // console.log("RechnungCreator: Sale created successfully");
-        
         if (typeof BroadcastChannel !== 'undefined') {
           try {
             const channel = new BroadcastChannel('dashboard_updates');
@@ -779,18 +783,28 @@ export default function RechnungCreator({ onDone, salesApi }) {
             </button>
           </div>
 
+          {/* 🔥 SECCIÓN DE TOTALES - IGUAL QUE INVOICECLASSIC */}
           <div className={styles.totalsSection}>
             <div className={styles.totalRow}>
               <span>{t('rechnungForm.totals.subtotal')}</span>
-              <span>{subtotal.toFixed(2)} {currencySymbol}</span>
+              <span>{formatCurrency(subtotal)} {currencySymbol}</span>
             </div>
+            
+            {discount > 0 && (
+              <div className={styles.totalRow}>
+                <span>{t('rechnungForm.totals.discount')}</span>
+                <span>-{formatCurrency(discount)} {currencySymbol}</span>
+              </div>
+            )}
+            
             <div className={styles.totalRow}>
-              <span>{t('rechnungForm.totals.tax')}</span>
-              <span>{taxAmount.toFixed(2)} {currencySymbol} </span>
+              <span>{taxName} {taxRate.toFixed(1)}%</span>
+              <span>{formatCurrency(taxAmount)} {currencySymbol}</span>
             </div>
+            
             <div className={`${styles.totalRow} ${styles.grandTotal}`}>
               <span>{t('rechnungForm.totals.total')}</span>
-              <span>{total.toFixed(2)} {currencySymbol}</span>
+              <span>{formatCurrency(total)} {currencySymbol}</span>
             </div>
           </div>
         </div>

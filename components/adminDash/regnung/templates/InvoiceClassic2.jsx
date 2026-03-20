@@ -1,4 +1,4 @@
-// frontend/components/adminDash/regnung/templates/InvoiceClassic2.jsx
+// frontend/components/dashboard/regnung/templates/InvoiceClassic2.jsx
 import React from 'react';
 import styles from '../templatesStyles/classic2.module.css';
 
@@ -174,7 +174,7 @@ export const InvoiceClassic2 = ({
 
       {/* Información del cliente */}
       <div className={getClassName('clientBox')}>
-        <div className={getClassName('clientTitle')}>{t('invoice.billTo')}</div>
+        <div className={getClassName('clientTitle')}>{t('invoice.customerRecipient')}</div>
         {companyName && <div className={getClassName('clientName')}>{companyName}</div>}
         {fullName && <div>{fullName}</div>}
         {addressParts.streetLine && <div className={getClassName('clientAddress')}>{addressParts.streetLine}</div>}

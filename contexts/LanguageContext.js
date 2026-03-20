@@ -33,6 +33,9 @@ const ALL_MODULES = [
   'homeHero',
   'index',
   'login',
+  'register',
+  'forgot-password',
+  'reset-password',
   'logoutButton',
   'privacy',
   'rechnungForm',
@@ -43,10 +46,13 @@ const ALL_MODULES = [
   'stockMovements',
   'terms',
   'uns',
+  'importExport',
   'invoice',
   'verkaufteArtikel',
   'wareneigang',
   'ceo',
+  'pricing',
+
 ];
 
 export const LanguageProvider = ({ children }) => {

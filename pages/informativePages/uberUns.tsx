@@ -43,7 +43,7 @@ const UberUns = () => {
             alt="Professional team"
             fill
             priority
-            className={styles.heroImage}
+            className={styles.heroImage} 
             sizes="100vw"
             quality={90}
           />
@@ -66,7 +66,7 @@ const UberUns = () => {
         {/* PRIMERA IMAGEN AGREGADA */}
         <div className={styles.sectionImage}>
           <Image
-            src="/img/stapler.webp" 
+            src="/img/wharehouse.png" 
             alt="Equipo trabajando"
             width={800}
             height={400}
@@ -107,7 +107,7 @@ const UberUns = () => {
         {/* SEGUNDA IMAGEN AGREGADA */}
         <div className={styles.sectionImage}>
           <Image
-            src="/img/alpinaYo.webp" /* CAMBIA ESTA RUTA */
+            src="/img/stapler.webp" /* CAMBIA ESTA RUTA */
             alt="Oficina moderna"
             width={800}
             height={400}

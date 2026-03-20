@@ -1,8 +1,9 @@
+// pages/register/index.tsx
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../components/auth/AuthProvider";
+import { useLanguage } from "../../contexts/LanguageContext";
 import styles from "./register.module.css";
-// import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
@@ -15,6 +16,8 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   
+  const { t } = useLanguage();
+  
   // Estados para validación de contraseña en tiempo real
   const [passwordErrors, setPasswordErrors] = useState({
     minLength: false,
@@ -25,12 +28,7 @@ export default function RegisterPage() {
   
   const router = useRouter();
   const auth = useAuth();
-    // const {t, loadModule} = useLanguage();
-    
-    // useEffect(() => { 
-    //   loadModule('register');
-    // }, [loadModule]);
-    
+  
   // Validación en tiempo real de la contraseña
   useEffect(() => {
     const errors = {
@@ -46,39 +44,34 @@ export default function RegisterPage() {
     return (
       <div className={styles.loadingContainer}>
         <div className={styles.loader}></div>
-        <p>Laden...</p>
+        <p>{t('register.loading')}</p>
       </div>
     );
-  } 
+  }
 
   const validateForm = () => {
-    // Validar que las contraseñas coincidan
     if (password !== confirmPassword) {
-      setError("Passwörter stimmen nicht überein");
+      setError(t('register.errors.passwordMismatch'));
       return false;
     }
     
-    // Validar longitud mínima
     if (password.length < 6) {
-      setError("Passwort muss mindestens 6 Zeichen lang sein");
+      setError(t('register.errors.passwordMinLength'));
       return false;
     }
     
-    // Validar letra mayúscula
     if (!/[A-Z]/.test(password)) {
-      setError("Passwort muss mindestens einen Großbuchstaben enthalten");
+      setError(t('register.errors.passwordUpperCase'));
       return false;
     }
     
-    // Validar número
     if (!/\d/.test(password)) {
-      setError("Passwort muss mindestens eine Zahl enthalten");
+      setError(t('register.errors.passwordNumber'));
       return false;
     }
     
-    // Validar términos
     if (!termsAccepted) {
-      setError("Bitte akzeptieren Sie die Nutzungsbedingungen");
+      setError(t('register.errors.termsRequired'));
       return false;
     }
     
@@ -95,20 +88,20 @@ export default function RegisterPage() {
       setLoading(false);
       return;
     }
+    
     try {
-      const result = await auth.register(email, password, name);
+      const result = await auth.register(email, password, name, company);
       if (result.success) {
-        setSuccess("Registrierung erfolgreich! Weiterleitung...");
+        setSuccess(t('register.success'));
         setTimeout(() => {
-          router.push("/adminDash");
+          router.push("/dashboard");
         }, 1500);
       } else {
-        setError(result.error || "Fehler bei der Registrierung");
-        console.log(error)
+        setError(result.error || t('register.errors.registrationFailed'));
       }
     } catch (err: any) {
       console.error('Register error:', err);
-      setError(err.message || "Verbindungsfehler mit dem Server");
+      setError(err.message || t('register.errors.connectionError'));
     } finally {
       setLoading(false);
     }
@@ -125,11 +118,8 @@ export default function RegisterPage() {
             alt="Alpina Logo" 
             className={styles.companyLogo}
           />
-          <h1 className={styles.companyName}>Werden Sie Teil von Alpina</h1>
-          <p className={styles.companySlogan}>
-            Schließen Sie sich unserer Community erfolgreicher Unternehmen an
-          </p>
-         
+          <h1 className={styles.companyName}>{t('register.welcome')}</h1>
+          <p className={styles.companySlogan}>{t('register.subtitle')}</p>
         </div>
       </div>
 
@@ -137,10 +127,8 @@ export default function RegisterPage() {
       <div className={styles.formSection}>
         <div className={styles.formContainer}>
           <div className={styles.formHeader}>
-            <h2 className={styles.welcomeTitle}>Neues Konto erstellen</h2>
-            <p className={styles.welcomeSubtitle}>
-              Registrieren Sie sich für den Zugang zur Alpina Plattform
-            </p>
+            <h2 className={styles.welcomeTitle}>{t('register.title')}</h2>
+            <p className={styles.welcomeSubtitle}>{t('register.formTitle')}</p>
           </div>
 
           <form onSubmit={handleSubmit} className={styles.registerForm}>
@@ -168,7 +156,7 @@ export default function RegisterPage() {
                   <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clipRule="evenodd" />
                   </svg>
-                  Vollständiger Name *
+                  {t('register.name.label')}
                 </label>
                 <input
                   id="name"
@@ -176,12 +164,11 @@ export default function RegisterPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   className={styles.inputField}
-                  placeholder="Max Mustermann"
+                  placeholder={t('register.name.placeholder')}
                   required
                   disabled={loading}
                 />
               </div>
-
             </div>
 
             <div className={styles.inputGroup}>
@@ -190,7 +177,7 @@ export default function RegisterPage() {
                   <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
                   <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
                 </svg>
-                Geschäfts-E-Mail *
+                {t('register.email.label')}
               </label>
               <input
                 id="email"
@@ -198,7 +185,7 @@ export default function RegisterPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className={styles.inputField}
-                placeholder="ihre@unternehmen.de"
+                placeholder={t('register.email.placeholder')}
                 required
                 disabled={loading}
               />
@@ -210,7 +197,7 @@ export default function RegisterPage() {
                   <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
-                  Passwort *
+                  {t('register.password.label')}
                 </label>
                 <input
                   id="password"
@@ -218,12 +205,12 @@ export default function RegisterPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   className={styles.inputField}
-                  placeholder="••••••••"
+                  placeholder={t('register.password.placeholder')}
                   required
                   disabled={loading}
                 />
                 <div className={styles.passwordHint}>
-                  Wird beim Tippen validiert
+                  {t('register.password.hint')}
                 </div>
               </div>
 
@@ -232,7 +219,7 @@ export default function RegisterPage() {
                   <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                   </svg>
-                  Passwort bestätigen *
+                  {t('register.confirmPassword.label')}
                 </label>
                 <input
                   id="confirmPassword"
@@ -240,64 +227,64 @@ export default function RegisterPage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   className={styles.inputField}
-                  placeholder="••••••••"
+                  placeholder={t('register.confirmPassword.placeholder')}
                   required
                   disabled={loading}
                 />
                 <div className={styles.passwordHint}>
                   {confirmPassword && password !== confirmPassword ? (
-                    <span className={styles.passwordMismatch}>Passwörter stimmen nicht überein</span>
+                    <span className={styles.passwordMismatch}>{t('register.confirmPassword.mismatch')}</span>
                   ) : confirmPassword && password === confirmPassword ? (
-                    <span className={styles.passwordMatch}>✓ Passwörter stimmen überein</span>
+                    <span className={styles.passwordMatch}>{t('register.confirmPassword.match')}</span>
                   ) : (
-                    "Muss mit Passwort übereinstimmen"
+                    t('register.confirmPassword.hint')
                   )}
                 </div>
               </div>
             </div>
 
             <div className={styles.passwordRequirements}>
-              <h4>Passwortanforderungen:</h4>
+              <h4>{t('register.requirements.title')}</h4>
               <ul>
                 <li className={passwordErrors.minLength ? styles.requirementMet : styles.requirementNotMet}>
                   <span className={styles.requirementIcon}>
                     {passwordErrors.minLength ? "✓" : "○"}
                   </span>
-                  Mindestens 6 Zeichen
+                  {t('register.requirements.minLength')}
                 </li>
                 <li className={passwordErrors.hasUpperCase ? styles.requirementMet : styles.requirementNotMet}>
                   <span className={styles.requirementIcon}>
                     {passwordErrors.hasUpperCase ? "✓" : "○"}
                   </span>
-                  Mindestens ein Großbuchstabe (A-Z)
+                  {t('register.requirements.upperCase')}
                 </li>
                 <li className={passwordErrors.hasNumber ? styles.requirementMet : styles.requirementNotMet}>
                   <span className={styles.requirementIcon}>
                     {passwordErrors.hasNumber ? "✓" : "○"}
                   </span>
-                  Mindestens eine Zahl (0-9)
+                  {t('register.requirements.number')}
                 </li>
                 <li className={passwordErrors.hasSpecialChar ? styles.requirementMet : styles.requirementNotMet}>
                   <span className={styles.requirementIcon}>
                     {passwordErrors.hasSpecialChar ? "✓" : "○"}
                   </span>
-                  Optional: Sonderzeichen (!@#$%^&*)
+                  {t('register.requirements.specialChar')}
                 </li>
               </ul>
               
               <div className={styles.passwordStrength}>
                 <div className={styles.strengthLabel}>
-                  Passwortstärke:
+                  {t('register.strength.label')}
                   <span className={
                     password.length === 0 ? styles.strengthNone :
                     password.length < 6 ? styles.strengthWeak :
                     !passwordErrors.hasUpperCase || !passwordErrors.hasNumber ? styles.strengthMedium :
                     styles.strengthStrong
                   }>
-                    {password.length === 0 ? " Keine Eingabe" :
-                     password.length < 6 ? " Schwach" :
-                     !passwordErrors.hasUpperCase || !passwordErrors.hasNumber ? " Mittel" :
-                     " Stark"}
+                    {password.length === 0 ? t('register.strength.none') :
+                     password.length < 6 ? t('register.strength.weak') :
+                     !passwordErrors.hasUpperCase || !passwordErrors.hasNumber ? t('register.strength.medium') :
+                     t('register.strength.strong')}
                   </span>
                 </div>
                 <div className={styles.strengthMeter}>
@@ -330,7 +317,10 @@ export default function RegisterPage() {
                 className={styles.termsCheckbox}
               />
               <label htmlFor="terms" className={styles.termsLabel}>
-                Ich stimme den{" "}
+                {/* CORREGIDO: Usar termsSection en lugar de terms */}
+                {t('register.termsSection.text')
+                  .replace('{termsLink}', '')
+                  .replace('{privacyLink}', '')}
                 <span
                   className={styles.termsLink}
                   onClick={(e) => {
@@ -338,9 +328,9 @@ export default function RegisterPage() {
                     router.push("/informativePages/termsPage");
                   }}
                 >
-                  Nutzungsbedingungen
-                </span>{" "}
-                und der{" "}
+                  {t('register.termsSection.termsLabel')}
+                </span>
+                {" und der "}
                 <span
                   className={styles.termsLink}
                   onClick={(e) => {
@@ -348,9 +338,9 @@ export default function RegisterPage() {
                     router.push("/informativePages/privacyPage");
                   }}
                 >
-                  Datenschutzerklärung
-                </span>{" "}
-                zu *
+                  {t('register.termsSection.privacyLabel')}
+                </span>
+                {" *"}
               </label>
             </div>
 
@@ -362,25 +352,34 @@ export default function RegisterPage() {
               {loading ? (
                 <>
                   <span className={styles.buttonSpinner}></span>
-                  Wird registriert...
+                  {t('register.button.registering')}
                 </>
               ) : (
-                "Konto erstellen"
+                t('register.button.register')
               )}
             </button>
 
             <div className={styles.divider}>
-              <span> <svg className={styles.googleIcon} viewBox="0 0 24 24">
+              <span>oder</span>
+            </div>
+
+            <button
+              type="button"
+              className={styles.googleButton}
+              onClick={() => {}}
+              disabled={loading}
+            >
+              <svg className={styles.googleIcon} viewBox="0 0 24 24">
                 <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
                 <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg></span>
-            </div>
-
+              </svg>
+              {/* {t('register.google')} */}
+            </button>
 
             <div className={styles.loginLink}>
-              Bereits ein Konto?{" "}
+              {t('register.loginSection.prompt')}{" "}
               <span
                 onClick={() => router.push("/login")}
                 onKeyDown={(e) => {
@@ -389,23 +388,17 @@ export default function RegisterPage() {
                 tabIndex={0}
                 role="link"
               >
-                Zur Anmeldung
+                {t('register.loginSection.link')}
               </span>
             </div>
-
-            {/* <div className={styles.supportInfo}>
-              Bei Fragen oder Problemen kontaktieren Sie unseren Support:{" "}
-              <a href="mailto:rysermariano@gmail.com" className={styles.supportLink}>
-                rysermariano@gmail.com
-              </a>
-            </div> */}
           </form>
 
           <div className={styles.copyright}>
-            © {new Date().getFullYear()} Alpina. Alle Rechte vorbehalten.
+            {t('register.copyright').replace('{year}', new Date().getFullYear().toString())}
             <br />
             <span className={styles.terms}>
-              <a href="/privacy">Datenschutz</a> | <a href="/terms">Nutzungsbedingungen</a>
+              {/* CORREGIDO: Usar los strings directamente */}
+              <a href="/privacy">{t('register.privacy')}</a> | <a href="/terms"> {t('register.terms')} </a>
             </span>
           </div>
         </div>

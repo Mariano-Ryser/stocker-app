@@ -7,14 +7,14 @@ export function preloadDashboardOnce() {
   hasPreloaded = true;
   
   const dashboardPages = [
-    '/adminDash/artikel',
-    '/adminDash/wareneigang',
+    '/dashboard/artikel',
+    '/dashboard/wareneigang',
     
-    '/adminDash/stockMovements',
-    '/adminDash/clients',
-    '/adminDash/regnung',
-    '/adminDash/scanner',
-    '/adminDash/settings',
+    '/dashboard/stockMovements',
+    '/dashboard/clients',
+    '/dashboard/regnung',
+    '/dashboard/scanner',
+    '/dashboard/settings',
   ];
   
   console.log('🚀 ...');

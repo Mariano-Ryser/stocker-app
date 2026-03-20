@@ -1,6 +1,6 @@
-// frontend/components/adminDash/regnung/templates/InvoiceClassic.jsx
 import styles from '../templatesStyles/classic.module.css'
 import React from 'react';
+import { COUNTRY_CONFIG } from '../../../../utils/countryConfig';
 
 export const InvoiceClassic = ({  
   sale, 
@@ -10,7 +10,6 @@ export const InvoiceClassic = ({
   formatCurrency,
   calculateLineTotals,
   companyInfo,
-  taxRate, 
   isPrintVersion = false,
   t
 }) => {
@@ -20,24 +19,100 @@ export const InvoiceClassic = ({
   const total = safeSale.total || 0;
   const tax = safeSale.tax || 0;
   const discount = safeSale.discount || 0;
+  
+
+  // Obtener configuración del país de facturación (de la empresa)
+  const countryCode = company?.invoiceSettings?.country || 'DE';
+  const countryConfig = COUNTRY_CONFIG[countryCode] || COUNTRY_CONFIG.DE;
+  
+  // 🔥 Obtener el nombre del impuesto según el país
+  const taxName = countryConfig.taxName || 'MwSt';
+  
+  // El taxRate puede venir de la venta o de la empresa
+  const taxRate = safeSale.taxRate || company?.invoiceSettings?.taxRate || 19;
+
+  // Función para obtener el pie de factura legal según el país
+  const getLegalFooter = () => {
+    if (!company?.taxInfo) return null;
+    
+    const footerLines = [];
+    
+    switch(countryCode) {
+      case 'DE':
+        if (company.taxInfo.steuernummer) {
+          footerLines.push(`Steuernummer: ${company.taxInfo.steuernummer}`);
+        }
+        if (company.taxInfo.ustId) {
+          footerLines.push(`USt-IdNr.: ${company.taxInfo.ustId}`);
+        }
+        if (company.taxInfo.companyRegister) {
+          footerLines.push(`Handelsregister: ${company.taxInfo.companyRegister}`);
+        }
+        break;
+        
+      case 'CH':
+        if (company.taxInfo.uid) {
+          footerLines.push(`UID: ${company.taxInfo.uid}`);
+        }
+        if (company.taxInfo.vatNumber) {
+          footerLines.push(`MWST-Nr.: ${company.taxInfo.vatNumber}`);
+        }
+        if (company.taxInfo.companyRegister) {
+          footerLines.push(`Handelsregister: ${company.taxInfo.companyRegister}`);
+        }
+        break;
+        
+      case 'ES':
+        if (company.taxInfo.nif) {
+          footerLines.push(`NIF: ${company.taxInfo.nif}`);
+        }
+        break;
+        
+      case 'AR':
+        if (company.taxInfo.cuit) {
+          footerLines.push(`CUIT: ${company.taxInfo.cuit}`);
+        }
+        if (company.taxInfo.ingresosBrutos) {
+          footerLines.push(`Ingresos Brutos: ${company.taxInfo.ingresosBrutos}`);
+        }
+        if (company.taxInfo.condicionIva) {
+          const ivaText = {
+            'responsableInscripto': 'Responsable Inscripto',
+            'monotributo': 'Monotributista',
+            'exento': 'Exento',
+            'consumidorFinal': 'Consumidor Final'
+          }[company.taxInfo.condicionIva] || company.taxInfo.condicionIva;
+          footerLines.push(`Condición IVA: ${ivaText}`);
+        }
+        break;
+        
+      default:
+        if (company.taxInfo.taxId) {
+          footerLines.push(`${countryConfig.taxIdLabel}: ${company.taxInfo.taxId}`);
+        }
+        if (company.taxInfo.vatNumber) {
+          footerLines.push(`${countryConfig.vatLabel || 'VAT'}: ${company.taxInfo.vatNumber}`);
+        }
+    }
+    
+    return footerLines;
+  };
 
   // Función para obtener las partes de la dirección por separado
   const getAddressParts = (client) => {
     if (!client) return { streetLine: null, cityLine: null, country: null };
     
-    // Si tiene address estructurado
     if (client.address) {
-      // Calle + número
       const streetParts = [];
       if (client.address.street) streetParts.push(client.address.street);
       if (client.address.number) streetParts.push(client.address.number);
       if (client.address.complement) streetParts.push(client.address.complement);
       const streetLine = streetParts.length > 0 ? streetParts.join(' ') : null;
       
-      // Código postal + ciudad
       const cityParts = [];
       if (client.address.postalCode) cityParts.push(client.address.postalCode);
       if (client.address.city) cityParts.push(client.address.city);
+      if (client.address.state) cityParts.push(client.address.state);
       const cityLine = cityParts.length > 0 ? cityParts.join(' ') : null;
       
       const country = client.address.country || null;
@@ -45,7 +120,6 @@ export const InvoiceClassic = ({
       return { streetLine, cityLine, country };
     }
     
-    // Si tiene adresse plano (para compatibilidad)
     if (client.adresse) {
       const parts = client.adresse.split(',').map(p => p.trim());
       const streetLine = parts[0] || null;
@@ -58,7 +132,6 @@ export const InvoiceClassic = ({
     return { streetLine: null, cityLine: null, country: null };
   };
 
-  // Función para obtener el nombre de la empresa
   const getCompanyName = (client) => {
     if (!client) return null;
     return client.company || 
@@ -69,7 +142,6 @@ export const InvoiceClassic = ({
            null;
   };
 
-  // Función para obtener el nombre completo
   const getFullName = (client) => {
     if (!client) return '';
     
@@ -83,13 +155,6 @@ export const InvoiceClassic = ({
     return client.clientName || '';
   };
 
-  // Función para obtener el email
-  const getEmail = (client) => {
-    if (!client) return null;
-    return client.email || client.mail || null;
-  };
-
-  // Función para obtener el teléfono
   const getPhone = (client) => {
     if (!client) return null;
     return client.phone || client.tel || client.telefon || null;
@@ -113,35 +178,31 @@ export const InvoiceClassic = ({
         final: 'final',
         footer: 'footer',
         bankDetails: 'bank-details',
-        bankRow: 'bank-row'
+        bankRow: 'bank-row',
+        legalInfo: 'legal-info'
       };
       return classMap[element] || '';
     }
     return styles[element] || '';
   };
 
-  // Obtener datos del cliente
   const client = safeSale.clientSnapshot || safeSale.client || {};
-  
-  // Extraer toda la información
   const fullName = getFullName(client);
   const companyName = getCompanyName(client);
-  const email = getEmail(client);
   const phone = getPhone(client);
   const addressParts = getAddressParts(client);
 
-  // Función para formatear IBAN para mostrar (con espacios cada 4 caracteres)
   const formatIBANForDisplay = (iban) => {
     if (!iban) return '';
-    // Si ya viene formateado, lo dejamos igual
     if (iban.includes(' ')) return iban;
-    // Si no, lo formateamos en grupos de 4
     return iban.replace(/(.{4})/g, '$1 ').trim();
   };
 
+  const legalFooter = getLegalFooter();
+
   return (
     <div className={getClassName('invoiceClassic')}>
-      {/* Header con borde clásico */}
+      {/* Header */}
       <div className={getClassName('header')}>
         <div className={getClassName('companySection')}>
           {company.logo && (
@@ -150,59 +211,36 @@ export const InvoiceClassic = ({
           <h1>{company.name}</h1>
           <p>{formatAddress(company.address)}</p>
           <p>Tel: {company.phone} | Email: {company.email}</p>
+          {company.website && <p>{company.website}</p>}
         </div>
         
         <div className={getClassName('invoiceInfo')}>
-          <h2>{t('invoice.invoice')}</h2>
+          <h3>{t('invoice.invoice')}</h3> 
           <p>{t('invoice.invoiceNumber')} {safeSale.lieferschein || '–'}</p>
           <p>{t('invoice.date')} {formatDate(safeSale.createdAt)}</p>
           <p>{t('invoice.dueDate')} {formatDate(safeSale.createdAt, 30)}</p>
         </div>
       </div>
 
-      {/* Línea decorativa */}
       <div className={getClassName('divider')}></div>
 
-      {/* Cliente - Con dirección por partes */}
+      {/* Cliente */}
       <div className={getClassName('clientBox')}>
         <h3>{t('invoice.customerRecipient')}</h3>
         
-        {/* Empresa (si existe) - PRIMERO */}
-        {companyName && (
-          <p><strong>{companyName}</strong></p>
-        )}
-        
-        {/* Calle + número (si existe) */}
-        {addressParts.streetLine && (
-          <p>{addressParts.streetLine}</p>
-        )}
-        
-        {/* Código postal + ciudad (si existe) */}
-        {addressParts.cityLine && (
-          <p>{addressParts.cityLine}</p>
-        )}
-        
-        {/* País (si existe) */}
-        {addressParts.country && (
-          <p>{addressParts.country}</p>
-        )}
-        
-        {/* Nombre completo - DESPUÉS de la dirección */}
+        {companyName && <p><strong>{companyName}</strong></p>}
+        {addressParts.streetLine && <p>{addressParts.streetLine}</p>}
+        {addressParts.cityLine && <p>{addressParts.cityLine}</p>}
+        {addressParts.country && <p>{addressParts.country}</p>}
         {fullName && <p><strong>{fullName}</strong></p>}
-        
-        {/* Teléfono (si existe) */}
         {phone && <p>Tel: {phone}</p>}
         
-        {/* Email (si existe) - OPCIONAL */}
-        {/* {email && <p>Email: {email}</p>} */}
-        
-        {/* Si no hay ningún dato, mostrar mensaje por defecto */}
         {!fullName && !companyName && !phone && !addressParts.streetLine && (
           <p>–</p>
         )}
       </div>
 
-      {/* Tabla con estilo clásico */}
+      {/* Tabla */}
       <table className={getClassName('table')}>
         <thead>
           <tr>
@@ -237,36 +275,59 @@ export const InvoiceClassic = ({
       <div className={getClassName('totals')}>
         <div className={getClassName('totalRow')}>
           <span>{t('invoice.totals.subtotal')}</span>
-          <span>{formatCurrency(subtotal)} {company.currency}</span>
+          <span>{formatCurrency(subtotal)} {company.currency}</span> 
         </div>
+    
         {discount > 0 && (
           <div className={getClassName('totalRow')}>
             <span>{t('invoice.totals.discount')}</span>
-            <span>-{formatCurrency(discount)} {company.currency}</span>
+            {/* aqui mostramos el descuento */}
+            <span>-{formatCurrency(discount)} {company.currency}</span> 
           </div>
         )}
+
+        {/* 🔥 Usamos la traducción con taxName y taxRate */}
         <div className={getClassName('totalRow')}>
-          <span>{t('invoice.totals.tax').replace('{rate}', (taxRate * 100).toFixed(1))}</span>
+          <span>
+               <span>{taxName} {taxRate.toFixed(1)}%</span>
+          </span>
           <span>{formatCurrency(tax)} {company.currency}</span>
         </div>
+        
         <div className={`${getClassName('totalRow')} ${getClassName('final')}`}>
           <span>{t('invoice.totals.total')}</span>
           <span>{formatCurrency(total)} {company.currency}</span>
         </div>
       </div>
 
-      {/* Footer con datos bancarios - VERSIÓN CORREGIDA */}
+      {/* Footer con datos bancarios y fiscales */}
       <div className={getClassName('footer')}>
-   
+        {/* Datos bancarios */}
+        {company.bankDetails && (
+          <div className={getClassName('bankSection')}>
+            <p className={getClassName('bankInfoLine')}>
+              {company.bankDetails.bankName && <span>{company.bankDetails.bankName}</span>}
+              {company.bankDetails.accountHolder && (
+                <span> | {company.bankDetails.accountHolder}</span>
+              )}
+              {company.bankDetails.iban && (
+                <span> | IBAN: <span className={getClassName('ibanCompact')}>
+                  {formatIBANForDisplay(company.bankDetails.iban)}
+                </span></span>
+              )}
+              {company.bankDetails.bic && <span> | BIC: {company.bankDetails.bic}</span>}
+            </p>
+          </div>
+        )}
 
-  <p className={getClassName('bankInfoLine')}>
-
-      {company.bankDetails.bankName && <span>{company.bankDetails.bankName}</span>}
-      {company.bankDetails.iban && (
-        <span> | IBAN: <span className={getClassName('ibanCompact')}>{formatIBANForDisplay(company.bankDetails.iban)}</span></span>
-      )}
-      {company.bankDetails.bic && <span> | BIC: {company.bankDetails.bic}</span>}
-    </p>
+        {/* Información fiscal legal según país */}
+        {legalFooter && legalFooter.length > 0 && (
+          <div className={getClassName('legalInfo')}>
+            {legalFooter.map((line, idx) => (
+              <p key={idx} className={getClassName('legalLine')}>{line}</p>
+            ))}
+          </div>
+        )}
 
         <p className={getClassName('thanks')}>{t('invoice.thanks')}</p>
       </div>

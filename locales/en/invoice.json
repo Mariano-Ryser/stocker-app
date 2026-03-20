@@ -38,7 +38,7 @@
     "totals": {
       "subtotal": "Subtotal:",
       "discount": "Discount:",
-      "tax": "VAT ({rate}%):",
+      "tax": "{taxName} {rate}%",
       "total": "Total:"
     },
     "ticket": {

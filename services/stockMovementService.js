@@ -63,13 +63,15 @@ export async function createStockMovement(movementData) {
   }
 }
 
-// Obtener movimientos con filtros
+// services/stockMovementService.js (ya está bien, solo confirmar)
 export async function getStockMovements(params = {}) {
   try {
     const queryParams = new URLSearchParams();
     
     Object.entries(params).forEach(([key, value]) => {
-      if (value) queryParams.append(key, value);
+      if (value !== undefined && value !== null && value !== '') {
+        queryParams.append(key, value);
+      }
     });
 
     const API_URL = `${getApiUrl('/stock-movements')}?${queryParams.toString()}`;
@@ -79,33 +81,19 @@ export async function getStockMovements(params = {}) {
       headers: getAuthHeaders()
     });
 
-    // console.log('📥 Respuesta status:', res.status);
-
-    let responseData;
-    const contentType = res.headers.get('content-type');
-    
-    if (contentType && contentType.includes('application/json')) {
-      responseData = await res.json();
-    } else {
-      const text = await res.text();
-      // console.log('📥 Respuesta texto:', text);
-      responseData = { movements: [], pagination: { total: 0, pages: 1 } };
-    }
-
     if (!res.ok) {
       if (res.status === 401) {
-        // console.log('🔒 No autorizado, redirigiendo a login...');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
-        return;
+        return { movements: [], pagination: { total: 0, pages: 1 } };
       }
       
-      console.error('❌ Error en respuesta:', responseData);
-      throw new Error(responseData.message || responseData.error || 'Error al obtener movimientos');
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || errorData.error || 'Error al obtener movimientos');
     }
 
-    return responseData;
+    return await res.json();
   } catch (error) {
     console.error('❌ Error en getStockMovements:', error);
     throw error;

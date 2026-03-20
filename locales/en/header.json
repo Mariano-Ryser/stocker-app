@@ -1,6 +1,6 @@
 {
    "header": {
-    "adminDash": "Admin Panel",
+    "dashboard": "Admin Panel",
     "login": "Login",
     "logout": "Logout",
     "register": "Register"

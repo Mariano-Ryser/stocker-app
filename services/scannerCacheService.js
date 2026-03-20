@@ -1,302 +1,302 @@
 // services/scannerCacheService.js - VERSIÓN COMPLETA
 class ScannerCacheService {
   constructor() {
-    this.DB_NAME = 'ScannerCache';
-    this.STORE_NAME = 'products';
-    this.DB_VERSION = 3; // ¡INCREMENTAR A 3 por el nuevo método!
-    this.CACHE_DURATION = 30 * 60 * 1000; // 30 minutos
+    this.dbName = 'scannerCache';
+    this.dbVersion = 3;
     this.db = null;
     this.initPromise = null;
   }
 
-  // Inicializar base de datos (una sola vez)
-  async initDB() {
+  async getDB() {
     if (this.db) return this.db;
     
-    // Si ya estamos inicializando, esperar esa promesa
     if (this.initPromise) return this.initPromise;
-
+    
     this.initPromise = new Promise((resolve, reject) => {
-      const request = indexedDB.open(this.DB_NAME, this.DB_VERSION);
-
+      const request = indexedDB.open(this.dbName, this.dbVersion);
+      
       request.onerror = () => {
-        console.error('Error opening IndexedDB:', request.error);
+        console.error('Error opening IndexedDB');
         reject(request.error);
       };
-
+      
       request.onsuccess = () => {
         this.db = request.result;
-        // console.log('✅ IndexedDB connected');
         resolve(this.db);
       };
-
+      
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
         
-        // Eliminar store antigua si existe
-        if (db.objectStoreNames.contains(this.STORE_NAME)) {
-          db.deleteObjectStore(this.STORE_NAME);
+        if (db.objectStoreNames.contains('products')) {
+          db.deleteObjectStore('products');
         }
         
-        // Crear nuevo store con índices
-        const store = db.createObjectStore(this.STORE_NAME, { 
-          keyPath: '_id' 
-        });
-        
-        // Crear índices para búsqueda rápida
+        const store = db.createObjectStore('products', { keyPath: 'id' });
+        store.createIndex('companyId', 'companyId', { unique: false });
+        store.createIndex('artikelNumber', 'artikelNumber', { unique: false });
         store.createIndex('artikelName', 'artikelName', { unique: false });
-        store.createIndex('artikelNumber', 'artikelNumber', { unique: true });
-        store.createIndex('byTimestamp', 'cachedAt', { unique: false });
-        
-        // console.log('🆕 IndexedDB store created');
+        store.createIndex('timestamp', 'timestamp', { unique: false });
       };
     });
-
+    
     return this.initPromise;
   }
 
-  // Guardar productos en caché
-  async cacheProducts(products) {
+  // ✅ NUEVO: Limpiar todo el caché
+  async clearAllCache() {
     try {
-      const db = await this.initDB();
-      const tx = db.transaction(this.STORE_NAME, 'readwrite');
-      const store = tx.objectStore(this.STORE_NAME);
+      const db = await this.getDB();
+      const tx = db.transaction('products', 'readwrite');
+      const store = tx.objectStore('products');
       
-      const timestamp = Date.now();
-      let count = 0;
+      await store.clear();
+      await tx.complete;
       
-      // Usar put en lugar de add para sobrescribir
-      for (const product of products) {
-        const productWithMeta = {
-          ...product,
-          cachedAt: timestamp,
-          // Guardar solo lo necesario para escáner
-          _id: product._id,
-          artikelName: product.artikelName,
-          artikelNumber: product.artikelNumber,
-          price: product.price || 0,
-          stock: product.stock || 0
-        };
-        
-        await store.put(productWithMeta);
-        count++;
-      }
-      
-      // Eliminar timestamp anterior
-      localStorage.removeItem('scanner_cache_timestamp');
-      
-      return new Promise((resolve, reject) => {
-        tx.oncomplete = () => {
-          // console.log(`✅ Caché actualizado: ${count} productos`);
-          resolve(count);
-        };
-        tx.onerror = () => reject(tx.error);
-      });
+      console.log('🧹 Caché de IndexedDB limpiado completamente');
+      return { success: true };
     } catch (error) {
-      console.error('Error caching products:', error);
-      return 0;
+      console.error('Error limpiando caché:', error);
+      return { success: false };
     }
   }
 
-  // Obtener productos del caché
-  async getCachedProducts(forceRefresh = false) {
+  // ✅ NUEVO: Limpiar caché de una empresa específica
+  async clearCompanyCache(companyId) {
     try {
-      const db = await this.initDB();
-      const tx = db.transaction(this.STORE_NAME, 'readonly');
-      const store = tx.objectStore(this.STORE_NAME);
+      if (!companyId) return { success: false };
+
+      const db = await this.getDB();
+      const tx = db.transaction('products', 'readwrite');
+      const store = tx.objectStore('products');
+      const index = store.index('companyId');
       
-      // Obtener todos los productos
-      const products = await new Promise((resolve, reject) => {
-        const request = store.getAll();
+      const range = IDBKeyRange.only(String(companyId));
+      
+      const keys = await new Promise((resolve, reject) => {
+        const request = index.getAllKeys(range);
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
       });
       
-      if (products.length === 0) {
-        return { products: [], fromCache: false };
-      }
+      keys.forEach(key => {
+        store.delete(key);
+      });
       
-      // Verificar si algún producto está expirado
-      const oldestCache = Math.min(...products.map(p => p.cachedAt || 0));
-      const cacheAge = Date.now() - oldestCache;
-      const isValid = cacheAge < this.CACHE_DURATION && !forceRefresh;
-      
-      if (!isValid && products.length > 0) {
-        // console.log('🔄 Caché expirado, necesita recarga');
-        return { products: [], fromCache: false };
-      }
-      
-      // console.log(`📦 Usando caché: ${products.length} productos (${Math.round(cacheAge/1000/60)} minutos)`);
-      return { products, fromCache: true };
-      
+      await tx.complete;
+      console.log(`🧹 Caché de empresa ${companyId} limpiado (${keys.length} registros)`);
+      return { success: true, deletedCount: keys.length };
     } catch (error) {
-      console.error('Error getting cached products:', error);
+      console.error('Error limpiando caché de empresa:', error);
+      return { success: false };
+    }
+  }
+async cacheProducts(products, companyId) {
+  try {
+    if (!companyId) {
+      console.warn('⚠️ cacheProducts: companyId no proporcionado');
+      return { success: false, error: 'companyId requerido' };
+    }
+
+    const db = await this.getDB();
+    const tx = db.transaction('products', 'readwrite');
+    const store = tx.objectStore('products');
+    
+    const timestamp = Date.now();
+    const stringCompanyId = String(companyId);
+    
+    // ✅ PASO 1: LIMPIAR TODOS LOS PRODUCTOS DE ESTA EMPRESA
+    console.log(`🧹 Limpiando productos antiguos para empresa ${stringCompanyId}...`);
+    
+    const index = store.index('companyId');
+    const range = IDBKeyRange.only(stringCompanyId);
+    
+    // Obtener todas las keys de esta empresa
+    const keys = await new Promise((resolve, reject) => {
+      const request = index.getAllKeys(range);
+      request.onsuccess = () => resolve(request.result);
+      request.onerror = () => reject(request.error);
+    });
+    
+    console.log(`📊 Encontrados ${keys.length} productos antiguos para eliminar`);
+    
+    // Eliminar cada key
+    keys.forEach(key => {
+      store.delete(key);
+    });
+    
+    // ✅ PASO 2: GUARDAR LOS NUEVOS PRODUCTOS
+    console.log(`💾 Guardando ${products.length} productos nuevos...`);
+    
+    for (const product of products) {
+      const productId = product._id || `temp_${Date.now()}_${Math.random()}`;
+      
+      store.put({
+        id: `${stringCompanyId}_${productId}`,
+        companyId: stringCompanyId,
+        product: product,
+        artikelNumber: product.artikelNumber || '',
+        artikelName: product.artikelName || '',
+        timestamp: timestamp
+      });
+    }
+    
+    // Completar transacción
+    await tx.complete;
+    
+    console.log(`✅ Caché actualizado: ${products.length} productos para empresa ${companyId} (antiguos: ${keys.length})`);
+    return { success: true, count: products.length, deleted: keys.length };
+    
+  } catch (error) {
+    console.error('❌ Error caching products:', error);
+    return { success: false, error };
+  }
+}
+
+  async getCachedProductsInstant(companyId) {
+    try {
+      if (!companyId) return { products: [], fromCache: false };
+
+      const db = await this.getDB();
+      const tx = db.transaction('products', 'readonly');
+      const store = tx.objectStore('products');
+      const index = store.index('companyId');
+      
+      const stringCompanyId = String(companyId);
+      const range = IDBKeyRange.only(stringCompanyId);
+      
+      const items = await new Promise((resolve, reject) => {
+        const request = index.getAll(range);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      
+      return {
+        products: items.map(item => item.product),
+        fromCache: true
+      };
+    } catch (error) {
+      console.warn('Error getting cached products:', error);
       return { products: [], fromCache: false };
     }
   }
 
-  // 🔥 NUEVO: Obtener productos instantáneamente (sin verificar expiración)
-  async getCachedProductsInstant() {
+  async findProductByBarcode(barcode, companyId) {
     try {
-      const db = await this.initDB();
-      const tx = db.transaction(this.STORE_NAME, 'readonly');
-      const store = tx.objectStore(this.STORE_NAME);
-      
-      const products = await new Promise((resolve, reject) => {
-        const request = store.getAll();
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-      
-      return { products, fromCache: products.length > 0 };
-    } catch (error) {
-      return { products: [], fromCache: false };
-    }
-  }
+      if (!barcode || !companyId) return null;
 
-  // Buscar producto por código de barras (¡búsqueda indexada!)
-  async findProductByBarcode(barcode) {
-    try {
-      const db = await this.initDB();
-      const tx = db.transaction(this.STORE_NAME, 'readonly');
-      const store = tx.objectStore(this.STORE_NAME);
-      const artikelNumberIndex = store.index('artikelNumber');
+      const db = await this.getDB();
+      const tx = db.transaction('products', 'readonly');
+      const store = tx.objectStore('products');
       
-      // Búsqueda exacta por artikelNumber
-      const product = await new Promise((resolve, reject) => {
-        const request = artikelNumberIndex.get(barcode);
+      const index = store.index('artikelNumber');
+      const range = IDBKeyRange.only(String(barcode));
+      
+      const items = await new Promise((resolve, reject) => {
+        const request = index.getAll(range);
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
       });
       
-      return product || null;
+      const companyItem = items.find(item => item.companyId === String(companyId));
       
+      return companyItem ? companyItem.product : null;
     } catch (error) {
-      console.error('Error searching product:', error);
+      console.warn('Error finding product by barcode:', error);
       return null;
     }
   }
 
-  // Buscar por nombre (índice de artikelName)
-  async searchProductsByName(searchTerm) {
+  async searchProductsByName(searchTerm, companyId) {
     try {
-      const db = await this.initDB();
-      const tx = db.transaction(this.STORE_NAME, 'readonly');
-      const store = tx.objectStore(this.STORE_NAME);
-      const nameIndex = store.index('artikelName');
+      if (!searchTerm || !companyId) return [];
+
+      const term = searchTerm.toLowerCase();
+      const db = await this.getDB();
+      const tx = db.transaction('products', 'readonly');
+      const store = tx.objectStore('products');
+      const index = store.index('companyId');
       
-      const range = IDBKeyRange.bound(
-        searchTerm.toLowerCase(),
-        searchTerm.toLowerCase() + '\uffff',
-        false,
-        false
-      );
+      const range = IDBKeyRange.only(String(companyId));
       
-      const products = await new Promise((resolve, reject) => {
-        const request = nameIndex.getAll(range);
-        request.onsuccess = () => resolve(request.result.slice(0, 50));
+      const items = await new Promise((resolve, reject) => {
+        const request = index.getAll(range);
+        request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
       });
       
-      return products;
-      
+      return items
+        .filter(item => 
+          item.product.artikelName?.toLowerCase().includes(term) ||
+          item.product.artikelNumber?.toString().toLowerCase().includes(term)
+        )
+        .map(item => item.product)
+        .slice(0, 50);
     } catch (error) {
-      console.error('Error searching by name:', error);
+      console.warn('Error searching products:', error);
       return [];
     }
   }
 
-  // Limpiar caché antiguo
-  async cleanOldCache() {
+  async getCacheStats(companyId) {
     try {
-      const db = await this.initDB();
-      const tx = db.transaction(this.STORE_NAME, 'readwrite');
-      const store = tx.objectStore(this.STORE_NAME);
-      const timestampIndex = store.index('byTimestamp');
-      
-      const oneWeekAgo = Date.now() - (7 * 24 * 60 * 60 * 1000);
-      const range = IDBKeyRange.upperBound(oneWeekAgo);
-      
-      const products = await new Promise((resolve, reject) => {
-        const request = timestampIndex.getAll(range);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-      
-      for (const product of products) {
-        store.delete(product._id);
-      }
-      
-      // console.log(`🧹 Limpiados ${products.length} productos antiguos`);
-      
-    } catch (error) {
-      console.error('Error cleaning cache:', error);
-    }
-  }
+      if (!companyId) return { count: 0 };
 
-  // 🔥 NUEVO: Limpiar TODO el caché
-  async clearCache() {
-    try {
-      const db = await this.initDB();
-      const tx = db.transaction(this.STORE_NAME, 'readwrite');
-      const store = tx.objectStore(this.STORE_NAME);
+      const db = await this.getDB();
+      const tx = db.transaction('products', 'readonly');
+      const store = tx.objectStore('products');
+      const index = store.index('companyId');
       
-      await new Promise((resolve, reject) => {
-        const request = store.clear();
-        request.onsuccess = () => {
-          // console.log('🗑️ Caché de IndexedDB limpiado completamente');
-          resolve();
-        };
-        request.onerror = () => reject(request.error);
-      });
-      
-      return true;
-    } catch (error) {
-      console.error('Error limpiando caché:', error);
-      return false;
-    }
-  }
-
-  // 🔥 NUEVO: Obtener producto por ID
-  async getProductById(productId) {
-    try {
-      const db = await this.initDB();
-      const tx = db.transaction(this.STORE_NAME, 'readonly');
-      const store = tx.objectStore(this.STORE_NAME);
-      
-      const product = await new Promise((resolve, reject) => {
-        const request = store.get(productId);
-        request.onsuccess = () => resolve(request.result);
-        request.onerror = () => reject(request.error);
-      });
-      
-      return product || null;
-    } catch (error) {
-      console.error('Error getting product by ID:', error);
-      return null;
-    }
-  }
-
-  // Obtener estadísticas del caché
-  async getCacheStats() {
-    try {
-      const db = await this.initDB();
-      const tx = db.transaction(this.STORE_NAME, 'readonly');
-      const store = tx.objectStore(this.STORE_NAME);
+      const range = IDBKeyRange.only(String(companyId));
       
       const count = await new Promise((resolve, reject) => {
-        const request = store.count();
+        const request = index.count(range);
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
       });
       
       return { count };
-      
     } catch (error) {
+      console.warn('Error getting cache stats:', error);
       return { count: 0 };
+    }
+  }
+
+  async cleanOldCache(companyId) {
+    try {
+      if (!companyId) return { success: false };
+
+      const db = await this.getDB();
+      const tx = db.transaction('products', 'readwrite');
+      const store = tx.objectStore('products');
+      const index = store.index('companyId');
+      
+      const range = IDBKeyRange.only(String(companyId));
+      
+      const items = await new Promise((resolve, reject) => {
+        const request = index.getAll(range);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      
+      const oldTimestamp = Date.now() - (24 * 60 * 60 * 1000);
+      let deletedCount = 0;
+      
+      items.forEach(item => {
+        if (item.timestamp < oldTimestamp) {
+          store.delete(item.id);
+          deletedCount++;
+        }
+      });
+      
+      await tx.complete;
+      
+      return { success: true, deletedCount };
+    } catch (error) {
+      console.error('Error cleaning old cache:', error);
+      return { success: false };
     }
   }
 }
 
-// Exportar singleton
 export default new ScannerCacheService();

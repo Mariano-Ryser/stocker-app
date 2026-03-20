@@ -4,8 +4,8 @@
     "subtitle": "Manage your product list",
     "newArticle": "New Article",
     "view": {
-      "table": "Table view",
-      "grid": "Grid view"
+      "table": "Table View",
+      "grid": "Grid View"
     },
     "search": {
       "placeholder": "Name or article number",
@@ -58,6 +58,63 @@
         "inStock": "In stock"
       }
     },
+    "creator": {
+      "title": "Create new article",
+      "form": {
+        "artikelName": "Article name *",
+        "artikelNamePlaceholder": "Enter article name",
+        "lagerPlatz": "Location",
+        "lagerPlatzPlaceholder": "e.g. A-12",
+        "artikelNumber": "Article number",
+        "artikelNumberPlaceholder": "e.g. 345-AB",
+        "bestand": "Stock",
+        "price": "Price",
+        "pricePlaceholder": "0.00",
+        "description": "Description",
+        "descriptionPlaceholder": "Product description...",
+        "image": "Image",
+        "imageSelect": "📷 Select image",
+        "imageChange": "📷 Change image",
+        "imageDelete": "🗑️ Delete image",
+        "imagePreview": "Preview",
+        "required": "Required field"
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "create": "Create article",
+        "creating": "Creating..."
+      },
+      "messages": {
+        "success": "Article created successfully",
+        "error": "Error creating article",
+        "validation": {
+          "nameRequired": "Article name is required",
+          "priceInvalid": "Invalid price",
+          "stockInvalid": "Invalid stock"
+        }
+      }
+    },
+    "editor": {
+      "title": "Edit article",
+      "buttons": {
+        "cancel": "Cancel",
+        "save": "Save changes",
+        "saving": "Saving...",
+        "delete": "Delete article",
+        "deleteConfirm": "Confirm delete",
+        "deleteImage": "Delete image"
+      },
+      "messages": {
+        "success": "Article updated successfully",
+        "error": "Error updating article",
+        "deleteConfirm": "Are you sure you want to delete this article?",
+        "deleteWarning": "This action cannot be undone.",
+        "deleteImageConfirm": "Do you really want to delete this image?",
+        "deleteSuccess": "Article deleted successfully",
+        "deleteImageSuccess": "Image deleted successfully"
+      },
+      "barcode": "Barcode"
+    },
     "loading": {
       "auth": "Loading authentication...",
       "products": "Loading..."
@@ -73,14 +130,14 @@
         "textWithFilters": " with selected filters"
       },
       "noProducts": {
-        "title": "No articles available",
+        "title": "No articles",
         "text": "Create your first article"
       },
       "resetButton": "Reset all filters"
     },
     "pagination": {
       "page": "Page {current} of {total}",
-      "total": "({total} articles total)"
+      "total": "({total} total articles)"
     },
     "errors": {
       "loadFailed": "Error loading articles"

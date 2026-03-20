@@ -135,59 +135,112 @@ export async function getProducts() {
 }
 
 // 🔹 Crear producto (maneja imagen opcional)
-export async function createProductAPI(product) {
+export async function createProductAPI(productData) {
   try {
     const API_URL = `${API_BASE_URL}/products`;
-    // // console.log('Creating product with data:', product);
-    
-    const formData = new FormData();
 
-    formData.append('artikelName', product.artikelName || '');
-    formData.append('lagerPlatz', product.lagerPlatz || '');
-    formData.append('artikelNumber', product.artikelNumber || '');
-    formData.append('description', product.description || '');
-    formData.append('stock', product.stock ? Number(product.stock) : 0);
-    formData.append('price', product.price ? Number(product.price) : 0);
-    
-    if (product.imagen && product.imagen instanceof File) {
-      // // console.log('Adding image file:', product.imagen.name);
-      formData.append('imagen', product.imagen);
+    // Si hay imagen, usar FormData
+    if (productData.imagen && productData.imagen instanceof File) {
+      const formData = new FormData();
+      Object.keys(productData).forEach(key => {
+        if (key === 'imagen' && productData[key] instanceof File) {
+          formData.append('imagen', productData[key]);
+        } else if (key !== 'imagen') {
+          formData.append(key, productData[key]);
+        }
+      });
+
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
+        },
+        body: formData
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // ✅ DETECTAR ERROR DE LÍMITE
+        if (res.status === 400 && data.limits) {
+          throw {
+            type: 'LIMIT_ERROR',
+            message: data.message,
+            limits: data.limits
+          };
+        }
+        throw new Error(data.message || `Error ${res.status}`);
+      }
+
+      return data;
     }
 
-    const headers = getAuthHeadersForFormData();
-
+    // Sin imagen (JSON normal)
     const res = await fetch(API_URL, {
-      method: "POST",
-      headers: headers,
-      body: formData,
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify(productData)
     });
 
-    // // console.log('Response status:', res.status);
-    
+    const data = await res.json();
+
     if (!res.ok) {
-      const errorText = await res.text();
-      console.error('Error response:', errorText);
-      
-      if (res.status === 401) {
-        localStorage.removeItem('token');
-        localStorage.removeItem('user');
-        window.location.href = '/login';
-        return;
+      // ✅ DETECTAR ERROR DE LÍMITE
+      if (res.status === 400 && data.limits) {
+        throw {
+          type: 'LIMIT_ERROR',
+          message: data.message,
+          limits: data.limits
+        };
       }
-      
-      throw new Error(`Error al crear producto: ${res.status}`);
+      throw new Error(data.message || `Error ${res.status}`);
     }
-    
-    const result = await res.json();
-    // // console.log('Product created successfully:', result);
-    return result;
-    
+
+    return data;
+
   } catch (error) {
-    // console.error('Error in createProductAPI:', error);
-    throw new Error(`Error: ${error.message}`);
+    console.error('Error in createProductAPI:', error);
+    throw error;
   }
 }
+// MODIFICAR: bulkImportAPI para manejar límites
+export async function bulkImportAPI(products) {
+  try {
+    const API_URL = `${API_BASE_URL}/products/bulk`;
 
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      },
+      body: JSON.stringify({ products })
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      // ✅ DETECTAR ERROR DE LÍMITE
+      if (res.status === 400 && data.limits) {
+        throw {
+          type: 'LIMIT_ERROR',
+          message: data.message,
+          limits: data.limits
+        };
+      }
+      throw new Error(data.message || `Error ${res.status}`);
+    }
+
+    return data;
+
+  } catch (error) {
+    console.error('Error in bulkImportAPI:', error);
+    throw error;
+  }
+}
 // 🔹 Actualizar producto
 export async function updateProductAPI(id, updatedData) {
   try {

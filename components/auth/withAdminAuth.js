@@ -10,7 +10,7 @@ export default function withAuth(WrappedComponent) {
 
     useEffect(() => {
       if (isAuthenticated === false) { // ⬅️ Solo redirigir si es `false`
-        router.push('/adminDash');
+        router.push('/dashboard');
       }
     }, [isAuthenticated]);
 

@@ -1,8 +1,10 @@
+// pages/reset-password/[token].tsx (o pages/reset-password/index.tsx si usas query)
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import styles from "./reset-password.module.css";
 import { useLanguage } from '../../contexts/LanguageContext';
+
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -11,11 +13,29 @@ export default function ResetPasswordPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [tokenValid, setTokenValid] = useState(false);
+  
+  // Estados para validación de contraseña en tiempo real
+  const [passwordErrors, setPasswordErrors] = useState({
+    minLength: false,
+    hasUpperCase: false,
+    hasNumber: false,
+    hasSpecialChar: false
+  });
+  
   const router = useRouter();
   const { token } = router.query;
-  const {t} = useLanguage();
+  const { t } = useLanguage();
   
-
+  // Validación en tiempo real de la contraseña
+  useEffect(() => {
+    const errors = {
+      minLength: password.length >= 6,
+      hasUpperCase: /[A-Z]/.test(password),
+      hasNumber: /\d/.test(password),
+      hasSpecialChar: /[!@#$%^&*(),.?":{}|<>]/.test(password)
+    };
+    setPasswordErrors(errors);
+  }, [password]);
   
   // Verificar token al cargar la página
   useEffect(() => {
@@ -23,7 +43,7 @@ export default function ResetPasswordPage() {
       verifyToken();
     }
   }, [token]);
- 
+
   const verifyToken = async () => {
     try {
       const response = await fetch(
@@ -41,15 +61,39 @@ export default function ResetPasswordPage() {
       if (response.ok) {
         setTokenValid(true);
       } else {
-        setError(data.message || "El enlace es inválido o ha expirado.");
+        setError(data.message || t('resetPassword.messages.invalidToken'));
         setTokenValid(false);
       }
     } catch (err: any) {
-      setError("Error al verificar el enlace. Por favor, intenta de nuevo.");
+      setError(t('resetPassword.messages.verificationError'));
       setTokenValid(false);
     } finally {
       setVerifying(false);
     }
+  };
+
+  const validateForm = () => {
+    if (password.length < 6) {
+      setError(t('resetPassword.messages.passwordMinLength'));
+      return false;
+    }
+
+    if (!/[A-Z]/.test(password)) {
+      setError(t('resetPassword.messages.passwordUpperCase'));
+      return false;
+    }
+
+    if (!/\d/.test(password)) {
+      setError(t('resetPassword.messages.passwordNumber'));
+      return false;
+    }
+
+    if (password !== confirmPassword) {
+      setError(t('resetPassword.messages.passwordMismatch'));
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -58,15 +102,7 @@ export default function ResetPasswordPage() {
     setError("");
     setSuccess("");
 
-    // Validaciones
-    if (password.length < 6) {
-      setError("La contraseña debe tener al menos 6 caracteres");
-      setLoading(false);
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      setError("Las contraseñas no coinciden");
+    if (!validateForm()) {
       setLoading(false);
       return;
     }
@@ -86,18 +122,17 @@ export default function ResetPasswordPage() {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess(data.message || "Contraseña restablecida correctamente.");
+        setSuccess(t('resetPassword.messages.success'));
         
-        // Redirigir al login después de 3 segundos
         setTimeout(() => {
           router.push("/login");
         }, 3000);
       } else {
-        setError(data.message || "Ocurrió un error. Por favor, intenta de nuevo.");
+        setError(data.message || t('resetPassword.messages.error'));
       }
     } catch (err: any) {
       console.error("Error:", err);
-      setError("Error de conexión con el servidor. Por favor, intenta de nuevo.");
+      setError(t('resetPassword.messages.connectionError'));
     } finally {
       setLoading(false);
     }
@@ -108,7 +143,7 @@ export default function ResetPasswordPage() {
       <div className={styles.container}>
         <div className={styles.loadingContainer}>
           <div className={styles.loader}></div>
-          <p>Verificando enlace...</p>
+          <p>{t('resetPassword.verifying')}</p>
         </div>
       </div>
     );
@@ -120,11 +155,11 @@ export default function ResetPasswordPage() {
         <div className={styles.formContainer}>
           <div className={styles.logoSection}>
             <img 
-              src="/img/logo78.png" 
+              src="/img/logo80.webp" 
               alt="Alpina Logo" 
               className={styles.logo}
             />
-            <h1 className={styles.title}>Alpina</h1>
+            <h1 className={styles.title}>{t('resetPassword.title')}</h1>
           </div>
 
           <div className={styles.formContent}>
@@ -132,15 +167,15 @@ export default function ResetPasswordPage() {
               <svg className={styles.errorIcon} fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
               </svg>
-              {error || "Enlace inválido o expirado"}
+              {error || t('resetPassword.messages.invalidToken')}
             </div>
 
             <div className={styles.links}>
               <Link href="/forgot-password" className={styles.actionLink}>
-                Solicitar nuevo enlace
+                {t('resetPassword.links.newLink')}
               </Link>
               <Link href="/login" className={styles.backLink}>
-                ← Volver al Login
+                {t('resetPassword.links.backToLogin')}
               </Link>
             </div>
           </div>
@@ -154,18 +189,16 @@ export default function ResetPasswordPage() {
       <div className={styles.formContainer}>
         <div className={styles.logoSection}>
           <img 
-            src="/img/logo78.png" 
+            src="/img/logo80.webp" 
             alt="Alpina Logo" 
             className={styles.logo}
           />
-          <h1 className={styles.title}>Alpina</h1>
+          <h1 className={styles.title}>{t('resetPassword.title')}</h1>
         </div>
 
         <div className={styles.formContent}>
-          <h2 className={styles.formTitle}>Nueva Contraseña</h2>
-          <p className={styles.formSubtitle}>
-            Ingresa tu nueva contraseña
-          </p>
+          <h2 className={styles.formTitle}>{t('resetPassword.heading')}</h2>
+          <p className={styles.formSubtitle}>{t('resetPassword.subtitle')}</p>
 
           <form onSubmit={handleSubmit} className={styles.form}>
             {error && (
@@ -191,21 +224,82 @@ export default function ResetPasswordPage() {
                 <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
-                Neue Passwort *
+                {t('resetPassword.password.label')}
               </label>
               <input
                 id="password"
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className={styles.inputField}
-                placeholder="••••••••"
+                className={`${styles.inputField} ${password && !passwordErrors.minLength ? styles.inputError : ''}`}
+                placeholder={t('resetPassword.password.placeholder')}
                 required
                 disabled={loading}
                 autoComplete="new-password"
-                minLength={6}
               />
-              <p className={styles.helperText}>Mindestens 6 Zeichen</p>
+            </div>
+
+            <div className={styles.passwordRequirements}>
+              <h4>{t('resetPassword.requirements.title')}</h4>
+              <ul>
+                <li className={passwordErrors.minLength ? styles.requirementMet : styles.requirementNotMet}>
+                  <span className={styles.requirementIcon}>
+                    {passwordErrors.minLength ? "✓" : "○"}
+                  </span>
+                  {t('resetPassword.requirements.minLength')}
+                </li>
+                <li className={passwordErrors.hasUpperCase ? styles.requirementMet : styles.requirementNotMet}>
+                  <span className={styles.requirementIcon}>
+                    {passwordErrors.hasUpperCase ? "✓" : "○"}
+                  </span>
+                  {t('resetPassword.requirements.upperCase')}
+                </li>
+                <li className={passwordErrors.hasNumber ? styles.requirementMet : styles.requirementNotMet}>
+                  <span className={styles.requirementIcon}>
+                    {passwordErrors.hasNumber ? "✓" : "○"}
+                  </span>
+                  {t('resetPassword.requirements.number')}
+                </li>
+                <li className={passwordErrors.hasSpecialChar ? styles.requirementMet : styles.requirementNotMet}>
+                  <span className={styles.requirementIcon}>
+                    {passwordErrors.hasSpecialChar ? "✓" : "○"}
+                  </span>
+                  {t('resetPassword.requirements.specialChar')}
+                </li>
+              </ul>
+              
+              <div className={styles.passwordStrength}>
+                <div className={styles.strengthLabel}>
+                  {t('resetPassword.strength.label')}
+                  <span className={
+                    password.length === 0 ? styles.strengthNone :
+                    password.length < 6 ? styles.strengthWeak :
+                    !passwordErrors.hasUpperCase || !passwordErrors.hasNumber ? styles.strengthMedium :
+                    styles.strengthStrong
+                  }>
+                    {password.length === 0 ? t('resetPassword.strength.none') :
+                     password.length < 6 ? t('resetPassword.strength.weak') :
+                     !passwordErrors.hasUpperCase || !passwordErrors.hasNumber ? t('resetPassword.strength.medium') :
+                     t('resetPassword.strength.strong')}
+                  </span>
+                </div>
+                <div className={styles.strengthMeter}>
+                  <div 
+                    className={`${styles.strengthBar} ${
+                      password.length === 0 ? styles.strengthNone :
+                      password.length < 6 ? styles.strengthWeak :
+                      !passwordErrors.hasUpperCase || !passwordErrors.hasNumber ? styles.strengthMedium :
+                      styles.strengthStrong
+                    }`}
+                    style={{
+                      width: password.length === 0 ? '0%' :
+                            password.length < 6 ? '33%' :
+                            !passwordErrors.hasUpperCase || !passwordErrors.hasNumber ? '66%' :
+                            '100%'
+                    }}
+                  ></div>
+                </div>
+              </div>
             </div>
 
             <div className={styles.inputGroup}>
@@ -213,45 +307,48 @@ export default function ResetPasswordPage() {
                 <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                 </svg>
-                Passwort bestätigen *
+                {t('resetPassword.confirmPassword.label')}
               </label>
               <input
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className={styles.inputField}
-                placeholder="••••••••"
+                className={`${styles.inputField} ${confirmPassword && password !== confirmPassword ? styles.inputError : ''}`}
+                placeholder={t('resetPassword.confirmPassword.placeholder')}
                 required
                 disabled={loading}
                 autoComplete="new-password"
               />
+              {confirmPassword && password !== confirmPassword && (
+                <div className={styles.fieldError}>{t('resetPassword.messages.passwordMismatch')}</div>
+              )}
             </div>
 
             <button
               className={`${styles.submitButton} ${loading ? styles.loading : ""}`}
               type="submit"
-              disabled={loading}
+              disabled={loading || !passwordErrors.minLength || !passwordErrors.hasUpperCase || !passwordErrors.hasNumber || password !== confirmPassword}
             >
               {loading ? (
                 <>
                   <span className={styles.buttonSpinner}></span>
-                  Passwort wird zurückgesetzt...
+                  {t('resetPassword.button.resetting')}
                 </>
               ) : (
-                "Passwort zurücksetzen"
+                t('resetPassword.button.reset')
               )}
             </button>
           </form>
 
           <div className={styles.links}>
             <Link href="/login" className={styles.backLink}>
-              ← Zurück zum Login
+              {t('resetPassword.links.backToLogin')}
             </Link>
           </div>
 
           <div className={styles.footer}>
-            © {new Date().getFullYear()} Alpina. Alle Rechte vorbehalten.
+            {t('resetPassword.footer').replace('{year}', new Date().getFullYear().toString())}
           </div>
         </div>
       </div>

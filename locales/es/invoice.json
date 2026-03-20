@@ -2,7 +2,7 @@
   "invoice": {
     "title": "Factura",
     "invoice": "FACTURA",
-    "invoiceNumber": "Nº:",
+    "invoiceNumber": "N°:",
     "date": "Fecha:",
     "dueDate": "Vence:",
     "status": {
@@ -15,15 +15,15 @@
     "customer": "Cliente",
     "customerRecipient": "Destinatario",
     "customerDirect": "Efectivo",
-    "invoiceDetails": "Detalles de Factura",
+    "invoiceDetails": "Detalles de la Factura",
     "paymentInfo": "Información de Pago",
     "bank": "Banco:",
     "iban": "IBAN:",
     "bic": "BIC/SWIFT:",
     "accountHolder": "Titular:",
     "bankName": "Banco:",
-    "thanks": "¡Gracias por su pedido!",
-    "thanksTicket": "¡Gracias por su compra!",
+    "thanks": "¡Muchas gracias por su pedido!",
+    "thanksTicket": "¡Muchas gracias por su compra!",
     "actions": {
       "print": "Imprimir"
     },
@@ -38,12 +38,12 @@
     "totals": {
       "subtotal": "Subtotal:",
       "discount": "Descuento:",
-      "tax": "IVA ({rate}%):",
+      "tax": "{taxName} {rate}%",
       "total": "Total:"
     },
     "ticket": {
       "title": "Tickets",
-      "ticketNumber": "Ticket Nº:",
+      "ticketNumber": "Ticket N°:",
       "date": "Fecha:",
       "customer": "Cliente:",
       "divider": "----------------------",

@@ -10,7 +10,7 @@ export default function HomeHero() {
 
    
 
-  const loginUrl = isAuthenticated ? '/adminDash' : '/login';
+  const loginUrl = isAuthenticated ? '/dashboard' : '/login';
 
   return (
     <section className="hero">
@@ -39,7 +39,7 @@ export default function HomeHero() {
         <div className="image">
           <Image
             src="/img/homeHero3.webp" 
-            alt="Alpina Dashboard"
+            alt="Stocker Dashboard"
             width={760}
             height={30}
             priority

@@ -35,6 +35,7 @@
 }
 
 /* LOGO */
+/* LOGO */
 .logo {
   cursor: pointer;
   display: flex;
@@ -42,41 +43,20 @@
   align-items: center;
   transition: transform 0.2s ease;
 }
-
 .logo:hover {
   transform: translateY(-1px);
 }
-
 .logoIcon {
-  width: 150px;
-  height: 90px;
+  width: 110px;
+  height: 85px;
+  margin-left: 2rem;
   overflow: hidden;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
-
 .logoImage {
-  width: 12rem;
-  object-fit: contain;
-}
-
-.logoText h1 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0;
-  letter-spacing: -0.025em;
-}
-
-.logoSubtitle {
-  font-size: 0.75rem;
-  color: #6b7280;
-  letter-spacing: 0.025em;
-}
-
-.logoHighlight {
-  color: #2563eb;
+  width: 5.5rem;
+  margin-left: 0px;
 }
 
 /* DESKTOP NAV */
@@ -268,10 +248,11 @@
 }
 
 @media (max-width: 480px) {
-  .logoImage {
-    width: 9rem;
-    object-fit: contain;
-  }
+   .logoImage {
+  width: 4rem;
+  
+  margin-left: 0px;
+}
   
   .container {
     padding: 0 1rem;
@@ -305,9 +286,10 @@
 
 @media (max-width: 360px) {
   .logoImage {
-    width: 9rem;
-    object-fit: contain;
-  }
+  width: 4rem;
+  
+  margin-left: 0px;
+}
   
   .logoIcon {
     width: 100px;

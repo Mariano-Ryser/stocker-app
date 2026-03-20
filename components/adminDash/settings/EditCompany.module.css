@@ -1,12 +1,132 @@
-/* EditCompany.module.css */
+/* frontend/components/dashboard/settings/EditCompany.module.css */
 
-/* Base Container */
+/* ===== BASE CONTAINER ===== */
 .companyContainer {
   position: relative;
   width: 100%;
+  margin: 2rem auto 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
 }
 
-/* Success Message Banner */
+/* ===== HELP TEXT ===== */
+.helpText {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  color: #6b7280;
+  line-height: 1.4;
+}
+
+/* ===== TAX RATE INPUT ===== */
+.taxRateInput {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.taxRateInput input {
+  flex: 1;
+  padding-right: 40px !important;
+}
+
+.taxRateSymbol {
+  position: absolute;
+  right: 12px;
+  color: #666;
+  font-weight: 500;
+  pointer-events: none;
+}
+
+/* ===== TABS ===== */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid #e5e7eb;
+  padding-bottom: 0.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.tab {
+  padding: 0.75rem 1.5rem;
+  background: none;
+  border: none;
+  border-radius: 6px 6px 0 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 200ms ease;
+  position: relative;
+  white-space: nowrap;
+}
+
+.tab:hover {
+  color: #2563eb;
+  background-color: #f9fafb;
+}
+
+.tab.activeTab {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+.tab.activeTab::after {
+  content: '';
+  position: absolute;
+  bottom: -0.5rem;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: #2563eb;
+  border-radius: 2px 2px 0 0;
+}
+
+.tabContent {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ===== TAX SECTION ===== */
+.taxSection {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background-color: #f9fafb;
+  border-radius: 8px;
+  border-left: 4px solid #2563eb;
+}
+
+.taxSectionTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin: 0 0 0.5rem 0;
+}
+
+.taxHelp {
+  font-size: 0.9rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px dashed #d1d5db;
+}
+
+/* ===== SUCCESS BANNER ===== */
 .successBanner {
   position: fixed;
   top: 50%;
@@ -52,7 +172,7 @@
   cursor: pointer;
   padding: 6px;
   border-radius: 50%;
-  transition: background-color 0.2s;
+  transition: background-color 200ms ease;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -74,7 +194,118 @@
   }
 }
 
-/* Logo Section */
+/* ===== SECTION HEADER ===== */
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.companyFormTitle {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.unsavedBadge {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 0.35rem 0.85rem;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid #ffeeba;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* ===== MODAL DE CONFIRMACIÓN ===== */
+.confirmModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1100;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+
+.confirmModalContent {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.confirmActions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.confirmCancel,
+.confirmDelete {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 200ms ease;
+  flex: 1;
+}
+
+.confirmCancel {
+  background-color: #6b7280;
+  color: white;
+}
+
+.confirmCancel:hover {
+  background-color: #4b5563;
+}
+
+.confirmDelete {
+  background-color: #dc2626;
+  color: white;
+}
+
+.confirmDelete:hover {
+  background-color: #b91c1c;
+}
+
+/* ===== LOGO SECTION ===== */
 .logoSection {
   margin-top: 2rem;
   padding-top: 2rem;
@@ -92,6 +323,7 @@
   display: flex;
   gap: 2rem;
   align-items: flex-start;
+  flex-wrap: wrap;
 }
 
 .logoPreview {
@@ -106,9 +338,15 @@
   height: 150px;
   object-fit: contain;
   border: 2px solid #e5e7eb;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   padding: 0.5rem;
   background-color: white;
+  transition: transform 200ms ease;
+}
+
+.logoImage:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .logoPlaceholder {
@@ -119,40 +357,54 @@
   align-items: center;
   justify-content: center;
   border: 2px dashed #d1d5db;
-  border-radius: 0.5rem;
+  border-radius: 8px;
   background-color: #f9fafb;
+  transition: all 200ms ease;
+}
+
+.logoPlaceholder:hover {
+  border-color: #2563eb;
+  background-color: #dbeafe;
 }
 
 .logoIcon {
   color: #9ca3af;
   margin-bottom: 0.5rem;
+  transition: color 200ms ease;
+}
+
+.logoPlaceholder:hover .logoIcon {
+  color: #2563eb;
 }
 
 .logoPlaceholderText {
   font-size: 0.875rem;
   color: #6b7280;
   text-align: center;
+  transition: color 200ms ease;
 }
 
-.logoActions {
-  display: flex;
-  gap: 0.5rem;
+.logoPlaceholder:hover .logoPlaceholderText {
+  color: #2563eb;
 }
+
 
 .btnDanger {
   padding: 0.5rem 1rem;
   background-color: #dc2626;
   color: white;
   border: none;
-  border-radius: 0.375rem;
+  border-radius: 6px;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 200ms ease;
 }
 
-.btnDanger:hover {
+.btnDanger:hover:not(:disabled) {
   background-color: #b91c1c;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .btnDanger:disabled {
@@ -162,6 +414,7 @@
 
 .logoUpload {
   flex: 1;
+  min-width: 250px;
 }
 
 .uploadLabel {
@@ -176,19 +429,21 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background-color: #3b82f6;
+  padding: 0.6rem 1.2rem;
+  background-color: #2563eb;
   color: white;
   border: none;
-  border-radius: 0.375rem;
+  border-radius: 6px;
   font-size: 0.875rem;
   font-weight: 500;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 200ms ease;
 }
 
 .uploadBtn:hover {
-  background-color: #2563eb;
+  background-color: #1d4ed8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
 }
 
 .uploadIcon {
@@ -201,6 +456,11 @@
   display: flex;
   align-items: center;
   gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.75rem;
+  background-color: #f9fafb;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
 }
 
 .fileName {
@@ -209,39 +469,37 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  max-width: 200px;
+  font-family: 'Courier New', 'SF Mono', monospace;
 }
 
 .uploadHelp {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
   font-size: 0.75rem;
   color: #6b7280;
+  line-height: 1.5;
 }
 
-/* Company Form Section */
+/* ===== COMPANY FORM SECTION ===== */
 .companyFormSection {
   margin-top: 2rem;
   padding-top: 2rem;
   border-top: 1px solid #e5e7eb;
 }
 
-.companyFormTitle {
-  font-size: 1.125rem;
-  font-weight: 600;
-  margin-bottom: 1.5rem;
-  color: #374151;
-}
-
 .companyForm {
   margin: 0;
 }
 
+/* ===== FORM GRID ===== */
 .formGrid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 1.25rem;
   margin-bottom: 1.5rem;
 }
 
+/* ===== FORM GROUP ===== */
 .formGroup {
   margin-bottom: 1.25rem;
 }
@@ -250,31 +508,52 @@
   display: block;
   margin-bottom: 0.375rem;
   font-size: 0.875rem;
-  font-weight: 500;
+  font-weight: 600;
   color: #374151;
 }
 
-.formInput {
+.formInput,
+.formTextarea,
+select.formInput {
   width: 100%;
-  padding: 0.625rem 0.75rem;
+  padding: 0.7rem 0.9rem;
   border: 1px solid #d1d5db;
   border-radius: 6px;
   font-size: 0.95rem;
   color: #1f2937;
   background-color: white;
-  transition: all 0.2s ease;
+  transition: all 200ms ease;
+  font-family: inherit;
 }
 
-.formInput:focus {
+.formInput:focus,
+.formTextarea:focus,
+select.formInput:focus {
   outline: none;
   border-color: #2563eb;
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
-.formInput::placeholder {
+.formInput::placeholder,
+.formTextarea::placeholder {
   color: #9ca3af;
+  font-size: 0.9rem;
 }
 
+.formInput:disabled,
+.formTextarea:disabled,
+select.formInput:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.formTextarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Input Error */
 .inputError {
   border-color: #dc2626 !important;
 }
@@ -283,94 +562,94 @@
   box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1) !important;
 }
 
-/* Textarea */
-.formTextarea {
-  width: 100%;
-  padding: 0.625rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  font-size: 0.95rem;
-  color: #1f2937;
-  background-color: white;
-  transition: all 0.2s ease;
-  resize: vertical;
-  min-height: 100px;
-  font-family: inherit;
-}
-
-.formTextarea:focus {
-  outline: none;
-  border-color: #2563eb;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-}
-
 /* Select Wrapper */
 .selectWrapper {
   position: relative;
 }
 
-.selectArrow {
+.selectWrapper select {
+  appearance: none;
+  padding-right: 2.5rem;
+}
+
+.selectWrapper::after {
+  content: '▼';
   position: absolute;
-  right: 0.75rem;
+  right: 1rem;
   top: 50%;
   transform: translateY(-50%);
-  pointer-events: none;
+  font-size: 0.8rem;
   color: #6b7280;
+  pointer-events: none;
+  transition: color 200ms ease;
+}
+
+.selectWrapper:hover::after {
+  color: #2563eb;
 }
 
 /* Error Messages */
 .formError {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem;
-  background-color: #fef2f2;
-  color: #991b1b;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: #fee2e2;
+  color: #b91c1c;
   border-radius: 6px;
-  margin-bottom: 1.25rem;
-  font-size: 0.875rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+  border-left: 4px solid #dc2626;
 }
 
 .errorIcon {
   flex-shrink: 0;
   color: #dc2626;
+  width: 20px;
+  height: 20px;
 }
 
 .fieldError {
   font-size: 0.75rem;
   color: #dc2626;
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
+  font-weight: 500;
 }
 
 /* Form Actions */
 .formActions {
   margin-top: 2rem;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .submitBtn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
+  gap: 0.6rem;
+  padding: 0.75rem 2rem;
   background-color: #2563eb;
   color: white;
   border: none;
   border-radius: 6px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
-  min-width: 120px;
+  transition: all 200ms ease;
+  min-width: 160px;
 }
 
 .submitBtn:hover:not(:disabled) {
   background-color: #1d4ed8;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
 }
 
 .submitBtn:disabled {
-  opacity: 0.5;
+  background-color: #9ca3af;
   cursor: not-allowed;
+  opacity: 0.6;
 }
 
 /* Spinner */
@@ -387,14 +666,85 @@
   }
 }
 
-/* Responsive Design */
+/* ===== ADDRESS SECTION ===== */
+.addressSection {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.addressSectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 1.5rem 0;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.addressSectionTitle::before {
+  content: '📍';
+  font-size: 1.1rem;
+}
+
+/* ===== BANK SECTION ===== */
+.bankSection {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.bankSectionTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bankSectionTitle::before {
+  content: '🏦';
+  font-size: 1.1rem;
+}
+
+/* Input de IBAN con formato */
+.ibanInput {
+  font-family: 'Courier New', 'SF Mono', monospace;
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+
+/* ===== RESPONSIVE DESIGN ===== */
+@media (max-width: 1024px) {
+  .companyContainer {
+    padding: 0 1rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .tabs {
+    flex-wrap: nowrap;
+    padding-bottom: 0.25rem;
+  }
+  
+  .tab {
+    flex: 0 0 auto;
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+  
   .logoContainer {
     flex-direction: column;
+    align-items: center;
   }
   
   .logoPreview {
     align-self: center;
+    width: 100%;
+    align-items: center;
   }
   
   .formGrid {
@@ -410,136 +760,113 @@
   .successText {
     font-size: 14px;
   }
-}/* frontend/components/adminDash/settings/EditCompany.module.css */
-.addressSection {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid #e0e0e0;
+  
+  .formActions {
+    justify-content: center;
+  }
+  
+  .submitBtn {
+    width: 100%;
+  }
+  
+  .confirmModalContent {
+    width: 95%;
+    padding: 1.5rem;
+  }
+  
+  .confirmActions {
+    flex-direction: column;
+  }
+  
+  .selectedFile {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .fileName {
+    max-width: 100%;
+    white-space: normal;
+    word-break: break-all;
+  }
+  
+  .sectionHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
 }
 
-.addressSectionTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 16px 0;
+@media (max-width: 480px) {
+  .companyContainer {
+    padding: 0 0.75rem;
+  }
+  
+  .tabs {
+    flex-direction: row;
+    gap: 0.25rem;
+  }
+  
+  .tab {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+  
+  .tab.activeTab::after {
+    bottom: -0.4rem;
+  }
+  
+  .logoImage,
+  .logoPlaceholder {
+    width: 120px;
+    height: 120px;
+  }
+  
+  .formInput,
+  .formTextarea,
+  select.formInput {
+    font-size: 16px; /* Previene zoom en iOS */
+  }
+  
+  .successBanner {
+    min-width: 200px;
+    max-width: 250px;
+    padding: 12px 16px;
+  }
+  
+  .successIcon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .successText {
+    font-size: 13px;
+  }
+  
+  .addressSectionTitle::before,
+  .bankSectionTitle::before {
+    font-size: 1rem;
+  }
 }
 
-.addressPreview {
-  margin-top: 16px;
-  padding: 12px;
-  background-color: #f8f9fa;
-  border-radius: 4px;
-  border-left: 3px solid #4CAF50;
-}
-
-.addressPreviewLabel {
-  display: block;
-  font-size: 12px;
-  color: #666;
-  margin-bottom: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.addressPreviewText {
-  margin: 0;
-  font-size: 14px;
-  color: #333;
-  line-height: 1.5;
-}
-
-/* Agregar al final de EditCompany.module.css */
-
-/* Sección de banco */
-.bankSection {
-  margin-top: 32px;
-  padding-top: 24px;
-  border-top: 1px solid #e5e7eb;
-}
-
-.bankSectionTitle {
-  font-size: 1.1rem;
-  font-weight: 500;
-  color: #374151;
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.bankSectionTitle::before {
-  content: '';
-  display: block;
-  width: 4px;
-  height: 20px;
-  background-color: #2563eb;
-  border-radius: 2px;
-}
-
-/* Input de IBAN con formato */
-.ibanInput {
-  font-family: 'Courier New', monospace;
-  letter-spacing: 1px;
-}
-
-/* Preview de datos bancarios */
-.bankPreview {
-  margin-top: 16px;
-  padding: 16px;
-  background-color: #f9fafb;
-  border-radius: 8px;
-  border-left: 3px solid #2563eb;
-}
-
-.bankPreviewLabel {
-  display: block;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  color: #6b7280;
-  margin-bottom: 8px;
-}
-
-.bankPreviewText {
-  font-size: 0.95rem;
-  color: #1f2937;
-  line-height: 1.5;
-}
-
-.bankPreviewName {
-  display: block;
-  font-weight: 500;
-  margin-bottom: 4px;
-  color: #111827;
-}
-
-.bankPreviewIban {
-  display: inline-block;
-  font-family: 'Courier New', monospace;
-  background-color: #ffffff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid #e5e7eb;
-  margin-right: 8px;
-  font-size: 0.9rem;
-}
-
-.bankPreviewBic {
-  display: inline-block;
-  font-family: 'Courier New', monospace;
-  background-color: #ffffff;
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid #e5e7eb;
-  font-size: 0.9rem;
-}
-
-/* Responsive para móviles */
-@media (max-width: 640px) {
-  .bankPreviewIban,
-  .bankPreviewBic {
-    display: block;
-    margin-right: 0;
-    margin-bottom: 8px;
+/* ===== TOUCH OPTIMIZATIONS ===== */
+@media (hover: none) and (pointer: coarse) {
+  .tab:hover,
+  .btnDanger:hover,
+  .uploadBtn:hover,
+  .submitBtn:hover,
+  .confirmCancel:hover,
+  .confirmDelete:hover {
+    transform: none;
+  }
+  
+  .formInput,
+  .formTextarea,
+  select.formInput,
+  .tab,
+  .btnDanger,
+  .uploadBtn,
+  .submitBtn,
+  .confirmCancel,
+  .confirmDelete {
+    cursor: default;
   }
 }

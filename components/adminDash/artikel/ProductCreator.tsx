@@ -1,8 +1,10 @@
-// ProductCreator.tsx - VERSIÓN CORREGIDA
+// ProductCreator.tsx
 import { useState, useEffect } from "react";
 import { useAuth } from '../../auth/AuthProvider';
+import { useLanguage } from '../../../contexts/LanguageContext';
+import { useProduct } from '../../../hooks/useProducts';
+import ProductLimitBadge from '../limitProduct/ProductLimitBadge';
 import styles from './ProductCreator.module.css';
-import { Currency } from "lucide-react";
 
 interface ProductCreatorProps {
   loading: boolean;
@@ -16,7 +18,7 @@ interface ProductCreatorProps {
     stock: number | string;
     price: number | string;
     imagen: File | null;
-  }) => Promise<{ success: boolean; product?: any; error?: string }>;
+  }) => Promise<{ success: boolean; product?: any; error?: string; limitError?: boolean; limits?: any }>;
 }
 
 export const ProductCreator: React.FC<ProductCreatorProps> = ({
@@ -25,21 +27,29 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
   onClose,
   onCreateProduct
 }) => {
-  const { isAuthenticated, company} = useAuth();
+  const { t } = useLanguage();
+  const { isAuthenticated, company } = useAuth();
+  const { productLimits, fetchProductLimits , products} = useProduct();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [localError, setLocalError] = useState<string | null>(null);
   
-const currencySymbol = company?.currency || 'USD';
+  // Cargar límites al montar el componente
+useEffect(() => {
+  fetchProductLimits();
+}, [fetchProductLimits, products?.length]);
+  
+  const currencySymbol = company?.currency || 'USD';
+  
   // Estado local del formulario
   const [formData, setFormData] = useState({
     artikelName: "",
     lagerPlatz: "",
     artikelNumber: "",
     description: "",
-    stock: 0,
-    price: 0,
+    stock: "",
+    price: "",
     imagen: null as File | null,
-  
   });
 
   if (!isAuthenticated) {
@@ -47,17 +57,15 @@ const currencySymbol = company?.currency || 'USD';
       <div className={styles.modalBackdrop}>
         <div className={styles.modal}>
           <div className={styles.modalHeader}>
-            <h2 className={styles.modalTitle}>Acceso restringido</h2>
+            <h2 className={styles.modalTitle}>{t('artikel.empty.restricted.title')}</h2>
             <button className={styles.closeBtn} onClick={onClose}>✕</button>
-
-             
           </div>
           <div className={styles.modalBody}>
-            <p>Debe iniciar sesión para crear productos.</p>
+            <p>{t('artikel.empty.restricted.text')}</p>
           </div>
           <div className={styles.modalFooter}>
             <button className={`${styles.btn} ${styles.btnCancel}`} onClick={onClose}>
-              Cerrar
+              {t('artikel.creator.buttons.cancel')}
             </button>
           </div>
         </div>
@@ -80,16 +88,8 @@ const currencySymbol = company?.currency || 'USD';
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value, type } = e.target;
-    
-    if (type === "number") {
-      setFormData(prev => ({ 
-        ...prev, 
-        [name]: value === "" ? "" : value
-      }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
-    }
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -100,8 +100,8 @@ const currencySymbol = company?.currency || 'USD';
     }
   };
 
-  const handleNumberBlur = (e: React.FocusEvent<HTMLInputElement>, fieldName: string) => {
-    const value = e.target.value;
+  const handleNumberBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
     
     let finalValue = value;
     
@@ -112,7 +112,7 @@ const currencySymbol = company?.currency || 'USD';
     }
     
     if (finalValue !== value) {
-      setFormData(prev => ({ ...prev, [fieldName]: finalValue }));
+      setFormData(prev => ({ ...prev, [name]: finalValue }));
     }
   };
 
@@ -120,33 +120,99 @@ const currencySymbol = company?.currency || 'USD';
     e.preventDefault();
     if (isSubmitting || !isAuthenticated) return;
     
+    // Validación básica
+    if (!formData.artikelName.trim()) {
+      setLocalError(t('artikel.creator.messages.validation.nameRequired'));
+      return;
+    }
+
+    // ✅ VERIFICAR LÍMITE ANTES DE ENVIAR
+   if (productLimits.remaining <= 0) {
+    setLocalError(
+      `❌ Límite de artículos alcanzado (${productLimits.current}/${productLimits.max}). ` +
+      `Elimina algunos productos o actualiza tu plan para seguir creando.`
+    );
+    return;
+    }
+
     setIsSubmitting(true);
-    try { 
-      const result = await onCreateProduct(formData);
-      if (result?.success) {
-        // Resetear formulario
-        setFormData({
-          artikelName: "",
-          lagerPlatz: "",
-          artikelNumber: "",
-          description: "",
-          stock: 0,
-          price: 0,
-          imagen: null,
-        });
-        setImagePreview(null);
-        onClose();
+    setLocalError(null);
+    
+    try {
+      // Convertir valores numéricos
+      const productToSend = {
+        ...formData,
+        stock: formData.stock === '' ? 0 : Number(formData.stock),
+        price: formData.price === '' ? 0 : Number(formData.price)
+      };
+      
+      console.log('📝 Enviando producto:', productToSend);
+      
+      const result = await onCreateProduct(productToSend);
+      
+      console.log('📥 Resultado de creación:', result);
+      
+      if (result) {
+        if (result.success === true) {
+          console.log('✅ Producto creado exitosamente:', result.product);
+          setFormData({
+            artikelName: "",
+            lagerPlatz: "",
+            artikelNumber: "",
+            description: "",
+            stock: "",
+            price: "",
+            imagen: null,
+          });
+          setImagePreview(null);
+          onClose();
+        } 
+        else if (result.product) {
+          console.log('✅ Producto creado (formato antiguo):', result.product);
+          setFormData({
+            artikelName: "",
+            lagerPlatz: "",
+            artikelNumber: "",
+            description: "",
+            stock: "",
+            price: "",
+            imagen: null,
+          });
+          setImagePreview(null);
+          onClose();
+        }
+        else if (result.limitError) {
+          // ✅ MANEJAR ERROR DE LÍMITE ESPECÍFICO
+          setLocalError(result.error);
+        }
+        else {
+          console.error('❌ Error al crear producto:', result.error || 'Error desconocido');
+          setLocalError(result.error || t('artikel.creator.messages.error'));
+        }
+      } else {
+        console.error('❌ Resultado vacío de onCreateProduct');
+        setLocalError(t('artikel.creator.messages.error'));
       }
+    } catch (err) {
+      console.error('❌ Excepción en handleSubmit:', err);
+      setLocalError(err instanceof Error ? err.message : t('artikel.creator.messages.error'));
     } finally {
       setIsSubmitting(false);
     }
   };
 
+  const displayError = localError || error;
+
+  // ✅ VERIFICAR SI EL BOTÓN DEBE ESTAR DESHABILITADO
+  const isSubmitDisabled = isSubmitting || 
+                          !formData.artikelName.trim() || 
+                          productLimits.remaining <= 0;
+
   return (
     <div className={styles.modalBackdrop}>
       <div className={styles.modal}>
         <div className={styles.modalHeader}>
-          <h2 className={styles.modalTitle}>Neuer Artikel</h2>
+          <h2 className={styles.modalTitle}>{t('artikel.creator.title')}</h2>
           <button 
             className={styles.closeBtn} 
             onClick={onClose}
@@ -158,14 +224,30 @@ const currencySymbol = company?.currency || 'USD';
 
         <form onSubmit={handleSubmit} className={styles.modalForm}>
           <div className={styles.modalBody}>
+            {/* ✅ MOSTRAR LÍMITE DE PRODUCTOS */}
+            {productLimits.max > 0 && (
+              <div className={styles.limitSection}>
+                <ProductLimitBadge limits={productLimits} />
+              </div>
+            )}
+            
+            {displayError && (
+              <div className={`${styles.errorMessage} ${displayError.includes('Límite') ? styles.limitError : ''}`}>
+                <div className={styles.errorIcon}>⚠️</div>
+                {displayError}
+              </div>
+            )}
+
             <div className={styles.formSection}>
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Artikel Name *</label>
+                <label className={styles.formLabel}>
+                  {t('artikel.creator.form.artikelName')}
+                </label>
                 <input
                   type="text"
                   name="artikelName"
                   value={formData.artikelName}
-                  placeholder="Artikel Name eingeben"
+                  placeholder={t('artikel.creator.form.artikelNamePlaceholder')}
                   onChange={handleInputChange}
                   disabled={isSubmitting}
                   required
@@ -175,12 +257,14 @@ const currencySymbol = company?.currency || 'USD';
 
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Lagerplatz</label>
+                  <label className={styles.formLabel}>
+                    {t('artikel.creator.form.lagerPlatz')}
+                  </label>
                   <input
                     type="text"
                     name="lagerPlatz"
                     value={formData.lagerPlatz}
-                    placeholder="A-12"
+                    placeholder={t('artikel.creator.form.lagerPlatzPlaceholder')}
                     onChange={handleInputChange}
                     disabled={isSubmitting}
                     className={styles.formInput}
@@ -188,12 +272,14 @@ const currencySymbol = company?.currency || 'USD';
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Artikelnummer</label>
+                  <label className={styles.formLabel}>
+                    {t('artikel.creator.form.artikelNumber')}
+                  </label>
                   <input
                     type="text"
                     name="artikelNumber"
                     value={formData.artikelNumber}
-                    placeholder="345-AB"
+                    placeholder={t('artikel.creator.form.artikelNumberPlaceholder')}
                     onChange={handleInputChange}
                     disabled={isSubmitting}
                     className={styles.formInput}
@@ -203,13 +289,15 @@ const currencySymbol = company?.currency || 'USD';
 
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Bestand</label>
+                  <label className={styles.formLabel}>
+                    {t('artikel.creator.form.bestand')}
+                  </label>
                   <input
                     type="number"
                     name="stock"
                     value={formData.stock}
                     onChange={handleNumberChange}
-                    onBlur={(e) => handleNumberBlur(e, 'stock')}
+                    onBlur={(e) => handleNumberBlur(e)}
                     disabled={isSubmitting}
                     min="0"
                     className={styles.formInput}
@@ -217,40 +305,46 @@ const currencySymbol = company?.currency || 'USD';
                 </div>
 
                 <div className={styles.formGroup}>
-                  <label className={styles.formLabel}>Preis {currencySymbol}</label>
+                  <label className={styles.formLabel}>
+                    {t('artikel.creator.form.price')} ({currencySymbol})
+                  </label>
                   <input
                     type="number"
                     name="price"
                     value={formData.price}
                     onChange={handleNumberChange}
-                    onBlur={(e) => handleNumberBlur(e, 'price')}
+                    onBlur={(e) => handleNumberBlur(e)}
                     disabled={isSubmitting}
                     min="0"
                     step="0.01"
-                    placeholder="0.00"
+                    placeholder={t('artikel.creator.form.pricePlaceholder')}
                     className={styles.formInput}
                   />
                 </div>
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Beschreibung</label>
+                <label className={styles.formLabel}>
+                  {t('artikel.creator.form.description')}
+                </label>
                 <textarea
                   name="description"
                   value={formData.description}
                   onChange={handleInputChange}
                   rows={3}
-                  placeholder="Produktbeschreibung..."
+                  placeholder={t('artikel.creator.form.descriptionPlaceholder')}
                   disabled={isSubmitting}
                   className={styles.formTextarea}
                 />
               </div>
 
               <div className={styles.formGroup}>
-                <label className={styles.formLabel}>Bild</label>
+                <label className={styles.formLabel}>
+                  {t('artikel.creator.form.image')}
+                </label>
                 <div className={styles.fileUploadSection}>
                   <label className={styles.fileLabel}>
-                    <span>📷 Bild auswählen</span>
+                    <span>{t('artikel.creator.form.imageSelect')}</span>
                     <input
                       type="file"
                       name="imagen"
@@ -265,20 +359,13 @@ const currencySymbol = company?.currency || 'USD';
                     <div className={styles.imagePreview}>
                       <img 
                         src={imagePreview} 
-                        alt="Vorschau" 
+                        alt={t('artikel.creator.form.imagePreview')} 
                         className={styles.previewImage}
                       />
                     </div>
                   )}
                 </div>
               </div>
-
-              {error && (
-                <div className={styles.errorMessage}>
-                  <div className={styles.errorIcon}>⚠️</div>
-                  {error}
-                </div>
-              )}
             </div>
           </div>
 
@@ -289,20 +376,22 @@ const currencySymbol = company?.currency || 'USD';
               onClick={onClose}
               disabled={isSubmitting}
             >
-              Abbrechen
+              {t('artikel.creator.buttons.cancel')}
             </button>
             <button 
-              className={`${styles.btn} ${styles.btnSave}`}
+              className={`${styles.btn} ${styles.btnSave} ${isSubmitDisabled ? styles.disabled : ''}`}
               type="submit"
-              disabled={isSubmitting || !formData.artikelName.trim() || loading}
+              disabled={isSubmitDisabled}
             >
               {isSubmitting ? (
                 <>
                   <div className={`${styles.loadingSpinner} ${styles.spinnerSmall}`}></div>
-                  Erstellen...
+                  {t('artikel.creator.buttons.creating')}
                 </>
+              ) : productLimits.remaining <= 0 ? (
+                'Límite alcanzado'
               ) : (
-                "Artikel Erstellen"
+                t('artikel.creator.buttons.create')
               )}
             </button>
           </div>

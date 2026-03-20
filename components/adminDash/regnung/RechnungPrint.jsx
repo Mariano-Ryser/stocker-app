@@ -1,4 +1,4 @@
-// frontend/components/adminDash/regnung/RechnungPrint.jsx
+// frontend/components/dashboard/regnung/RechnungPrint.jsx
 import React, { useState, useRef } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { InvoiceClassic } from "./templates/InvoiceClassic";
@@ -30,7 +30,7 @@ const TEMPLATES = {
   modern: { 
     name: 'Modern', 
     component: InvoiceModern,
-    icon: '🎨',
+    icon: '📄',
     type: 'invoice',
     styleClass: 'invoice-modern'
   },

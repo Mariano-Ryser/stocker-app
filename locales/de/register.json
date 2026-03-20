@@ -1,0 +1,70 @@
+{
+  "register": {
+    "loading": "Laden...",
+    "welcome": "Werden Sie Teil von Stocker",
+    "subtitle": "Schließen Sie sich unserer Community erfolgreicher Unternehmen an",
+    "title": "Neues Konto erstellen",
+    "formTitle": "Registrieren Sie sich für den Zugang zur Stocker Plattform",
+    "name": {
+      "label": "Vollständiger Name *",
+      "placeholder": "Max Mustermann"
+    },
+    "email": {
+      "label": "Geschäfts-E-Mail *",
+      "placeholder": "ihre@unternehmen.de"
+    },
+    "password": {
+      "label": "Passwort *",
+      "placeholder": "••••••••",
+      "hint": "Wird beim Tippen validiert"
+    },
+    "confirmPassword": {
+      "label": "Passwort bestätigen *",
+      "placeholder": "••••••••",
+      "hint": "Muss mit Passwort übereinstimmen",
+      "match": "✓ Passwörter stimmen überein",
+      "mismatch": "Passwörter stimmen nicht überein"
+    },
+    "requirements": {
+      "title": "Passwortanforderungen:",
+      "minLength": "Mindestens 6 Zeichen",
+      "upperCase": "Mindestens ein Großbuchstabe (A-Z)",
+      "number": "Mindestens eine Zahl (0-9)",
+      "specialChar": "Optional: Sonderzeichen (!@#$%^&*)"
+    },
+    "strength": {
+      "label": "Passwortstärke:",
+      "none": " Keine Eingabe",
+      "weak": " Schwach",
+      "medium": " Mittel",
+      "strong": " Stark"
+    },
+    "termsSection": {
+      "text": "Ich stimme den {termsLink} und der {privacyLink} zu *",
+      "termsLabel": "Nutzungsbedingungen",
+      "privacyLabel": "Datenschutzerklärung"
+    },
+    "button": {
+      "register": "Konto erstellen",
+      "registering": "Wird registriert..."
+    },
+    "google": "Mit Google registrieren",
+    "loginSection": {
+      "prompt": "Bereits ein Konto?",
+      "link": "Zur Anmeldung"
+    },
+    "success": "Registrierung erfolgreich! Weiterleitung...",
+    "errors": {
+      "passwordMismatch": "Passwörter stimmen nicht überein",
+      "passwordMinLength": "Passwort muss mindestens 6 Zeichen lang sein",
+      "passwordUpperCase": "Passwort muss mindestens einen Großbuchstaben enthalten",
+      "passwordNumber": "Passwort muss mindestens eine Zahl enthalten",
+      "termsRequired": "Bitte akzeptieren Sie die Nutzungsbedingungen",
+      "registrationFailed": "Fehler bei der Registrierung",
+      "connectionError": "Verbindungsfehler mit dem Server"
+    },
+    "copyright": "© {year} Stocker. Alle Rechte vorbehalten.",
+    "privacy": "Datenschutz",
+    "terms": "Nutzungsbedingungen"
+  }
+}

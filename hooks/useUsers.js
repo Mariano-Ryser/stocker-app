@@ -73,9 +73,29 @@ const fetchCompanyUsers = useCallback(async () => {
   try {
     const data = await getCompanyUsersAPI();
     
-    if (data.ok) {
+    // ✅ SI ES 404, la empresa fue eliminada - redirigir al login
+    if (data && data.status === 404) {
+      console.log('🏢 Empresa no encontrada - cerrando sesión');
+      
+      // Limpiar localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      
+      // Redirigir al login después de un pequeño delay
+      setTimeout(() => {
+        window.location.href = '/login?reason=company_deleted';
+      }, 1000);
+      
+      return;
+    }
+    
+    if (data && data.ok === false) {
+      setError(data.message);
+      return;
+    }
+    
+    if (data && data.ok === true) {
       setCompanyUsers(data.users || []);
-      // USAR LOS LÍMITES DEL BACKEND, NO LOS HARCODEADOS
       setUserLimits(data.userLimits || { 
         maxUsers: 3, 
         createdUsers: 0, 
@@ -287,7 +307,41 @@ const uploadCompanyLogo = async (id, file, company, updateCompany) => {
     setLoading(false);
   }
 };
-
+const deleteCompanyUser = async (userId) => {
+  if (!isAuthenticated || !hasAdminPermissions()) {
+    setError('No tienes permisos para eliminar usuarios');
+    return { success: false, error: 'Permisos insuficientes' };
+  }
+  
+  // No permitir eliminarse a sí mismo
+  const currentUserId = currentUser.id || currentUser._id;
+  if (currentUserId === userId) {
+    setError('No puedes eliminarte a ti mismo');
+    return { success: false, error: 'No puedes eliminarte a ti mismo' };
+  }
+  
+  setLoading(true);
+  try {
+    const res = await deleteUserAPI(userId);
+    
+    if (res && res.ok) {
+      // Eliminar de la lista local
+      setCompanyUsers(prev => prev.filter(user => user._id !== userId));
+      setRefreshTrigger(prev => prev + 1);
+      
+      return { success: true };
+    } else {
+      setError(res?.message || 'Error al eliminar usuario');
+      return { success: false, error: res?.message };
+    }
+  } catch (err) {
+    console.error('Error eliminando usuario:', err);
+    setError(err.message);
+    return { success: false, error: err.message };
+  } finally {
+    setLoading(false);
+  }
+};
 /** ELIMINAR LOGO DE EMPRESA */
 const deleteCompanyLogo = async (id) => {
   if (!isAuthenticated) {
@@ -434,7 +488,9 @@ const deleteCompanyLogo = async (id) => {
     filterUsers,
     refreshUsers,
     refreshTrigger,
-    
+    deleteCompanyUser,
+
+
     // Propiedades
     isAuthenticated,
     hasAdminPermissions,

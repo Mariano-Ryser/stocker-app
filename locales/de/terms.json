@@ -7,13 +7,13 @@
       "scope": {
         "title": "1. Geltungsbereich",
         "paragraphs": [
-          "Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen der alpina GmbH (nachfolgend der \"Anbieter\") und den Nutzern (nachfolgend die \"Kunden\") der alpina-Plattform.",
+          "Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge zwischen der stocker GmbH (nachfolgend der \"Anbieter\") und den Nutzern (nachfolgend die \"Kunden\") der Stocker-Plattform.",
           "Die Plattform bietet datenbasierte Analysen und Entscheidungsunterstützung für Unternehmen. Mit der Registrierung oder Nutzung der Dienste erkennen die Kunden diese AGB als verbindlich an."
         ]
       },
       "description": {
         "title": "2. Leistungsbeschreibung",
-        "intro": "alpina stellt eine cloudbasierte Plattform zur Verfügung, die folgende Funktionen umfasst:",
+        "intro": "stocker stellt eine cloudbasierte Plattform zur Verfügung, die folgende Funktionen umfasst:",
         "items": [
           "Integration von Daten aus verschiedenen Quellen",
           "Erweiterte Datenanalyse und Visualisierung",
@@ -89,7 +89,7 @@
     },
     "contact": {
       "title": "Kontakt",
-      "company": "Alpina Systems AG",
+      "company": "Stocker Systems AG",
       "address": [
         "Hohlstrasse 405",
         "8048 Zúrich",

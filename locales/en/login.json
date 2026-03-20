@@ -1,12 +1,43 @@
 {
-    "login": {
-    "title": "INGLEEEES",
-    "email": "E-Mail",
-    "password": "Passwort",
-    "forgotPassword": "Passwort vergessen?",
-    "noAccount": "Noch keinen Account?",
-    "register": "Registrieren",
-    "button": "Anmelden",
-    "error": "Ungültige E-Mail oder Passwort."
+  "login": {
+    "loading": "Loading...",
+    "welcome": "Welcome to Stocker",
+    "subtitle": "Access your dashboard and manage your company data",
+    "features": {
+      "dashboard": "Real-time dashboard control",
+      "security": "Secure authentication",
+      "support": "Priority customer support",
+      "encryption": "Industry-standard data encryption"
+    },
+    "title": "Sign In",
+    "subtitle2": "Sign in with your credentials",
+    "email": {
+      "label": "Email Address *",
+      "placeholder": "your@email.com"
+    },
+    "password": {
+      "label": "Password *",
+      "placeholder": "••••••••"
+    },
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "button": {
+      "login": "Sign In",
+      "loggingIn": "Signing in..."
+    },
+    "google": "Sign in with Google",
+    "register": {
+      "prompt": "Don't have an account?",
+      "link": "Register now"
+    },
+    "success": "Login successful! Redirecting...",
+    "errors": {
+      "invalidCredentials": "Invalid credentials",
+      "connectionError": "Connection error with server",
+      "generic": "Error logging in"
+    },
+    "copyright": "© {year} Stocker. All rights reserved.",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Use"
   }
 }

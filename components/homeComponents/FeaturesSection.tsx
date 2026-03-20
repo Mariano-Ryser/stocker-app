@@ -62,7 +62,7 @@ export default function FeaturesSection() {
 
         .container {
           max-width: 1000px; /* ancho más contenido */
-          margin: 0 auto;
+          margin: 1rem auto 4rem auto;
         }
 
         .grid {
@@ -73,7 +73,6 @@ export default function FeaturesSection() {
 
         .feature-card {
           background: white;
-          border-radius: 16px;
           padding: 28px;
           box-shadow: 0 10px 24px rgba(0, 0, 0, 0.06);
           text-align: center;

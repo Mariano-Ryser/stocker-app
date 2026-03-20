@@ -35,58 +35,34 @@
 }
 
 /* LOGO */
-.logo {
+.logo { 
   cursor: pointer;
   display: flex;
   gap: 0.75rem;
   align-items: center;
   transition: transform 0.2s ease;
 }
-
 .logo:hover {
   transform: translateY(-1px);
 }
-
 .logoIcon {
-  width: 150px;
-  height: 90px;
+  width: 110px;
+  height: 85px;
+  margin-left: 2rem;
   overflow: hidden;
   display: flex;
   align-items: center;
-  justify-content: center;
 }
-
 .logoImage {
-  width: 12rem;
-  object-fit: contain;
-  
+  width: 5.5rem;
+  margin-left: 0px;
 }
-
-.logoText h1 {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0;
-  letter-spacing: -0.025em;
-}
-
-.logoSubtitle {
-  font-size: 0.75rem;
-  color: #6b7280;
-  letter-spacing: 0.025em;
-}
-
-.logoHighlight {
-  color: #2563eb;
-}
-
 /* DESKTOP NAV */
 .desktopNav {
   display: none;
   align-items: center;
   gap: 0.5rem;
 }
-
 .desktopNav a {
   display: flex;
   align-items: center;
@@ -98,19 +74,16 @@
   transition: all 0.2s ease;
   color: #1f2937;
 }
-
 .desktopNav a:hover {
   background: #f9fafb;
   color: #2563eb;
 }
-
 /* DESKTOP ACTIONS */
 .desktopActions {
   display: none;
   align-items: center;
   gap: 0.5rem;
 }
-
 /* DESKTOP BUTTONS */
 .btnText {
   background: transparent;
@@ -122,12 +95,10 @@
   border-radius: 0.75rem;
   transition: all 0.2s ease;
 }
-
 .btnText:hover {
   background: #f9fafb;
   color: #2563eb;
 }
-
 /* MOBILE TOGGLE */
 .mobileToggle {
   background: none;
@@ -142,11 +113,9 @@
   padding: 0.5rem;
   border-radius: 0.5rem;
 }
-
 .mobileToggle:hover {
   background: #f9fafb;
 }
-
 /* MOBILE MENU DROPDOWN */
 .mobileMenu {
   position: fixed;
@@ -165,7 +134,6 @@
   overflow: hidden;
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
 }
-
 /* Ajuste para cuando el header está oculto */
 .header.hidden + .mobileMenu,
 .header.hidden ~ .mobileMenu {
@@ -269,11 +237,12 @@
 }
 
 @media (max-width: 480px) {
-  .logoImage {
-    width: 9rem;
-    object-fit: contain;
-  }
   
+  .logoImage {
+  width: 4rem;
+  
+  margin-left: 0px;
+}
   .container {
     padding: 0 1rem;
   }
@@ -299,26 +268,11 @@
     font-size: 0.7rem;
   }
   
-  .logoIcon {
-    width: 110px;
-    height: 80px;
-  }
+  
 }
 
 @media (max-width: 360px) {
-  .logoImage {
-    width: 9rem;
-    object-fit: contain;
-  }
-  
-  .logoIcon {
-    width: 100px;
-    height: 70px;
-  }
-  
-  .logoText h1 {
-    font-size: 1.2rem;
-  }
+
   
   .mobileMenu {
     right: 0.5rem;
