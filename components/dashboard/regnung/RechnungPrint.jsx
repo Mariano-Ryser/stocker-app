@@ -4,7 +4,7 @@ import { useAuth } from "../../auth/AuthProvider";
 import { InvoiceClassic } from "./templates/InvoiceClassic";
 import { InvoiceClassic2 } from "./templates/InvoiceClassic2";
 import { InvoiceModern } from "./templates/InvoiceModern";
-import { InvoiceLetter } from "./templates/InvoiceLetter";
+import { InvoiceLetter } from "./templates/invoiceLetter";
 import { TicketThermal } from "./templates/TicketThermal";
 import styles from "./RechnungPrint.module.css";
 import { printStyles } from './printStyles';
