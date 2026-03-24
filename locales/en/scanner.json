@@ -9,7 +9,7 @@
     "header": {
       "title": "Kiosk Sale",
       "subtitle": "Fast scanning and payment",
-      "productsAvailable": "📦 {count} products available",
+      "productsAvailable": "{count} products available",
       "updating": "Updating...",
       "indexedDB": "(IndexedDB: {count})",
       "total": "Total:",

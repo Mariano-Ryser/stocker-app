@@ -23,6 +23,36 @@ const TIMEZONE_OPTIONS = [
   { value: 'America/Argentina/Buenos_Aires', label: 'settings.timezones.America/Argentina/Buenos_Aires' },
 ];
 
+// 🔥 MAPA DE PAÍSES A MONEDAS POR DEFECTO
+const COUNTRY_TO_CURRENCY = {
+  'DE': 'EUR',
+  'ES': 'EUR',
+  'FR': 'EUR',
+  'IT': 'EUR',
+  'AT': 'EUR',
+  'CH': 'CHF',      // Suiza -> CHF
+  'US': 'USD',
+  'AR': 'ARS',
+  'BR': 'BRL',
+  'UK': 'GBP',
+  'GB': 'GBP',
+};
+
+// 🔥 MAPA DE PAÍSES A ZONAS HORARIAS POR DEFECTO
+const COUNTRY_TO_TIMEZONE = {
+  'DE': 'Europe/Berlin',
+  'ES': 'Europe/Madrid',
+  'FR': 'Europe/Paris',
+  'IT': 'Europe/Rome',
+  'AT': 'Europe/Vienna',
+  'CH': 'Europe/Zurich',
+  'US': 'America/New_York',
+  'AR': 'America/Argentina/Buenos_Aires',
+  'BR': 'America/Sao_Paulo',
+  'UK': 'Europe/London',
+  'GB': 'Europe/London',
+};
+
 export default function EditCompanyComponent({ user, company, updateCompany: updateCompanyContext }) {
   const { t } = useLanguage();
   const { uploadCompanyLogo, deleteCompanyLogo } = useUsers();
@@ -103,16 +133,39 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
   
   const successTimeoutRef = useRef(null);
 
-  // Actualizar configuración cuando cambia el país
+  // 🔥 FUNCIÓN MEJORADA: Actualizar configuración cuando cambia el país
   useEffect(() => {
     const newConfig = COUNTRY_CONFIG[companyForm.invoiceCountry] || COUNTRY_CONFIG.DE;
     setCountryConfig(newConfig);
     
     // Actualizar taxRate al valor por defecto del país
-    setCompanyForm(prev => ({
-      ...prev,
-      taxRate: newConfig.taxRate
-    }));
+    // Actualizar currency según el país
+    // Actualizar timezone según el país
+    setCompanyForm(prev => {
+      const updates = {
+        taxRate: newConfig.taxRate
+      };
+      
+      // 🔥 Actualizar moneda según el país
+      const defaultCurrency = COUNTRY_TO_CURRENCY[companyForm.invoiceCountry];
+      if (defaultCurrency) {
+        updates.currency = defaultCurrency;
+      }
+      
+      // 🔥 Actualizar zona horaria según el país
+      const defaultTimezone = COUNTRY_TO_TIMEZONE[companyForm.invoiceCountry];
+      if (defaultTimezone) {
+        updates.timezone = defaultTimezone;
+      }
+      
+      console.log(`🌍 País cambiado a ${companyForm.invoiceCountry}:`, {
+        taxRate: updates.taxRate,
+        currency: updates.currency,
+        timezone: updates.timezone
+      });
+      
+      return { ...prev, ...updates };
+    });
   }, [companyForm.invoiceCountry]);
 
   // Actualizar cuando cambia company
@@ -169,9 +222,9 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
     return value.replace(/[^0-9]/g, '');
   };
 
-  // Verificar si hay cambios (simplificado)
+  // Verificar si hay cambios
   const hasChanges = () => {
-    return true; // Siempre permite guardar para pruebas
+    return JSON.stringify(companyForm) !== JSON.stringify(originalForm);
   };
 
   const showSuccessMessage = (message) => {
@@ -287,7 +340,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
     }
   };
 
-  // Funciones para el manejo del logo (sin cambios)
+  // Funciones para el manejo del logo
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -296,76 +349,72 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
     }
   };
 
- const handleUploadLogo = async () => {
-  if (!logoFile) {
-    setErrors({ logo: t('settings.company.logo.noFileSelected') });
-    return;
-  }
-
-  setIsUploadingLogo(true);
-  setErrors({});
-
-  try {
-    // Obtener el ID de la compañía (asumiendo que company tiene un _id)
-    const companyId = company?._id || company?.id;
-    
-    if (!companyId) {
-      throw new Error('No se encontró el ID de la compañía');
+  const handleUploadLogo = async () => {
+    if (!logoFile) {
+      setErrors({ logo: t('settings.company.logo.noFileSelected') });
+      return;
     }
 
-    const result = await uploadCompanyLogo(companyId, logoFile, company, updateCompanyContext);
-    
-    if (result.success || result.ok) {
-      // Limpiar el archivo seleccionado
-      setLogoFile(null);
-      // Actualizar el preview con el nuevo logo (ya debería estar actualizado)
-      setOriginalLogo(logoPreview);
-      showSuccessMessage(t('settings.company.messages.logoUploaded'));
-    } else {
-      setErrors({ logo: result.error || t('settings.company.logo.uploadError') });
+    setIsUploadingLogo(true);
+    setErrors({});
+
+    try {
+      const companyId = company?._id || company?.id;
+      
+      if (!companyId) {
+        throw new Error('No se encontró el ID de la compañía');
+      }
+
+      const result = await uploadCompanyLogo(companyId, logoFile, company, updateCompanyContext);
+      
+      if (result.success || result.ok) {
+        setLogoFile(null);
+        setOriginalLogo(logoPreview);
+        showSuccessMessage(t('settings.company.messages.logoUploaded'));
+      } else {
+        setErrors({ logo: result.error || t('settings.company.logo.uploadError') });
+      }
+    } catch (error) {
+      console.error('Error uploading logo:', error);
+      setErrors({ logo: error.message || t('settings.company.logo.uploadError') });
+    } finally {
+      setIsUploadingLogo(false);
     }
-  } catch (error) {
-    console.error('Error uploading logo:', error);
-    setErrors({ logo: error.message || t('settings.company.logo.uploadError') });
-  } finally {
-    setIsUploadingLogo(false);
-  }
-};
+  };
 
-const handleDeleteLogo = async () => {
-  setIsUploadingLogo(true);
-  setErrors({});
+  const handleDeleteLogo = async () => {
+    setIsUploadingLogo(true);
+    setErrors({});
 
-  try {
-    const companyId = company?._id || company?.id;
-    
-    if (!companyId) {
-      throw new Error('No se encontró el ID de la compañía');
-    }
+    try {
+      const companyId = company?._id || company?.id;
+      
+      if (!companyId) {
+        throw new Error('No se encontró el ID de la compañía');
+      }
 
-    const result = await deleteCompanyLogo(companyId);
-    
-    if (result.success || result.ok) {
-      // Actualizar el preview
-      setLogoPreview('');
-      setOriginalLogo('');
-      setLogoFile(null);
+      const result = await deleteCompanyLogo(companyId);
+      
+      if (result.success || result.ok) {
+        setLogoPreview('');
+        setOriginalLogo('');
+        setLogoFile(null);
+        setShowDeleteConfirm(false);
+        showSuccessMessage(t('settings.company.messages.logoRemoved'));
+      } else {
+        setErrors({ logo: result.error || t('settings.company.logo.deleteError') });
+        setShowDeleteConfirm(false);
+      }
+    } catch (error) {
+      console.error('Error deleting logo:', error);
+      setErrors({ logo: error.message || t('settings.company.logo.deleteError') });
       setShowDeleteConfirm(false);
-      showSuccessMessage(t('settings.company.messages.logoRemoved'));
-    } else {
-      setErrors({ logo: result.error || t('settings.company.logo.deleteError') });
-      setShowDeleteConfirm(false);
+    } finally {
+      setIsUploadingLogo(false);
     }
-  } catch (error) {
-    console.error('Error deleting logo:', error);
-    setErrors({ logo: error.message || t('settings.company.logo.deleteError') });
-    setShowDeleteConfirm(false);
-  } finally {
-    setIsUploadingLogo(false);
-  }
-};
+  };
 
-  // Renderizar campos de dirección según país (simplificado)
+  // Renderizar campos de dirección según país
   const renderAddressFields = () => {
     const fields = [];
     
@@ -468,9 +517,11 @@ const handleDeleteLogo = async () => {
     return fields;
   };
 
-  // Renderizar campos fiscales según país (simplificado)
+  // Renderizar campos fiscales según país
   const renderTaxFields = () => {
-    return (
+    const fields = [];
+    
+    fields.push(
       <div key="taxId" className={styles.formGroup}>
         <label htmlFor="taxId" className={styles.formLabel}>
           Tax ID
@@ -484,9 +535,49 @@ const handleDeleteLogo = async () => {
         />
       </div>
     );
+    
+    // Campos específicos para Suiza
+    if (companyForm.invoiceCountry === 'CH') {
+      fields.push(
+        <div key="uid" className={styles.formGrid}>
+          <div className={styles.formGroup}>
+            <label htmlFor="uid" className={styles.formLabel}>
+              UID (Unternehmens-Identifikationsnummer)
+            </label>
+            <input
+              type="text"
+              id="uid"
+              value={companyForm.uid}
+              onChange={e => setCompanyForm({...companyForm, uid: e.target.value})}
+              className={styles.formInput}
+              placeholder="CHE-123.456.789"
+            />
+            <p className={styles.helpText}>
+              (UID)
+            </p>
+          </div>
+          
+          <div className={styles.formGroup}>
+            <label htmlFor="companyRegister" className={styles.formLabel}>
+              
+            </label>
+            <input
+              type="text"
+              id="companyRegister"
+              value={companyForm.companyRegister}
+              onChange={e => setCompanyForm({...companyForm, companyRegister: e.target.value})}
+              className={styles.formInput}
+              placeholder="CH-123.456.789"
+            />
+          </div>
+        </div>
+      );
+    }
+    
+    return fields;
   };
 
-  // Renderizar campos bancarios según país (simplificado)
+  // Renderizar campos bancarios según país
   const renderBankFields = () => {
     const fields = [];
     
@@ -791,6 +882,15 @@ const handleDeleteLogo = async () => {
             </p>
           </div>
 
+          {/* 🔥 NUEVO: Indicador visual de cambios automáticos */}
+          <div className={styles.autoUpdateNotice}>
+            <span>
+              <strong> {countryConfig.taxName} ({companyForm.taxRate}%)</strong>, 
+              <strong> {CURRENCY_OPTIONS.find(c => c.value === companyForm.currency)?.label.split('.').pop() || companyForm.currency}</strong> 
+             
+            </span>
+          </div>
+
           {/* Campo para porcentaje de IVA */}
           <div className={styles.formGroup}>
             <label htmlFor="taxRate" className={styles.formLabel}>
@@ -942,6 +1042,11 @@ const handleDeleteLogo = async () => {
                       ))}
                     </select>
                   </div>
+                  {COUNTRY_TO_CURRENCY[companyForm.invoiceCountry] && (
+                    <p className={styles.autoHint}>
+                      {countryConfig.name}: {COUNTRY_TO_CURRENCY[companyForm.invoiceCountry]}
+                    </p>
+                  )}
                 </div>
               </div>
               
@@ -964,6 +1069,11 @@ const handleDeleteLogo = async () => {
                     ))}
                   </select>
                 </div>
+                {COUNTRY_TO_TIMEZONE[companyForm.invoiceCountry] && (
+                  <p className={styles.autoHint}>
+                   {countryConfig.name}: {COUNTRY_TO_TIMEZONE[companyForm.invoiceCountry].split('/').pop()}
+                  </p>
+                )}
               </div>
 
               {/* Dirección dinámica según país */}

@@ -1,4 +1,4 @@
-// ScannerSalesPage.js - VERSIÓN COMPLETA CON GESTIÓN DE FOCO INTELIGENTE
+// ScannerSalesPage.js - VERSIÓN CORREGIDA (FOCO SIEMPRE EN SCANNER)
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../../../components/auth/AuthProvider';
 import { useProduct } from '../../../hooks/useProducts';
@@ -38,7 +38,8 @@ export default function ScannerSalesPage() {
   const [lastScanned, setLastScanned] = useState(null);
   const [scanMode, setScanMode] = useState(true);
   const [isSearching, setIsSearching] = useState(false);
-  const [focusedInput, setFocusedInput] = useState('scanner'); // 'scanner' o 'client'
+  const [focusedInput, setFocusedInput] = useState('scanner');
+  const [shouldFocusScanner, setShouldFocusScanner] = useState(true); // 🔥 NUEVO: Control de foco
   
   const scannerInputRef = useRef(null);
   const clientInputRef = useRef(null);
@@ -101,26 +102,39 @@ export default function ScannerSalesPage() {
     }
   }, [scannerProducts, hasInitialData]);
 
-  // 🔥 EFECTO MODIFICADO: Enfocar según el modo
+  // 🔥 EFECTO MODIFICADO: Enfocar según el modo - MÁS AGRESIVO
   useEffect(() => {
-    if (hasInitialData && !cashPayment.show && !showManualSearch) {
+    if (hasInitialData && !cashPayment.show && !showManualSearch && shouldFocusScanner) {
       if (focusedInput === 'scanner' && scannerInputRef.current) {
         scannerInputRef.current.focus();
       } else if (focusedInput === 'client' && clientInputRef.current) {
         clientInputRef.current.focus();
       }
     }
-  }, [focusedInput, cashPayment.show, showManualSearch, hasInitialData]);
+  }, [focusedInput, cashPayment.show, showManualSearch, hasInitialData, shouldFocusScanner]);
+
+  // 🔥 NUEVO: Efecto para forzar foco después de escaneo
+  useEffect(() => {
+    if (!isSearching && !cashPayment.show && !showManualSearch && shouldFocusScanner && focusedInput === 'scanner') {
+      const timeoutId = setTimeout(() => {
+        if (scannerInputRef.current && document.activeElement !== scannerInputRef.current) {
+          scannerInputRef.current.focus();
+          console.log('🎯 Foco restaurado en scanner');
+        }
+      }, 50);
+      return () => clearTimeout(timeoutId);
+    }
+  }, [isSearching, cashPayment.show, showManualSearch, shouldFocusScanner, focusedInput]);
 
   // 🔥 NUEVA FUNCIÓN: Cambiar el foco manualmente
   const switchFocus = (inputType) => {
     setFocusedInput(inputType);
+    setShouldFocusScanner(true);
   };
 
   // 🔥 MANEJADOR DE TECLAS GLOBAL (atajos)
   useEffect(() => {
     const handleGlobalKeyDown = (e) => {
-      // Alt+S para cambiar a scanner, Alt+C para cambiar a cliente
       if (e.altKey && e.key === 's') {
         e.preventDefault();
         switchFocus('scanner');
@@ -135,7 +149,7 @@ export default function ScannerSalesPage() {
   }, []);
 
   // 🔥 NUEVA FUNCIÓN: Manejar tecla Enter en el input de cliente
-  const handleClientKeyPress = (e:any) => {
+  const handleClientKeyPress = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       
@@ -145,13 +159,16 @@ export default function ScannerSalesPage() {
         setClientId(firstClient._id);
         setClientSearch(`${firstClient.vorname} ${firstClient.name}`);
         setShowClientAutocomplete(false);
+        // 🔥 Volver al scanner después de seleccionar cliente
+        setFocusedInput('scanner');
+        setShouldFocusScanner(true);
       }
     }
   };
 
   // 🔥 NUEVA FUNCIÓN: Manejar tecla global para finalizar venta (Ctrl+Enter)
   useEffect(() => {
-    const handleCheckoutShortcut = (e:any) => {
+    const handleCheckoutShortcut = (e) => {
       if (e.ctrlKey && e.key === 'Enter' && scannedItems.length > 0 && !cashPayment.show) {
         e.preventDefault();
         handleFinishSale();
@@ -163,7 +180,7 @@ export default function ScannerSalesPage() {
   }, [scannedItems.length, cashPayment.show]);
 
   useEffect(() => {
-    const handleClickOutside = (event:any) => {
+    const handleClickOutside = (event) => {
       if (showClientAutocomplete && clientAutocompleteRef.current &&
           !clientAutocompleteRef.current.contains(event.target)) {
         setShowClientAutocomplete(false);
@@ -175,7 +192,7 @@ export default function ScannerSalesPage() {
   }, [showClientAutocomplete]);
 
   // 🔥 Búsqueda instantánea por código de barras
-  const findProductByBarcode = useCallback(async (barcode:any) => {
+  const findProductByBarcode = useCallback(async (barcode) => {
     if (!barcode) return null;
     
     const searchTerm = barcode.toLowerCase().trim();
@@ -241,7 +258,7 @@ export default function ScannerSalesPage() {
     return () => clearTimeout(timer);
   }, [manualSearchTerm, showManualSearch, handleManualSearch]);
 
-  const checkStockBeforeAdd = (product:any, quantityToAdd = 1) => {
+  const checkStockBeforeAdd = (product, quantityToAdd = 1) => {
     const existingItem = scannedItems.find(item => item.productId === product._id);
     const currentQuantity = existingItem ? existingItem.quantity : 0;
     const totalQuantityNeeded = currentQuantity + quantityToAdd;
@@ -264,7 +281,7 @@ export default function ScannerSalesPage() {
     return true;
   };
 
-  const addProductToSale = (product:any, quantity = 1) => {
+  const addProductToSale = (product, quantity = 1) => {
     if (!checkStockBeforeAdd(product, quantity)) return false;
     
     const existingIndex = scannedItems.findIndex(item => 
@@ -296,20 +313,29 @@ export default function ScannerSalesPage() {
         .replace('{name}', product.artikelName)
     });
     
+    // 🔥 Limpiar mensaje después de 2 segundos
+    setTimeout(() => {
+      setLastScanned(null);
+    }, 2000);
+    
     return true;
   };
 
-  // 🔥 Recuperar foco si se pierde accidentalmente
+  // 🔥 CORREGIDO: Recuperar foco sin conflictos
   const handleInputBlur = () => {
-    if (focusedInput === 'scanner' && !cashPayment.show && !showManualSearch && hasInitialData) {
+    // Solo recuperar foco si debe estar en scanner y no hay modales activos
+    if (focusedInput === 'scanner' && !cashPayment.show && !showManualSearch && hasInitialData && shouldFocusScanner) {
       setTimeout(() => {
-        scannerInputRef.current?.focus();
-      }, 10);
+        if (scannerInputRef.current && document.activeElement !== scannerInputRef.current) {
+          scannerInputRef.current.focus();
+          console.log('🎯 Foco recuperado en blur');
+        }
+      }, 100);
     }
   };
 
-  // 🔥 Manejar escaneo con respuesta inmediata
-  const handleBarcodeScan = async (e:any) => {
+  // 🔥 CORREGIDO: Manejar escaneo con respuesta inmediata y foco asegurado
+  const handleBarcodeScan = async (e) => {
     e.preventDefault();
     
     if (!barcodeInput.trim()) {
@@ -336,6 +362,14 @@ export default function ScannerSalesPage() {
       if (product) {
         addProductToSale(product, 1);
         setBarcodeInput('');
+        
+        // 🔥 FORZAR FOCO INMEDIATAMENTE después de agregar producto
+        setTimeout(() => {
+          if (scannerInputRef.current && !cashPayment.show && !showManualSearch) {
+            scannerInputRef.current.focus();
+            console.log('🎯 Foco forzado después de escaneo exitoso');
+          }
+        }, 10);
       } else {
         setLastScanned({
           product: null,
@@ -345,10 +379,15 @@ export default function ScannerSalesPage() {
             .replace('{barcode}', barcodeInput)
         });
         
+        // Limpiar input para nuevo escaneo
+        setBarcodeInput('');
+        
         setTimeout(() => {
           setLastScanned(null);
-          scannerInputRef.current?.focus();
-        }, 3000);
+          if (scannerInputRef.current && !cashPayment.show && !showManualSearch) {
+            scannerInputRef.current.focus();
+          }
+        }, 2000);
       }
     } catch (error) {
       console.error('Error en escaneo:', error);
@@ -358,7 +397,14 @@ export default function ScannerSalesPage() {
         success: false,
         message: t('scanner.scanner.feedback.searchError')
       });
-      scannerInputRef.current?.focus();
+      setBarcodeInput('');
+      
+      setTimeout(() => {
+        setLastScanned(null);
+        if (scannerInputRef.current && !cashPayment.show && !showManualSearch) {
+          scannerInputRef.current.focus();
+        }
+      }, 2000);
     } finally {
       setIsSearching(false);
     }
@@ -378,6 +424,9 @@ export default function ScannerSalesPage() {
     setClientId('');
     setClientSearch('');
     setShowClientAutocomplete(false);
+    // 🔥 Volver al scanner después de limpiar
+    setFocusedInput('scanner');
+    setShouldFocusScanner(true);
   };
 
   const updateQuantity = (index, newQuantity) => {
@@ -402,6 +451,13 @@ export default function ScannerSalesPage() {
     setScannedItems(prev => prev.map((item, i) => 
       i === index ? { ...item, quantity: newQuantity } : item
     ));
+    
+    // 🔥 Mantener foco en scanner después de modificar cantidad
+    setTimeout(() => {
+      if (scannerInputRef.current && !cashPayment.show && !showManualSearch) {
+        scannerInputRef.current.focus();
+      }
+    }, 50);
   };
 
   const updatePrice = (index, newPrice) => {
@@ -412,6 +468,13 @@ export default function ScannerSalesPage() {
 
   const removeItem = (index) => {
     setScannedItems(prev => prev.filter((_, i) => i !== index));
+    
+    // 🔥 Mantener foco en scanner después de eliminar
+    setTimeout(() => {
+      if (scannerInputRef.current && !cashPayment.show && !showManualSearch) {
+        scannerInputRef.current.focus();
+      }
+    }, 50);
   };
 
   const validateStockBeforeFinish = () => {
@@ -545,16 +608,17 @@ export default function ScannerSalesPage() {
       if (result.success && result.sale) {
         setCurrentReceipt(result.sale);
         setShowReceipt(true);
-          // ✅ DISPARAR EVENTO DE STOCK ACTUALIZADO (para cada producto vendido)
-  scannedItems.forEach(item => {
-    window.dispatchEvent(new CustomEvent('stockUpdated', { 
-      detail: { 
-        productId: item.productId,
-        quantitySold: item.quantity,
-        timestamp: new Date().toISOString()
-      } 
-    }));
-  });
+        
+        scannedItems.forEach(item => {
+          window.dispatchEvent(new CustomEvent('stockUpdated', { 
+            detail: { 
+              productId: item.productId,
+              quantitySold: item.quantity,
+              timestamp: new Date().toISOString()
+            } 
+          }));
+        });
+        
         updateProductInCache(true).catch(err => 
           console.warn('Error actualizando caché:', err)
         );
@@ -574,6 +638,7 @@ export default function ScannerSalesPage() {
           setCurrentReceipt(null);
           setIsSubmitting(false);
           setFocusedInput('scanner');
+          setShouldFocusScanner(true);
         }, 5000);
       } else {
         if (result.type === 'BUSINESS_ERROR' || result.message.includes('Stock')) {
@@ -617,6 +682,7 @@ export default function ScannerSalesPage() {
       change: 0,
       method: 'cash'
     });
+    setShouldFocusScanner(false); // 🔥 Desactivar foco automático mientras está el modal
   };
 
   const handleCancelSale = () => {
@@ -638,6 +704,7 @@ export default function ScannerSalesPage() {
       setShowManualSearch(false);
       setManualSearchTerm('');
       setFocusedInput('scanner');
+      setShouldFocusScanner(true);
     }
   };
 
@@ -645,6 +712,7 @@ export default function ScannerSalesPage() {
     setShowManualSearch(true);
     setManualSearchTerm('');
     setManualSearchResults([]);
+    setShouldFocusScanner(false); // 🔥 Desactivar foco automático durante búsqueda manual
   };
 
   const handleSelectManualProduct = (product) => {
@@ -653,6 +721,7 @@ export default function ScannerSalesPage() {
     setManualSearchTerm('');
     setManualSearchResults([]);
     setFocusedInput('scanner');
+    setShouldFocusScanner(true);
   };
 
   const closePaymentModal = () => {
@@ -663,6 +732,7 @@ export default function ScannerSalesPage() {
       change: 0
     }));
     setFocusedInput('scanner');
+    setShouldFocusScanner(true);
   };
 
   const handleCashInputKeyPress = (e) => {
@@ -791,10 +861,13 @@ export default function ScannerSalesPage() {
                   value={barcodeInput}
                   onChange={(e) => setBarcodeInput(e.target.value)}
                   onBlur={handleInputBlur}
-                  onFocus={() => setFocusedInput('scanner')}
+                  onFocus={() => {
+                    setFocusedInput('scanner');
+                    setShouldFocusScanner(true);
+                  }}
                   placeholder={t('scanner.scanner.placeholder')}
                   className={`${styles.scannerInput} ${focusedInput === 'scanner' ? styles.inputFocused : ''}`}
-                  disabled={!scanMode || cashPayment.show || showManualSearch || isSearching}
+                  disabled={!scanMode || cashPayment.show || showManualSearch}
                   autoFocus={hasInitialData && focusedInput === 'scanner'}
                 />
                 <button 
@@ -843,6 +916,7 @@ export default function ScannerSalesPage() {
                     setManualSearchTerm('');
                     setManualSearchResults([]);
                     setFocusedInput('scanner');
+                    setShouldFocusScanner(true);
                   }}
                 >
                   ✕
@@ -936,6 +1010,7 @@ export default function ScannerSalesPage() {
                   onFocus={() => {
                     setShowClientAutocomplete(true);
                     setFocusedInput('client');
+                    setShouldFocusScanner(false);
                   }}
                   onKeyDown={handleClientKeyPress}
                   className={`${styles.clientInput} ${focusedInput === 'client' ? styles.inputFocused : ''}`}
@@ -967,6 +1042,8 @@ export default function ScannerSalesPage() {
                       setClientId('');
                       setClientSearch('');
                       setShowClientAutocomplete(false);
+                      setFocusedInput('scanner');
+                      setShouldFocusScanner(true);
                     }}
                   >
                     <div className={styles.autocompleteItemContent}>
@@ -987,6 +1064,8 @@ export default function ScannerSalesPage() {
                         setClientId(c._id);
                         setClientSearch(`${c.vorname} ${c.name}`);
                         setShowClientAutocomplete(false);
+                        setFocusedInput('scanner');
+                        setShouldFocusScanner(true);
                       }}
                     >
                       <div className={styles.autocompleteItemContent}>
@@ -1394,6 +1473,7 @@ export default function ScannerSalesPage() {
                     setClientId('');
                     setClientSearch('');
                     setFocusedInput('scanner');
+                    setShouldFocusScanner(true);
                   }}
                 >
                   {t('scanner.receipt.newSale')}

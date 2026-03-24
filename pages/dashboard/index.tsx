@@ -1,4 +1,4 @@
-// pages/dashboard/index.tsx
+// pages/dashboard/index.tsx (versión mejorada)
 import {preloadDashboardOnce} from '../../PreloadDashboard'
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useAuth } from "../../components/auth/AuthProvider";
@@ -27,11 +27,22 @@ import { User, Sale } from '../../types';
 
 export default function DashboardHome() {
   const { t } = useLanguage(); 
-  const [showSplash, setShowSplash] = useState(false); // Inicialmente false
+  const [showSplash, setShowSplash] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   
-  useEffect(()=>{
-    preloadDashboardOnce()
-  },[])
+  // Detectar si es móvil para ajustes adicionales
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+  
+  useEffect(() => {
+    preloadDashboardOnce();
+  }, []);
 
   const { user, isAuthenticated, loading: authLoading } = useAuth() as { 
     user: User | null; 
@@ -40,34 +51,25 @@ export default function DashboardHome() {
   };
 
   const router = useRouter();
-  // Hook para manejo coordinado de refresh
   const { refreshAllData: coordinatedRefresh, isRefreshing } = useDashboard();
 
-  // Verificar si es la primera vez después del login
   useEffect(() => {
-    // Solo verificar cuando el usuario está autenticado
     if (isAuthenticated && !authLoading) {
-      // Verificar si ya mostramos el splash en esta sesión
       const hasShownSplash = sessionStorage.getItem('splashShown');
       
       if (!hasShownSplash) {
-        // Primera vez en esta sesión, mostrar splash
         setShowSplash(true);
-        // Marcar que ya lo mostramos
         sessionStorage.setItem('splashShown', 'true');
       }
     }
   }, [isAuthenticated, authLoading]);
 
-  // Inicializar hooks
   const {
-    // products,
     loading: productsLoading, 
     refreshProducts, 
     totalProducts, 
   } = useProduct();
   
-  // Solo necesitamos stats de clientes, no la lista completa
   const { 
     clientsStats,
     loading: clientsLoading, 
@@ -81,7 +83,6 @@ export default function DashboardHome() {
     salesStats,
   } = useSales();
 
-  // Estado para estadísticas
   const [stats, setStats] = useState({
     produkte: 0,
     kunden: 0,
@@ -92,19 +93,15 @@ export default function DashboardHome() {
     pendingCount: 0
   });
 
-  // ✅ Función optimizada para refrescar todos los datos
   const handleRefreshAllData = useCallback(async () => {
-    // console.log("Dashboard: Manual refresh triggered");
     await coordinatedRefresh([refreshProducts, refreshClients, refreshSales]);
   }, [coordinatedRefresh, refreshProducts, refreshClients, refreshSales]);
 
-  // ✅ Efecto para actualizar stats cuando TODOS los datos estén listos
   useEffect(() => {
     const allDataLoaded = !productsLoading && !clientsLoading && !salesLoading;
     const hasData = isAuthenticated && allDataLoaded;
     
     if (hasData) {
-      // console.log("Dashboard: All data loaded, updating stats");
       setStats({
         produkte: totalProducts || 0,
         kunden: clientsStats?.total || 0,
@@ -125,14 +122,12 @@ export default function DashboardHome() {
     salesLoading
   ]);
 
-  // ✅ Efecto para redirección si no está autenticado
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
       router.push("/login");
     }
   }, [authLoading, isAuthenticated, router]);
 
-  // ✅ Efecto para manejar eventos globales (broadcast)
   useEffect(() => {
     if (!isAuthenticated) return;
 
@@ -142,16 +137,13 @@ export default function DashboardHome() {
       broadcastChannel = new BroadcastChannel('sales_updates');
       broadcastChannel.onmessage = (event) => {
         if (event.data === 'new_sale' || event.data === 'data_updated') {
-          // console.log("Dashboard: Broadcast received, refreshing data");
           handleRefreshAllData();
         }
       };
     }
 
-    // Opcional: Refrescar al volver al dashboard
     const handleRouteChange = (url: string) => {
       if (url === '/dashboard' || url === '/') {
-        // console.log("Dashboard: Route changed to dashboard, refreshing");
         handleRefreshAllData();
       }
     };
@@ -166,7 +158,6 @@ export default function DashboardHome() {
     };
   }, [isAuthenticated, router, handleRefreshAllData]);
 
-  // ✅ Formatear datos para display
   const formatted = useMemo(() => {
     return {
       produkte: stats.produkte.toLocaleString("de-DE"),
@@ -179,17 +170,14 @@ export default function DashboardHome() {
     };
   }, [stats]);
 
-  // Manejador para cuando el splash screen termina
   const handleSplashComplete = useCallback(() => {
     setShowSplash(false);
   }, []);
 
-  // Mostrar splash screen solo si es la primera vez en la sesión
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} duration={2100} />;
   }
 
-  // Loading state normal (para cuando el splash ya pasó pero los datos aún cargan)
   if (authLoading) {
     return (
       <div className={styles.loadingWrapper}>
@@ -206,10 +194,6 @@ export default function DashboardHome() {
 
   return (
     <div className={styles.dashboardContainer}>
-    
-
-      {/* Main Layout Grid */}
-      
       <div className={styles.mainLayout}>
         {/* Left Column - Quick Actions */}
         <div className={styles.leftColumn}>
@@ -320,18 +304,13 @@ export default function DashboardHome() {
               </button>
             </div>
           </section>
-            {/* Resto del dashboard igual */}
-    {isPremiumUser && (
-    
-       <>
-        <SalesChart 
-            sales={sales as Sale[]}
-            loading={salesLoading}
-          /> 
-       
-       </>
-      
-      )}    
+          
+          {isPremiumUser && (
+            <SalesChart 
+              sales={sales as Sale[]}
+              loading={salesLoading}
+            /> 
+          )}    
         </div>
 
         {/* Right Column - Profile & Info */}

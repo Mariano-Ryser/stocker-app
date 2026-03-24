@@ -1,8 +1,7 @@
 {
-  "CTASection": {
-    "title": "Starten Sie noch heute mit Stocker",
-    "p": "Erleben Sie die Zukunft datenbasierter Unternehmensentscheidungen – und behalten Sie jederzeit die volle Kontrolle über Ihr Unternehmen. ",
-    "login": "Login",
-    "testen": "Kostenlos testen"
-  }
+  "title": "Starten Sie noch heute mit Stocker SaaS",
+  "p": "Erleben Sie die Zukunft datenbasierter Unternehmensentscheidungen mit Stocker – Ihr digitales Tool für effizientes Bestandsmanagement und volle Kontrolle über Ihr Inventar.",
+  "login": "Login",
+  "testen": "Kostenlos testen",
+  "keywords": ["Stocker SaaS", "Bestandskontrolle", "Inventarverwaltung", "Software für Inventar", "Lagerverwaltung"]
 }

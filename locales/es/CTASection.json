@@ -1,8 +1,7 @@
 {
-  "CTASection": {
-    "title": "Empieza hoy con Stocker",
-    "p": "Descubre el futuro de las decisiones empresariales basadas en datos y mantén el control total de tu negocio en todo momento.",
-    "login": "Iniciar sesión",
-    "testen": "Prueba gratuita"
-  }
+  "title": "Empieza hoy con Stocker SaaS",
+  "p": "Descubre el futuro de la gestión empresarial con Stocker – tu herramienta digital para un control eficiente del inventario y total dominio de tu stock.",
+  "login": "Iniciar sesión",
+  "testen": "Probar gratis",
+  "keywords": ["Stocker SaaS", "control de stock", "gestión de inventarios", "software de inventario", "gestión de almacén"]
 }

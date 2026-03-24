@@ -8,9 +8,9 @@
     "scanner": "Scanner",
     "sold": "Verkaufte Artikel",
     "inventory": "Bewegungen",
-    "settings": "Settings",
+    "settings": "Einstellungen",
     "ceo": "CEO",
-    "logout":"Logout"
+    "logout":"Abmelden"
   },
   "roles": {
     "ceo": "CEO",

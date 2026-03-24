@@ -7,7 +7,7 @@ import styles from './SalesChart.module.css';
 import { useAuth } from "../../components/auth/AuthProvider";
 
 interface SalesData {
-  month: string;
+  month: string; 
   sales: number;
   revenue: number;
 }

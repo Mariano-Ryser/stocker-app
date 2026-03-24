@@ -9,7 +9,7 @@
     "header": {
       "title": "Kiosk-Verkauf",
       "subtitle": "Schnelles Scannen und Bezahlen",
-      "productsAvailable": "📦 {count} Produkte verfügbar",
+      "productsAvailable": "{count} Produkte verfügbar",
       "updating": "Aktualisiere...",
       "indexedDB": "(IndexedDB: {count})",
       "total": "Gesamt:",

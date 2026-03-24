@@ -443,11 +443,5 @@ ko: () => (
   return <FlagComponent />;
 };
 
-// Propiedades por defecto
-Flag.defaultProps = {
-  size: 24,
-  className: '',
-  style: {}
-};
 
 export default Flag;
