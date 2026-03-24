@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Head from 'next/head';
-import styles from './Kontakt.module.css';
+import styles from './kontakt.module.css';
 import Footer from '../../components/footer/Footer';
 import { useLanguage } from '../../contexts/LanguageContext';
 

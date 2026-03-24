@@ -48,11 +48,7 @@ const nextConfig = {
     ignoreBuildErrors: process.env.NODE_ENV === 'development',
   },
 
-  // Si estás usando ESLint, agrega esta configuración
-  eslint: {
-    // Ignora errores de ESLint durante la compilación
-    ignoreDuringBuilds: process.env.NODE_ENV === 'development',
-  },
+ 
 
   // Para optimización de bundles
   experimental: {

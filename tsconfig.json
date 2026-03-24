@@ -16,16 +16,15 @@
     "module": "esnext",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
-    "moduleResolution":"node",
+    "jsx": "react-jsx",
+    "moduleResolution": "node"
   },
   "include": [
     "next-env.d.tsx",
     "**/*.ts",
-    "**/*.tsx",
+    "**/*.tsx"
   ],
-  
-    "exclude": [
+  "exclude": [
     "node_modules"
   ]
 }
