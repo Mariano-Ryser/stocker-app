@@ -1,7 +1,7 @@
 {
   "sales": {
     "title": "Facturas",
-    "subtitle": "Administre sus facturas y ventas",
+    "subtitle": "Gestiona tus facturas y ventas",
     "loading": {
       "auth": "Cargando autenticación...",
       "invoices": "Cargando facturas...",
@@ -9,15 +9,19 @@
     },
     "error": {
       "general": "Error",
-      "title": "Error al cargar las facturas"
+      "title": "Error al cargar las facturas",
+      "loadFailed": "Error al cargar las facturas"
     },
     "actions": {
       "new": "Nueva Factura",
-      "retry": "Intentar de nuevo",
-      "resetFilters": "Restablecer todos los filtros",
+      "retry": "Reintentar",
+      "resetFilters": "Limpiar todos los filtros",
       "createFirst": "Crear primera factura",
       "loadMore": "Cargar más facturas ({remaining} disponibles)",
-      "stock": "Ver movimientos de stock"
+      "stock": "Ver movimientos de stock",
+      "view": "Ver",
+      "delete": "Eliminar",
+      "confirmDelete": "¿Estás seguro de que deseas eliminar esta factura?"
     },
     "buttons": {
       "stock": "Stock",
@@ -26,13 +30,19 @@
     "search": {
       "placeholder": "Buscar cliente o número de factura...",
       "results": "{visible} de {total} facturas",
-      "moreAvailable": " ({remaining} más disponibles)"
+      "moreAvailable": " ({remaining} más disponibles)",
+      "clear": "Limpiar búsqueda"
     },
     "filter": {
       "allStatus": "Todos los estados",
       "status": "Estado",
       "date": "Fecha",
-      "sortBy": "Ordenar por"
+      "sortBy": "Ordenar por",
+      "clear": "Limpiar filtros",
+      "apply": "Aplicar filtros",
+      "dateFrom": "Fecha desde",
+      "dateTo": "Fecha hasta",
+      "dateRange": "Rango de fechas"
     },
     "sort": {
       "newest": "Más recientes primero",
@@ -48,15 +58,32 @@
     "status": {
       "paid": "Pagada",
       "cancelled": "Cancelada",
-      "pending": "Pendiente"
+      "pending": "Pendiente",
+      "all": "Todos los estados"
     },
     "table": {
       "date": "Fecha",
       "client": "Cliente",
-      "invoiceNumber": "N° Factura",
+      "invoiceNumber": "Albarán",
       "total": "Total",
       "status": "Estado",
       "actions": "Acciones"
+    },
+    "excel": {
+      "date": "Fecha",
+      "time": "Hora",
+      "client": "Cliente",
+      "invoiceNumber": "N° Factura",
+      "subtotal": "Subtotal",
+      "tax": "IVA",
+      "total": "Total",
+      "status": "Estado",
+      "actions": "Acciones"
+    },
+    "view": {
+      "table": "Vista Tabla",
+      "excel": "Vista Excel",
+      "cards": "Vista Tarjetas"
     },
     "client": {
       "unknown": "Desconocido"
@@ -64,12 +91,27 @@
     "empty": {
       "notFound": {
         "title": "No se encontraron facturas",
-        "text": "Sin resultados para sus criterios de búsqueda"
+        "text": "No hay resultados para tus criterios de búsqueda"
       },
       "noInvoices": {
-        "title": "No hay facturas disponibles",
-        "text": "Cree su primera factura"
+        "title": "No hay facturas",
+        "text": "Crea tu primera factura"
       }
+    },
+    "pagination": {
+      "showing": "Mostrando {count} de {total} facturas",
+      "pageInfo": "Página {current} de {total}",
+      "page": "Página {current} de {total}"
+    },
+    "details": {
+      "invoice": "Factura",
+      "items": "Artículos",
+      "total": "Total",
+      "subtotal": "Subtotal",
+      "tax": "Impuesto",
+      "customer": "Cliente",
+      "payment": "Pago",
+      "notes": "Notas"
     }
   }
 }

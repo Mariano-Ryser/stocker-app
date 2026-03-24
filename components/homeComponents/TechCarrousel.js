@@ -1,7 +1,7 @@
 export default function TechCarousel() {
   const techStack = [
     { name: "Next.js", logo: "/tech/nextjs.svg", role: "Frontend" },
-    { name: "VisualStudioCode", logo: "/tech/visualStudioCode.svg", role: "Design" },
+    { name: "VisualStudioCode", logo: "/tech/visual.webp", role: "Design" },
     { name: "Node.js", logo: "/tech/nodejs.svg", role: "Backend" },
     { name: "MongoDB", logo: "/tech/mongodb.svg", role: "Database" },
     { name: "Vercel", logo: "/tech/vercel.svg", role: "Deployment" },
@@ -26,32 +26,15 @@ export default function TechCarousel() {
         </div>
       </div>
 
-      {/* Fila inferior - derecha a izquierda (invertida) */}
-      
-      {/* <div className="carousel carousel-bottom">
-        <div className="track">
-          {[...techStack].reverse()
-            .concat([...techStack].reverse())
-            .concat([...techStack].reverse())
-            .map((tech, i) => (
-            <div className="item" key={`bottom-${i}`}>
-              <img src={tech.logo} alt={tech.name} />
-              <span>{tech.role}</span>
-            </div>
-          ))}
-        </div>
-      </div> */}
-
-     
-      
-
       <style jsx>{`
         .carousel-wrapper {
           width: 100%;
           padding: 0rem 0;
           overflow: hidden;
           position: relative;
-        }
+          background: linear-gradient(180deg, #f8fcff 0%, #ffffff 100%);
+          padding-top: 2rem;
+        } 
 
         .carousel {
           width: 100%;
@@ -63,10 +46,6 @@ export default function TechCarousel() {
           margin-bottom: 0.5rem;
         }
 
-        .carousel-bottom {
-          margin-top: 0.5rem;
-        }
-
         .track {
           display: flex;
           width: max-content;
@@ -74,10 +53,6 @@ export default function TechCarousel() {
 
         .carousel-top .track {
           animation: scrollLeft 50s linear infinite;
-        }
-
-        .carousel-bottom .track {
-          animation: scrollRight 50s linear infinite;
         }
 
         .item {
@@ -90,7 +65,6 @@ export default function TechCarousel() {
           transform: scale(1);
           transition: all 0.3s ease;
           padding: 0.5rem;
-          
         }
         
         .item:hover {
@@ -99,7 +73,6 @@ export default function TechCarousel() {
           cursor: pointer;
           border-radius: 8px;
         }
-    
 
         img {
           height: 60px;
@@ -132,34 +105,67 @@ export default function TechCarousel() {
           }
         }
 
-        @keyframes scrollRight {
-          0% {
-            transform: translateX(calc(-160px * ${techStack.length}));
+        /* Estilos específicos para móvil */
+        @media (max-width: 768px) {
+          .carousel-wrapper {
+            padding-top: 1.5rem;
           }
-          100% {
-            transform: translateX(0);
+
+          .item {
+            min-width: 100px; /* Reducido de 160px a 100px */
+            gap: 0.25rem; /* Espacio más pequeño entre icono y texto */
+            padding: 0.25rem; /* Menos padding interno */
           }
-        }
-             /* Opcional: Añadir un gradiente para suavizar los bordes */
-        .carousel-wrapper::before,
-        .carousel-wrapper::after {
-          content: '';
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          width: 100px;
-          z-index: 2;
-          pointer-events: none;
+
+          img {
+            height: 40px; /* Reducido de 60px a 40px */
+          }
+
+          span {
+            font-size: 0.7rem; /* Texto más pequeño */
+          }
+
+          .carousel-top .track {
+            animation: scrollLeftMobile 40s linear infinite; /* Animación más rápida para móvil */
+          }
+
+          @keyframes scrollLeftMobile {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(calc(-100px * ${techStack.length}));
+            }
+          }
         }
 
-        .carousel-wrapper::before {
-          left: 0;
-          background: linear-gradient(to right, white, transparent);
-        }
+        /* Para móviles muy pequeños */
+        @media (max-width: 480px) {
+          .item {
+            min-width: 85px; /* Aún más reducido para pantallas muy pequeñas */
+            gap: 0.2rem;
+          }
 
-        .carousel-wrapper::after {
-          right: 0;
-          background: linear-gradient(to left, white, transparent);
+          img {
+            height: 35px; /* Iconos más pequeños */
+          }
+
+          span {
+            font-size: 0.65rem;
+          }
+
+          .carousel-top .track {
+            animation: scrollLeftMobileSmall 35s linear infinite;
+          }
+
+          @keyframes scrollLeftMobileSmall {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(calc(-85px * ${techStack.length}));
+            }
+          }
         }
       `}</style>
     </section>

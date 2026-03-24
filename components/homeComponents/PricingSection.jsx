@@ -33,7 +33,9 @@ export default function PricingSection() {
       id: 'enterprise',
          price: billingCycle === 'month' ? 89 : 854,
       priceId: { month: 'price_enterprise_month', year: 'price_enterprise_year' },
-      features: ['pricing.enterprise.f1', 'pricing.enterprise.f2', 'pricing.enterprise.f3', 'pricing.enterprise.f4', 'pricing.enterprise.f5', 'pricing.enterprise.f6']
+      features: ['pricing.enterprise.f1', 'pricing.enterprise.f2', 'pricing.enterprise.f3', 'pricing.enterprise.f4', 'pricing.enterprise.f5',
+        //  'pricing.enterprise.f6'
+        ]
     }
   ];
 
@@ -67,7 +69,7 @@ export default function PricingSection() {
     <section className="pricing">
       <div className="container">
         <h2>{t('pricing.title')}</h2>
-        <p className="subtitle">{t('pricing.subtitle')}</p>
+        {/* <p className="subtitle">{t('pricing.subtitle')}</p> */}
 
         <div className="toggle">
           <button 
@@ -81,7 +83,7 @@ export default function PricingSection() {
             onClick={() => setBillingCycle('year')}
           >
             {t('pricing.yearly')}
-            <span className="save">-20%</span>
+            {/* <span className="save">-20%</span> */}
           </button>
         </div>
 
@@ -128,7 +130,7 @@ export default function PricingSection() {
       <style jsx>{`
         .pricing {
           padding: 60px 20px;
-          background: linear-gradient(135deg, #f8fcff 0%, #ffffff 100%);
+          background: linear-gradient(180deg, #f9f9f9 0%,  #f8fcff 100%);
         }
         .container {
           max-width: 1200px;
@@ -138,7 +140,8 @@ export default function PricingSection() {
           text-align: center;
           font-size: 2rem;
           font-weight: 600;
-          margin-bottom: 8px;
+          margin-top: 1rem;
+          margin-bottom: 5rem;
           color: #1a1a1a;
         }
         .subtitle {
@@ -157,7 +160,6 @@ export default function PricingSection() {
           padding: 8px 24px;
           border: 1px solid #d1d9e6;
           background: #fff;
-          border-radius: 30px;
           font-size: 0.95rem;
           cursor: pointer;
           position: relative;
@@ -182,7 +184,6 @@ export default function PricingSection() {
           color: #fff;
           font-size: 0.65rem;
           padding: 2px 8px;
-          border-radius: 12px;
           font-weight: 600;
         }
         .grid {
@@ -194,7 +195,6 @@ export default function PricingSection() {
         .card {
           background: #fff;
           border: 1px solid #e6edf4;
-          border-radius: 12px;
           position: relative;
           transition: all 0.25s ease;
           box-shadow: 0 2px 8px rgba(123, 179, 224, 0.05);
@@ -221,7 +221,6 @@ export default function PricingSection() {
           color: #fff;
           font-size: 0.7rem;
           padding: 4px 16px;
-          border-radius: 20px;
           font-weight: 600;
           letter-spacing: 0.3px;
           box-shadow: 0 2px 8px rgba(123, 179, 224, 0.3);
@@ -283,7 +282,6 @@ export default function PricingSection() {
           padding: 12px;
           background: #fff;
           border: 1.5px solid #7bb3e0;
-          border-radius: 8px;
           font-size: 0.95rem;
           font-weight: 500;
           cursor: pointer;
@@ -308,7 +306,6 @@ export default function PricingSection() {
           text-align: center;
           padding: 40px;
           background: #e1f0fa;
-          border-radius: 16px;
         }
         .trial p {
           margin-bottom: 20px;

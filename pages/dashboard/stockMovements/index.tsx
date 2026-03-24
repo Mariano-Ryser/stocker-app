@@ -1,16 +1,26 @@
+// pages/dashboard/admin/stock/StockMovements.tsx
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../../components/auth/AuthProvider';
 import { useStockMovements } from '../../../hooks/useStockMovements';
 import Pagination from '../../../components/shared/Pagination';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { format } from 'date-fns';
-import { de } from 'date-fns/locale';
+import { de, es, enUS } from 'date-fns/locale';
 import styles from './StockMovements.module.css';
 
 export default function StockMovements() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const [viewMode, setViewMode] = useState('excel'); // 'table' o 'excel'
+
+  // Obtener locale para date-fns según el idioma
+  const getLocale = () => {
+    switch (language) {
+      case 'de': return de;
+      case 'es': return es;
+      default: return enUS;
+    }
+  };
 
   const {
     movements,
@@ -69,7 +79,7 @@ export default function StockMovements() {
 
   const formatDate = (date: string) => {
     try {
-      return format(new Date(date), 'dd.MM.yyyy HH:mm', { locale: de });
+      return format(new Date(date), 'dd.MM.yyyy HH:mm', { locale: getLocale() });
     } catch {
       return '-';
     }
@@ -99,7 +109,7 @@ export default function StockMovements() {
             <button
               className={`${styles.viewButton} ${viewMode === 'table' ? styles.activeView : ''}`}
               onClick={() => setViewMode('table')}
-              title="Vista Tabla"
+              title={t('stockMovements.view.table')}
             >
               <svg viewBox="0 0 24 24" width="20" height="20">
                 <path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h10v2H7v-2z"/>
@@ -108,7 +118,7 @@ export default function StockMovements() {
             <button
               className={`${styles.viewButton} ${viewMode === 'excel' ? styles.activeView : ''}`}
               onClick={() => setViewMode('excel')}
-              title="Vista Excel"
+              title={t('stockMovements.view.excel')}
             >
               <svg viewBox="0 0 24 24" width="20" height="20">
                 <path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h5v2H7v-2z"/>
@@ -253,16 +263,16 @@ export default function StockMovements() {
                 <table className={styles.excelTable}>
                   <thead>
                     <tr>
-                      <th className={styles.excelHeader}>Fecha</th>
-                      <th className={styles.excelHeader}>Artículo</th>
-                      <th className={styles.excelHeader}>N° Artículo</th>
-                      <th className={styles.excelHeader}>Tipo</th>
-                      <th className={styles.excelHeader}>Cantidad</th>
-                      <th className={styles.excelHeader}>Stock Anterior</th>
-                      <th className={styles.excelHeader}>Stock Nuevo</th>
-                      <th className={styles.excelHeader}>Usuario</th>
-                      <th className={styles.excelHeader}>Referencia</th>
-                      <th className={styles.excelHeader}>Notas</th>
+                      <th className={styles.excelHeader}>{t('stockMovements.excel.date')}</th>
+                      <th className={styles.excelHeader}>{t('stockMovements.excel.article')}</th>
+                      <th className={styles.excelHeader}>{t('stockMovements.excel.articleNumber')}</th>
+                      <th className={styles.excelHeader}>{t('stockMovements.excel.type')}</th>
+                      <th className={styles.excelHeader}>{t('stockMovements.excel.quantity')}</th>
+                      <th className={styles.excelHeader}>{t('stockMovements.excel.previousStock')}</th>
+                      <th className={styles.excelHeader}>{t('stockMovements.excel.newStock')}</th>
+                      <th className={styles.excelHeader}>{t('stockMovements.excel.user')}</th>
+                      <th className={styles.excelHeader}>{t('stockMovements.excel.reference')}</th>
+                      <th className={styles.excelHeader}>{t('stockMovements.excel.notes')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -344,19 +354,28 @@ export default function StockMovements() {
 
             {/* Paginación */}
             {pagination.pages > 1 && (
-              <Pagination
-                currentPage={pagination.current}
-                totalPages={pagination.pages}
-                onPageChange={goToPage}
-                loading={loadingMore}
-              />
+              <>
+                <Pagination
+                  currentPage={pagination.current}
+                  totalPages={pagination.pages}
+                  onPageChange={goToPage}
+                  onNext={nextPage}
+                  onPrev={prevPage}
+                  loading={loadingMore}
+                />
+                <div className={styles.paginationInfo}>
+                  {t('stockMovements.pagination.showing', {
+                    count: movements.length,
+                    total: pagination.total
+                  })}
+                  {' · '}
+                  {t('stockMovements.pagination.pageInfo', {
+                    current: pagination.current,
+                    total: pagination.pages
+                  })}
+                </div>
+              </>
             )}
-
-            {/* Info de paginación */}
-            <div className={styles.paginationInfo}>
-              Mostrando {movements.length} de {pagination.total} movimientos
-              {pagination.pages > 1 && ` · Página ${pagination.current} de ${pagination.pages}`}
-            </div>
           </>
         )}
       </div>

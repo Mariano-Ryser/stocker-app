@@ -1,93 +1,87 @@
 {
-  "title": "Importación y Exportación Excel",
-  "subtitle": "Gestiona tus {dataType} de forma eficiente – {action}",
+  "title": "Excel Import & Export",
+  "subtitleProducts": "Administre productos eficientemente – Importar & Exportar",
+  "subtitleSales": "Exportar datos de ventas – Solo Exportar",
   "productLabel": "Productos",
   "salesLabel": "Ventas",
   "importExport": "Importar/Exportar",
-  "exportOnly": "Solo exportar",
+  "exportOnly": "Solo Exportar",
   "stats": {
-    "items": "{dataType}",
+    "itemsProducts": "Productos",
+    "itemsSales": "Ventas",
     "status": "Estado",
     "loading": "Cargando...",
     "ready": "Listo",
     "functions": "Funciones",
-    "importExport": "Importar y exportar",
-    "exportOnly": "Solo exportar"
+    "importExport": "Importar & Exportar",
+    "exportOnly": "Solo Exportar"
   },
   "template": {
     "download": "Descargar plantilla",
-    "subtitle": {
-      "sales": "Plantilla de exportación para ventas",
-      "products": "Plantilla de importación para datos de productos"
-    },
-    "format": "Formato para {dataType}:",
+    "subtitleSales": "Plantilla de exportación para datos de ventas",
+    "subtitleProducts": "Plantilla de importación para datos de productos",
+    "formatProducts": "Formato para productos:",
+    "formatSales": "Formato para ventas:",
     "fields": {
       "product": {
         "articleNumber": "Número de artículo",
         "articleNumberHint": "único (opcional)",
-        "name": "Nombre del producto",
-        "nameHint": "nombre del producto",
+        "name": "Nombre del artículo",
+        "nameHint": "Nombre del producto",
         "required": "Obligatorio",
         "location": "Ubicación",
         "locationHint": "ej. A-01",
         "stock": "Stock",
-        "stockHint": "número ≥ 0",
+        "stockHint": "Número ≥ 0",
         "price": "Precio",
         "priceHint": "sin símbolo de moneda",
         "imageUrl": "URL de imagen",
-        "imageUrlHint": "enlace a la imagen"
+        "imageUrlHint": "Enlace a la imagen del producto"
       },
       "sale": {
         "deliveryNote": "Nº de albarán",
         "deliveryNoteHint": "número único",
         "customer": "Cliente",
-        "customerHint": "nombre del cliente",
-        "productName": "Nombre del producto",
+        "customerHint": "Nombre del cliente",
+        "productName": "Nombre del artículo",
         "productNameHint": "producto vendido",
         "quantity": "Cantidad",
         "quantityHint": "cantidad vendida",
-        "unitPrice": "Precio unitario (CHF)",
+        "unitPrice": "Precio unitario",
         "unitPriceHint": "precio por unidad",
         "status": "Estado",
         "statusHint": "pending/paid/cancelled",
-        "total": "Total (CHF)",
-        "totalHint": "importe total"
+        "total": "Total",
+        "totalHint": "monto total"
       }
     }
   },
   "importExportCard": {
-    "title": {
-      "sales": "Exportar",
-      "products": "Importar y exportar"
-    },
-    "subtitle": {
-      "sales": "Exportar datos de ventas",
-      "products": "Gestionar e intercambiar datos"
-    }
+    "titleProducts": "Importar & Exportar",
+    "titleSales": "Exportar",
+    "subtitleProducts": "Intercambiar y gestionar datos",
+    "subtitleSales": "Exportar datos de ventas"
   },
   "actions": {
     "supported": "Soporta: .xlsx, .xls, .csv",
     "maxRecords": "Hasta 10.000 registros",
     "sameFormat": "Mismo formato para importar/exportar",
-    "exportFormat": "Formato compatible con Excel",
+    "exportFormat": "Formato de exportación compatible con Excel",
     "salesDetails": "Incluye todos los detalles de ventas"
   },
   "import": {
-    "notAvailable": "La importación de ventas no está disponible. Solo exportación.",
+    "notAvailable": "La importación de ventas no está disponible. Solo se puede exportar.",
     "noValidProducts": "No se encontraron productos válidos para importar.",
     "noValidSales": "No se encontraron ventas válidas para importar.",
-    "spaceCheck": {
-      "error": "❌ No hay suficiente espacio. Intentas importar {importCount} productos, pero solo tienes {remaining} disponibles."
-    }
+    "spaceCheckError": "❌ No hay suficiente espacio. Por favor, elimine algunos productos o actualice su plan.",
+    "spaceCheckErrorWithLimit": "❌ Límite de productos alcanzado. No puede importar más productos. Por favor, elimine algunos productos o actualice su plan."
   },
   "modal": {
     "validation": "Resultado de validación",
     "importComplete": "Importación completada",
     "error": "Error",
-    "subtitle": {
-      "products": "Productos",
-      "sales": "Ventas"
-    },
+    "subtitleProducts": "Productos",
+    "subtitleSales": "Ventas",
     "close": "Cerrar",
     "cancel": "Cancelar",
     "done": "Listo",
@@ -96,24 +90,20 @@
   "validation": {
     "valid": "Válidos",
     "invalid": "Inválidos",
-    "errorDetails": "Detalles de errores",
+    "errorDetails": "Detalles del error",
     "errors": "Errores",
-    "row": "Fila {row}",
+    "row": "Fila",
     "errorsList": "Detalles de errores:"
   },
   "importResult": {
     "success": "Importación exitosa",
-    "warning": "Importado con advertencias",
+    "warning": "Importación con advertencias",
     "error": "Error en la importación",
-    "message": {
-      "success": "{imported} de {total} productos importados correctamente",
-      "partial": "{imported} de {total} productos importados correctamente"
-    },
-    "stats": {
-      "total": "Total:",
-      "success": "Correctos:",
-      "failed": "Fallidos:"
-    },
-    "moreErrors": "... y {count} errores más"
+    "messageSuccess": "Productos importados exitosamente",
+    "messagePartial": "Algunos productos se importaron, otros no",
+    "statsTotal": "Total:",
+    "statsSuccess": "Exitosos:",
+    "statsFailed": "Fallidos:",
+    "moreErrors": "... y más errores"
   }
 }

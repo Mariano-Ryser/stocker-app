@@ -1,4 +1,4 @@
-{
+ {
   "verkaufteArtikel": {
     "title": "Verkaufte Artikel",
     "subtitle": "Übersicht aller verkauften Artikel",
@@ -7,7 +7,8 @@
     "loadingShort": "Lade...",
     "error": {
       "general": "Fehler",
-      "title": "Fehler beim Laden der Artikel"
+      "title": "Fehler beim Laden der Artikel",
+      "loadFailed": "Fehler beim Laden der Artikel"
     },
     "actions": {
       "retry": "Erneut versuchen",
@@ -41,12 +42,29 @@
       "date": "Datum",
       "lieferschein": "Lieferschein: {number}"
     },
+    "excel": {
+      "date": "Datum",
+      "time": "Uhrzeit",
+      "article": "Artikel",
+      "quantity": "Menge",
+      "unitPrice": "Preis/Einheit",
+      "total": "Gesamt",
+      "client": "Kunde",
+      "email": "E-Mail",
+      "lieferschein": "Lieferschein",
+      "status": "Status"
+    },
     "card": {
       "client": "Kunde:",
       "lieferschein": "Lieferschein:",
       "date": "Datum:",
       "price": "Preis:",
       "total": "Gesamt:"
+    },
+    "view": {
+      "table": "Tabellenansicht",
+      "excel": "Excel-Ansicht",
+      "cards": "Kartenansicht"
     },
     "client": {
       "unknown": "Kunde unbekannt"
@@ -62,8 +80,13 @@
       }
     },
     "status": {
+      "paid": "Bezahlt",
       "cancelled": "Storniert",
       "pending": "Ausstehend"
+    },
+    "pagination": {
+      "showing": "Zeige {count} von {total} Artikeln",
+      "pageInfo": "Seite {current} von {total}"
     }
   }
 }

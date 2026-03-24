@@ -1,17 +1,17 @@
 {
   "stockMovements": {
     "title": "Stock Movements",
-    "subtitle": "Overview of incoming and outgoing items",
+    "subtitle": "Overview of ins and outs",
     "loading": "Loading movements…",
     "loadingAuth": "Loading…",
     "error": "Error loading",
     "noMovements": "No movements",
-    "refresh": "↻",
+    "refresh": "Refresh",
     "filters": {
       "allTypes": "All types",
       "startDate": "Start date",
       "endDate": "End date",
-      "search": "Search articles…",
+      "search": "Search article…",
       "clear": "Clear"
     },
     "table": {
@@ -21,19 +21,31 @@
       "quantity": "Quantity",
       "stock": "Stock",
       "user": "User",
-      "reference": "Ref"
+      "reference": "Reference"
+    },
+    "excel": {
+      "date": "Date",
+      "article": "Article",
+      "articleNumber": "Article No.",
+      "type": "Type",
+      "quantity": "Quantity",
+      "previousStock": "Previous Stock",
+      "newStock": "New Stock",
+      "user": "User",
+      "reference": "Reference",
+      "notes": "Notes"
     },
     "movementTypes": {
       "WAREHOUSE_IN": {
-        "label": "Incoming",
+        "label": "Warehouse In",
         "icon": "↓"
       },
       "WAREHOUSE_OUT": {
-        "label": "Outgoing",
+        "label": "Warehouse Out",
         "icon": "↑"
       },
       "MANUAL_ADJUSTMENT": {
-        "label": "Adjustment",
+        "label": "Manual Adjustment",
         "icon": "✎"
       },
       "RETURN": {
@@ -45,12 +57,18 @@
         "icon": "⚠"
       },
       "INITIAL_STOCK": {
-        "label": "Initial stock",
+        "label": "Initial Stock",
         "icon": "●"
       }
     },
     "pagination": {
-      "page": "Page {current} of {total}"
+      "page": "Page {current} of {total}",
+      "showing": "Showing {count} of {total} movements",
+      "pageInfo": "Page {current} of {total}"
+    },
+    "view": {
+      "table": "Table View",
+      "excel": "Excel View"
     }
   }
 }

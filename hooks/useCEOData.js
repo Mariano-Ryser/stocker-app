@@ -1,4 +1,4 @@
-// hooks/useCEOData.js - VERSIÓN SIMPLIFICADA
+// hooks/useCEOData.js - VERSIÓN CORREGIDA
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
 
@@ -29,9 +29,9 @@ export const useCEOData = () => {
     setError(null);
 
     try {
-      console.log('📊 Cargando usuarios...');
+      console.log('📊 Cargando todos los usuarios del sistema...');
       
-      // 1. Obtener todos los usuarios
+      // 1. Obtener TODOS los usuarios
       const usersRes = await fetch(`${URI}/users`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -41,73 +41,135 @@ export const useCEOData = () => {
       
       if (!usersData.ok) throw new Error(usersData.message);
 
-      console.log(`📦 Total usuarios: ${usersData.users.length}`);
+      console.log(`📦 Total usuarios encontrados: ${usersData.users.length}`);
 
-      // 2. Obtener todas las empresas en una sola llamada (paralelo)
-      const companiesMap = new Map();
+      // 2. Obtener todas las empresas únicas
       const companyIds = [...new Set(usersData.users.map(u => u.companyId).filter(Boolean))];
+      console.log(`🏢 Empresas únicas: ${companyIds.length}`);
+      
+      // 3. Obtener datos de cada empresa y sus productos en paralelo
+      const companiesMap = new Map();
       
       await Promise.all(companyIds.map(async (companyId) => {
         try {
+          // Obtener datos de la empresa
           const companyRes = await fetch(`${URI}/company/${companyId}`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
+          
+          let companyData = { name: 'Sin empresa', maxUsers: 3, maxProducts: 100, usersCount: 0 };
+          let productsCount = 0;
+          
           if (companyRes.ok) {
-            const companyData = await companyRes.json();
-            const company = companyData.company || companyData;
-            companiesMap.set(companyId, {
+            const data = await companyRes.json();
+            const company = data.company || data;
+            companyData = {
+              _id: companyId,
               name: company?.name || 'Sin nombre',
               maxUsers: company?.maxUsers || 3,
+              maxProducts: company?.maxProducts || 100,
               usersCount: company?.usersCount || 0
-            });
+            };
           }
+          
+          // ✅ OBTENER EL CONTADOR DE PRODUCTOS DE LA EMPRESA
+          try {
+            const limitsRes = await fetch(`${URI}/company/${companyId}/limits`, {
+              headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (limitsRes.ok) {
+              const limitsData = await limitsRes.json();
+              if (limitsData.ok && limitsData.limits) {
+                productsCount = limitsData.limits.current || 0;
+              }
+            }
+          } catch (err) {
+            console.warn(`Error obteniendo límites de empresa ${companyId}:`, err);
+          }
+          
+          companiesMap.set(companyId, {
+            ...companyData,
+            productsCount: productsCount
+          });
         } catch (err) {
           console.warn(`Error obteniendo empresa ${companyId}:`, err);
+          companiesMap.set(companyId, {
+            _id: companyId,
+            name: 'Sin empresa',
+            maxUsers: 3,
+            maxProducts: 100,
+            usersCount: 0,
+            productsCount: 0
+          });
         }
       }));
 
-      // 3. Construir usuarios con datos de empresa
-      const usersWithCompany = usersData.users.map(userItem => ({
-        _id: userItem._id,
-        name: userItem.name,
-        email: userItem.email,
-        role: userItem.role,
-        plan: userItem.plan,
-        isActive: userItem.isActive,
-        createdAt: userItem.createdAt,
-        updatedAt: userItem.updatedAt,
-        companyId: userItem.companyId,
-        company: companiesMap.get(userItem.companyId) || {
+      // 4. Construir usuarios con datos de empresa y productos
+      const usersWithCompany = usersData.users.map(userItem => {
+        const company = companiesMap.get(userItem.companyId) || {
           name: 'Sin empresa',
           maxUsers: 3,
-          usersCount: 0
-        },
-        // Inicializamos stats vacías (se cargarán bajo demanda en el modal)
-        stats: {
-          products: 0,
-          sales: 0,
-          clients: 0,
-          revenue: 0
-        }
-      }));
+          maxProducts: 100,
+          usersCount: 0,
+          productsCount: 0
+        };
+        
+        return {
+          _id: userItem._id,
+          name: userItem.name,
+          email: userItem.email,
+          role: userItem.role,
+          plan: userItem.plan,
+          isActive: userItem.isActive,
+          createdAt: userItem.createdAt,
+          updatedAt: userItem.updatedAt,
+          companyId: userItem.companyId,
+          company: {
+            name: company.name,
+            maxUsers: company.maxUsers,
+            maxProducts: company.maxProducts,
+            usersCount: company.usersCount,
+            productsCount: company.productsCount
+          },
+          stats: {
+            products: company.productsCount, // ✅ AHORA SÍ TIENE EL CONTADOR REAL
+            sales: 0,
+            clients: 0,
+            revenue: 0
+          }
+        };
+      });
 
       setUsers(usersWithCompany);
 
-      // 4. Calcular estadísticas básicas (sin productos/ventas globales)
+      // 5. Calcular estadísticas globales
+      const uniqueCompanies = new Map();
       const globalStats = usersWithCompany.reduce((acc, userItem) => {
+        // Contar usuarios
         acc.totalUsers++;
         if (userItem.isActive) acc.activeUsers++;
         else acc.inactiveUsers++;
         
+        // Contar productos totales del sistema
+        acc.totalProducts += userItem.stats?.products || 0;
+        
+        // Contar por plan
         if (userItem.plan) acc.plans[userItem.plan] = (acc.plans[userItem.plan] || 0) + 1;
+        
+        // Contar por rol
         if (userItem.role) acc.roles[userItem.role] = (acc.roles[userItem.role] || 0) + 1;
+        
+        // Contar empresas únicas
+        if (userItem.companyId && !uniqueCompanies.has(userItem.companyId)) {
+          uniqueCompanies.set(userItem.companyId, true);
+        }
         
         return acc;
       }, {
         totalUsers: 0,
         activeUsers: 0,
         inactiveUsers: 0,
-        totalCompanies: companiesMap.size,
+        totalCompanies: 0,
         totalProducts: 0,
         totalSales: 0,
         totalClients: 0,
@@ -116,8 +178,10 @@ export const useCEOData = () => {
         roles: { ceo: 0, admin: 0, user: 0 }
       });
 
+      globalStats.totalCompanies = uniqueCompanies.size;
       setStats(globalStats);
-      console.log(`✅ Cargados ${usersWithCompany.length} usuarios`);
+      
+      console.log(`✅ Cargados ${usersWithCompany.length} usuarios con sus contadores de productos`);
 
     } catch (err) {
       console.error('Error fetching CEO data:', err);
@@ -127,7 +191,6 @@ export const useCEOData = () => {
     }
   }, [token, user, URI]);
 
-  // Funciones para actualizar usuario en la lista local
   const updateUserInList = (userId, updates) => {
     setUsers(prev => prev.map(u => 
       u._id === userId ? { ...u, ...updates } : u
@@ -198,6 +261,47 @@ export const useCEOData = () => {
     }
   };
 
+  // ✅ Función para refrescar un usuario específico (después de cambios)
+  const refreshUser = useCallback(async (userId, companyId) => {
+    if (!token) return;
+    
+    try {
+      // Obtener límites actualizados de la empresa
+      const limitsRes = await fetch(`${URI}/company/${companyId}/limits`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      
+      let productsCount = 0;
+      if (limitsRes.ok) {
+        const limitsData = await limitsRes.json();
+        if (limitsData.ok && limitsData.limits) {
+          productsCount = limitsData.limits.current || 0;
+        }
+      }
+      
+      // Actualizar usuario en la lista
+      updateUserInList(userId, {
+        stats: {
+          ...users.find(u => u._id === userId)?.stats,
+          products: productsCount
+        },
+        company: {
+          ...users.find(u => u._id === userId)?.company,
+          productsCount: productsCount
+        }
+      });
+      
+      // Actualizar estadísticas globales
+      setStats(prev => ({
+        ...prev,
+        totalProducts: prev.totalProducts - (users.find(u => u._id === userId)?.stats?.products || 0) + productsCount
+      }));
+      
+    } catch (err) {
+      console.error('Error refreshing user:', err);
+    }
+  }, [token, URI, users]);
+
   useEffect(() => {
     fetchUsers();
   }, [fetchUsers]);
@@ -210,6 +314,7 @@ export const useCEOData = () => {
     toggleUserStatus,
     changeUserPlan,
     refresh: fetchUsers,
+    refreshUser,
     updateUserInList
   };
 };

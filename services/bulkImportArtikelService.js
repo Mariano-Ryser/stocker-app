@@ -1,7 +1,7 @@
 import { useAuth } from '../components/auth/AuthProvider';
 
 export const useBulkImport = () => {
-  const { user } = useAuth();
+  const { user } = useAuth(); 
 
   const bulkImportProducts = async (products) => {
     try {

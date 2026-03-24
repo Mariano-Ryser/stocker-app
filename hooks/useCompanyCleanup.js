@@ -13,7 +13,7 @@ export function useCompanyCleanup() {
     const {
       deleteProducts = true,
       deleteSales = true,
-      deleteStockMovements = true,
+      deleteStockMovements = true, 
       deleteClients = true,
       deleteUsers = true,
       deleteCompany = true,
@@ -22,7 +22,7 @@ export function useCompanyCleanup() {
 
     if (!companyId) {
       setError('ID de compañía requerido');
-      return { success: false };
+      return { success: false }; 
     }
 
     setLoading(true);

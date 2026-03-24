@@ -94,7 +94,7 @@ export default function DashboardHome() {
 
   // ✅ Función optimizada para refrescar todos los datos
   const handleRefreshAllData = useCallback(async () => {
-    console.log("Dashboard: Manual refresh triggered");
+    // console.log("Dashboard: Manual refresh triggered");
     await coordinatedRefresh([refreshProducts, refreshClients, refreshSales]);
   }, [coordinatedRefresh, refreshProducts, refreshClients, refreshSales]);
 
@@ -104,7 +104,7 @@ export default function DashboardHome() {
     const hasData = isAuthenticated && allDataLoaded;
     
     if (hasData) {
-      console.log("Dashboard: All data loaded, updating stats");
+      // console.log("Dashboard: All data loaded, updating stats");
       setStats({
         produkte: totalProducts || 0,
         kunden: clientsStats?.total || 0,
@@ -142,7 +142,7 @@ export default function DashboardHome() {
       broadcastChannel = new BroadcastChannel('sales_updates');
       broadcastChannel.onmessage = (event) => {
         if (event.data === 'new_sale' || event.data === 'data_updated') {
-          console.log("Dashboard: Broadcast received, refreshing data");
+          // console.log("Dashboard: Broadcast received, refreshing data");
           handleRefreshAllData();
         }
       };
@@ -151,7 +151,7 @@ export default function DashboardHome() {
     // Opcional: Refrescar al volver al dashboard
     const handleRouteChange = (url: string) => {
       if (url === '/dashboard' || url === '/') {
-        console.log("Dashboard: Route changed to dashboard, refreshing");
+        // console.log("Dashboard: Route changed to dashboard, refreshing");
         handleRefreshAllData();
       }
     };
@@ -206,30 +206,10 @@ export default function DashboardHome() {
 
   return (
     <div className={styles.dashboardContainer}>
-      {/* Resto del dashboard igual */}
-      {/* {isPremiumUser && (
-        <section className={styles.premiumSection}>
-          <div className={styles.premiumSectionHeader}>
-            <h2 className={styles.premiumSectionTitle}>
-              <span className={styles.premiumBadge}>{t('index.premiumBadge')}</span>
-              {t('index.premiumTitle')}
-            </h2>
-            <p className={styles.premiumSectionSubtitle}>
-              {t('index.premiumSubtitle')}
-            </p>
-          </div>
-          <SalesChart 
-            sales={sales as Sale[]}
-            loading={salesLoading}
-          /> 
-          <QuickStats 
-            sales={sales as Sale[]}
-            loading={salesLoading}
-          />
-        </section>
-      )}   */}
+    
 
       {/* Main Layout Grid */}
+      
       <div className={styles.mainLayout}>
         {/* Left Column - Quick Actions */}
         <div className={styles.leftColumn}>
@@ -340,6 +320,18 @@ export default function DashboardHome() {
               </button>
             </div>
           </section>
+            {/* Resto del dashboard igual */}
+    {isPremiumUser && (
+    
+       <>
+        <SalesChart 
+            sales={sales as Sale[]}
+            loading={salesLoading}
+          /> 
+       
+       </>
+      
+      )}    
         </div>
 
         {/* Right Column - Profile & Info */}

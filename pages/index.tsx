@@ -6,7 +6,9 @@ import FeaturesSection from '../components/homeComponents/FeaturesSection';
 import CTASection from '../components/homeComponents/CTASection';
 import Footer from '../components/footer/Footer';
 import TechCarrousel from '../components/homeComponents/TechCarrousel'
-import PricingSection from '../components/homeComponents/PricingSection'
+import TestimonialsSection from '../components/homeComponents/TestimonialsSection';
+import PricingSection from '../components/homeComponents/PricingSection';
+import FAQSection from '../components/homeComponents/FAQSection';
 import { useLanguage } from '../contexts/LanguageContext';
 
 
@@ -19,16 +21,17 @@ export default function Home() {
     <>
       <HomeHero />
       <FeaturesSection /> 
-      <CTASection />
+     {/* <TestimonialsSection />  */}
+      <PricingSection /> 
       <TechCarrousel />
-    
+      <CTASection />
+     {/* <FAQSection />  */}
      <div className="about-page">
         <div className="container">
           <h2>{t('home.title')}</h2>
           <p>{t('home.p')}</p>
         </div>
       </div>
-      <PricingSection /> 
       <Footer />
       <style jsx>{`
         .privacy-background {

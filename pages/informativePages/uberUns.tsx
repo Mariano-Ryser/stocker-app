@@ -44,21 +44,24 @@ const UberUns = () => {
             fill
             priority
             className={styles.heroImage} 
-            sizes="100vw"
-            quality={90}
+            sizes="(max-width: 768px) 100vw, 1200px"
+             placeholder="blur"
+  blurDataURL="data:image/jpeg;base64,..." // Add tiny blurred placeholder
           />
           <div className={styles.heroOverlay} />
         </div>
+        
 
         <div className={styles.heroContent}>
           <h1>{t('uns.heroTitle')}</h1>
           <p>{t('uns.heroSubtitle')}</p>
-          <button onClick={scrollToFooter} className={styles.ctaButton}>
+          {/* <button onClick={scrollToFooter} className={styles.ctaButton}>
             {t('uns.ctaButton')}
-          </button>
+          </button> */}
         </div>
       </section>
-
+      {/* CTA */}
+      
       {/* QUIÉNES SOMOS */}
       <section className={styles.section}>
         <h2>{t('uns.section1Title')}</h2>
@@ -77,6 +80,16 @@ const UberUns = () => {
         <p>{t('uns.section1Text1')}</p>
         <p>{t('uns.section1Text2')}</p>
       </section>
+
+<section className={styles.cta}>
+        <h2>{t('uns.ctaTitle')}</h2>
+        <p>{t('uns.ctaText')}</p>
+
+        <button onClick={scrollToFooter} className={styles.ctaButton}>
+          {t('uns.ctaButton')}
+        </button>
+      </section>
+
 
       {/* SERVICIOS */}
       <section className={styles.sectionAlt}>
@@ -148,15 +161,7 @@ const UberUns = () => {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className={styles.cta}>
-        <h2>{t('uns.ctaTitle')}</h2>
-        <p>{t('uns.ctaText')}</p>
 
-        <button onClick={scrollToFooter} className={styles.ctaButton}>
-          {t('uns.ctaButton')}
-        </button>
-      </section>
 
       <Footer />
       <div id="contacto"></div>

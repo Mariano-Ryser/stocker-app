@@ -7,11 +7,10 @@ import { useProduct } from '../../../hooks/useProducts';
 import { useSalesForImport } from '../../../hooks/useSalesForImport';
 import { validateProducts } from '../../../services/bulkImportService';
 import ProductLimitBadge from '../../../components/dashboard/limitProduct/ProductLimitBadge';
-import styles from './ImportExportPage.module.css';
-
+import styles from './ImportExportPage.module.css'; 
 
 export default function ImportExportPage() {
-   const { t } = useLanguage();
+  const { t } = useLanguage();
   const [dataType, setDataType] = useState('products');
   const [importResults, setImportResults] = useState(null);
   const [showImportModal, setShowImportModal] = useState(false);
@@ -45,8 +44,13 @@ export default function ImportExportPage() {
 
   const currentData = dataType === 'sales' ? sales : products;
   const currentLoading = dataType === 'sales' ? salesLoading : productsLoading;
-  const dataTypeLabel = dataType === 'sales' ? t('salesLabel') : t('productLabel');
   const showImport = dataType === 'products';
+
+
+
+
+
+
 
   const handleImport = async (importedData) => {
     if (dataType === 'sales') {
@@ -57,15 +61,26 @@ export default function ImportExportPage() {
     try {
       console.log('=== HANDLE IMPORT START ===');
       console.log('Imported data count:', importedData.length);
+      console.log('Product limits:', productLimits);
       
+      // ✅ Verificar límite de espacio
       if (importedData.length > productLimits.remaining) {
+
+         console.log('Space check failed - limits:', productLimits);
+        // Usar mensaje sin variables
+        const errorMessage = t('import.spaceCheckError');
+        
+        console.log('Space check failed:', errorMessage);
+        
         setImportResults({
-          type: 'error',
-          dataType: 'products',
-          message: t('import.spaceCheck.error', {
-            importCount: importedData.length,
-            remaining: productLimits.remaining
-          })
+        type: 'error',
+        dataType: 'products',
+        message: t('import.spaceCheckError'),
+        limits: {
+          current: productLimits.current,
+          max: productLimits.max,
+          remaining: productLimits.remaining
+        }
         });
         setShowImportModal(true);
         return;
@@ -102,18 +117,30 @@ export default function ImportExportPage() {
       const totalCount = result.total || validation.valid.length;
       const failedCount = totalCount - importedCount;
       
+      // ✅ Usar mensajes sin variables
+      let message = '';
+      let resultType = 'import';
+      
+      if (failedCount === 0) {
+        message = t('importResult.messageSuccess');
+        resultType = 'import';
+      } else if (importedCount > 0) {
+        message = t('importResult.messagePartial');
+        resultType = 'import';
+      } else {
+        message = t('importResult.error');
+        resultType = 'error';
+      }
+      
       setImportResults({
-        type: 'import',
+        type: resultType,
         dataType: 'products',
         success: importedCount,
         failed: failedCount,
         imported: importedCount,
         total: totalCount,
         errors: result.errors || [],
-        message: result.message || t('importResult.message.success', {
-          imported: importedCount,
-          total: totalCount
-        }),
+        message: message,
         limits: result.limits
       });
       
@@ -134,11 +161,36 @@ export default function ImportExportPage() {
       setImportResults({
         type: 'error',
         dataType: 'products',
-        message: error.message || t('importResult.error')
+        message: t('importResult.error')
       });
       setShowImportModal(true);
     }
   };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   const handleImportValidOnly = async () => {
     try {
@@ -154,10 +206,7 @@ export default function ImportExportPage() {
       }
 
       if (validData.length > productLimits.remaining) {
-        alert(t('import.spaceCheck.error', {
-          importCount: validData.length,
-          remaining: productLimits.remaining
-        }));
+        alert(t('import.spaceCheckError'));
         return;
       }
 
@@ -167,6 +216,15 @@ export default function ImportExportPage() {
       const totalCount = result.total || validData.length;
       const failedCount = totalCount - importedCount;
 
+      let message = '';
+      if (failedCount === 0) {
+        message = t('importResult.messageSuccess');
+      } else if (importedCount > 0) {
+        message = t('importResult.messagePartial');
+      } else {
+        message = t('importResult.error');
+      }
+
       setImportResults({
         type: 'import',
         dataType: 'products',
@@ -174,10 +232,7 @@ export default function ImportExportPage() {
         failed: failedCount,
         imported: importedCount,
         total: totalCount,
-        message: result.message || t('importResult.message.success', {
-          imported: importedCount,
-          total: totalCount
-        })
+        message: message
       });
 
       if (importedCount > 0) {
@@ -191,7 +246,7 @@ export default function ImportExportPage() {
       setImportResults({
         type: 'error',
         dataType: 'products',
-        message: error.message
+        message: t('importResult.error')
       });
     }
   };
@@ -200,6 +255,35 @@ export default function ImportExportPage() {
     setShowImportModal(false);
     setImportResults(null);
     setImportedData([]);
+  };
+
+  // ✅ Obtener textos según el tipo de datos
+  const getSubtitle = () => {
+    return dataType === 'sales' ? t('subtitleSales') : t('subtitleProducts');
+  };
+
+  const getItemsLabel = () => {
+    return dataType === 'sales' ? t('stats.itemsSales') : t('stats.itemsProducts');
+  };
+
+  const getTemplateSubtitle = () => {
+    return dataType === 'sales' ? t('template.subtitleSales') : t('template.subtitleProducts');
+  };
+
+  const getFormatText = () => {
+    return dataType === 'sales' ? t('template.formatSales') : t('template.formatProducts');
+  };
+
+  const getCardTitle = () => {
+    return dataType === 'sales' ? t('importExportCard.titleSales') : t('importExportCard.titleProducts');
+  };
+
+  const getCardSubtitle = () => {
+    return dataType === 'sales' ? t('importExportCard.subtitleSales') : t('importExportCard.subtitleProducts');
+  };
+
+  const getModalSubtitle = () => {
+    return dataType === 'sales' ? t('modal.subtitleSales') : t('modal.subtitleProducts');
   };
 
   return (
@@ -215,10 +299,7 @@ export default function ImportExportPage() {
         <div className={styles.headerContent}>
           <h1 className={styles.headerTitle}>{t('title')}</h1>
           <p className={styles.headerSubtitle}>
-            {t('subtitle', {
-              dataType: dataTypeLabel,
-              action: dataType === 'sales' ? t('exportOnly') : t('importExport')
-            })}
+            {getSubtitle()}
           </p>
         </div>
         
@@ -281,7 +362,7 @@ export default function ImportExportPage() {
             )}
           </div>
           <div className={styles.statCardContent}>
-            <div className={styles.statCardLabel}>{t('stats.items', { dataType: dataTypeLabel })}</div>
+            <div className={styles.statCardLabel}>{getItemsLabel()}</div>
             <div className={styles.statCardValue}>
               {currentLoading ? (
                 <div className={styles.loadingDots}>
@@ -352,9 +433,7 @@ export default function ImportExportPage() {
             <div className={styles.cardHeaderContent}>
               <h2 className={styles.cardTitle}>{t('template.download')}</h2>
               <p className={styles.cardSubtitle}>
-                {dataType === 'sales' 
-                  ? t('template.subtitle.sales')
-                  : t('template.subtitle.products')}
+                {getTemplateSubtitle()}
               </p>
             </div>
           </div>
@@ -365,7 +444,7 @@ export default function ImportExportPage() {
             <div className={styles.templateInfo}>
               <h3 className={styles.templateTitle}>
                 <span className={styles.templateTitleIcon}>📋</span>
-                {t('template.format', { dataType: dataTypeLabel })}
+                {getFormatText()}
               </h3>
               {dataType === 'products' ? (
                 <ul className={styles.templateList}>
@@ -456,12 +535,10 @@ export default function ImportExportPage() {
             </div>
             <div className={styles.cardHeaderContent}>
               <h2 className={styles.cardTitle}>
-                {dataType === 'sales' ? t('importExportCard.title.sales') : t('importExportCard.title.products')}
+                {getCardTitle()}
               </h2>
               <p className={styles.cardSubtitle}>
-                {dataType === 'sales' 
-                  ? t('importExportCard.subtitle.sales')
-                  : t('importExportCard.subtitle.products')}
+                {getCardSubtitle()}
               </p>
             </div>
           </div>
@@ -470,7 +547,7 @@ export default function ImportExportPage() {
             <ExcelImportExport 
               data={currentData}
               onImport={handleImport}
-              filename={dataTypeLabel}
+              filename={dataType === 'products' ? 'produkte' : 'verkaufe'}
               disabled={currentLoading}
               showImport={showImport}
               showExport={true}
@@ -489,9 +566,7 @@ export default function ImportExportPage() {
               <div className={styles.infoItem}>
                 <span className={styles.infoItemIcon}>🔄</span>
                 <span className={styles.infoItemText}>
-                  {dataType === 'products' 
-                    ? t('actions.sameFormat')
-                    : t('actions.exportFormat')}
+                  {dataType === 'products' ? t('actions.sameFormat') : t('actions.exportFormat')}
                 </span>
               </div>
               {dataType === 'sales' && (
@@ -517,7 +592,7 @@ export default function ImportExportPage() {
                    t('modal.error')}
                 </h2>
                 <p className={styles.modalSubtitle}>
-                  {importResults.dataType === 'sales' ? t('modal.subtitle.sales') : t('modal.subtitle.products')}
+                  {getModalSubtitle()}
                 </p>
               </div>
               <button className={styles.closeBtn} onClick={handleCloseModal}>
@@ -552,7 +627,7 @@ export default function ImportExportPage() {
                           <div key={i} className={styles.errorItem}>
                             <div className={styles.errorItemHeader}>
                               <span className={styles.errorRow}>
-                                {t('validation.row', { row: e.row || e.index + 2 })}
+                                {t('validation.row')} {e.row || e.index + 2}
                               </span>
                               {e.lieferschein && (
                                 <span className={styles.errorLieferschein}>{e.lieferschein}</span>
@@ -599,24 +674,21 @@ export default function ImportExportPage() {
                         {importResults.failed > 0 ? t('importResult.warning') : t('importResult.success')}
                       </h3>
                       <p className={styles.importResultMessage}>
-                        {importResults.message || t('importResult.message.partial', {
-                          imported: importResults.imported || importResults.success,
-                          total: importResults.total || (importResults.success + importResults.failed)
-                        })}
+                        {importResults.message}
                       </p>
                       
                       <div className={styles.importStats}>
                         <div className={styles.importStat}>
-                          <span className={styles.importStatLabel}>{t('importResult.stats.total')}</span>
-                          <span className={styles.importStatValue}>{importResults.total || (importResults.success + importResults.failed)}</span>
+                          <span className={styles.importStatLabel}>{t('importResult.statsTotal')}</span>
+                          <span className={styles.importStatValue}>{importResults.total}</span>
                         </div>
                         <div className={`${styles.importStat} ${styles.success}`}>
-                          <span className={styles.importStatLabel}>{t('importResult.stats.success')}</span>
-                          <span className={styles.importStatValue}>{importResults.imported || importResults.success}</span>
+                          <span className={styles.importStatLabel}>{t('importResult.statsSuccess')}</span>
+                          <span className={styles.importStatValue}>{importResults.success || importResults.imported}</span>
                         </div>
                         {importResults.failed > 0 && (
                           <div className={`${styles.importStat} ${styles.failed}`}>
-                            <span className={styles.importStatLabel}>{t('importResult.stats.failed')}</span>
+                            <span className={styles.importStatLabel}>{t('importResult.statsFailed')}</span>
                             <span className={styles.importStatValue}>{importResults.failed}</span>
                           </div>
                         )}
@@ -632,7 +704,7 @@ export default function ImportExportPage() {
                           </ul>
                           {importResults.errors.length > 3 && (
                             <p className={styles.importErrorsMore}>
-                              {t('importResult.moreErrors', { count: importResults.errors.length - 3 })}
+                              {t('importResult.moreErrors')}
                             </p>
                           )}
                         </div>
@@ -649,22 +721,32 @@ export default function ImportExportPage() {
               )}
 
               {importResults.type === 'error' && (
-                <>
-                  <div className={`${styles.importResult} ${styles.error}`}>
-                    <div className={styles.importResultIcon}>❌</div>
-                    <div className={styles.importResultContent}>
-                      <h3>{t('importResult.error')}</h3>
-                      <p>{importResults.message}</p>
-                    </div>
-                  </div>
+                      <>
+                        <div className={`${styles.importResult} ${styles.error}`}>
+                          <div className={styles.importResultIcon}>❌</div>
+                          <div className={styles.importResultContent}>
+                            <h3>{t('importResult.error')}</h3>
+                            <p>{importResults.message}</p>
+                            {importResults.limits && (
+                              <div className={styles.limitInfo}>
+                                <p className={styles.limitInfoText}>
+                                  {t('import.spaceCheckErrorWithLimit', { 
+                                    current: importResults.limits.current,
+                                    max: importResults.limits.max
+                                  })}
+                                </p>
+                              </div>
+                            )}
+                          </div>
+                        </div>
 
-                  <div className={`${styles.modalActions} ${styles.center}`}>
-                    <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleCloseModal}>
-                      {t('modal.close')}
-                    </button>
-                  </div>
-                </>
-              )}
+                        <div className={`${styles.modalActions} ${styles.center}`}>
+                          <button className={`${styles.btn} ${styles.btnPrimary}`} onClick={handleCloseModal}>
+                            {t('modal.close')}
+                          </button>
+                        </div>
+                      </>
+                    )}
             </div>
           </div>
         </div>

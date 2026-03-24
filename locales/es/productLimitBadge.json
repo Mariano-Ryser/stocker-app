@@ -1,0 +1,14 @@
+
+{
+   "productLimitBadge":
+{
+  "title": "Límite de artículos",
+  "criticalMessage": "⚠️ Límite crítico. Considera actualizar tu plan.",
+  "warningMessage": "ℹ️ Te estás acercando al límite.",
+  "normalMessage": "✅ Espacio disponible: {{available}} artículos.",
+  "compact": {
+    "used": "usado"
+  },
+  "stats": "{{current}} de {{max}} usado ({{percentage}}%)"
+  }
+}

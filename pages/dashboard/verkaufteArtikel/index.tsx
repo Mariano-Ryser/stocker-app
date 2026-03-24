@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+ import { useState, useMemo, useEffect } from "react";
 import { useSales } from "../../../hooks/useSales";
 import { useInfiniteScroll } from "../../../hooks/useInfiniteScroll";
 import { useAuth } from '../../../components/auth/AuthProvider';
@@ -109,9 +109,9 @@ export default function VerkauftetArtikelPage() {
 
   const getStatusBadge = (status) => {
     const badges = {
-      paid: { bg: "#d1fae5", color: "#065f46", text: t('sales.status.paid') },
-      cancelled: { bg: "#fee2e2", color: "#991b1b", text: t('sales.status.cancelled') },
-      pending: { bg: "#fff3cd", color: "#856404", text: t('sales.status.pending') }
+      paid: { bg: "#d1fae5", color: "#065f46", text: t('verkaufteArtikel.status.paid') },
+      cancelled: { bg: "#fee2e2", color: "#991b1b", text: t('verkaufteArtikel.status.cancelled') },
+      pending: { bg: "#fff3cd", color: "#856404", text: t('verkaufteArtikel.status.pending') }
     };
     return badges[status] || { bg: "#f3f4f6", color: "#374151", text: status };
   };
@@ -132,7 +132,7 @@ export default function VerkauftetArtikelPage() {
             <button
               className={`${styles.viewButton} ${viewMode === 'table' ? styles.activeView : ''}`}
               onClick={() => setViewMode('table')}
-              title="Vista Tabla"
+              title={t('verkaufteArtikel.view.table')}
             >
               <svg viewBox="0 0 24 24" width="20" height="20">
                 <path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h10v2H7v-2z"/>
@@ -141,7 +141,7 @@ export default function VerkauftetArtikelPage() {
             <button
               className={`${styles.viewButton} ${viewMode === 'excel' ? styles.activeView : ''}`}
               onClick={() => setViewMode('excel')}
-              title="Vista Excel"
+              title={t('verkaufteArtikel.view.excel')}
             >
               <svg viewBox="0 0 24 24" width="20" height="20">
                 <path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h5v2H7v-2z"/>
@@ -150,7 +150,7 @@ export default function VerkauftetArtikelPage() {
             <button
               className={`${styles.viewButton} ${viewMode === 'cards' ? styles.activeView : ''}`}
               onClick={() => setViewMode('cards')}
-              title="Vista Tarjetas"
+              title={t('verkaufteArtikel.view.cards')}
             >
               <svg viewBox="0 0 24 24" width="20" height="20">
                 <path fill="currentColor" d="M4 4h16v2H4V4zm0 4h16v2H4V8zm0 4h16v2H4v-2zm0 4h10v2H4v-2z"/>
@@ -396,16 +396,16 @@ export default function VerkauftetArtikelPage() {
                 <table className={styles.excelTable}>
                   <thead>
                     <tr>
-                      <th className={styles.excelHeader}>Fecha</th>
-                      <th className={styles.excelHeader}>Hora</th>
-                      <th className={styles.excelHeader}>Artículo</th>
-                      <th className={styles.excelHeader}>Cantidad</th>
-                      <th className={styles.excelHeader}>Precio Unit.</th>
-                      <th className={styles.excelHeader}>Total</th>
-                      <th className={styles.excelHeader}>Cliente</th>
-                      <th className={styles.excelHeader}>Email</th>
-                      <th className={styles.excelHeader}>Lieferschein</th>
-                      <th className={styles.excelHeader}>Estado</th>
+                      <th className={styles.excelHeader}>{t('verkaufteArtikel.excel.date')}</th>
+                      <th className={styles.excelHeader}>{t('verkaufteArtikel.excel.time')}</th>
+                      <th className={styles.excelHeader}>{t('verkaufteArtikel.excel.article')}</th>
+                      <th className={styles.excelHeader}>{t('verkaufteArtikel.excel.quantity')}</th>
+                      <th className={styles.excelHeader}>{t('verkaufteArtikel.excel.unitPrice')}</th>
+                      <th className={styles.excelHeader}>{t('verkaufteArtikel.excel.total')}</th>
+                      <th className={styles.excelHeader}>{t('verkaufteArtikel.excel.client')}</th>
+                      <th className={styles.excelHeader}>{t('verkaufteArtikel.excel.email')}</th>
+                      <th className={styles.excelHeader}>{t('verkaufteArtikel.excel.lieferschein')}</th>
+                      <th className={styles.excelHeader}>{t('verkaufteArtikel.excel.status')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -416,41 +416,30 @@ export default function VerkauftetArtikelPage() {
                           <td className={styles.excelCell}>
                             <span className={styles.excelDate}>{row.dateString}</span>
                           </td>
-                          
                           <td className={styles.excelCell}>
                             <span className={styles.excelTime}>{row.dateTime}</span>
                           </td>
-                          
                           <td className={styles.excelCell}>
                             <span className={styles.excelProductName}>{row.productName}</span>
                           </td>
-                          
-                         
-                          
                           <td className={`${styles.excelCell} ${styles.excelNumber}`}>
                             <span className={styles.excelQuantity}>{row.quantity}</span>
                           </td>
-                          
                           <td className={`${styles.excelCell} ${styles.excelNumber}`}>
                             <span className={styles.excelUnitPrice}>{row.unitPrice.toFixed(2)}</span>
                           </td>
-                          
                           <td className={`${styles.excelCell} ${styles.excelNumber}`}>
                             <span className={styles.excelTotal}>{row.lineTotal.toFixed(2)} {currencySymbol}</span>
                           </td>
-                          
                           <td className={styles.excelCell}>
                             <span className={styles.excelClientName}>{row.clientName}</span>
                           </td>
-                          
                           <td className={styles.excelCell}>
                             <span className={styles.excelClientEmail}>{row.clientEmail}</span>
                           </td>
-                          
                           <td className={styles.excelCell}>
                             <span className={styles.excelLieferschein}>{row.lieferschein || '-'}</span>
                           </td>
-                          
                           <td className={styles.excelCell}>
                             <span 
                               className={styles.excelStatus}

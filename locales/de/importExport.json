@@ -1,12 +1,14 @@
 {
   "title": "Excel Import & Export",
-  "subtitle": "Verwalten Sie {dataType} effizient – {action}",
+  "subtitleProducts": "Verwalten Sie Produkte effizient – Import & Export",
+  "subtitleSales": "Verkaufsdaten exportieren – Nur Export",
   "productLabel": "Produkte",
   "salesLabel": "Verkäufe",
   "importExport": "Import/Export",
   "exportOnly": "Nur Export",
   "stats": {
-    "items": "{dataType}",
+    "itemsProducts": "Produkte",
+    "itemsSales": "Verkäufe",
     "status": "Status",
     "loading": "Lädt...",
     "ready": "Bereit",
@@ -16,11 +18,10 @@
   },
   "template": {
     "download": "Vorlage herunterladen",
-    "subtitle": {
-      "sales": "Exportvorlage für Verkaufsdaten",
-      "products": "Importvorlage für konsistente Produktdaten"
-    },
-    "format": "Format für {dataType}:",
+    "subtitleSales": "Exportvorlage für Verkaufsdaten",
+    "subtitleProducts": "Importvorlage für konsistente Produktdaten",
+    "formatProducts": "Format für Produkte:",
+    "formatSales": "Format für Verkäufe:",
     "fields": {
       "product": {
         "articleNumber": "Artikelnummer",
@@ -46,24 +47,20 @@
         "productNameHint": "verkauftes Produkt",
         "quantity": "Menge",
         "quantityHint": "verkaufte Anzahl",
-        "unitPrice": "Einzelpreis (CHF)",
+        "unitPrice": "Einzelpreis",
         "unitPriceHint": "Preis pro Einheit",
         "status": "Status",
         "statusHint": "pending/paid/cancelled",
-        "total": "Total (CHF)",
+        "total": "Total",
         "totalHint": "Gesamtbetrag"
       }
     }
   },
   "importExportCard": {
-    "title": {
-      "sales": "Export",
-      "products": "Import & Export"
-    },
-    "subtitle": {
-      "sales": "Verkaufsdaten exportieren",
-      "products": "Daten austauschen und verwalten"
-    }
+    "titleProducts": "Import & Export",
+    "titleSales": "Export",
+    "subtitleProducts": "Daten austauschen und verwalten",
+    "subtitleSales": "Verkaufsdaten exportieren"
   },
   "actions": {
     "supported": "Unterstützt: .xlsx, .xls, .csv",
@@ -76,18 +73,15 @@
     "notAvailable": "Import für Verkäufe ist nicht verfügbar. Nur Export möglich.",
     "noValidProducts": "Keine gültigen Produkte zum Importieren gefunden.",
     "noValidSales": "Keine gültigen Verkäufe zum Importieren gefunden.",
-    "spaceCheck": {
-      "error": "❌ No hay suficiente espacio. Intentas importar {importCount} productos, pero solo tienes {remaining} espacios disponibles."
-    }
+    "spaceCheckError": "❌ Nicht genügend Speicherplatz. Bitte löschen Sie einige Produkte oder aktualisieren Sie Ihren Plan.",
+    "spaceCheckErrorWithLimit": "❌ Produktlimit erreicht. Sie können keine weiteren Produkte importieren. Bitte löschen Sie einige Produkte oder aktualisieren Sie Ihren Plan."
   },
   "modal": {
     "validation": "Validierungsergebnis",
     "importComplete": "Import abgeschlossen",
     "error": "Fehler",
-    "subtitle": {
-      "products": "Produkte",
-      "sales": "Verkäufe"
-    },
+    "subtitleProducts": "Produkte",
+    "subtitleSales": "Verkäufe",
     "close": "Schliessen",
     "cancel": "Abbrechen",
     "done": "Fertig",
@@ -98,22 +92,18 @@
     "invalid": "Ungültig",
     "errorDetails": "Fehlerdetails",
     "errors": "Fehler",
-    "row": "Zeile {row}",
+    "row": "Zeile",
     "errorsList": "Fehlerdetails:"
   },
   "importResult": {
     "success": "Erfolgreich importiert",
     "warning": "Import mit Warnungen",
     "error": "Fehler beim Import",
-    "message": {
-      "success": "{imported} von {total} Produkten erfolgreich importiert",
-      "partial": "{imported} von {total} Produkten erfolgreich importiert"
-    },
-    "stats": {
-      "total": "Insgesamt:",
-      "success": "Erfolgreich:",
-      "failed": "Fehlgeschlagen:"
-    },
-    "moreErrors": "... und {count} weitere Fehler"
+    "messageSuccess": "Produkte erfolgreich importiert",
+    "messagePartial": "Einige Produkte wurden importiert, andere nicht",
+    "statsTotal": "Insgesamt:",
+    "statsSuccess": "Erfolgreich:",
+    "statsFailed": "Fehlgeschlagen:",
+    "moreErrors": "... und weitere Fehler"
   }
 }

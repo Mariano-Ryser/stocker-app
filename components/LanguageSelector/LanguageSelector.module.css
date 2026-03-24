@@ -14,7 +14,6 @@
   gap: 8px;
   padding: 6px 10px;
   border: 1px solid #e5e7eb;
-  border-radius: 6px;
   background: white;
   cursor: pointer;
   transition: border-color 0.2s, background-color 0.2s;
@@ -43,7 +42,6 @@
   min-width: 180px;
   background: white;
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
   overflow: hidden;
   z-index: 50;

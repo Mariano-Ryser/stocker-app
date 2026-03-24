@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps, router }) {
         <link rel="icon"
          href="/img/logo80.webp" />
       </Head>
-
+      
       <AuthProvider>
         <LanguageProvider>
           {isDashboard ? (

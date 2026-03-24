@@ -1,0 +1,42 @@
+{
+  "lowStockAlert": {
+    "button": "Niedrigbestandswarnungen",
+    "title": "📦 Niedrigbestandswarnungen",
+    "refresh": "Aktualisieren",
+    "info": "Produkte erscheinen hier, wenn sie einen konfigurierten Schwellenwert haben und ihr Bestand gleich oder kleiner als dieser Schwellenwert ist.",
+    "stats": {
+      "withAlert": "⚠️ Mit Warnung:",
+      "outOfStock": "🔴 Ausverkauft:"
+    },
+    "sectionTitle": "Produkte die Aufmerksamkeit benötigen",
+    "tableHeader": {
+      "product": "Produkt",
+      "stockThreshold": "Bestand / Schwellenwert",
+      "status": "Status",
+      "action": "Aktion"
+    },
+    "status": {
+      "outOfStock": "AUSVERKAUFT",
+      "critical": "KRITISCH",
+      "low": "NIEDRIG",
+      "caution": "VORSICHT"
+    },
+    "buttons": {
+      "restock": "Nachbestellen",
+      "increase": "Erhöhen",
+      "edit": "Bearbeiten"
+    },
+    "summary": {
+      "attention": "⚠️ <strong>{count}</strong> Produkt{plural} benötigt{pluralS} Aufmerksamkeit",
+      "outOfStockNote": "🔴 {count} Produkt{plural} ausverkauft",
+      "allGood": "✅ Alle Produkte mit konfigurierten Schwellenwerten liegen über ihren Grenzwerten"
+    },
+    "actions": {
+      "viewAll": "Alle Produkte anzeigen →"
+    },
+    "empty": {
+      "noProducts": "✅ Keine Produkte mit konfigurierten Schwellenwerten",
+      "allSafe": "Alle Produkte liegen über ihren Schwellenwerten"
+    }
+  }
+}

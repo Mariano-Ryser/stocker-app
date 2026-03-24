@@ -7,10 +7,11 @@
     "loadingShort": "Loading...",
     "error": {
       "general": "Error",
-      "title": "Error loading items"
+      "title": "Error loading items",
+      "loadFailed": "Failed to load items"
     },
     "actions": {
-      "retry": "Try again",
+      "retry": "Retry",
       "refresh": "Refresh",
       "clearFilters": "Clear filters",
       "loadMore": "Load more ({remaining})"
@@ -23,9 +24,9 @@
       "of": "of"
     },
     "filters": {
-      "product": "Search items...",
+      "product": "Search item...",
       "client": "Customer",
-      "lieferschein": "Invoice No.",
+      "lieferschein": "Delivery note",
       "dateFrom": "From",
       "dateTo": "To",
       "dateSeparator": "—",
@@ -34,19 +35,36 @@
     },
     "table": {
       "article": "Item",
-      "quantity": "Qty",
+      "quantity": "Quantity",
       "price": "Price",
       "total": "Total",
       "client": "Customer",
       "date": "Date",
-      "lieferschein": "Invoice No.: {number}"
+      "lieferschein": "Delivery note: {number}"
+    },
+    "excel": {
+      "date": "Date",
+      "time": "Time",
+      "article": "Item",
+      "quantity": "Quantity",
+      "unitPrice": "Unit Price",
+      "total": "Total",
+      "client": "Customer",
+      "email": "Email",
+      "lieferschein": "Delivery Note",
+      "status": "Status"
     },
     "card": {
       "client": "Customer:",
-      "lieferschein": "Invoice No.:",
+      "lieferschein": "Delivery note:",
       "date": "Date:",
       "price": "Price:",
       "total": "Total:"
+    },
+    "view": {
+      "table": "Table View",
+      "excel": "Excel View",
+      "cards": "Card View"
     },
     "client": {
       "unknown": "Unknown customer"
@@ -62,8 +80,13 @@
       }
     },
     "status": {
+      "paid": "Paid",
       "cancelled": "Cancelled",
       "pending": "Pending"
+    },
+    "pagination": {
+      "showing": "Showing {count} of {total} items",
+      "pageInfo": "Page {current} of {total}"
     }
   }
 }

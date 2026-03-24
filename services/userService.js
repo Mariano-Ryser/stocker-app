@@ -381,7 +381,7 @@ export async function createCompanyUserAPI(userData) {
 export async function getCompanyUsersAPI() {
   try {
     const API_URL = `${API_BASE_URL}/users/company/users`;
-    console.log('Obteniendo usuarios de empresa desde:', API_URL);
+    // console.log('Obteniendo usuarios de empresa desde:', API_URL);
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -412,7 +412,7 @@ export async function getCompanyUsersAPI() {
     }
     
     const data = await res.json();
-    console.log('Usuarios de empresa recibidos:', data);
+    // console.log('Usuarios de empresa recibidos:', data);
     return { ok: true, ...data };
   } catch (error) {
     console.error('Error in getCompanyUsersAPI:', error);

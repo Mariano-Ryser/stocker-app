@@ -5,7 +5,7 @@ import RechnungCreator from "../../../components/dashboard/regnung/RechnungCreat
 import RechnungPrint from "../../../components/dashboard/regnung/RechnungPrint";
 import RechnungUpdate from "../../../components/dashboard/regnung/RechnungUpdate";
 import StockMovementsModal from "../../../components/dashboard/regnung/SalesMovementsModal";
-import { useAuth } from "../../../components/auth/AuthProvider";
+import { useAuth } from "../../../components/auth/AuthProvider"; 
 import { useLanguage } from "../../../contexts/LanguageContext";
 import styles from "./SalesPage.module.css";
 
@@ -157,7 +157,7 @@ export default function SalesPage() {
             <button
               className={`${styles.viewButton} ${viewMode === 'table' ? styles.activeView : ''}`}
               onClick={() => setViewMode('table')}
-              title="Vista Tabla"
+              title={t('sales.view.table')}
             >
               <svg viewBox="0 0 24 24" width="20" height="20">
                 <path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h10v2H7v-2z"/>
@@ -166,10 +166,19 @@ export default function SalesPage() {
             <button
               className={`${styles.viewButton} ${viewMode === 'excel' ? styles.activeView : ''}`}
               onClick={() => setViewMode('excel')}
-              title="Vista Excel"
+              title={t('sales.view.excel')}
             >
               <svg viewBox="0 0 24 24" width="20" height="20">
                 <path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h5v2H7v-2z"/>
+              </svg>
+            </button>
+            <button
+              className={`${styles.viewButton} ${viewMode === 'cards' ? styles.activeView : ''}`}
+              onClick={() => setViewMode('cards')}
+              title={t('sales.view.cards')}
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M4 4h16v2H4V4zm0 4h16v2H4V8zm0 4h16v2H4v-2zm0 4h10v2H4v-2z"/>
               </svg>
             </button>
           </div>
@@ -203,6 +212,7 @@ export default function SalesPage() {
               className={styles.clearButton}
               onClick={() => setSearch('')}
               disabled={loading}
+              title={t('sales.search.clear')}
             >
               ✕
             </button>
@@ -216,7 +226,7 @@ export default function SalesPage() {
             className={styles.filterInput}
             onChange={e => setDateFrom(e.target.value)}
             disabled={loading}
-            placeholder="Fecha desde"
+            placeholder={t('sales.filter.dateFrom')}
           />
           <input
             type="date"
@@ -224,7 +234,7 @@ export default function SalesPage() {
             className={styles.filterInput}
             onChange={e => setDateTo(e.target.value)}
             disabled={loading}
-            placeholder="Fecha hasta"
+            placeholder={t('sales.filter.dateTo')}
           />
           <select
             className={styles.filterInput}
@@ -262,11 +272,9 @@ export default function SalesPage() {
             {loading ? (
               t('sales.loading.short')
             ) : (
-              <>
-                {t('sales.search.results')
-                  .replace('{visible}', sales.length)
-                  .replace('{total}', totalItems)}
-              </>
+              t('sales.search.results')
+                .replace('{visible}', sales.length)
+                .replace('{total}', totalItems)
             )}
           </span>
           
@@ -286,6 +294,7 @@ export default function SalesPage() {
                     setSortField("createdAt");
                     setSortDirection("desc");
                   }}
+                  title={t('sales.filter.clear')}
                 >
                   ✕
                 </button>
@@ -297,6 +306,7 @@ export default function SalesPage() {
                 <button 
                   className={styles.clearFilter}
                   onClick={() => setStatusFilter("")}
+                  title={t('sales.filter.clear')}
                 >
                   ✕
                 </button>
@@ -311,6 +321,7 @@ export default function SalesPage() {
                     setDateFrom("");
                     setDateTo("");
                   }}
+                  title={t('sales.filter.clear')}
                 >
                   ✕
                 </button>
@@ -443,6 +454,7 @@ export default function SalesPage() {
                                 setUpdateModalOpen(true);
                                 e.stopPropagation();
                               }}
+                              title={t('sales.buttons.edit')}
                             >
                               ✎
                             </button>
@@ -491,15 +503,15 @@ export default function SalesPage() {
                 <table className={styles.excelTable}>
                   <thead>
                     <tr>
-                      <th className={styles.excelHeader}>Fecha</th>
-                      <th className={styles.excelHeader}>Hora</th>
-                      <th className={styles.excelHeader}>Cliente</th>
-                      <th className={styles.excelHeader}>N° Factura</th>
-                      <th className={styles.excelHeader}>Subtotal</th>
-                      <th className={styles.excelHeader}>IVA</th>
-                      <th className={styles.excelHeader}>Total</th>
-                      <th className={styles.excelHeader}>Estado</th>
-                      <th className={styles.excelHeader}>Acciones</th>
+                      <th className={styles.excelHeader}>{t('sales.excel.date')}</th>
+                      <th className={styles.excelHeader}>{t('sales.excel.time')}</th>
+                      <th className={styles.excelHeader}>{t('sales.excel.client')}</th>
+                      <th className={styles.excelHeader}>{t('sales.excel.invoiceNumber')}</th>
+                      <th className={styles.excelHeader}>{t('sales.excel.subtotal')}</th>
+                      <th className={styles.excelHeader}>{t('sales.excel.tax')}</th>
+                      <th className={styles.excelHeader}>{t('sales.excel.total')}</th>
+                      <th className={styles.excelHeader}>{t('sales.excel.status')}</th>
+                      <th className={styles.excelHeader}>{t('sales.excel.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -699,17 +711,28 @@ export default function SalesPage() {
 
           {/* Paginación */}
           {totalPages > 1 && (
-            <Pagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={goToPage}
-                onNext={() => goToPage(currentPage + 1)}   // 👈 Añadido
-                onPrev={() => goToPage(currentPage - 1)}   // 👈 Añadido
-              loading={loadingMore}
-            />
+            <>
+              <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                onPageChange={goToPage}
+                onNext={() => goToPage(currentPage + 1)}
+                onPrev={() => goToPage(currentPage - 1)}
+                loading={loadingMore}
+              />
+              <div className={styles.paginationInfo}>
+                {t('sales.pagination.showing', {
+                  count: sales.length,
+                  total: totalItems
+                })}
+                {' · '}
+                {t('sales.pagination.pageInfo', {
+                  current: currentPage,
+                  total: totalPages
+                })}
+              </div>
+            </>
           )}
-
-         
         </>
       )}
 

@@ -6,9 +6,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function HomeHero() {
   const { isAuthenticated } = useAuth();
-   const { t } = useLanguage();
-
-   
+  const { t } = useLanguage();
 
   const loginUrl = isAuthenticated ? '/dashboard' : '/login';
 
@@ -19,22 +17,21 @@ export default function HomeHero() {
           <h1 className="hero-title">{t('homeHero.title')}</h1>
           <p>{t('homeHero.subtitle')}</p>
 
-         <div className="actions">
-              <button
-                className="btn secondary"
-                onClick={() => Router.push(loginUrl)}
-              >
-                {isAuthenticated ? t('homeHero.b1a') : t('homeHero.b1')}
-              </button>
+          <div className="actions">
+            <button
+              className="btn secondary"
+              onClick={() => Router.push(loginUrl)}
+            >
+              {isAuthenticated ? t('homeHero.b1a') : t('homeHero.b1')}
+            </button>
 
-              <button
-                className="btn secondary"
-                onClick={() => Router.push('/informativePages/uberUns')}
-              >
-                {t('homeHero.b2')}
-              </button>
-        </div>
-
+            <button
+              className="btn secondary"
+              onClick={() => Router.push('/informativePages/uberUns')}
+            >
+              {t('homeHero.b2')}
+            </button>
+          </div>
         </div>
         <div className="image">
           <Image
@@ -48,8 +45,6 @@ export default function HomeHero() {
       </div>
 
       <style jsx>{`
-       
-
         .hero {
           background: linear-gradient(
             180deg,
@@ -60,9 +55,10 @@ export default function HomeHero() {
           overflow: hidden;
         }
 
-        .hero-title{
-        animation: fadeTitleIn 3s ease-in-out;
+        .hero-title {
+          animation: fadeTitleIn 3s ease-in-out;
         }
+        
         @keyframes fadeTitleIn { 
           from {
             opacity: 0; 
@@ -73,7 +69,6 @@ export default function HomeHero() {
             transform: translateY(0);
           }
         }
-        
 
         .container {
           max-width: 1580px;
@@ -105,45 +100,44 @@ export default function HomeHero() {
           margin-bottom: 32px;
         }
 
-    .actions {
-  display: flex;
-  gap: 14px;
-  flex-wrap: wrap;
-}
+        .actions {
+          display: flex;
+          gap: 14px;
+          flex-wrap: wrap;
+        }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 14px 26px;
-  border-radius: 10px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.25s ease;
-  border: 1px solid transparent;
-  letter-spacing: 0.2px;
-}
+        .btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 14px 26px;
+          border-radius: 10px;
+          font-size: 0.95rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.25s ease;
+          border: 1px solid transparent;
+          letter-spacing: 0.2px;
+        }
 
- 
-/* SECONDARY */
-.btn.secondary {
-  background: #fff;
-  color: var(--dark);
-  border: 1px solid #e5e7eb;
-}
+        /* SECONDARY */
+        .btn.secondary {
+          background: #fff;
+          color: var(--dark);
+          border: 1px solid #e5e7eb;
+        }
 
-.btn.secondary:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  background: #f9fafb;
-}
+        .btn.secondary:hover {
+          border-color: var(--primary);
+          color: var(--primary);
+          background: #f9fafb;
+        }
 
-/* FOCUS (accesibilidad SaaS real) */
-.btn:focus-visible {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
-}
+        /* FOCUS (accesibilidad SaaS real) */
+        .btn:focus-visible {
+          outline: none;
+          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+        }
 
         .secondary {
           background: transparent;
@@ -160,9 +154,10 @@ export default function HomeHero() {
         .image {
           display: flex;
           justify-content: center;
-          order: 1; /* Mueve la imagen arriba en mobile */
+          order: 1;
           animation: fadeIn 2s ease-in-out;
         }
+        
         @keyframes fadeIn {
           from {
             opacity: 0; 
@@ -182,42 +177,42 @@ export default function HomeHero() {
 
         /* RESPONSIVE */
         @media (min-width: 898px) {
-          
           .container {
             grid-template-columns: 1fr 1fr;
             gap: 20px;
           }
           
           .image {
-            order: 0; /* Vuelve al orden original en tablet/desktop */
+            order: 0;
           }
           
           .content h1 {
             font-size: 3rem;
           }
-            .content p {
+          
+          .content p {
             font-size: 1.1rem;
           }
-          
         }
 
         @media (min-width: 1024px) {
-          
-         
-
           .content h1 {
             font-size: 3.4rem;
           }
         }
 
         @media (max-width: 787px) {
-          
           .hero {
-            padding: 6rem 0 6rem;
+            padding: 6rem 0 6rem; /* Eliminamos el padding lateral aquí */
           }
           
           .container {
             gap: 32px;
+            padding: 0; /* Eliminamos el padding del container */
+          }
+          
+          .content {
+            padding: 0 24px; /* Aplicamos padding solo al contenido */
           }
           
           .content h1 {
@@ -236,11 +231,14 @@ export default function HomeHero() {
           
           .image {
             margin-top: 20px;
+            width: 100%; /* Aseguramos que ocupe todo el ancho */
           }
           
           .image :global(img) {
             width: 100%;
-            max-width: 550px;
+            max-width: none; /* Eliminamos el max-width para que toque los bordes */
+            height: auto;
+            border-radius: 0; /* Opcional: eliminamos bordes redondeados si los tuviera */
           }
         }
 
@@ -249,15 +247,18 @@ export default function HomeHero() {
             padding: 6rem 0 4rem;
           }
           
+          .content {
+            padding: 0 24px;
+          }
+          
           .content h1 {
             font-size: 2rem;
           }
-           .content p {
+          
+          .content p {
             font-size: 1.1rem;
             text-align: center;
           }
-          
-         
           
           .actions {
             flex-direction: column;
@@ -266,6 +267,17 @@ export default function HomeHero() {
           
           .actions button {
             width: 100%;
+          }
+          
+          .image {
+            width: 100%;
+            margin-left: 0;
+            margin-right: 0;
+          }
+          
+          .image :global(img) {
+            width: 100%;
+            max-width: none;
           }
         }
       `}</style>

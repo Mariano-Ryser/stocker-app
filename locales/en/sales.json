@@ -9,15 +9,19 @@
     },
     "error": {
       "general": "Error",
-      "title": "Error loading invoices"
+      "title": "Error loading invoices",
+      "loadFailed": "Failed to load invoices"
     },
     "actions": {
       "new": "New Invoice",
-      "retry": "Try again",
+      "retry": "Retry",
       "resetFilters": "Reset all filters",
       "createFirst": "Create first invoice",
       "loadMore": "Load more invoices ({remaining} available)",
-      "stock": "View stock movements"
+      "stock": "View stock movements",
+      "view": "View",
+      "delete": "Delete",
+      "confirmDelete": "Are you sure you want to delete this invoice?"
     },
     "buttons": {
       "stock": "Stock",
@@ -26,13 +30,19 @@
     "search": {
       "placeholder": "Search customer or invoice number...",
       "results": "{visible} of {total} invoices",
-      "moreAvailable": " ({remaining} more available)"
+      "moreAvailable": " ({remaining} more available)",
+      "clear": "Clear search"
     },
     "filter": {
-      "allStatus": "All status",
+      "allStatus": "All statuses",
       "status": "Status",
       "date": "Date",
-      "sortBy": "Sort by"
+      "sortBy": "Sort by",
+      "clear": "Clear filters",
+      "apply": "Apply filters",
+      "dateFrom": "Date from",
+      "dateTo": "Date to",
+      "dateRange": "Date range"
     },
     "sort": {
       "newest": "Newest first",
@@ -48,15 +58,32 @@
     "status": {
       "paid": "Paid",
       "cancelled": "Cancelled",
-      "pending": "Pending"
+      "pending": "Pending",
+      "all": "All statuses"
     },
     "table": {
       "date": "Date",
       "client": "Customer",
-      "invoiceNumber": "Invoice No.",
+      "invoiceNumber": "Delivery Note",
       "total": "Total",
       "status": "Status",
       "actions": "Actions"
+    },
+    "excel": {
+      "date": "Date",
+      "time": "Time",
+      "client": "Customer",
+      "invoiceNumber": "Invoice Number",
+      "subtotal": "Subtotal",
+      "tax": "Tax",
+      "total": "Total",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "view": {
+      "table": "Table View",
+      "excel": "Excel View",
+      "cards": "Card View"
     },
     "client": {
       "unknown": "Unknown"
@@ -67,9 +94,24 @@
         "text": "No results for your search criteria"
       },
       "noInvoices": {
-        "title": "No invoices available",
+        "title": "No invoices",
         "text": "Create your first invoice"
       }
+    },
+    "pagination": {
+      "showing": "Showing {count} of {total} invoices",
+      "pageInfo": "Page {current} of {total}",
+      "page": "Page {current} of {total}"
+    },
+    "details": {
+      "invoice": "Invoice",
+      "items": "Items",
+      "total": "Total",
+      "subtotal": "Subtotal",
+      "tax": "Tax",
+      "customer": "Customer",
+      "payment": "Payment",
+      "notes": "Notes"
     }
   }
 }

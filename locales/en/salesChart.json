@@ -1,0 +1,69 @@
+{
+  "salesChart": {
+    "title": "Sales Analysis Dashboard",
+    "subtitle": "Performance Overview",
+    "loading": "Loading sales statistics...",
+    "views": {
+      "synoptic": "Synoptic",
+      "matrix": "Matrix",
+      "trend": "Trend"
+    },
+    "timeRange": {
+      "yearly": "Yearly",
+      "monthly": "Monthly"
+    },
+    "months": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Apr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dec"
+    },
+    "stats": {
+      "totalRevenue": "Total Revenue",
+      "totalSales": "Total Sales",
+      "averagePerSale": "Average per Sale"
+    },
+    "table": {
+      "month": "MONTH",
+      "day": "DAY",
+      "unitsSold": "UNITS SOLD",
+      "revenue": "REVENUE",
+      "avgSale": "AVG. SALE",
+      "contribution": "CONTRIBUTION",
+      "total": "TOTAL"
+    },
+    "matrix": {
+      "title": "Performance Matrix",
+      "subtitle": "Quadrant Analysis by Performance",
+      "starPerformer": "Star Performer",
+      "highValue": "High Value",
+      "volumeDriver": "Volume Driver",
+      "needsReview": "Needs Review"
+    },
+    "trend": {
+      "title": "Trend Analysis",
+      "subtitle": "Comparative Performance Overview",
+      "revenue": "Revenue",
+      "sales": "Sales",
+      "trend": "Trend",
+      "vsAvg": "vs Avg",
+      "bestPerformance": "Best Performance",
+      "growthMomentum": "Growth Momentum",
+      "peakSeason": "Peak Season",
+      "positive": "↑ Positive",
+      "needsAttention": "↓ Needs Attention"
+    },
+    "insights": {
+      "bestPeriod": "Best Performing Period:",
+      "peakSales": "Peak Sales Period:"
+    }
+  }
+}

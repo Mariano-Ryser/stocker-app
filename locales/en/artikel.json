@@ -1,24 +1,25 @@
 {
   "artikel": {
-    "title": "Article List",
-    "subtitle": "Manage your product list",
-    "newArticle": "New Article",
+    "title": "Product List",
+    "subtitle": "Manage your product inventory",
+    "newArticle": "New Product",
     "view": {
       "table": "Table View",
-      "grid": "Grid View"
+      "grid": "Grid View",
+      "excel": "Excel View"
     },
     "search": {
       "placeholder": "Name or article number",
       "button": "Search",
       "activeSearch": "Active search: \"{term}\"",
       "clear": "Clear search",
-      "results": "{count} articles shown",
+      "results": "{count} products shown",
       "resultsOf": "of {total} total",
       "for": "for \"{term}\""
     },
     "filter": {
       "stock": "Stock filter:",
-      "all": "All articles",
+      "all": "All products",
       "inStock": "In stock (≥50)",
       "lowStock": "Low stock (1-49)",
       "outOfStock": "Out of stock (0)",
@@ -37,14 +38,19 @@
       "clear": "Clear"
     },
     "table": {
-      "name": "Article name",
+      "name": "Product",
+      "lagerplatz": "Location",
       "number": "Number",
       "price": "Price",
       "stock": "Stock"
     },
+    "excel": {
+      "totalValue": "Total Value",
+      "status": "Status"
+    },
     "card": {
-      "number": "N°: {number}",
       "location": "📍 {location}",
+      "number": "No.: {number}",
       "units": "units",
       "unit": "unit"
     },
@@ -59,58 +65,61 @@
       }
     },
     "creator": {
-      "title": "Create new article",
+      "title": "Create New Product",
       "form": {
-        "artikelName": "Article name *",
-        "artikelNamePlaceholder": "Enter article name",
+        "artikelName": "Product name *",
+        "artikelNamePlaceholder": "Enter product name",
         "lagerPlatz": "Location",
-        "lagerPlatzPlaceholder": "e.g. A-12",
-        "artikelNumber": "Article number",
-        "artikelNumberPlaceholder": "e.g. 345-AB",
+        "lagerPlatzPlaceholder": "E.g., A-12",
+        "artikelNumber": "Product number",
+        "artikelNumberPlaceholder": "E.g., 345-AB",
         "bestand": "Stock",
         "price": "Price",
         "pricePlaceholder": "0.00",
+         "lowStockThreshold": "Low stock threshold",
+        "lowStockThresholdPlaceholder": "0",
+        "lowStockThresholdHelper": "When stock reaches this number, an alert will appear.",
         "description": "Description",
         "descriptionPlaceholder": "Product description...",
         "image": "Image",
         "imageSelect": "📷 Select image",
         "imageChange": "📷 Change image",
         "imageDelete": "🗑️ Delete image",
-        "imagePreview": "Preview",
+        "imagePreview": "Image preview",
         "required": "Required field"
       },
       "buttons": {
         "cancel": "Cancel",
-        "create": "Create article",
+        "create": "Create Product",
         "creating": "Creating..."
       },
       "messages": {
-        "success": "Article created successfully",
-        "error": "Error creating article",
+        "success": "Product created successfully",
+        "error": "Error creating product",
         "validation": {
-          "nameRequired": "Article name is required",
+          "nameRequired": "Product name is required",
           "priceInvalid": "Invalid price",
           "stockInvalid": "Invalid stock"
         }
       }
     },
     "editor": {
-      "title": "Edit article",
+      "title": "Edit Product",
       "buttons": {
         "cancel": "Cancel",
-        "save": "Save changes",
+        "save": "Save Changes",
         "saving": "Saving...",
-        "delete": "Delete article",
-        "deleteConfirm": "Confirm delete",
-        "deleteImage": "Delete image"
+        "delete": "Delete Product",
+        "deleteConfirm": "Confirm Delete",
+        "deleteImage": "Delete Image"
       },
       "messages": {
-        "success": "Article updated successfully",
-        "error": "Error updating article",
-        "deleteConfirm": "Are you sure you want to delete this article?",
+        "success": "Product updated successfully",
+        "error": "Error updating product",
+        "deleteConfirm": "Are you sure you want to delete this product?",
         "deleteWarning": "This action cannot be undone.",
-        "deleteImageConfirm": "Do you really want to delete this image?",
-        "deleteSuccess": "Article deleted successfully",
+        "deleteImageConfirm": "Are you sure you want to delete this image?",
+        "deleteSuccess": "Product deleted successfully",
         "deleteImageSuccess": "Image deleted successfully"
       },
       "barcode": "Barcode"
@@ -125,22 +134,22 @@
         "text": "You must log in to view products"
       },
       "notFound": {
-        "title": "No articles found",
+        "title": "No products found",
         "text": "No results for \"{term}\"",
         "textWithFilters": " with selected filters"
       },
       "noProducts": {
-        "title": "No articles",
-        "text": "Create your first article"
+        "title": "No products",
+        "text": "Create your first product"
       },
       "resetButton": "Reset all filters"
     },
     "pagination": {
       "page": "Page {current} of {total}",
-      "total": "({total} total articles)"
+      "total": "({total} total products)"
     },
     "errors": {
-      "loadFailed": "Error loading articles"
+      "loadFailed": "Error loading products"
     }
   }
 }

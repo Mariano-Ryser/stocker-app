@@ -1,4 +1,5 @@
-{
+
+  {
   "verkaufteArtikel": {
     "title": "Artículos Vendidos",
     "subtitle": "Resumen de todos los artículos vendidos",
@@ -7,10 +8,11 @@
     "loadingShort": "Cargando...",
     "error": {
       "general": "Error",
-      "title": "Error al cargar los artículos"
+      "title": "Error al cargar los artículos",
+      "loadFailed": "Error al cargar los artículos"
     },
     "actions": {
-      "retry": "Intentar de nuevo",
+      "retry": "Reintentar",
       "refresh": "Actualizar",
       "clearFilters": "Limpiar filtros",
       "loadMore": "Cargar más ({remaining})"
@@ -23,9 +25,9 @@
       "of": "de"
     },
     "filters": {
-      "product": "Buscar artículos...",
+      "product": "Buscar artículo...",
       "client": "Cliente",
-      "lieferschein": "N° Factura",
+      "lieferschein": "Albarán",
       "dateFrom": "Desde",
       "dateTo": "Hasta",
       "dateSeparator": "—",
@@ -34,19 +36,36 @@
     },
     "table": {
       "article": "Artículo",
-      "quantity": "Cant.",
+      "quantity": "Cantidad",
       "price": "Precio",
       "total": "Total",
       "client": "Cliente",
       "date": "Fecha",
-      "lieferschein": "N° Factura: {number}"
+      "lieferschein": "Albarán: {number}"
+    },
+    "excel": {
+      "date": "Fecha",
+      "time": "Hora",
+      "article": "Artículo",
+      "quantity": "Cantidad",
+      "unitPrice": "Precio Unit.",
+      "total": "Total",
+      "client": "Cliente",
+      "email": "Email",
+      "lieferschein": "Albarán",
+      "status": "Estado"
     },
     "card": {
       "client": "Cliente:",
-      "lieferschein": "N° Factura:",
+      "lieferschein": "Albarán:",
       "date": "Fecha:",
       "price": "Precio:",
       "total": "Total:"
+    },
+    "view": {
+      "table": "Vista Tabla",
+      "excel": "Vista Excel",
+      "cards": "Vista Tarjetas"
     },
     "client": {
       "unknown": "Cliente desconocido"
@@ -54,16 +73,21 @@
     "empty": {
       "notFound": {
         "title": "No se encontraron artículos",
-        "text": "Sin resultados para sus criterios de búsqueda"
+        "text": "No hay resultados para tus criterios de búsqueda"
       },
       "noSales": {
-        "title": "Sin artículos vendidos",
+        "title": "No hay artículos vendidos",
         "text": "Aún no se han vendido artículos"
       }
     },
     "status": {
-      "cancelled": "Cancelado",
+      "paid": "Pagada",
+      "cancelled": "Cancelada",
       "pending": "Pendiente"
+    },
+    "pagination": {
+      "showing": "Mostrando {count} de {total} artículos",
+      "pageInfo": "Página {current} de {total}"
     }
   }
 }

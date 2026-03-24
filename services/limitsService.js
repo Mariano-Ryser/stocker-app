@@ -9,23 +9,23 @@ const getAuthHeaders = () => {
 // Obtener límites de productos - con opción para evitar caché
 export async function getProductLimits(options = {}) {
   try {
-    console.log('🔍 Intentando obtener límites del backend...');
+    // console.log('🔍 Intentando obtener límites del backend...');
     
     // ✅ AÑADIR TIMESTAMP PARA EVITAR CACHÉ DEL NAVEGADOR
     const cacheBuster = options.noCache ? `&_=${Date.now()}` : '';
     const url = `${API_BASE_URL}/products/limits?t=${cacheBuster}`;
-    console.log('📡 URL:', url);
+    // console.log('📡 URL:', url);
     
     const res = await fetch(url, {
       headers: getAuthHeaders(),
       cache: options.noCache ? 'no-store' : 'default'
     });
 
-    console.log('📥 Respuesta status:', res.status);
+    // console.log('📥 Respuesta status:', res.status);
 
     if (!res.ok) {
       if (res.status === 401) {
-        console.log('🔒 No autorizado');
+        // console.log('🔒 No autorizado');
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
@@ -40,7 +40,7 @@ export async function getProductLimits(options = {}) {
         const storedProducts = localStorage.getItem('currentProducts');
         const currentCount = storedProducts ? JSON.parse(storedProducts).length : 0;
         
-        console.log('📦 Usando localStorage - currentCount:', currentCount);
+        // console.log('📦 Usando localStorage - currentCount:', currentCount);
         
         return {
           max: 100,
@@ -54,7 +54,7 @@ export async function getProductLimits(options = {}) {
     }
 
     const data = await res.json();
-    console.log('✅ Datos recibidos:', data);
+    // console.log('✅ Datos recibidos:', data);
     
     const limits = data.limits || data;
     
@@ -67,7 +67,7 @@ export async function getProductLimits(options = {}) {
       limits.percentage = Math.round((currentCount / limits.max) * 100);
     }
     
-    console.log('📊 Límites finales:', limits);
+    // console.log('📊 Límites finales:', limits);
     return limits;
     
   } catch (error) {
@@ -77,7 +77,7 @@ export async function getProductLimits(options = {}) {
     const storedProducts = localStorage.getItem('currentProducts');
     const currentCount = storedProducts ? JSON.parse(storedProducts).length : 0;
     
-    console.log('📦 Usando localStorage (fallback) - currentCount:', currentCount);
+    // console.log('📦 Usando localStorage (fallback) - currentCount:', currentCount);
     
     return {
       max: 100,

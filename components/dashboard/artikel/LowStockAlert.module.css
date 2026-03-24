@@ -1,0 +1,372 @@
+/* ===== Floating Button ===== */
+.floatingButton {
+  position: fixed;
+  bottom: 94px;
+  right: 21px;
+  background: #ff1616;
+  border: none;
+  border-radius: 50%;
+  width: 58px;
+  height: 58px;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 1000;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 4px 16px rgba(231, 77, 60, 0.904);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+
+
+.floatingButton:hover {
+  transform: scale(1.05);
+}
+
+.bellIcon {
+  position: relative;
+  color: white;
+  width: 24px;
+  height: 24px;
+}
+
+.badge {
+  position: absolute;
+  top: -15px;
+  right: -10px;
+  background: #def701;
+  color: rgb(0, 0, 0);
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-weight: bold;
+}
+
+/* ===== Modal ===== */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+}
+
+.modal {
+  width: 95%;
+  max-width: 1000px;
+  max-height: 85vh; /* 🔥 clave */
+  background: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column; /* 🔥 importante */
+}
+
+/* ===== Header ===== */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  flex-shrink: 0;
+  background: white;
+  z-index: 10;
+}
+
+
+.modalTitle {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.headerActions {
+  display: flex;
+  gap: 10px;
+}
+
+.refreshButton,
+.closeButton {
+  border: none;
+  background: #f3f4f6;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.refreshButton:hover,
+.closeButton:hover {
+  background: #e5e7eb;
+}
+
+/* ===== Body ===== */
+.modalBody {
+  padding: 16px;
+  overflow-y: auto; /* 🔥 scroll interno */
+  flex: 1; /* 🔥 ocupa espacio disponible */
+}
+
+/* ===== Info ===== */
+.infoBar {
+  background: #eff6ff;
+  padding: 10px 14px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+}
+
+.infoText {
+  font-size: 13px;
+  color: #1e3a8a;
+}
+
+/* ===== Stats ===== */
+.statsBar {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+}
+
+.statLabel {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.statValue {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.warningValue {
+  color: #f59e0b;
+}
+
+.criticalValue {
+  color: #ef4444;
+}
+
+/* ===== Section ===== */
+.sectionTitle {
+  margin: 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+/* ===== Table ===== */
+.productsList {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  overflow: hidden;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.listHeader {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  background: #f9fafb;
+  padding: 10px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.productRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  padding: 10px;
+  border-top: 1px solid #f1f5f9;
+  align-items: center;
+  transition: background 0.2s;
+}
+
+.productRow:hover {
+  background: #f9fafb;
+}
+
+/* ===== Product Info ===== */
+.productInfo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.productImage {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.productDetails {
+  display: flex;
+  flex-direction: column;
+}
+
+.productName {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.productSku {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.outOfStockBadge {
+  background: #ef4444;
+  color: white;
+  font-size: 10px;
+  margin-left: 6px;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* ===== Stock ===== */
+.productStock {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stockInfo {
+  font-size: 13px;
+}
+
+.stockValue {
+  font-weight: 600;
+}
+
+.stockDivider {
+  margin: 0 4px;
+  color: #9ca3af;
+}
+
+.thresholdValue {
+  color: #6b7280;
+}
+
+.stockBar {
+  width: 100%;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.stockFill {
+  height: 100%;
+  transition: width 0.3s;
+}
+
+/* ===== Status ===== */
+.productStatus {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.statusBadge {
+  font-size: 12px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+/* ===== States ===== */
+.warning {
+  color: #f59e0b;
+}
+
+.warning .stockFill {
+  background: #f59e0b;
+}
+
+.critical {
+  color: #ef4444;
+}
+
+.critical .stockFill {
+  background: #ef4444;
+}
+
+/* ===== Footer ===== */
+.summary {
+  margin-top: 14px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summaryLeft {
+  font-size: 13px;
+  color: #374151;
+}
+
+.outOfStockNote {
+  color: #ef4444;
+  margin-top: 4px;
+}
+
+.viewAllButton {
+  background: #111827;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.viewAllButton:hover {
+  background: #1f2937;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+  .productRow,
+  .listHeader {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .summary {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+}
+
+.modal {
+  animation: fadeInScale 0.2s ease;
+}
+
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

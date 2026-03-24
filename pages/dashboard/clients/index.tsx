@@ -1,3 +1,4 @@
+// pages/dashboard/admin/clients/index.tsx
 import { useState, useRef, useCallback } from 'react';
 import { useClientsPaginated } from '../../../hooks/useClientsPaginated';
 import Pagination from '../../../components/shared/Pagination';
@@ -54,7 +55,7 @@ export default function ClientsPage() {
   const handleClearSearch = useCallback(() => {
     setInputValue('');
     setSearchTerm('');
-    inputRef.current?.focus(); // 🔥 Devuelve el foco al input
+    inputRef.current?.focus();
   }, [setSearchTerm]);
 
   const handleEdit = useCallback((client: Client) => {
@@ -101,7 +102,7 @@ export default function ClientsPage() {
             <button
               className={`${styles.viewButton} ${viewMode === 'cards' ? styles.activeView : ''}`}
               onClick={() => setViewMode('cards')}
-              title="Vista Tarjetas"
+              title={t('clients.view.cards')}
             >
               <svg viewBox="0 0 24 24" width="20" height="20">
                 <path fill="currentColor" d="M4 4h16v2H4V4zm0 4h16v2H4V8zm0 4h16v2H4v-2zm0 4h10v2H4v-2z"/>
@@ -110,7 +111,7 @@ export default function ClientsPage() {
             <button
               className={`${styles.viewButton} ${viewMode === 'excel' ? styles.activeView : ''}`}
               onClick={() => setViewMode('excel')}
-              title="Vista Excel"
+              title={t('clients.view.excel')}
             >
               <svg viewBox="0 0 24 24" width="20" height="20">
                 <path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h5v2H7v-2z"/>
@@ -130,8 +131,8 @@ export default function ClientsPage() {
         </div>
       </header>
 
-      {/* Buscador estable */}
-    <div className={styles.searchSection}>
+      {/* Buscador */}
+      <div className={styles.searchSection}>
         <div className={styles.searchContainer}>
           <input
             ref={inputRef}
@@ -150,11 +151,9 @@ export default function ClientsPage() {
         <div className={styles.searchStats}>
           <span className={styles.resultsCount}>
             {loading ? t('clients.loadingShort') : (
-              <>
-                {t('clients.search.results')
-                  .replace('{visible}', clients.length)
-                  .replace('{total}', pagination.total)}
-              </>
+              t('clients.search.results')
+                .replace('{visible}', clients.length)
+                .replace('{total}', pagination.total)
             )}
           </span>
         </div>
@@ -163,7 +162,7 @@ export default function ClientsPage() {
       {error && (
         <div className={styles.error}>
           {error}
-          <button onClick={refresh}>Reintentar</button>
+          <button onClick={refresh}>{t('clients.loadMore')}</button>
         </div>
       )}
 
@@ -214,27 +213,27 @@ export default function ClientsPage() {
                       <div className={styles.clientDetails}>
                         {client.company && (
                           <div className={styles.detail}>
-                            <span className={styles.label}>{t('clients.table.company')}</span>
+                            <span className={styles.label}>{t('clients.card.company')}</span>
                             <span className={styles.value}>{client.company}</span>
                           </div>
                         )}
                         <div className={styles.detail}>
-                          <span className={styles.label}>{t('clients.table.email')}</span>
+                          <span className={styles.label}>{t('clients.card.email')}</span>
                           <span className={styles.value}>{client.email || '-'}</span>
                         </div>
                         <div className={styles.detail}>
-                          <span className={styles.label}>{t('clients.table.phone')}</span>
+                          <span className={styles.label}>{t('clients.card.phone')}</span>
                           <span className={styles.value}>{client.phone || '-'}</span>
                         </div>
                         {client.formattedAddress && (
                           <div className={styles.detail}>
-                            <span className={styles.label}>{t('clients.table.address')}</span>
+                            <span className={styles.label}>{t('clients.card.address')}</span>
                             <span className={styles.value}>{client.formattedAddress}</span>
                           </div>
                         )}
                         {!client.formattedAddress && client.adresse && (
                           <div className={styles.detail}>
-                            <span className={styles.label}>{t('clients.table.address')}</span>
+                            <span className={styles.label}>{t('clients.card.address')}</span>
                             <span className={styles.value}>{client.adresse}</span>
                           </div>
                         )}
@@ -270,14 +269,14 @@ export default function ClientsPage() {
                 <table className={styles.excelTable}>
                   <thead>
                     <tr>
-                      <th className={styles.excelHeader}>Nombre</th>
-                      <th className={styles.excelHeader}>Apellido</th>
-                      <th className={styles.excelHeader}>Empresa</th>
-                      <th className={styles.excelHeader}>Email</th>
-                      <th className={styles.excelHeader}>Teléfono</th>
-                      <th className={styles.excelHeader}>Dirección</th>
-                      <th className={styles.excelHeader}>Ciudad</th>
-                      <th className={styles.excelHeader}>Acciones</th>
+                      <th className={styles.excelHeader}>{t('clients.excel.name')}</th>
+                      <th className={styles.excelHeader}>{t('clients.excel.vorname')}</th>
+                      <th className={styles.excelHeader}>{t('clients.excel.company')}</th>
+                      <th className={styles.excelHeader}>{t('clients.excel.email')}</th>
+                      <th className={styles.excelHeader}>{t('clients.excel.phone')}</th>
+                      <th className={styles.excelHeader}>{t('clients.excel.address')}</th>
+                      <th className={styles.excelHeader}>{t('clients.excel.city')}</th>
+                      <th className={styles.excelHeader}>{t('clients.excel.actions')}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -335,18 +334,26 @@ export default function ClientsPage() {
             )}
 
             {pagination.pages > 1 && (
-              <Pagination
-                currentPage={pagination.current}
-                totalPages={pagination.pages}
-                onPageChange={goToPage}
-                loading={loadingMore}
-              />
+              <>
+                <Pagination
+                  currentPage={pagination.current}
+                  totalPages={pagination.pages}
+                  onPageChange={goToPage}
+                  loading={loadingMore}
+                />
+                <div className={styles.paginationInfo}>
+                  {t('clients.pagination.showing', {
+                    count: clients.length,
+                    total: pagination.total
+                  })}
+                  {' · '}
+                  {t('clients.pagination.pageInfo', {
+                    current: pagination.current,
+                    total: pagination.pages
+                  })}
+                </div>
+              </>
             )}
-
-            <div className={styles.paginationInfo}>
-              Mostrando {clients.length} de {pagination.total} clientes
-              {pagination.pages > 1 && ` · Página ${pagination.current} de ${pagination.pages}`}
-            </div>
           </>
         )}
       </div>

@@ -11,39 +11,43 @@
     "trial": "Prueba gratis 14 días • Sin tarjeta de crédito",
     "trialBtn": "Probar gratis",
     "save": "Ahorra 2 meses",
-
+    
     "starter": {
       "name": "Starter",
-      "desc": "Perfecto para pequeños negocios",
+      "desc": "Ideal para tiendas pequeñas y principiantes",
       "f1": "Hasta 500 productos",
       "f2": "Escaneo de códigos de barras",
-      "f3": "2 usuarios"
+      "f3": "2 usuarios",
+      "f4": "Soporte básico"
     },
     "basic": {
       "name": "Básico",
-      "desc": "Para negocios en crecimiento",
+      "desc": "Perfecto para negocios en crecimiento",
       "f1": "Hasta 2000 productos",
       "f2": "Escaneo de códigos de barras",
       "f3": "3 usuarios",
-      "f4": "Historial de ventas"
+      "f4": "Historial de ventas",
+      "f5": "Alertas de stock"
     },
     "pro": {
       "name": "Profesional",
-      "desc": "Mejor relación calidad-precio 🚀",
-      "f1": "Productos ilimitados",
+      "desc": "La mejor relación calidad-precio 🚀",
+      "f1": "Hasta 5000 productos",
       "f2": "Escaneo de códigos de barras",
-      "f3": "5 usuarios",
+      "f3": "6 usuarios",
       "f4": "Informes avanzados",
-      "f5": "Soporte prioritario"
+      "f5": "Soporte prioritario",
+      "f6": "Integración con e-commerce"
     },
     "enterprise": {
       "name": "Empresa",
-      "desc": "Para operaciones grandes y en expansión",
-      "f1": "Productos ilimitados",
+      "desc": "Soluciones a medida para operaciones grandes",
+      "f1": "Hasta 10000 productos",
       "f2": "Usuarios ilimitados",
       "f3": "API personalizada",
-      "f4": "Soporte 24/7",
-      "f5": "Onboarding dedicado"
+      "f4": "Soporte activo 24/7",
+      "f5": "Onboarding dedicado",
+      "f6": "Consultoría de implementación"
     }
   }
 }

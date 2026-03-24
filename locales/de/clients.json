@@ -4,6 +4,7 @@
     "subtitle": "Verwalten Sie Ihre Kundenliste",
     "newClient": "Neuer Kunde",
     "loading": "Laden...",
+    "loadingShort": "Lade Kunden...",
     "loadingAuth": "Authentifizierung wird geladen...",
     "search": {
       "placeholder": "Kunden suchen... (Name, Vorname, Email, Adresse, Telefon)",
@@ -12,10 +13,31 @@
       "clear": "Suche zurücksetzen"
     },
     "table": {
+      "name": "Name",
+      "vorname": "Vorname",
+      "email": "Email",
+      "phone": "Telefon",
+      "company": "Firma",
+      "address": "Adresse",
+      "city": "Stadt",
+      "actions": "Aktionen"
+    },
+    "card": {
+      "title": "Kundenkarte",
       "email": "Email:",
       "phone": "Telefon:",
       "company": "Firma:",
       "address": "Adresse:"
+    },
+    "excel": {
+      "name": "Name",
+      "vorname": "Vorname",
+      "company": "Firma",
+      "email": "Email",
+      "phone": "Telefon",
+      "address": "Adresse",
+      "city": "Stadt",
+      "actions": "Aktionen"
     },
     "address": {
       "full": "{street} {number}{complement}, {postalCode} {city}",
@@ -44,6 +66,15 @@
         "text": "Erstellen Sie Ihren ersten Kunden"
       }
     },
-    "loadMore": "Mehr Kunden laden"
+    "view": {
+      "cards": "Kartenansicht",
+      "excel": "Excel-Ansicht"
+    },
+    "pagination": {
+      "showing": "Zeige {count} von {total} Kunden",
+      "pageInfo": "Seite {current} von {total}"
+    },
+    "loadMore": "Mehr Kunden laden",
+    "error": "Fehler beim Laden der Kunden"
   }
 }

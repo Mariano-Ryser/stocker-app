@@ -1,17 +1,17 @@
 {
   "stockMovements": {
     "title": "Movimientos de Stock",
-    "subtitle": "Vista general de entradas y salidas",
+    "subtitle": "Entradas y salidas en detalle",
     "loading": "Cargando movimientos…",
     "loadingAuth": "Cargando…",
     "error": "Error al cargar",
-    "noMovements": "Sin movimientos",
-    "refresh": "↻",
+    "noMovements": "No hay movimientos",
+    "refresh": "Actualizar",
     "filters": {
       "allTypes": "Todos los tipos",
       "startDate": "Fecha inicio",
       "endDate": "Fecha fin",
-      "search": "Buscar artículos…",
+      "search": "Buscar artículo…",
       "clear": "Limpiar"
     },
     "table": {
@@ -21,7 +21,19 @@
       "quantity": "Cantidad",
       "stock": "Stock",
       "user": "Usuario",
-      "reference": "Ref"
+      "reference": "Referencia"
+    },
+    "excel": {
+      "date": "Fecha",
+      "article": "Artículo",
+      "articleNumber": "N° Artículo",
+      "type": "Tipo",
+      "quantity": "Cantidad",
+      "previousStock": "Stock Anterior",
+      "newStock": "Stock Nuevo",
+      "user": "Usuario",
+      "reference": "Referencia",
+      "notes": "Notas"
     },
     "movementTypes": {
       "WAREHOUSE_IN": {
@@ -33,7 +45,7 @@
         "icon": "↑"
       },
       "MANUAL_ADJUSTMENT": {
-        "label": "Ajuste",
+        "label": "Ajuste Manual",
         "icon": "✎"
       },
       "RETURN": {
@@ -45,12 +57,18 @@
         "icon": "⚠"
       },
       "INITIAL_STOCK": {
-        "label": "Stock inicial",
+        "label": "Stock Inicial",
         "icon": "●"
       }
     },
     "pagination": {
-      "page": "Página {current} de {total}"
+      "page": "Página {current} de {total}",
+      "showing": "Mostrando {count} de {total} movimientos",
+      "pageInfo": "Página {current} de {total}"
+    },
+    "view": {
+      "table": "Vista Tabla",
+      "excel": "Vista Excel"
     }
   }
 }

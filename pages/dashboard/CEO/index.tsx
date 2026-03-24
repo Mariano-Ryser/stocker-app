@@ -3,13 +3,13 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '../../../components/auth/AuthProvider';
 import { useCEOData } from '../../../hooks/useCEOData';
-import { updateProductLimitAPI } from '../../../services/companyService'; // ✅ IMPORTAR SERVICIO
+import { updateProductLimitAPI } from '../../../services/companyService';
 import UserDetailModal from '../../../components/dashboard/CEO/UserDetailModal';
 import styles from './ceoDashboard.module.css';
 
 export default function CEODashboard() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
-  const { users, loading, error, stats, toggleUserStatus, changeUserPlan, refresh } = useCEOData();
+  const { users, loading, error, stats, toggleUserStatus, changeUserPlan, refresh, refreshUser } = useCEOData();
   const router = useRouter();
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -19,7 +19,7 @@ export default function CEODashboard() {
   const [selectedUserData, setSelectedUserData] = useState(null);
   const [showUserModal, setShowUserModal] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
-  const [viewMode, setViewMode] = useState('excel'); // 'table' o 'excel'
+  const [viewMode, setViewMode] = useState('excel');
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -30,7 +30,7 @@ export default function CEODashboard() {
     }
   }, [authLoading, isAuthenticated, user, router]);
 
-  const getPlanName = (plan) => {
+  const getPlanName = (plan:any) => {
     const plans = {
       basic: 'Básico',
       medium: 'Medio',
@@ -39,7 +39,7 @@ export default function CEODashboard() {
     return plans[plan] || plan;
   };
 
-  const getRoleName = (role) => {
+  const getRoleName = (role:any) => {
     const roles = {
       ceo: 'CEO',
       admin: 'Admin',
@@ -48,8 +48,8 @@ export default function CEODashboard() {
     return roles[role] || role;
   };
 
-  // ✅ NUEVA FUNCIÓN: Manejar cambio de límite de productos
-  const handleProductLimitChange = async (companyId, newLimit) => {
+  // Manejar cambio de límite de productos
+  const handleProductLimitChange = async (companyId:any, newLimit:any) => {
     setActionLoading(true);
     try {
       const result = await updateProductLimitAPI(companyId, newLimit);
@@ -60,6 +60,11 @@ export default function CEODashboard() {
           window.dispatchEvent(new CustomEvent('refreshProductLimits'));
         }
         
+        // ✅ REFRESCAR EL USUARIO ESPECÍFICO EN LUGAR DE TODOS
+        if (selectedUserData) {
+          await refreshUser(selectedUserData._id, companyId);
+        }
+        
         // Actualizar los datos locales del usuario seleccionado
         if (selectedUserData && selectedUserData.companyId === companyId) {
           setSelectedUserData(prev => ({
@@ -67,12 +72,13 @@ export default function CEODashboard() {
             company: {
               ...prev.company,
               maxProducts: newLimit
+            },
+            stats: {
+              ...prev.stats,
+              products: prev.stats?.products || 0
             }
           }));
         }
-        
-        // Refrescar la lista completa de usuarios
-        await refresh();
         
         return { success: true };
       } else {
@@ -110,19 +116,19 @@ export default function CEODashboard() {
     );
   }
 
-  const filteredUsers = users.filter(user => {
+  const filteredUsers = users.filter(userItem => {
     const matchesSearch = 
-      user.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      user.company?.name?.toLowerCase().includes(searchTerm.toLowerCase());
+      userItem.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      userItem.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      userItem.company?.name?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = 
       filterStatus === 'todos' ? true :
-      filterStatus === 'activos' ? user.isActive :
-      filterStatus === 'inactivos' ? !user.isActive : true;
+      filterStatus === 'activos' ? userItem.isActive :
+      filterStatus === 'inactivos' ? !userItem.isActive : true;
     
     const matchesPlan = 
-      filterPlan === 'todos' ? true : user.plan === filterPlan;
+      filterPlan === 'todos' ? true : userItem.plan === filterPlan;
     
     return matchesSearch && matchesStatus && matchesPlan;
   });
@@ -298,55 +304,55 @@ export default function CEODashboard() {
                   </tr>
                 </thead>
                 <tbody>
-                  {filteredUsers.map((user) => (
-                    <tr key={user._id} className={styles.userRow}>
+                  {filteredUsers.map((userItem) => (
+                    <tr key={userItem._id} className={styles.userRow}>
                       <td className={styles.tableCell}>
                         <div className={styles.userInfo}>
                           <div className={styles.userAvatar}>
-                            {user.name?.charAt(0).toUpperCase()}
+                            {userItem.name?.charAt(0).toUpperCase()}
                           </div>
                           <div>
-                            <div className={styles.userName}>{user.name}</div>
-                            <div className={styles.userEmail}>{user.email}</div>
-                            <div className={styles.userRole}>{getRoleName(user.role)}</div>
+                            <div className={styles.userName}>{userItem.name}</div>
+                            <div className={styles.userEmail}>{userItem.email}</div>
+                            <div className={styles.userRole}>{getRoleName(userItem.role)}</div>
                           </div>
                         </div>
                       </td>
 
                       <td className={styles.tableCell}>
                         <div className={styles.companyInfo}>
-                          <div className={styles.companyName}>{user.company?.name || 'Sin empresa'}</div>
+                          <div className={styles.companyName}>{userItem.company?.name || 'Sin empresa'}</div>
                           <div className={styles.companyLimit}>
-                            Usuarios: {user.company?.usersCount || 0}/{user.company?.maxUsers || 3}
+                            Usuarios: {userItem.company?.usersCount || 0}/{userItem.company?.maxUsers || 3}
                           </div>
                           <div className={styles.companyProductLimit}>
-                            Productos: {user.stats?.products || 0}/{user.company?.maxProducts || 100}
+                            Productos: {userItem.stats?.products || 0}/{userItem.company?.maxProducts || 100}
                           </div>
                         </div>
                       </td>
 
                       <td className={styles.tableCell}>
                         <div className={styles.dateInfo}>
-                          <div>{formatDate(user.createdAt)}</div>
+                          <div>{formatDate(userItem.createdAt)}</div>
                         </div>
                       </td>
 
                       <td className={styles.tableCell}>
-                        <span className={`${styles.planBadge} ${styles[user.plan]}`}>
-                          {getPlanName(user.plan)}
+                        <span className={`${styles.planBadge} ${styles[userItem.plan]}`}>
+                          {getPlanName(userItem.plan)}
                         </span>
                       </td>
 
                       <td className={styles.tableCell}>
-                        <span className={`${styles.statusBadge} ${user.isActive ? styles.statusActive : styles.statusInactive}`}>
-                          {user.isActive ? 'Activo' : 'Inactivo'}
+                        <span className={`${styles.statusBadge} ${userItem.isActive ? styles.statusActive : styles.statusInactive}`}>
+                          {userItem.isActive ? 'Activo' : 'Inactivo'}
                         </span>
                       </td>
 
                       <td className={styles.tableCell}>
                         <div className={styles.actionButtons}>
                           <button
-                            onClick={() => openUserModal(user)}
+                            onClick={() => openUserModal(userItem)}
                             className={styles.editButton}
                             disabled={actionLoading}
                             title="Editar usuario"
@@ -354,12 +360,12 @@ export default function CEODashboard() {
                             ✎
                           </button>
                           <button
-                            onClick={() => handleToggleStatus(user._id, user.isActive)}
-                            className={`${styles.statusButton} ${user.isActive ? styles.deactivateButton : styles.activateButton}`}
+                            onClick={() => handleToggleStatus(userItem._id, userItem.isActive)}
+                            className={`${styles.statusButton} ${userItem.isActive ? styles.deactivateButton : styles.activateButton}`}
                             disabled={actionLoading}
-                            title={user.isActive ? 'Desactivar usuario' : 'Activar usuario'}
+                            title={userItem.isActive ? 'Desactivar usuario' : 'Activar usuario'}
                           >
-                            {user.isActive ? '🔴' : '🟢'}
+                            {userItem.isActive ? '🔴' : '🟢'}
                           </button>
                         </div>
                       </td>
@@ -388,58 +394,58 @@ export default function CEODashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {filteredUsers.map((user) => (
-                      <tr key={user._id} className={styles.excelRow}>
+                    {filteredUsers.map((userItem) => (
+                      <tr key={userItem._id} className={styles.excelRow}>
                         <td className={styles.excelCell}>
-                          <span className={styles.excelUserName}>{user.name}</span>
+                          <span className={styles.excelUserName}>{userItem.name}</span>
                         </td>
                         
                         <td className={styles.excelCell}>
-                          <span className={styles.excelUserEmail}>{user.email}</span>
+                          <span className={styles.excelUserEmail}>{userItem.email}</span>
                         </td>
                         
                         <td className={styles.excelCell}>
-                          <span className={styles.excelUserRole}>{getRoleName(user.role)}</span>
+                          <span className={styles.excelUserRole}>{getRoleName(userItem.role)}</span>
                         </td>
                         
                         <td className={styles.excelCell}>
                           <span className={styles.excelCompanyName}>
-                            {user.company?.name || 'Sin empresa'}
+                            {userItem.company?.name || 'Sin empresa'}
                           </span>
                         </td>
                         
                         <td className={`${styles.excelCell} ${styles.excelNumber}`}>
                           <span className={styles.excelUserCount}>
-                            {user.company?.usersCount || 0}/{user.company?.maxUsers || 3}
+                            {userItem.company?.usersCount || 0}/{userItem.company?.maxUsers || 3}
                           </span>
                         </td>
                         
                         <td className={`${styles.excelCell} ${styles.excelNumber}`}>
                           <span className={styles.excelProductCount}>
-                            {user.stats?.products || 0}/{user.company?.maxProducts || 100}
+                            {userItem.stats?.products || 0}/{userItem.company?.maxProducts || 100}
                           </span>
                         </td>
                         
                         <td className={styles.excelCell}>
-                          <span className={`${styles.excelPlanBadge} ${styles[`excelPlan${user.plan}`]}`}>
-                            {getPlanName(user.plan)}
+                          <span className={`${styles.excelPlanBadge} ${styles[`excelPlan${userItem.plan}`]}`}>
+                            {getPlanName(userItem.plan)}
                           </span>
                         </td>
                         
                         <td className={styles.excelCell}>
-                          <span className={`${styles.excelStatusBadge} ${user.isActive ? styles.excelStatusActive : styles.excelStatusInactive}`}>
-                            {user.isActive ? 'Activo' : 'Inactivo'}
+                          <span className={`${styles.excelStatusBadge} ${userItem.isActive ? styles.excelStatusActive : styles.excelStatusInactive}`}>
+                            {userItem.isActive ? 'Activo' : 'Inactivo'}
                           </span>
                         </td>
                         
                         <td className={styles.excelCell}>
-                          <span className={styles.excelDate}>{formatDate(user.createdAt)}</span>
+                          <span className={styles.excelDate}>{formatDate(userItem.createdAt)}</span>
                         </td>
                         
                         <td className={styles.excelCell}>
                           <div className={styles.excelActions}>
                             <button
-                              onClick={() => openUserModal(user)}
+                              onClick={() => openUserModal(userItem)}
                               className={styles.excelEditButton}
                               disabled={actionLoading}
                               title="Editar usuario"
@@ -447,12 +453,12 @@ export default function CEODashboard() {
                               ✎
                             </button>
                             <button
-                              onClick={() => handleToggleStatus(user._id, user.isActive)}
-                              className={`${styles.excelStatusButton} ${user.isActive ? styles.excelDeactivate : styles.excelActivate}`}
+                              onClick={() => handleToggleStatus(userItem._id, userItem.isActive)}
+                              className={`${styles.excelStatusButton} ${userItem.isActive ? styles.excelDeactivate : styles.excelActivate}`}
                               disabled={actionLoading}
-                              title={user.isActive ? 'Desactivar usuario' : 'Activar usuario'}
+                              title={userItem.isActive ? 'Desactivar usuario' : 'Activar usuario'}
                             >
-                              {user.isActive ? '🔴' : '🟢'}
+                              {userItem.isActive ? '🔴' : '🟢'}
                             </button>
                           </div>
                         </td>
@@ -472,11 +478,11 @@ export default function CEODashboard() {
           userData={selectedUserData}
           onClose={() => setShowUserModal(false)}
           onPlanChange={handleChangePlan}
-          onProductLimitChange={handleProductLimitChange} // ✅ PASAR LA FUNCIÓN
+          onProductLimitChange={handleProductLimitChange}
           actionLoading={actionLoading}
           onUserDeleted={(userId:any) => {
             console.log('Usuario eliminado:', userId);
-            refresh(); // Refrescar la lista de usuarios
+            refresh();
             setShowUserModal(false);
           }}
         />

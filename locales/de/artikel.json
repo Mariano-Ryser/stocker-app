@@ -5,7 +5,8 @@
     "newArticle": "Neuer Artikel",
     "view": {
       "table": "Tabellenansicht",
-      "grid": "Rasteransicht"
+      "grid": "Rasteransicht",
+      "excel": "Excel-Ansicht"
     },
     "search": {
       "placeholder": "Name oder Artikelnummer",
@@ -38,13 +39,18 @@
     },
     "table": {
       "name": "Artikelname",
+      "lagerplatz": "Lagerplatz",
       "number": "Nummer",
       "price": "Preis",
       "stock": "Bestand"
     },
+    "excel": {
+      "totalValue": "Gesamtwert",
+      "status": "Status"
+    },
     "card": {
-      "number": "N°: {number}",
       "location": "📍 {location}",
+      "number": "N°: {number}",
       "units": "Einheiten",
       "unit": "Einheit"
     },
@@ -69,7 +75,10 @@
         "artikelNumberPlaceholder": "z.B. 345-AB",
         "bestand": "Bestand",
         "price": "Preis",
-        "pricePlaceholder": "0.00",
+        "pricePlaceholder": "0.00",  
+        "lowStockThreshold": "Mindestbestand für Warnung",
+        "lowStockThresholdPlaceholder": "0",
+        "lowStockThresholdHelper": "Bei diesem Bestand wird eine Warnung angezeigt.",
         "description": "Beschreibung",
         "descriptionPlaceholder": "Produktbeschreibung...",
         "image": "Bild",
@@ -141,6 +150,19 @@
     },
     "errors": {
       "loadFailed": "Fehler beim Laden der Artikel"
+    },
+    "lowStockAlert": {
+      "title": "Produkte mit niedrigem Bestand",
+      "button": "Bestandswarnungen",
+      "globalThreshold": "Globaler Schwellenwert",
+      "thresholdDescription": "Produkte mit Bestand unter diesem Wert werden in der Warnung angezeigt",
+      "productsCount": "{count} Produkte müssen nachbestellt werden",
+      "reorder": "Nachbestellen",
+      "customThreshold": "Individueller Schwellenwert",
+      "useGlobal": "Globalen Wert verwenden ({threshold})",
+      "critical": "Kritisch",
+      "warning": "Warnung",
+      "normal": "Normal"
     }
   }
 }

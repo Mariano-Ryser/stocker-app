@@ -9,7 +9,8 @@
     },
     "error": {
       "general": "Fehler",
-      "title": "Fehler beim Laden der Rechnungen"
+      "title": "Fehler beim Laden der Rechnungen",
+      "loadFailed": "Fehler beim Laden der Rechnungen"
     },
     "actions": {
       "new": "Neue Rechnung",
@@ -17,7 +18,10 @@
       "resetFilters": "Alle Filter zurücksetzen",
       "createFirst": "Erste Rechnung erstellen",
       "loadMore": "Mehr Rechnungen laden ({remaining} verfügbar)",
-      "stock": "Stock Bewegungen anzeigen"
+      "stock": "Stock Bewegungen anzeigen",
+      "view": "Anzeigen",
+      "delete": "Löschen",
+      "confirmDelete": "Sind Sie sicher, dass Sie diese Rechnung löschen möchten?"
     },
     "buttons": {
       "stock": "Stock",
@@ -26,13 +30,19 @@
     "search": {
       "placeholder": "Kunde oder Rechnungsnummer suchen...",
       "results": "{visible} von {total} Rechnungen",
-      "moreAvailable": " ({remaining} mehr verfügbar)"
+      "moreAvailable": " ({remaining} mehr verfügbar)",
+      "clear": "Suche löschen"
     },
     "filter": {
       "allStatus": "Alle Status",
       "status": "Status",
       "date": "Datum",
-      "sortBy": "Sortierung"
+      "sortBy": "Sortierung",
+      "clear": "Filter löschen",
+      "apply": "Filter anwenden",
+      "dateFrom": "Datum von",
+      "dateTo": "Datum bis",
+      "dateRange": "Datumsbereich"
     },
     "sort": {
       "newest": "Neueste zuerst",
@@ -48,7 +58,8 @@
     "status": {
       "paid": "Bezahlt",
       "cancelled": "Storniert",
-      "pending": "Ausstehend"
+      "pending": "Ausstehend",
+      "all": "Alle Status"
     },
     "table": {
       "date": "Datum",
@@ -57,6 +68,22 @@
       "total": "Total",
       "status": "Status",
       "actions": "Aktionen"
+    },
+    "excel": {
+      "date": "Datum",
+      "time": "Uhrzeit",
+      "client": "Kunde",
+      "invoiceNumber": "Rechnungsnummer",
+      "subtotal": "Zwischensumme",
+      "tax": "MwSt.",
+      "total": "Gesamt",
+      "status": "Status",
+      "actions": "Aktionen"
+    },
+    "view": {
+      "table": "Tabellenansicht",
+      "excel": "Excel-Ansicht",
+      "cards": "Kartenansicht"
     },
     "client": {
       "unknown": "Unbekannt"
@@ -70,6 +97,21 @@
         "title": "Keine Rechnungen vorhanden",
         "text": "Erstellen Sie Ihre erste Rechnung"
       }
+    },
+    "pagination": {
+      "showing": "Zeige {count} von {total} Rechnungen",
+      "pageInfo": "Seite {current} von {total}",
+      "page": "Seite {current} von {total}"
+    },
+    "details": {
+      "invoice": "Rechnung",
+      "items": "Artikel",
+      "total": "Gesamt",
+      "subtotal": "Zwischensumme",
+      "tax": "Steuer",
+      "customer": "Kunde",
+      "payment": "Zahlung",
+      "notes": "Notizen"
     }
   }
 }

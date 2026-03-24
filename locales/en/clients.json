@@ -1,41 +1,80 @@
 {
   "clients": {
-    "title": "Customers",
-    "subtitle": "Manage your customer list",
-    "newClient": "New Customer",
+    "title": "Clients",
+    "subtitle": "Manage your client list",
+    "newClient": "New Client",
     "loading": "Loading...",
+    "loadingShort": "Loading clients...",
     "loadingAuth": "Loading authentication...",
     "search": {
-      "placeholder": "Search customers... (Name, Email, Address, Phone)",
-      "results": "{visible} of {total} customers shown",
+      "placeholder": "Search clients... (Name, Last Name, Email, Address, Phone)",
+      "results": "{visible} of {total} clients shown",
       "moreAvailable": " ({remaining} more available)",
       "clear": "Clear search"
     },
     "table": {
+      "name": "Name",
+      "vorname": "Last Name",
+      "email": "Email",
+      "phone": "Phone",
+      "company": "Company",
+      "address": "Address",
+      "city": "City",
+      "actions": "Actions"
+    },
+    "card": {
+      "title": "Client Card",
       "email": "Email:",
-      "address": "Address:",
-      "phone": "Phone:"
+      "phone": "Phone:",
+      "company": "Company:",
+      "address": "Address:"
+    },
+    "excel": {
+      "name": "Name",
+      "vorname": "Last Name",
+      "company": "Company",
+      "email": "Email",
+      "phone": "Phone",
+      "address": "Address",
+      "city": "City",
+      "actions": "Actions"
+    },
+    "address": {
+      "full": "{street} {number}{complement}, {postalCode} {city}",
+      "street": "{street} {number}",
+      "cityLine": "{postalCode} {city}",
+      "withCountry": "{street} {number}{complement}, {postalCode} {city}, {country}",
+      "noAddress": "No address"
     },
     "actions": {
       "edit": "Edit",
       "delete": "Delete",
       "deleting": "Deleting…",
-      "confirmDelete": "Are you sure you want to delete this customer?"
+      "confirmDelete": "Are you sure you want to delete this client?"
     },
     "empty": {
       "restricted": {
-        "title": "Access Restricted",
-        "text": "You must log in to view customers"
+        "title": "Access restricted",
+        "text": "You must log in to view clients"
       },
       "notFound": {
-        "title": "No customers found",
+        "title": "No clients found",
         "text": "No results for \"{search}\""
       },
       "noClients": {
-        "title": "No customers available",
-        "text": "Create your first customer"
+        "title": "No clients",
+        "text": "Create your first client"
       }
     },
-    "loadMore": "Load more customers"
+    "view": {
+      "cards": "Card View",
+      "excel": "Excel View"
+    },
+    "pagination": {
+      "showing": "Showing {count} of {total} clients",
+      "pageInfo": "Page {current} of {total}"
+    },
+    "loadMore": "Load more clients",
+    "error": "Error loading clients"
   }
 }

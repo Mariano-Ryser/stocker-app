@@ -1,0 +1,69 @@
+{
+  "salesChart": {
+    "title": "Verkaufsanalyse Dashboard",
+    "subtitle": "Leistungsübersicht",
+    "loading": "Lade Verkaufsstatistiken...",
+    "views": {
+      "synoptic": "Übersicht",
+      "matrix": "Matrix",
+      "trend": "Trend"
+    },
+    "timeRange": {
+      "yearly": "Jährlich",
+      "monthly": "Monatlich"
+    },
+    "months": {
+      "jan": "Jan",
+      "feb": "Feb",
+      "mar": "Mär",
+      "apr": "Apr",
+      "may": "Mai",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Aug",
+      "sep": "Sep",
+      "oct": "Okt",
+      "nov": "Nov",
+      "dec": "Dez"
+    },
+    "stats": {
+      "totalRevenue": "Gesamtumsatz",
+      "totalSales": "Gesamtverkäufe",
+      "averagePerSale": "Durchschnitt pro Verkauf"
+    },
+    "table": {
+      "month": "MONAT",
+      "day": "TAG",
+      "unitsSold": "VERKAUFTE EINHEITEN",
+      "revenue": "UMSATZ",
+      "avgSale": "DURCHSCHN. VERKAUF",
+      "contribution": "BEITRAG",
+      "total": "GESAMT"
+    },
+    "matrix": {
+      "title": "Performance Matrix",
+      "subtitle": "Quadrantenanalyse nach Leistung",
+      "starPerformer": "Top-Performer",
+      "highValue": "Hoher Wert",
+      "volumeDriver": "Mengentreiber",
+      "needsReview": "Überprüfung nötig"
+    },
+    "trend": {
+      "title": "Trendanalyse",
+      "subtitle": "Vergleichende Leistungsübersicht",
+      "revenue": "Umsatz",
+      "sales": "Verkäufe",
+      "trend": "Trend",
+      "vsAvg": "vs Durchschnitt",
+      "bestPerformance": "Beste Leistung",
+      "growthMomentum": "Wachstumsdynamik",
+      "peakSeason": "Hochsaison",
+      "positive": "↑ Positiv",
+      "needsAttention": "↓ Aufmerksamkeit nötig"
+    },
+    "insights": {
+      "bestPeriod": "Bester Zeitraum:",
+      "peakSales": "Spitzenverkaufszeitraum:"
+    }
+  }
+}

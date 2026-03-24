@@ -1,41 +1,80 @@
 {
   "clients": {
     "title": "Clientes",
-    "subtitle": "Administre su lista de clientes",
+    "subtitle": "Gestiona tu lista de clientes",
     "newClient": "Nuevo Cliente",
     "loading": "Cargando...",
+    "loadingShort": "Cargando clientes...",
     "loadingAuth": "Cargando autenticación...",
     "search": {
-      "placeholder": "Buscar clientes... (Nombre, Email, Dirección, Teléfono)",
+      "placeholder": "Buscar clientes... (Nombre, Apellido, Email, Dirección, Teléfono)",
       "results": "{visible} de {total} clientes mostrados",
       "moreAvailable": " ({remaining} más disponibles)",
       "clear": "Limpiar búsqueda"
     },
     "table": {
+      "name": "Nombre",
+      "vorname": "Apellido",
+      "email": "Email",
+      "phone": "Teléfono",
+      "company": "Empresa",
+      "address": "Dirección",
+      "city": "Ciudad",
+      "actions": "Acciones"
+    },
+    "card": {
+      "title": "Tarjeta de Cliente",
       "email": "Email:",
-      "address": "Dirección:",
-      "phone": "Teléfono:"
+      "phone": "Teléfono:",
+      "company": "Empresa:",
+      "address": "Dirección:"
+    },
+    "excel": {
+      "name": "Nombre",
+      "vorname": "Apellido",
+      "company": "Empresa",
+      "email": "Email",
+      "phone": "Teléfono",
+      "address": "Dirección",
+      "city": "Ciudad",
+      "actions": "Acciones"
+    },
+    "address": {
+      "full": "{street} {number}{complement}, {postalCode} {city}",
+      "street": "{street} {number}",
+      "cityLine": "{postalCode} {city}",
+      "withCountry": "{street} {number}{complement}, {postalCode} {city}, {country}",
+      "noAddress": "Sin dirección"
     },
     "actions": {
       "edit": "Editar",
       "delete": "Eliminar",
       "deleting": "Eliminando…",
-      "confirmDelete": "¿Está seguro de que desea eliminar este cliente?"
+      "confirmDelete": "¿Estás seguro de que deseas eliminar este cliente?"
     },
     "empty": {
       "restricted": {
         "title": "Acceso restringido",
-        "text": "Debe iniciar sesión para ver los clientes"
+        "text": "Debes iniciar sesión para ver los clientes"
       },
       "notFound": {
         "title": "No se encontraron clientes",
-        "text": "Sin resultados para \"{search}\""
+        "text": "No hay resultados para \"{search}\""
       },
       "noClients": {
-        "title": "No hay clientes disponibles",
-        "text": "Cree su primer cliente"
+        "title": "No hay clientes",
+        "text": "Crea tu primer cliente"
       }
     },
-    "loadMore": "Cargar más clientes"
+    "view": {
+      "cards": "Vista Tarjetas",
+      "excel": "Vista Excel"
+    },
+    "pagination": {
+      "showing": "Mostrando {count} de {total} clientes",
+      "pageInfo": "Página {current} de {total}"
+    },
+    "loadMore": "Cargar más clientes",
+    "error": "Error al cargar los clientes"
   }
 }

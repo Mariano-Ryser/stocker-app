@@ -16,6 +16,8 @@ const languageOptions = [
   { code: 'de', name: 'Deutsch', flag: '🇩🇪' },
   { code: 'en', name: 'English', flag: '🇬🇧' },
   { code: 'es', name: 'Español', flag: 'es' }
+  // { code: 'it', name: 'Italy', flag: 'it' },
+  // { code: 'fr', name: 'French', flag: 'fr' },
 ];
 
 const DEFAULT_LANGUAGE = 'en';
@@ -23,6 +25,9 @@ const DEFAULT_LANGUAGE = 'en';
 // 👉 Todos los módulos de la app
 const ALL_MODULES = [
   'artikel',
+  'lowStockAlert',
+  'salesChart',
+  'splash',
   'clients',
   'clientsForms',
   'CTASection',
@@ -52,6 +57,7 @@ const ALL_MODULES = [
   'wareneigang',
   'ceo',
   'pricing',
+  'productLimitBadge',
 
 ];
 

@@ -1,0 +1,42 @@
+{
+  "lowStockAlert": {
+    "button": "Low Stock Alerts",
+    "title": "📦 Low Stock Alerts",
+    "refresh": "Refresh",
+    "info": "Products appear here when they have a custom threshold configured and their stock is equal to or less than that threshold.",
+    "stats": {
+      "withAlert": "⚠️ With alert:",
+      "outOfStock": "🔴 Out of stock:"
+    },
+    "sectionTitle": "Products requiring attention",
+    "tableHeader": {
+      "product": "Product",
+      "stockThreshold": "Stock / Threshold",
+      "status": "Status",
+      "action": "Action"
+    },
+    "status": {
+      "outOfStock": "OUT OF STOCK",
+      "critical": "CRITICAL",
+      "low": "LOW",
+      "caution": "CAUTION"
+    },
+    "buttons": {
+      "restock": "Restock",
+      "increase": "Increase",
+      "edit": "Edit"
+    },
+    "summary": {
+      "attention": "⚠️ <strong>{count}</strong> product{plural} need{pluralS} attention",
+      "outOfStockNote": "🔴 {count} product{plural} out of stock",
+      "allGood": "✅ All products with configured thresholds are above their limits"
+    },
+    "actions": {
+      "viewAll": "View all products →"
+    },
+    "empty": {
+      "noProducts": "✅ No products with configured thresholds",
+      "allSafe": "All products are above their threshold limits"
+    }
+  }
+}

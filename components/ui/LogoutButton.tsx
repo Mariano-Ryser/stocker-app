@@ -50,7 +50,6 @@ export default function LogoutButton({
         color: 'white',
         border: 'none',
         padding: showText ? '0.75rem 1rem' : '0.75rem',
-        borderRadius: '8px',
         cursor: 'pointer',
         fontSize: '0.95rem',
         transition: 'all 0.3s ease',

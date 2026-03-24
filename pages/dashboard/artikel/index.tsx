@@ -19,18 +19,19 @@ type ProductResult = {
 // ===== COMPONENTES INTERNOS =====
 
 // Componente para vista de tabla
-const TableView = ({ products, currencySymbol, getStockStatus, onProductClick }) => (
+const TableView = ({ products, currencySymbol, getStockStatus, getStockStatusText, onProductClick, t }) => (
   <table className={styles.productsTable}>
     <thead>
       <tr>
-        <th className={`${styles.tableHeader} ${styles.colName}`}>Artículo</th>
-        <th className={`${styles.tableHeader} ${styles.colLager}`}>Número</th>
-        <th className={`${styles.tableHeader} ${styles.colPrice}`}>Precio</th>
-        <th className={`${styles.tableHeader} ${styles.colStock}`}>Stock</th>
+        <th className={`${styles.tableHeader} ${styles.colName}`}>{t('artikel.table.name')}</th>
+        <th className={`${styles.tableHeader} ${styles.colLager}`}>{t('artikel.table.lagerplatz')}</th>
+        <th className={`${styles.tableHeader} ${styles.colNumber}`}>{t('artikel.table.number')}</th>
+        <th className={`${styles.tableHeader} ${styles.colPrice}`}>{t('artikel.table.price')}</th>
+        <th className={`${styles.tableHeader} ${styles.colStock}`}>{t('artikel.table.stock')}</th>
       </tr>
     </thead>
     <tbody>
-      {products.map((product:any) => (
+      {products.map((product: any) => (
         <tr 
           key={product._id} 
           className={styles.productRow}
@@ -40,6 +41,9 @@ const TableView = ({ products, currencySymbol, getStockStatus, onProductClick })
             {product.artikelName}
           </td>
           <td className={`${styles.tableCell} ${styles.productLager}`}>
+            {product.lagerPlatz || '-'}
+          </td>
+          <td className={`${styles.tableCell} ${styles.productNumber}`}>
             {product.artikelNumber || '-'}
           </td>
           <td className={`${styles.tableCell} ${styles.productPrice}`}>
@@ -92,14 +96,14 @@ const GridView = ({ products, currencySymbol, getStockStatus, getStockStatusText
         <div className={styles.cardContent}>
           <h3 className={styles.cardTitle}>{product.artikelName}</h3>
           <div className={styles.cardDetails}>
-            {product.artikelNumber && (
-              <p className={styles.cardNumber}>
-                {t('artikel.card.number').replace('{number}', product.artikelNumber)}
-              </p>
-            )}
             {product.lagerPlatz && (
               <p className={styles.cardLocation}>
                 {t('artikel.card.location').replace('{location}', product.lagerPlatz)}
+              </p>
+            )}
+            {product.artikelNumber && (
+              <p className={styles.cardNumber}>
+                {t('artikel.card.number').replace('{number}', product.artikelNumber)}
               </p>
             )}
           </div>
@@ -122,7 +126,7 @@ const GridView = ({ products, currencySymbol, getStockStatus, getStockStatusText
 );
 
 // Componente para vista Excel
-const ExcelView = ({ products, currencySymbol, getStockStatus, getStockStatusText, onProductClick }) => {
+const ExcelView = ({ products, currencySymbol, getStockStatus, getStockStatusText, onProductClick, t }) => {
   // Calcular valores totales con useMemo dentro del componente
   const productsWithTotal = useMemo(() => 
     products.map(product => ({
@@ -136,13 +140,13 @@ const ExcelView = ({ products, currencySymbol, getStockStatus, getStockStatusTex
       <table className={styles.excelTable}>
         <thead>
           <tr>
-            <th className={styles.excelHeader}>Artículo</th>
-            <th className={styles.excelHeader}>Número</th>
-            <th className={styles.excelHeader}>Ubicación</th>
-            <th className={styles.excelHeader}>Stock</th>
-            <th className={styles.excelHeader}>Precio</th>
-            <th className={styles.excelHeader}>Valor Total</th>
-            <th className={styles.excelHeader}>Estado</th>
+            <th className={styles.excelHeader}>{t('artikel.table.name')}</th>
+            <th className={styles.excelHeader}>{t('artikel.table.lagerplatz')}</th>
+            <th className={styles.excelHeader}>{t('artikel.table.number')}</th>
+            <th className={styles.excelHeader}>{t('artikel.table.stock')}</th>
+            <th className={styles.excelHeader}>{t('artikel.table.price')}</th>
+            <th className={styles.excelHeader}>{t('artikel.excel.totalValue')}</th>
+            <th className={styles.excelHeader}>{t('artikel.excel.status')}</th>
           </tr>
         </thead>
         <tbody>
@@ -158,13 +162,13 @@ const ExcelView = ({ products, currencySymbol, getStockStatus, getStockStatusTex
                 </div>
               </td>
               <td className={styles.excelCell}>
-                <span className={styles.excelArtikelNumber}>
-                  {product.artikelNumber || '-'}
+                <span className={styles.excelLocation}>
+                  {product.lagerPlatz || '-'}
                 </span>
               </td>
               <td className={styles.excelCell}>
-                <span className={styles.excelLocation}>
-                  {product.lagerPlatz || '-'}
+                <span className={styles.excelArtikelNumber}>
+                  {product.artikelNumber || '-'}
                 </span>
               </td>
               <td className={`${styles.excelCell} ${styles.excelStock}`}>
@@ -202,12 +206,12 @@ const ExcelView = ({ products, currencySymbol, getStockStatus, getStockStatusTex
 };
 
 // Componente para los botones de vista
-const ViewToggle = ({ viewMode, setViewMode, loading }) => {
+const ViewToggle = ({ viewMode, setViewMode, loading, t }) => {
   const views = useMemo(() => [
-    { mode: 'table', title: 'Vista Tabla', path: 'M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h10v2H7v-2z' },
-    { mode: 'grid', title: 'Vista Cuadrícula', path: 'M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z' },
-    { mode: 'excel', title: 'Vista Excel', path: 'M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h5v2H7v-2z' }
-  ], []);
+    { mode: 'table', title: t('artikel.view.table'), path: 'M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h10v2H7v-2z' },
+    { mode: 'grid', title: t('artikel.view.grid'), path: 'M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z' },
+    { mode: 'excel', title: t('artikel.view.excel'), path: 'M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h5v2H7v-2z' }
+  ], [t]);
 
   return (
     <div className={styles.viewToggle}>
@@ -267,6 +271,40 @@ export default function ListProduct() {
 
   const [showModal, setShowModal] = useState(false);
 
+  // 🔥 NUEVA FUNCIÓN: Obtener el umbral efectivo del producto
+  const getEffectiveThreshold = useCallback((product: any): number => {
+    // Si el producto tiene lowStockThreshold configurado y es mayor que 0, usarlo
+    if (product.lowStockThreshold !== null && 
+        product.lowStockThreshold !== undefined && 
+        product.lowStockThreshold > 0) {
+      return product.lowStockThreshold;
+    }
+    // Si no tiene umbral personalizado, usar valor por defecto (10)
+    // Este valor por defecto puede venir del localStorage o ser fijo
+    const defaultThreshold = parseInt(localStorage.getItem('lowStockThreshold') || '10');
+    return defaultThreshold;
+  }, []);
+
+  // 🔥 MODIFICADA: Usar lowStockThreshold del producto en lugar de 50
+  const getStockStatus = useCallback((product: any) => {
+    const stock = product.stock || 0;
+    const threshold = getEffectiveThreshold(product);
+    
+    if (stock <= 0) return 'outOfStock';
+    if (stock <= threshold) return 'lowStock';
+    return 'inStock';
+  }, [getEffectiveThreshold]);
+
+  // 🔥 MODIFICADA: Usar lowStockThreshold para el texto
+  const getStockStatusText = useCallback((product: any) => {
+    const stock = product.stock || 0;
+    const threshold = getEffectiveThreshold(product);
+    
+    if (stock <= 0) return t('artikel.stock.outOfStock');
+    if (stock <= threshold) return t('artikel.stock.lowStock');
+    return t('artikel.stock.inStock');
+  }, [t, getEffectiveThreshold]);
+
   // Handlers memoizados con useCallback
   const handleSearchKeyPress = useCallback((e) => {
     if (e.key === 'Enter') {
@@ -313,21 +351,6 @@ export default function ListProduct() {
     }
     return result as ProductResult;
   }, [createProduct, refreshProducts]);
-
-  // Funciones de utilidad memoizadas
-  const getStockStatus = useCallback((product: any) => {
-    const stock = product.stock || 0;
-    if (stock <= 0) return 'outOfStock';
-    if (stock < 50) return 'lowStock';
-    return 'inStock';
-  }, []);
-
-  const getStockStatusText = useCallback((product: any) => {
-    const stock = product.stock || 0;
-    if (stock <= 0) return t('artikel.stock.outOfStock');
-    if (stock < 50) return t('artikel.stock.lowStock');
-    return t('artikel.stock.inStock');
-  }, [t]);
 
   // Textos dinámicos memoizados
   const activeFilterText = useMemo(() => {
@@ -388,6 +411,7 @@ export default function ListProduct() {
                 viewMode={viewMode} 
                 setViewMode={setViewMode} 
                 loading={productsLoading}
+                t={t}
               />
               <button 
                 onClick={() => setShowModal(true)} 
@@ -491,6 +515,7 @@ export default function ListProduct() {
                   className={styles.clearFilter}
                   onClick={() => setStock('all')}
                   disabled={productsLoading}
+                  title={t('artikel.filter.clear')}
                 >
                   ✕
                 </button>
@@ -503,6 +528,7 @@ export default function ListProduct() {
                   className={styles.clearFilter}
                   onClick={() => setSort('none')}
                   disabled={productsLoading}
+                  title={t('artikel.filter.clear')}
                 >
                   ✕
                 </button>
@@ -565,7 +591,9 @@ export default function ListProduct() {
                 products={products}
                 currencySymbol={currencySymbol}
                 getStockStatus={getStockStatus}
+                getStockStatusText={getStockStatusText}
                 onProductClick={handleProductClick}
+                t={t}
               />
             )}
 
@@ -587,6 +615,7 @@ export default function ListProduct() {
                 getStockStatus={getStockStatus}
                 getStockStatusText={getStockStatusText}
                 onProductClick={handleProductClick}
+                t={t}
               />
             )}
 

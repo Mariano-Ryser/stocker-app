@@ -1,0 +1,69 @@
+{
+  "salesChart": {
+    "title": "Dashboard de Análisis de Ventas",
+    "subtitle": "Resumen de Rendimiento",
+    "loading": "Cargando estadísticas de ventas...",
+    "views": {
+      "synoptic": "Sinóptico",
+      "matrix": "Matriz",
+      "trend": "Tendencia"
+    },
+    "timeRange": {
+      "yearly": "Anual",
+      "monthly": "Mensual"
+    },
+    "months": {
+      "jan": "Ene",
+      "feb": "Feb",
+      "mar": "Mar",
+      "apr": "Abr",
+      "may": "May",
+      "jun": "Jun",
+      "jul": "Jul",
+      "aug": "Ago",
+      "sep": "Sep",
+      "oct": "Oct",
+      "nov": "Nov",
+      "dec": "Dic"
+    },
+    "stats": {
+      "totalRevenue": "Ingresos Totales",
+      "totalSales": "Ventas Totales",
+      "averagePerSale": "Promedio por Venta"
+    },
+    "table": {
+      "month": "MES",
+      "day": "DÍA",
+      "unitsSold": "UNIDADES VENDIDAS",
+      "revenue": "INGRESOS",
+      "avgSale": "PROM. VENTA",
+      "contribution": "CONTRIBUCIÓN",
+      "total": "TOTAL"
+    },
+    "matrix": {
+      "title": "Matriz de Rendimiento",
+      "subtitle": "Análisis de Cuadrantes por Rendimiento",
+      "starPerformer": "Estrella",
+      "highValue": "Alto Valor",
+      "volumeDriver": "Impulsor de Volumen",
+      "needsReview": "Necesita Revisión"
+    },
+    "trend": {
+      "title": "Análisis de Tendencias",
+      "subtitle": "Resumen Comparativo de Rendimiento",
+      "revenue": "Ingresos",
+      "sales": "Ventas",
+      "trend": "Tendencia",
+      "vsAvg": "vs Promedio",
+      "bestPerformance": "Mejor Rendimiento",
+      "growthMomentum": "Momentum de Crecimiento",
+      "peakSeason": "Temporada Alta",
+      "positive": "↑ Positivo",
+      "needsAttention": "↓ Necesita Atención"
+    },
+    "insights": {
+      "bestPeriod": "Mejor Período:",
+      "peakSales": "Período Pico de Ventas:"
+    }
+  }
+}

@@ -8,8 +8,7 @@ export function preloadPublicPagesOnce() {
   
   const dashboardPages = [
     '/informativePages/uberUns',
-    '/login',
-    '/register',
+    '/login'
     // '/informativePages/termsPage',
     // '/informativePages/privacyPage',
   ];

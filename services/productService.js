@@ -1,4 +1,3 @@
-// services/productService.js
 const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 
 // Función helper para obtener headers con token
@@ -12,11 +11,23 @@ const getAuthHeaders = () => {
   
   return headers;
 };
-// 🔹 NUEVA: Obtener TODOS los productos para el escáner (sin paginación)
+
+// Helper para FormData (sin Content-Type)
+const getAuthHeadersForFormData = () => {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const headers = {};
+  
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  return headers;
+};
+
+// 🔹 Obtener TODOS los productos para el escáner (sin paginación)
 export async function getAllProductsForScanner() {
   try {
     const API_URL = `${API_BASE_URL}/products/scanner`;
-    // // console.log('Fetching all products for scanner from:', API_URL);
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -36,35 +47,17 @@ export async function getAllProductsForScanner() {
     }
     
     const data = await res.json();
-    
-    // // console.log('Products for scanner fetched successfully:', {
-    //   count: data.products?.length,
-    //   total: data.total
-    // });
-
-    return data; // { products, total }
+    return data;
   } catch (error) {
     console.error('Error in getAllProductsForScanner:', error);
     throw new Error(`Network error: ${error.message}`);
   }
 }
-// Helper para FormData (sin Content-Type)
-const getAuthHeadersForFormData = () => {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  const headers = {};
-  
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-  
-  return headers;
-};
 
-// 🔹 NUEVA: Obtener productos con paginación y filtros
+// 🔹 Obtener productos con paginación y filtros
 export async function getProductsPaginated(queryParams) {
   try {
     const API_URL = `${API_BASE_URL}/products/paginated?${queryParams.toString()}`;
-    // // console.log('Fetching paginated products from:', API_URL);
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -84,14 +77,7 @@ export async function getProductsPaginated(queryParams) {
     }
     
     const data = await res.json();
-    
-    // console.log('Products fetched successfully:', {
-    //   count: data.products?.length,
-    //   pagination: data.pagination,
-    //   totalInventoryValue: data.totalInventoryValue
-    // });
-
-    return data; // Ahora esperamos { products, pagination, totalInventoryValue }
+    return data;
   } catch (error) {
     console.error('Error in getProductsPaginated:', error);
     throw new Error(`Network error: ${error.message}`);
@@ -102,7 +88,6 @@ export async function getProductsPaginated(queryParams) {
 export async function getProducts() {
   try {
     const API_URL = `${API_BASE_URL}/products`;
-    // // console.log('Fetching all products from:', API_URL);
     
     const res = await fetch(API_URL, {
       headers: getAuthHeaders()
@@ -134,7 +119,7 @@ export async function getProducts() {
   }
 }
 
-// 🔹 Crear producto (maneja imagen opcional)
+// 🔹 Crear producto (con lowStockThreshold)
 export async function createProductAPI(productData) {
   try {
     const API_URL = `${API_BASE_URL}/products`;
@@ -146,7 +131,15 @@ export async function createProductAPI(productData) {
         if (key === 'imagen' && productData[key] instanceof File) {
           formData.append('imagen', productData[key]);
         } else if (key !== 'imagen') {
-          formData.append(key, productData[key]);
+          // Asegurar que lowStockThreshold se envía correctamente
+          if (key === 'lowStockThreshold') {
+            const value = productData[key];
+            if (value !== null && value !== undefined && value !== '') {
+              formData.append(key, value.toString());
+            }
+          } else {
+            formData.append(key, productData[key]);
+          }
         }
       });
 
@@ -161,7 +154,6 @@ export async function createProductAPI(productData) {
       const data = await res.json();
 
       if (!res.ok) {
-        // ✅ DETECTAR ERROR DE LÍMITE
         if (res.status === 400 && data.limits) {
           throw {
             type: 'LIMIT_ERROR',
@@ -176,19 +168,25 @@ export async function createProductAPI(productData) {
     }
 
     // Sin imagen (JSON normal)
+    const productToSend = {
+      ...productData,
+      lowStockThreshold: productData.lowStockThreshold === '' || productData.lowStockThreshold === null 
+        ? null 
+        : Number(productData.lowStockThreshold)
+    };
+
     const res = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`
       },
-      body: JSON.stringify(productData)
+      body: JSON.stringify(productToSend)
     });
 
     const data = await res.json();
 
     if (!res.ok) {
-      // ✅ DETECTAR ERROR DE LÍMITE
       if (res.status === 400 && data.limits) {
         throw {
           type: 'LIMIT_ERROR',
@@ -206,7 +204,8 @@ export async function createProductAPI(productData) {
     throw error;
   }
 }
-// MODIFICAR: bulkImportAPI para manejar límites
+
+// 🔹 Bulk import
 export async function bulkImportAPI(products) {
   try {
     const API_URL = `${API_BASE_URL}/products/bulk`;
@@ -223,7 +222,6 @@ export async function bulkImportAPI(products) {
     const data = await res.json();
 
     if (!res.ok) {
-      // ✅ DETECTAR ERROR DE LÍMITE
       if (res.status === 400 && data.limits) {
         throw {
           type: 'LIMIT_ERROR',
@@ -241,11 +239,11 @@ export async function bulkImportAPI(products) {
     throw error;
   }
 }
-// 🔹 Actualizar producto
+
+// 🔹 Actualizar producto (con lowStockThreshold)
 export async function updateProductAPI(id, updatedData) {
   try {
     const API_URL = `${API_BASE_URL}/products/${id}`;
-    // // console.log('Updating product:', id, updatedData);
     
     const formData = new FormData();
 
@@ -254,7 +252,17 @@ export async function updateProductAPI(id, updatedData) {
         if (key === 'imagen' && updatedData[key] instanceof File) {
           formData.append(key, updatedData[key]);
         } else {
-          formData.append(key, updatedData[key]);
+          // Asegurar que lowStockThreshold se envía correctamente
+          if (key === 'lowStockThreshold') {
+            const value = updatedData[key];
+            if (value !== null && value !== undefined && value !== '') {
+              formData.append(key, value.toString());
+            } else {
+              formData.append(key, '');
+            }
+          } else {
+            formData.append(key, updatedData[key]);
+          }
         }
       }
     }

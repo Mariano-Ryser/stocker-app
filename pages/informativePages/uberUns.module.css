@@ -8,13 +8,12 @@
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  background-color: #f0f0f0; /* Background color while image loads */
 }
-
 .heroImageContainer {
   position: absolute;
   inset: 0;
   z-index: 1;
-  margin-top: 5rem;
 }
 
 .heroImage {
@@ -38,7 +37,7 @@
   z-index: 3;
   max-width: 800px;
   padding: 0 20px;
-  text-align: center;
+  text-align: center; 
 }
 
 .heroContent h1 {
@@ -231,7 +230,7 @@
 
 /* ===== CTA ===== */
 .cta {
-  background: linear-gradient(135deg, #4294ff, #0055ffc5);
+  background: linear-gradient(135deg, #104386, #00a2fff1);
   text-align: center;
   padding: 60px 20px;
 }

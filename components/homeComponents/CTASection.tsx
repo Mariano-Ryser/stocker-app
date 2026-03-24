@@ -22,6 +22,7 @@ export default function CTASection() {
       </div>
 
       <style jsx>{`
+       
         .cta {
           padding: 80px 24px;
           background: white;

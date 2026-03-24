@@ -545,7 +545,16 @@ export default function ScannerSalesPage() {
       if (result.success && result.sale) {
         setCurrentReceipt(result.sale);
         setShowReceipt(true);
-        
+          // ✅ DISPARAR EVENTO DE STOCK ACTUALIZADO (para cada producto vendido)
+  scannedItems.forEach(item => {
+    window.dispatchEvent(new CustomEvent('stockUpdated', { 
+      detail: { 
+        productId: item.productId,
+        quantitySold: item.quantity,
+        timestamp: new Date().toISOString()
+      } 
+    }));
+  });
         updateProductInCache(true).catch(err => 
           console.warn('Error actualizando caché:', err)
         );

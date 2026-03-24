@@ -54,7 +54,7 @@ export const useApi = () => {
       return response;
     } catch (error) {
       if (error.name === 'AbortError') {
-        console.log('Request cancelled');
+        // console.log('Request cancelled');
         return null;
       }
       throw error;

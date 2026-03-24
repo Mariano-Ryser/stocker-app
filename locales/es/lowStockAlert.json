@@ -1,0 +1,42 @@
+{
+  "lowStockAlert": {
+    "button": "Alertas de stock bajo",
+    "title": "📦 Alertas de stock bajo",
+    "refresh": "Actualizar",
+    "info": "Los productos aparecen aquí cuando tienen un umbral personalizado configurado y su stock es igual o menor a ese umbral.",
+    "stats": {
+      "withAlert": "⚠️ Con alerta:",
+      "outOfStock": "🔴 Agotados:"
+    },
+    "sectionTitle": "Productos que requieren atención",
+    "tableHeader": {
+      "product": "Producto",
+      "stockThreshold": "Stock / Umbral",
+      "status": "Estado",
+      "action": "Acción"
+    },
+    "status": {
+      "outOfStock": "AGOTADO",
+      "critical": "CRÍTICO",
+      "low": "BAJO",
+      "caution": "PRECAUCIÓN"
+    },
+    "buttons": {
+      "restock": "Reponer",
+      "increase": "Aumentar",
+      "edit": "Editar"
+    },
+    "summary": {
+      "attention": "⚠️ <strong>{count}</strong> producto{plural} necesita{pluralS} atención",
+      "outOfStockNote": "🔴 {count} producto{plural} agotado{pluralS}",
+      "allGood": "✅ Todos los productos con umbral configurado están por encima de su límite"
+    },
+    "actions": {
+      "viewAll": "Ver todos los productos →"
+    },
+    "empty": {
+      "noProducts": "✅ No hay productos con umbral configurado",
+      "allSafe": "Todos los productos están por encima de sus límites"
+    }
+  }
+}

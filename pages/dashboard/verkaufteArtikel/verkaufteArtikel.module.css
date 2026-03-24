@@ -566,6 +566,10 @@
 }
 
 @media (max-width: 480px) {
+  /* verkaufteArtikel.module.css */
+.container {
+  margin: 6rem 0;
+}
   .articleCard {
     padding: 16px;
   }

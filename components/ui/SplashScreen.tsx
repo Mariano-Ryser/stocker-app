@@ -1,13 +1,17 @@
 // components/ui/SplashScreen.tsx
 import { useEffect, useState } from 'react';
 import styles from './SplashScreen.module.css';
+import { useLanguage } from '../../contexts/LanguageContext';
 
 interface SplashScreenProps {
   onComplete?: () => void;
   duration?: number; // en milisegundos
 }
 
+
+
 export default function SplashScreen({ onComplete, duration = 1500 }: SplashScreenProps) {
+    const { t } = useLanguage();
   const [fadeOut, setFadeOut] = useState(false);
 
   useEffect(() => {
@@ -95,11 +99,11 @@ export default function SplashScreen({ onComplete, duration = 1500 }: SplashScre
       </div>
 
         {/* Nombre de la empresa/App */}
-        <h1 className={styles.appName}>stoker</h1>
+        <h1 className={styles.appName}>Stoker</h1>
         
         {/* Texto de carga */}
         <div className={styles.loadingContainer}>
-          <span className={styles.loadingText}>Loading daten</span>
+          <span className={styles.loadingText}>{t('splash.loading')}</span>
           <span className={styles.loadingDots}>
             <span>.</span>
             <span>.</span>

@@ -1,8 +1,8 @@
-// services/scannerCacheService.js - VERSIÓN COMPLETA
+// services/scannerCacheService.js - VERSIÓN CORREGIDA
 class ScannerCacheService {
   constructor() {
     this.dbName = 'scannerCache';
-    this.dbVersion = 3;
+    this.dbVersion = 4; // Aumentar versión para forzar recreación
     this.db = null;
     this.initPromise = null;
   }
@@ -28,22 +28,134 @@ class ScannerCacheService {
       request.onupgradeneeded = (event) => {
         const db = event.target.result;
         
+        // Eliminar store anterior para recrear con nuevos índices
         if (db.objectStoreNames.contains('products')) {
           db.deleteObjectStore('products');
         }
         
+        // Crear store con todos los campos necesarios
         const store = db.createObjectStore('products', { keyPath: 'id' });
         store.createIndex('companyId', 'companyId', { unique: false });
         store.createIndex('artikelNumber', 'artikelNumber', { unique: false });
         store.createIndex('artikelName', 'artikelName', { unique: false });
         store.createIndex('timestamp', 'timestamp', { unique: false });
+        
+        // console.log('📦 IndexedDB actualizado a versión 4');
       };
     });
     
     return this.initPromise;
   }
 
-  // ✅ NUEVO: Limpiar todo el caché
+  async cacheProducts(products, companyId) {
+    try {
+      if (!companyId) {
+        console.warn('⚠️ cacheProducts: companyId no proporcionado');
+        return { success: false, error: 'companyId requerido' };
+      }
+
+      const db = await this.getDB();
+      const tx = db.transaction('products', 'readwrite');
+      const store = tx.objectStore('products');
+      
+      const timestamp = Date.now();
+      const stringCompanyId = String(companyId);
+      
+      // Limpiar productos antiguos
+      // console.log(`🧹 Limpiando caché para empresa ${stringCompanyId}...`);
+      
+      const index = store.index('companyId');
+      const range = IDBKeyRange.only(stringCompanyId);
+      
+      const keys = await new Promise((resolve, reject) => {
+        const request = index.getAllKeys(range);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      
+      // console.log(`📊 Eliminando ${keys.length} productos antiguos`);
+      
+      keys.forEach(key => {
+        store.delete(key);
+      });
+      
+      // Guardar nuevos productos con TODOS los campos
+      // console.log(`💾 Guardando ${products.length} productos nuevos...`);
+      
+      for (const product of products) {
+        const productId = product._id || `temp_${Date.now()}_${Math.random()}`;
+        
+        // Asegurar que lowStockThreshold existe
+        const productToCache = {
+          ...product,
+          lowStockThreshold: product.lowStockThreshold !== undefined ? product.lowStockThreshold : null
+        };
+        
+        store.put({
+          id: `${stringCompanyId}_${productId}`,
+          companyId: stringCompanyId,
+          product: productToCache, // Guardar producto completo
+          artikelNumber: product.artikelNumber || '',
+          artikelName: product.artikelName || '',
+          timestamp: timestamp
+        });
+      }
+      
+      await tx.complete;
+      
+      // console.log(`✅ Caché actualizado: ${products.length} productos para empresa ${companyId}`);
+      // console.log(`   - Ejemplo: ${products[0]?.artikelName} tiene lowStockThreshold: ${products[0]?.lowStockThreshold}`);
+      
+      return { success: true, count: products.length, deleted: keys.length };
+      
+    } catch (error) {
+      console.error('❌ Error caching products:', error);
+      return { success: false, error };
+    }
+  }
+
+  async getCachedProductsInstant(companyId) {
+    try {
+      if (!companyId) return { products: [], fromCache: false };
+
+      const db = await this.getDB();
+      const tx = db.transaction('products', 'readonly');
+      const store = tx.objectStore('products');
+      const index = store.index('companyId');
+      
+      const stringCompanyId = String(companyId);
+      const range = IDBKeyRange.only(stringCompanyId);
+      
+      const items = await new Promise((resolve, reject) => {
+        const request = index.getAll(range);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      
+      const products = items.map(item => {
+        // Verificar que lowStockThreshold está presente
+        if (item.product.lowStockThreshold === undefined) {
+          console.warn(`⚠️ Producto ${item.product.artikelName} no tiene lowStockThreshold, asignando null`);
+          item.product.lowStockThreshold = null;
+        }
+        return item.product;
+      });
+      
+      // Log para depuración
+      const withThreshold = products.filter(p => p.lowStockThreshold > 0);
+      // console.log(`📦 Caché cargado: ${products.length} productos, ${withThreshold.length} con umbral`);
+      
+      return {
+        products: products,
+        fromCache: true
+      };
+    } catch (error) {
+      console.warn('Error getting cached products:', error);
+      return { products: [], fromCache: false };
+    }
+  }
+
+  // Resto de métodos igual...
   async clearAllCache() {
     try {
       const db = await this.getDB();
@@ -53,7 +165,7 @@ class ScannerCacheService {
       await store.clear();
       await tx.complete;
       
-      console.log('🧹 Caché de IndexedDB limpiado completamente');
+      // console.log('🧹 Caché de IndexedDB limpiado completamente');
       return { success: true };
     } catch (error) {
       console.error('Error limpiando caché:', error);
@@ -61,7 +173,6 @@ class ScannerCacheService {
     }
   }
 
-  // ✅ NUEVO: Limpiar caché de una empresa específica
   async clearCompanyCache(companyId) {
     try {
       if (!companyId) return { success: false };
@@ -84,100 +195,53 @@ class ScannerCacheService {
       });
       
       await tx.complete;
-      console.log(`🧹 Caché de empresa ${companyId} limpiado (${keys.length} registros)`);
+      // console.log(`🧹 Caché de empresa ${companyId} limpiado (${keys.length} registros)`);
       return { success: true, deletedCount: keys.length };
     } catch (error) {
       console.error('Error limpiando caché de empresa:', error);
       return { success: false };
     }
   }
-async cacheProducts(products, companyId) {
-  try {
-    if (!companyId) {
-      console.warn('⚠️ cacheProducts: companyId no proporcionado');
-      return { success: false, error: 'companyId requerido' };
-    }
 
-    const db = await this.getDB();
-    const tx = db.transaction('products', 'readwrite');
-    const store = tx.objectStore('products');
+  async removeProductsFromCache(productIds, companyId) {
+    if (!productIds || productIds.length === 0 || !companyId) return false;
     
-    const timestamp = Date.now();
-    const stringCompanyId = String(companyId);
-    
-    // ✅ PASO 1: LIMPIAR TODOS LOS PRODUCTOS DE ESTA EMPRESA
-    console.log(`🧹 Limpiando productos antiguos para empresa ${stringCompanyId}...`);
-    
-    const index = store.index('companyId');
-    const range = IDBKeyRange.only(stringCompanyId);
-    
-    // Obtener todas las keys de esta empresa
-    const keys = await new Promise((resolve, reject) => {
-      const request = index.getAllKeys(range);
-      request.onsuccess = () => resolve(request.result);
-      request.onerror = () => reject(request.error);
-    });
-    
-    console.log(`📊 Encontrados ${keys.length} productos antiguos para eliminar`);
-    
-    // Eliminar cada key
-    keys.forEach(key => {
-      store.delete(key);
-    });
-    
-    // ✅ PASO 2: GUARDAR LOS NUEVOS PRODUCTOS
-    console.log(`💾 Guardando ${products.length} productos nuevos...`);
-    
-    for (const product of products) {
-      const productId = product._id || `temp_${Date.now()}_${Math.random()}`;
-      
-      store.put({
-        id: `${stringCompanyId}_${productId}`,
-        companyId: stringCompanyId,
-        product: product,
-        artikelNumber: product.artikelNumber || '',
-        artikelName: product.artikelName || '',
-        timestamp: timestamp
-      });
-    }
-    
-    // Completar transacción
-    await tx.complete;
-    
-    console.log(`✅ Caché actualizado: ${products.length} productos para empresa ${companyId} (antiguos: ${keys.length})`);
-    return { success: true, count: products.length, deleted: keys.length };
-    
-  } catch (error) {
-    console.error('❌ Error caching products:', error);
-    return { success: false, error };
-  }
-}
-
-  async getCachedProductsInstant(companyId) {
     try {
-      if (!companyId) return { products: [], fromCache: false };
-
       const db = await this.getDB();
-      const tx = db.transaction('products', 'readonly');
+      const tx = db.transaction('products', 'readwrite');
       const store = tx.objectStore('products');
       const index = store.index('companyId');
       
-      const stringCompanyId = String(companyId);
-      const range = IDBKeyRange.only(stringCompanyId);
-      
+      const range = IDBKeyRange.only(String(companyId));
       const items = await new Promise((resolve, reject) => {
         const request = index.getAll(range);
         request.onsuccess = () => resolve(request.result);
         request.onerror = () => reject(request.error);
       });
       
-      return {
-        products: items.map(item => item.product),
-        fromCache: true
-      };
+      const productsToKeep = items.filter(item => !productIds.includes(item.product._id));
+      
+      const keys = await new Promise((resolve, reject) => {
+        const request = index.getAllKeys(range);
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+      });
+      
+      keys.forEach(key => {
+        store.delete(key);
+      });
+      
+      for (const item of productsToKeep) {
+        store.put(item);
+      }
+      
+      await tx.complete;
+      
+      // console.log(`✅ Eliminados ${productIds.length} productos del caché`);
+      return true;
     } catch (error) {
-      console.warn('Error getting cached products:', error);
-      return { products: [], fromCache: false };
+      console.error('Error removing products from cache:', error);
+      return false;
     }
   }
 

@@ -6,7 +6,7 @@
     "loadingAuth": "Laden…",
     "error": "Fehler beim Laden",
     "noMovements": "Keine Bewegungen",
-    "refresh": "↻",
+    "refresh": "Aktualisieren",
     "filters": {
       "allTypes": "Alle Typen",
       "startDate": "Startdatum",
@@ -20,20 +20,32 @@
       "type": "Typ",
       "quantity": "Menge",
       "stock": "Bestand",
-      "user": "User",
-      "reference": "Ref"
+      "user": "Benutzer",
+      "reference": "Referenz"
+    },
+    "excel": {
+      "date": "Datum",
+      "article": "Artikel",
+      "articleNumber": "Artikelnummer",
+      "type": "Typ",
+      "quantity": "Menge",
+      "previousStock": "Bestand Vorher",
+      "newStock": "Bestand Neu",
+      "user": "Benutzer",
+      "reference": "Referenz",
+      "notes": "Notizen"
     },
     "movementTypes": {
       "WAREHOUSE_IN": {
-        "label": "Eingang",
+        "label": "Wareneingang",
         "icon": "↓"
       },
       "WAREHOUSE_OUT": {
-        "label": "Ausgang",
+        "label": "Warenausgang",
         "icon": "↑"
       },
       "MANUAL_ADJUSTMENT": {
-        "label": "Anpassung",
+        "label": "Manuelle Anpassung",
         "icon": "✎"
       },
       "RETURN": {
@@ -50,7 +62,13 @@
       }
     },
     "pagination": {
-      "page": "Seite {current} von {total}"
+      "page": "Seite {current} von {total}",
+      "showing": "Zeige {count} von {total} Bewegungen",
+      "pageInfo": "Seite {current} von {total}"
+    },
+    "view": {
+      "table": "Tabellenansicht",
+      "excel": "Excel-Ansicht"
     }
   }
 }
