@@ -465,11 +465,11 @@ const currentUserId = user._id || user.id;
                         <table className={styles.excelTable}>
                           <thead>
                             <tr>
-                              <th className={styles.excelHeader}>Usuario</th>
+                              <th className={styles.excelHeader}>{t('settings.users.list.table.user')}</th>
                               <th className={styles.excelHeader}>Email</th>
-                              <th className={styles.excelHeader}>Rol</th>
-                              <th className={styles.excelHeader}>Estado</th>
-                              <th className={styles.excelHeader}>Acciones</th>
+                              <th className={styles.excelHeader}>{t('settings.users.list.table.role')}</th>
+                              <th className={styles.excelHeader}>{t('settings.users.list.table.status')}</th>
+                              <th className={styles.excelHeader}>{t('settings.users.list.table.actions')}</th>
                             </tr>
                           </thead>
                           <tbody>

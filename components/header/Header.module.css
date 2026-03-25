@@ -231,12 +231,19 @@
     display: none;
   }
 }
-
+ 
 @media (max-width: 480px) {
+  .header {
+ height: 4.3rem;
+  
+}
+.header.scrolled {
+  height: 3.6rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+}
   
   .logoImage {
-  width: 4rem;
-  
+  width: 3rem;
   margin-left: 0px;
 }
   .container {
@@ -278,12 +285,14 @@
 
 /* Ajuste para cuando el header tiene scroll y está oculto */
 .header.scrolled.hidden {
-  height: 5.5rem; /* Mantiene la altura reducida incluso cuando está oculto */
+  height: 4rem; /* Mantiene la altura reducida incluso cuando está oculto */
 }
 
 /* Transición suave para todos los cambios */
 .header {
+ 
   transition: all 0.3s ease-in-out, transform 0.3s ease-in-out;
+  
 }
 
 /* Mejora para el menú móvil cuando el header está oculto */

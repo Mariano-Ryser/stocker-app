@@ -1694,9 +1694,10 @@
 
 @media (max-width: 480px) {
   .container {
-    padding: 8px;
-    margin-top: 7rem;
-  }
+  max-width: 100%;
+  margin: 6rem 0;
+  padding: 0 0.2rem;
+}
   
   .leftPanel, .rightPanel {
     padding: 14px;

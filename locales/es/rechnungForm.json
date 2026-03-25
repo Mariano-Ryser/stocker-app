@@ -30,7 +30,7 @@
       "randomBadge": "🎯",
       "noClients": "No hay clientes disponibles",
       "moreClients": "... y {count} clientes más",
-      "clientCount": "{count} cliente{plural} disponible{plural}",
+      "clientCount": "{count} cliente disponible",
       "showingFirst": "(mostrando primeros {count})",
       "info": "Selecciona un cliente de la lista o usa \"Cliente Aleatorio\"",
       "clearTitle": "Limpiar selección (usar ClienteAleatorio)"

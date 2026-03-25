@@ -16,8 +16,7 @@
 }
 
 .headerLeft h1 {
-  margin: 0 0 8px 0;
-  font-size: 2rem;
+  font-size: 22px;
   color: #333;
   font-weight: 700;
 }
@@ -563,7 +562,15 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
-
+@media (max-width: 480px) {
+  .container {
+  max-width: 100%;
+  margin: 5rem 0;
+  padding: 0 0.2rem;
+}
+  
+ 
+}
 /* ===== HEADER ACTIONS Y TOGGLE DE VISTA ===== */
 .headerActions {
   display: flex;

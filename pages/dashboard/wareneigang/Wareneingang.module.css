@@ -1,9 +1,7 @@
 /* pages/dashboard/wareneingang/Wareneingang.module.css */
 
 .container {
-  margin: 5rem auto;
-  padding: 1rem;
-  max-width: 1400px;
+  margin: 5rem 0rem;
   min-height: 100vh;
 }
 
@@ -15,10 +13,8 @@
 }
 
 .title {
-  font-size: 1.5rem;
+  font-size: 22px;
   font-weight: 600;
-  color: #111827;
-  margin: 0 0 0.25rem 0;
 }
 
 .subtitle {

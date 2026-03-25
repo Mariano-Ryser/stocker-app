@@ -35,12 +35,15 @@ informes de inventario, dashboard de inventario, gestión digital de inventario,
 " />
         {/* Canonical URL */}
         <link rel="canonical" href={baseUrl} />
+        <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/img/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/img/logo80.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/img/logo80.png" />
         
         {/* Open Graph Tags */}
         <meta property="og:title" content="Stocker – Intelligent Inventory Management SaaS" />
         <meta property="og:description" content="Manage your inventory easily and quickly with Stocker. Real-time tracking, analytics, and optimization tools for your business." />
-        <meta property="og:image" content={`${baseUrl}/img/logo80.webp`} />
+        <meta property="og:image" content={`${baseUrl}/img/logo80.png`} />
         <meta property="og:image:width" content="1200" />
         <meta property="og:image:height" content="630" />
         <meta property="og:image:alt" content="Stocker - Inventory Management Dashboard" />
@@ -53,7 +56,7 @@ informes de inventario, dashboard de inventario, gestión digital de inventario,
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content="Stocker – Intelligent Inventory Management SaaS" />
         <meta name="twitter:description" content="Manage your inventory easily and quickly with Stocker. Real-time tracking, analytics, and optimization tools." />
-        <meta name="twitter:image" content={`${baseUrl}/img/logo80.webp`} />
+        <meta name="twitter:image" content={`${baseUrl}/img/logo80.png`} />
         
           <link rel="alternate" href="https://www.stockercloud.com/de" hreflang="de" />
           <link rel="alternate" href="https://www.stockercloud.com/es" hreflang="es" />

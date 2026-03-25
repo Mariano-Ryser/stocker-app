@@ -204,7 +204,7 @@ export default function DashboardHome() {
             </div>
 
             <div className={styles.actionsGrid}>
-              <button className={styles.actionItem} onClick={() => router.push("/dashboard/scanner")}>
+              <button className={`${styles.actionItem} ${styles.highlightAction}`} onClick={() => router.push("/dashboard/scanner")}>
                 <div className={styles.actionIconBox}>
                   <svg className={styles.svgIcon} viewBox="0 0 24 24" fill="none">
                     <path d="M3 7V5C3 3.89543 3.89543 3 5 3H7M17 3H19C20.1046 3 21 3.89543 21 5V7M21 17V19C21 20.1046 20.1046 21 19 21H17M7 21H5C3.89543 21 3 20.1046 3 19V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -264,7 +264,7 @@ export default function DashboardHome() {
                 </button>
               )}
 
-              <button className={styles.actionItem} onClick={() => router.push("/dashboard/verkaufteArtikel")}>
+              <button className={`${styles.actionItem} ${styles.highlightAction}`} onClick={() => router.push("/dashboard/verkaufteArtikel")}>
                 <div className={styles.actionIconBox}>
                   <svg className={styles.svgIcon} viewBox="0 0 24 24" fill="none">
                     <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -276,7 +276,7 @@ export default function DashboardHome() {
                 </div>
               </button>
 
-              <button className={styles.actionItem} onClick={() => router.push("/dashboard/code")}>
+              <button className={`${styles.actionItem} ${styles.highlightAction}`} onClick={() => router.push("/dashboard/code")}>
                 <div className={styles.actionIconBox}>
                   <svg className={styles.svgIcon} viewBox="0 0 24 24" fill="none">
                     <rect x="4" y="6" width="2" height="15" fill="currentColor" rx="0.5" />
@@ -293,7 +293,7 @@ export default function DashboardHome() {
                 </div>
               </button>
 
-              <button className={styles.actionItem} onClick={() => router.push("/dashboard/wareneigang")}>
+              <button className={`${styles.actionItem} ${styles.highlightAction}`} onClick={() => router.push("/dashboard/wareneigang")}>
                 <div className={styles.actionIconBox}>
                   <GoodsInIcon />
                 </div>
@@ -357,7 +357,7 @@ export default function DashboardHome() {
           </div>
 
           {/* Recent Activity / Tips */}
-          <div className={`${styles.card} ${styles.tipsCard}`}>
+          {/* <div className={`${styles.card} ${styles.tipsCard}`}>
             <h3>{t('index.tips.title')}</h3>
             <ul className={styles.tipsList}>
               <li>{t('index.tips.tip1')}</li>
@@ -375,10 +375,10 @@ export default function DashboardHome() {
                 </li>
               )}
             </ul>
-          </div>
+          </div> */}
 
           {/* Stats Grid */}
-          <section className={styles.statsGrid}>
+          {/* <section className={styles.statsGrid}>
             <article className={styles.statCard}>
               <div className={`${styles.iconWrapper} ${styles.blue}`}>
                 <IconBox className={styles.icon} />
@@ -420,7 +420,7 @@ export default function DashboardHome() {
               </div>
             </article>
 
-            <article className={`${styles.statCard} ${styles.revenueCard}`}>
+             <article className={`${styles.statCard} ${styles.revenueCard}`}>
               <div className={`${styles.iconWrapper} ${styles.green}`}>
                 <IconChart className={styles.icon} />
               </div>
@@ -433,8 +433,8 @@ export default function DashboardHome() {
                   <small className={styles.infoText}>{t('index.stats.revenueNote')}</small>
                 </span>
               </div>
-            </article>
-          </section>
+            </article> 
+          </section> */}
         </aside>
       </div>
     </div>

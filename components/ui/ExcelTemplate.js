@@ -9,93 +9,93 @@ export default function ExcelTemplateButton({ type = 'products' }) {
 
   const config = {
     products: {
-      data: [
-        {
-          'Article Number': 'ART-001',
-          'Article Name': 'Example Product 1',
-          'Storage Location': 'A-01',
-          'Description': 'Product description',
-          'Stock': 100,
-          'Price': 19.99,
-        },
-        {
-          'Article Number': 'ART-002',
-          'Article Name': 'Example Product 2',
-          'Storage Location': 'B-02',
-          'Description': 'Another description',
-          'Stock': 50,
-          'Price': 29.99,
-        }
-      ],
-      instructions: [
-        ['INSTRUCTIONS FOR PRODUCT IMPORT'],
-        [''],
-        ['1. Fill this template with your product data'],
-        ['2. Required fields: Article Name'],
-        ['3. Optional fields: All others'],
-        ['4. Numbers for Stock and Price can be entered directly'],
-        ['5. Save the file as .xlsx or .xls'],
-        ['6. Use the import function in the app'],
-        [''],
-        ['IMPORTANT:'],
-        ['- Do not delete the header row'],
-        ['- Use the same column format'],
-        ['- Maximum file size: 10MB'],
-        ['- Maximum rows: 10,000']
-      ],
-      filename: 'Product_Import_Template.xlsx',
-      title: 'Products'
+  data: [
+    {
+      'Artikelnummer': 'ART-001',
+      'Artikelname': 'Beispielprodukt 1',
+      'Lagerplatz': 'A-01',
+      'Beschreibung': 'Produktbeschreibung',
+      'Bestand': 100,
+      'Preis': 19.99,
     },
-    sales: {
-      data: [
-        {
-          'Delivery Note No.': 'DN-2023-001',
-          'Customer': 'Example GmbH',
-          'Customer No.': 'C-001',
-          'Date': '01.01.2023',
-          'Article Name': 'Product A',
-          'Quantity': 5,
-          'Unit Price': 19.99,
-          'Line Total': 99.95,
-          'Subtotal': 99.95,
-          'Tax': 7.20,
-          'Total': 107.15,
-          'Status': 'paid'
-        },
-        {
-          'Delivery Note No.': 'DN-2023-001',
-          'Customer': 'Example GmbH',
-          'Customer No.': 'C-001',
-          'Date': '01.01.2023',
-          'Article Name': 'Product B',
-          'Quantity': 3,
-          'Unit Price': 29.50,
-          'Line Total': 88.50,
-          'Subtotal': 188.45,
-          'Tax': 13.57,
-          'Total': 202.02,
-          'Status': 'paid'
-        }
-      ],
-      instructions: [
-        ['INSTRUCTIONS FOR INVOICE EXPORT'],
-        [''],
-        ['1. This is an export template for invoices'],
-        ['2. Important: Same delivery note = same invoice'],
-        ['3. One invoice can contain multiple items'],
-        ['4. Fields:'],
-        ['   - Delivery Note No.: Unique number per invoice'],
-        ['   - Customer: Customer name'],
-        ['   - Article Name: Product name (per row)'],
-        ['   - Quantity, Unit Price: Numbers'],
-        ['   - Status: "pending", "paid" or "cancelled"'],
-        ['5. Totals (Subtotal, Tax, Total) are calculated'],
-        [''],
-        ['TIP: Export existing invoices first to see the format']
-      ],
-      filename: 'Invoice_Export_Template.xlsx',
-      title: 'Invoices'
+    {
+      'Artikelnummer': 'ART-002',
+      'Artikelname': 'Beispielprodukt 2',
+      'Lagerplatz': 'B-02',
+      'Beschreibung': 'Weitere Beschreibung',
+      'Bestand': 50,
+      'Preis': 29.99,
     }
+  ],
+  instructions: [
+    ['ANLEITUNG FÜR DEN PRODUKTIMPORT'],
+    [''],
+    ['1. Füllen Sie diese Vorlage mit Ihren Produktdaten aus'],
+    ['2. Pflichtfeld: Artikelname'],
+    ['3. Optionale Felder: Alle anderen'],
+    ['4. Zahlen für Bestand und Preis können direkt eingegeben werden'],
+    ['5. Speichern Sie die Datei als .xlsx oder .xls'],
+    ['6. Verwenden Sie die Importfunktion in der App'],
+    [''],
+    ['WICHTIG:'],
+    ['- Löschen Sie nicht die Kopfzeile'],
+    ['- Verwenden Sie das gleiche Spaltenformat'],
+    ['- Maximale Dateigröße: 10MB'],
+    ['- Maximale Anzahl Zeilen: 10.000']
+  ],
+  filename: 'Produkt_Import_Vorlage.xlsx',
+  title: 'Produkte'
+},
+   sales: {
+  data: [
+    {
+      'Lieferscheinnummer': 'LS-2023-001',
+      'Kunde': 'Beispiel GmbH',
+      'Kundennummer': 'K-001',
+      'Datum': '01.01.2023',
+      'Artikelname': 'Produkt A',
+      'Menge': 5,
+      'Einzelpreis': 19.99,
+      'Positionsbetrag': 99.95,
+      'Zwischensumme': 99.95,
+      'Steuer': 7.20,
+      'Gesamtbetrag': 107.15,
+      'Status': 'bezahlt'
+    },
+    {
+      'Lieferscheinnummer': 'LS-2023-001',
+      'Kunde': 'Beispiel GmbH',
+      'Kundennummer': 'K-001',
+      'Datum': '01.01.2023',
+      'Artikelname': 'Produkt B',
+      'Menge': 3,
+      'Einzelpreis': 29.50,
+      'Positionsbetrag': 88.50,
+      'Zwischensumme': 188.45,
+      'Steuer': 13.57,
+      'Gesamtbetrag': 202.02,
+      'Status': 'bezahlt'
+    }
+  ],
+  instructions: [
+    ['ANLEITUNG FÜR DEN RECHNUNGSEXPORT'],
+    [''],
+    ['1. Dies ist eine Exportvorlage für Rechnungen'],
+    ['2. Wichtig: Gleiche Lieferscheinnummer = gleiche Rechnung'],
+    ['3. Eine Rechnung kann mehrere Positionen enthalten'],
+    ['4. Felder:'],
+    ['   - Lieferscheinnummer: Eindeutige Nummer pro Rechnung'],
+    ['   - Kunde: Name des Kunden'],
+    ['   - Artikelname: Produktname (pro Zeile)'],
+    ['   - Menge, Einzelpreis: Zahlenwerte'],
+    ['   - Status: "offen", "bezahlt" oder "storniert"'],
+    ['5. Summen (Zwischensumme, Steuer, Gesamtbetrag) werden berechnet'],
+    [''],
+    ['TIPP: Exportieren Sie zuerst bestehende Rechnungen, um das Format zu sehen']
+  ],
+  filename: 'Rechnung_Export_Vorlage.xlsx',
+  title: 'Rechnungen'
+}
   };
 
   const currentConfig = config[type] || config.products;

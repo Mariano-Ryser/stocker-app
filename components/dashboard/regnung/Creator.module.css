@@ -18,7 +18,9 @@
   align-items: center;
   position: relative;
 }
-
+.clientCount{
+  font-size: 12px;
+}
 .taxInput {
   flex: 1;
   padding-right: 30px !important;
@@ -55,7 +57,6 @@
   background: #f8d7da;
   color: #721c24;
   padding: 8px;
-  border-radius: 4px;
   margin-top: 4px;
   font-size: 12px;
 }
@@ -66,7 +67,6 @@
   background: #d1ecf1;
   color: #0c5460;
   padding: 8px;
-  border-radius: 4px;
   margin-top: 4px;
   font-size: 12px;
 }
@@ -90,7 +90,6 @@
   color: #666;
   background-color: #f0f8ff;
   padding: 6px 8px;
-  border-radius: 4px;
   border-left: 3px solid #4a90e2;
 }
 
@@ -148,7 +147,6 @@
   max-width: 800px;
   max-height: 95vh;
   overflow: hidden;
-  border-radius: 12px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
@@ -177,7 +175,6 @@
   font-size: 20px;
   cursor: pointer;
   padding: 8px;
-  border-radius: 6px;
   color: #666;
   transition: all 0.2s;
   width: 40px;
@@ -232,7 +229,6 @@
 .formGroup select {
   padding: 12px;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
   font-size: 1rem;
   width: 100%;
   background: white;
@@ -261,7 +257,6 @@
   right: 0;
   background: white;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
   max-height: 200px;
   overflow-y: auto;
   z-index: 1001;
@@ -318,7 +313,6 @@
 .stockBadge {
   display: inline-block;
   padding: 3px 8px;
-  border-radius: 12px;
   font-size: 12px;
   font-weight: 500;
 }
@@ -344,7 +338,6 @@
   font-size: 12px;
   background-color: #f8d7da;
   padding: 5px 10px;
-  border-radius: 4px;
 }
 
 .productDetails {
@@ -392,7 +385,6 @@
 .itemCard {
   background: #f8f9fa;
   border: 1px solid #e5e7eb;
-  border-radius: 12px;
   padding: 16px;
   transition: all 0.2s;
 }
@@ -425,7 +417,6 @@
 .removeBtn {
   background: #ef4444;
   border: none;
-  border-radius: 6px;
   width: 32px;
   height: 32px;
   display: flex;
@@ -469,7 +460,6 @@
   padding: 12px;
   background: white;
   border: 1px solid #d1d5db;
-  border-radius: 8px;
   font-weight: 600;
   color: #059669;
   text-align: center;
@@ -479,7 +469,6 @@
 .addBtn {
   background: #10b981;
   border: none;
-  border-radius: 8px;
   padding: 14px 20px;
   color: white;
   cursor: pointer;
@@ -505,7 +494,6 @@
 .totalsSection {
   background: #f8f9fa;
   padding: 20px;
-  border-radius: 12px;
   border: 1px solid #e5e7eb;
 }
 
@@ -540,7 +528,6 @@
 .btn {
   padding: 14px 24px;
   border: none;
-  border-radius: 8px;
   font-weight: 600;
   font-size: 1rem;
   cursor: pointer;
@@ -617,7 +604,6 @@
     max-height: 92vh;
     width: 100%;
     max-width: 100%;
-    border-radius: 20px 20px 0 0;
     animation: slideUp 0.3s ease-out;
   }
 
@@ -655,19 +641,7 @@
   }
 
   /* Autocomplete en móvil - ocupa toda la pantalla */
-  .autocompleteDropdown {
-    position: fixed;
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    max-height: 60vh;
-    border-radius: 20px 20px 0 0;
-    margin-top: 0;
-    z-index: 2000;
-    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
-    animation: slideUpDropdown 0.25s ease-out;
-  }
+
 
   @keyframes slideUpDropdown {
     from {
@@ -701,7 +675,6 @@
     bottom: 0;
     left: 0;
     right: 0;
-    border-radius: 20px 20px 0 0;
     padding: 20px;
     text-align: center;
     font-size: 14px;
@@ -718,7 +691,6 @@
   /* Items de factura en móvil */
   .itemCard {
     padding: 14px;
-    border-radius: 16px;
   }
 
   .itemHeader {
@@ -733,7 +705,6 @@
   .removeBtn {
     width: 40px;
     height: 40px;
-    border-radius: 10px;
   }
 
   .itemDetails {
@@ -749,12 +720,10 @@
   .addBtn {
     padding: 16px;
     font-size: 1rem;
-    border-radius: 12px;
   }
 
   .totalsSection {
     padding: 16px;
-    border-radius: 16px;
   }
 
   .totalRow {
@@ -780,7 +749,6 @@
     width: 100%;
     min-width: auto;
     padding: 16px;
-    border-radius: 12px;
     font-size: 1rem;
   }
 
@@ -835,7 +803,6 @@
     font-size: 0.85rem;
     padding: 4px 8px;
     background: #e9ecef;
-    border-radius: 16px;
   }
 
   .removeBtn {

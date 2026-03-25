@@ -112,7 +112,7 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
     cbu: company?.bankDetails?.cbu || '',
     alias: company?.bankDetails?.alias || '',
   });
-
+ 
   // Estados principales
   const [companyForm, setCompanyForm] = useState(getInitialFormState());
   const [originalForm, setOriginalForm] = useState(getInitialFormState());
@@ -1042,11 +1042,11 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                       ))}
                     </select>
                   </div>
-                  {COUNTRY_TO_CURRENCY[companyForm.invoiceCountry] && (
+                  {/* {COUNTRY_TO_CURRENCY[companyForm.invoiceCountry] && (
                     <p className={styles.autoHint}>
                       {countryConfig.name}: {COUNTRY_TO_CURRENCY[companyForm.invoiceCountry]}
                     </p>
-                  )}
+                  )} */}
                 </div>
               </div>
               
@@ -1069,11 +1069,11 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
                     ))}
                   </select>
                 </div>
-                {COUNTRY_TO_TIMEZONE[companyForm.invoiceCountry] && (
+                {/* {COUNTRY_TO_TIMEZONE[companyForm.invoiceCountry] && (
                   <p className={styles.autoHint}>
                    {countryConfig.name}: {COUNTRY_TO_TIMEZONE[companyForm.invoiceCountry].split('/').pop()}
                   </p>
-                )}
+                )} */}
               </div>
 
               {/* Dirección dinámica según país */}

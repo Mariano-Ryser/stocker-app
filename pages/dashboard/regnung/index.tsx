@@ -135,7 +135,7 @@ export default function SalesPage() {
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <h1>{t('sales.title')}</h1>
-          <p>{t('sales.subtitle')}</p>
+          {/* <p>{t('sales.subtitle')}</p> */}
           
           {loading && !loadingMore && (
             <div className={styles.loadingMessage}>

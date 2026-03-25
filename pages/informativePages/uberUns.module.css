@@ -9,7 +9,9 @@
   justify-content: center;
   overflow: hidden;
   background-color: #f0f0f0; /* Background color while image loads */
+  margin-top:6rem;
 }
+
 .heroImageContainer {
   position: absolute;
   inset: 0;
@@ -73,8 +75,8 @@
 /* ===== SECTIONS ===== */
 .section {
   max-width: 1100px;
-  margin: 0 auto;
-  padding: 60px 20px;
+  margin: 0rem auto;
+  padding: 0px 0px;
 }
 
 .sectionAlt {
@@ -303,6 +305,11 @@
 
 /* Ajuste adicional para pantallas muy pequeñas */
 @media (max-width: 480px) {
+  /* ===== HERO ===== */
+.hero {
+ margin-top:4rem;
+ margin-bottom: -25px;
+}
   .heroContent h1 {
     font-size: 1.8rem;
   }

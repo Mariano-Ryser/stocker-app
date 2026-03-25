@@ -8,8 +8,6 @@ interface SplashScreenProps {
   duration?: number; // en milisegundos
 }
 
-
-
 export default function SplashScreen({ onComplete, duration = 1500 }: SplashScreenProps) {
     const { t } = useLanguage();
   const [fadeOut, setFadeOut] = useState(false);
@@ -99,7 +97,7 @@ export default function SplashScreen({ onComplete, duration = 1500 }: SplashScre
       </div>
 
         {/* Nombre de la empresa/App */}
-        <h1 className={styles.appName}>Stoker</h1>
+        <h1 className={styles.appName}>Stocker</h1>
         
         {/* Texto de carga */}
         <div className={styles.loadingContainer}>

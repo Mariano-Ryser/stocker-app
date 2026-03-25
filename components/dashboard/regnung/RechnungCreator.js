@@ -576,21 +576,24 @@ export default function RechnungCreator({ onDone, salesApi }) {
                     )}
                   </div>
                 )}
+
               </div>
-              {!clientId && clientSearch === "" && (
+              {/* {!clientId && clientSearch === "" && (
                 <div className={styles.infoNote}>
                   <span className={styles.infoIcon}>💡</span>
-                  {t('rechnungForm.client.info')}
+                  {t('rechnungForm.client.info')} 
                 </div>
-              )}
-              {showClientAutocomplete && !clientSearch && (
+              )} */}
+
+              {/* {showClientAutocomplete && !clientSearch && (
                 <div className={styles.clientCount}>
                   {t('rechnungForm.client.clientCount')
                     .replace('{count}', clients.length)
                     .replace('{plural}', clients.length !== 1 ? 's' : '')}
                   {clients.length > 20 && ` ${t('rechnungForm.client.showingFirst').replace('{count}', 20)}`}
                 </div>
-              )}
+              )} */}
+
             </div>
 
             <div className={styles.formGroup}>

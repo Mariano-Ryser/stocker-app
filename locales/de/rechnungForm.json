@@ -28,12 +28,12 @@
       "search": "Kunden suchen...",
       "random": "Random Kunde (Standard)",
       "randomBadge": "🎯",
-      "noClients": "No hay clientes disponibles",
-      "moreClients": "... y {count} clientes más",
-      "clientCount": "{count} cliente{plural} disponible{plural}",
-      "showingFirst": "(mostrando primeros {count})",
-      "info": "Selecciona un cliente de la lista o usa \"Random Kunde\"",
-      "clearTitle": "Limpiar selección (usar ClienteRandom)"
+      "noClients": "Keine Kunden verfügbar",
+      "moreClients": "... und {count} weitere Kunden",
+      "clientCount": "{count} Kunde verfügbar",
+      "showingFirst": "(zeige die ersten {count})",
+      "info": "Wählen Sie einen Kunden aus der Liste oder verwenden Sie Zufälliger Kunde“",
+      "clearTitle": "Auswahl löschen (Zufälligen Kunden verwenden)"
     },
     "status": {
       "label": "Status",
