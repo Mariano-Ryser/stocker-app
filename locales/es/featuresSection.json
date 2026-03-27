@@ -1,13 +1,18 @@
 {
-  "featuresSection": {
-    "heading": "Funciones principales",
-    "title1": "Inteligencia de negocio",
-    "f1": "Obtén una visión completa de tu empresa mediante análisis estructurados y visualizaciones de datos claras y comprensibles.",
-    "title2": "Automatización",
-    "f2": "Reduce el trabajo manual mediante automatización inteligente y mejora la eficiencia en todos tus procesos.",
-    "title3": "Analítica e informes",
-    "f3": "Toma decisiones fundamentadas con informes precisos, análisis en tiempo real y métricas claramente definidas.",
-    "title4": "Seguridad de datos",
-    "f4": "Protege tus datos empresariales y corporativos sensibles con conceptos modernos de seguridad y control de accesos."
-  }
+  "featuresSection":
+   {
+    "heading": "Funciones principales"
+    ,
+      "title1": "Control total del stock",
+      "f1": "Ve todos tus productos en tiempo real y evita quedarte sin stock o comprar de más.",
+
+      "title2": "Ahorra tiempo cada día",
+      "f2": "Automatiza tareas repetitivas y reduce el trabajo manual en minutos.",
+
+      "title3": "Sabe qué vender más",
+      "f3": "Analiza tus ventas fácilmente y toma decisiones sin complicaciones.",
+
+      "title4": "Datos seguros",
+      "f4": "Tu información siempre protegida y accesible solo por ti."
+    }
 }

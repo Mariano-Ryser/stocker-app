@@ -11,7 +11,7 @@ const TicketPrinter = ({ sale, company, onPrintComplete }) => {
   useEffect(() => {
     // console.log('TicketRef montado:', ticketRef.current);
   }, []);
-
+ 
   // Formatear fecha
   const formatDate = (date) => {
     return new Date(date).toLocaleString('de-CH', {

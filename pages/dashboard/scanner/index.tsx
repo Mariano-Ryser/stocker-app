@@ -149,7 +149,7 @@ export default function ScannerSalesPage() {
   }, []);
 
   // 🔥 NUEVA FUNCIÓN: Manejar tecla Enter en el input de cliente
-  const handleClientKeyPress = (e) => {
+  const handleClientKeyPress = (e:any) => {
     if (e.key === 'Enter') {
       e.preventDefault();
       
@@ -168,7 +168,7 @@ export default function ScannerSalesPage() {
 
   // 🔥 NUEVA FUNCIÓN: Manejar tecla global para finalizar venta (Ctrl+Enter)
   useEffect(() => {
-    const handleCheckoutShortcut = (e) => {
+    const handleCheckoutShortcut = (e:any) => {
       if (e.ctrlKey && e.key === 'Enter' && scannedItems.length > 0 && !cashPayment.show) {
         e.preventDefault();
         handleFinishSale();
@@ -735,7 +735,7 @@ export default function ScannerSalesPage() {
     setShouldFocusScanner(true);
   };
 
-  const handleCashInputKeyPress = (e) => {
+  const handleCashInputKeyPress = (e:any) => {
     if (e.key === 'Enter') {
       handleFinishSaleWithPayment();
     }
@@ -1028,11 +1028,11 @@ export default function ScannerSalesPage() {
                 )}
               </div>
               
-              {showClientAutocomplete && filteredClients().length > 0 && (
+              {/* {showClientAutocomplete && filteredClients().length > 0 && (
                 <div className={styles.autocompleteHint}>
                   ⏎ Enter para seleccionar el primero
                 </div>
-              )}
+              )} */}
               
               {showClientAutocomplete && (
                 <div className={styles.autocompleteDropdown}>

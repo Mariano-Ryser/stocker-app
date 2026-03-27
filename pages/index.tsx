@@ -18,7 +18,7 @@ export default function Home() {
     [])
   const { t } = useLanguage();
   return ( 
-    <>
+    <>  
       <HomeHero />
       <FeaturesSection /> 
      {/* <TestimonialsSection />  */}

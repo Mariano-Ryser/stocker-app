@@ -355,7 +355,7 @@ export default function DashboardHome() {
               <LogoutButton />
             </div>
           </div>
-
+ 
           {/* Recent Activity / Tips */}
           {/* <div className={`${styles.card} ${styles.tipsCard}`}>
             <h3>{t('index.tips.title')}</h3>

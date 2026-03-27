@@ -43,10 +43,7 @@ export default function DashboardLayout({ children }) {
       }
     };
 
-    // Verificar al montar
     checkMobile();
-
-    // Escuchar cambios de tamaño
     window.addEventListener('resize', checkMobile);
     
     return () => window.removeEventListener('resize', checkMobile);
@@ -60,7 +57,6 @@ export default function DashboardLayout({ children }) {
   }, [loading, user, router]);
 
   const toggleMinimize = () => {
-    // Solo permitir minimizar en escritorio
     if (!isMobile) {
       setIsMinimized(!isMinimized);
     }
@@ -95,8 +91,8 @@ export default function DashboardLayout({ children }) {
           </button>
         )}
 
-        <nav className="navbar">
-          <ul>
+        <nav className={styles.nav}>
+          <ul className={styles.navList}>
             <li>
               <Link
                 href="/dashboard"
@@ -131,6 +127,7 @@ export default function DashboardLayout({ children }) {
                 <span className={styles.linkText}>{t("menu.wareneigang")}</span>
               </Link>
             </li>
+            
             <li>
               <Link
                 href="/dashboard/stockMovements"
@@ -154,6 +151,7 @@ export default function DashboardLayout({ children }) {
                 <span className={styles.linkText}>{t("menu.clients")}</span>
               </Link>
             </li>
+            
             <li>
               <Link
                 href="/dashboard/regnung"
@@ -165,6 +163,7 @@ export default function DashboardLayout({ children }) {
                 <span className={styles.linkText}>{t("menu.invoices")}</span>
               </Link>
             </li>
+            
             <li>
               <Link
                 href="/dashboard/scanner"
@@ -176,6 +175,7 @@ export default function DashboardLayout({ children }) {
                 <span className={styles.linkText}>{t("menu.scanner")}</span>
               </Link>
             </li>
+            
             <li>
               <Link
                 href="/dashboard/verkaufteArtikel"
@@ -215,8 +215,9 @@ export default function DashboardLayout({ children }) {
                 </Link>
               </li>
             )}
-                  {/* Solo para plan ceo o rol ceo REGISTERR */}
-              {(user.role === "ceo") && (
+            
+            {/* Solo para plan ceo o rol ceo REGISTER */}
+            {(user.role === "ceo") && (
               <li>
                 <Link
                   href="/dashboard/register"
@@ -228,18 +229,21 @@ export default function DashboardLayout({ children }) {
                 </Link>
               </li>
             )}
+
+            {/* ✅ SEPARADOR ANTES DEL LOGOUT */}
+            <li className={styles.separator}></li>
+            
+            {/* ✅ LOGOUT COMO ITEM DE LA LISTA */}
+            <li className={styles.logoutItem}>
+              <LogoutButton 
+                icon={<LogoutIcon />}
+                showText={!isMinimized}
+                text={t("menu.logout")}
+                className={styles.logoutButtonLink}
+              />
+            </li>
           </ul>  
         </nav>
-     
-        <div className={styles.logoutContainer}>
-          <div className={`${styles.logoutButton} ${isMinimized ? styles.minimizedLogout : ""}`}>
-            <LogoutButton 
-              icon={<LogoutIcon />}
-              showText={!isMinimized}
-              text={t("menu.logout")}
-            />
-          </div>
-        </div>
       </aside>
 
       {/* CONTENIDO */}
@@ -260,12 +264,8 @@ export default function DashboardLayout({ children }) {
         <div className={styles.overlay} onClick={() => setIsOpen(false)} />
       )}
 
-      {/* ALERTA DE STOCK BAJO - Fuera del sidebar para que flote correctamente */}
-      {user &&
-      <>
- <LowStockAlert />
-      </>
-      }
+      {/* ALERTA DE STOCK BAJO */}
+      {user && <LowStockAlert />}
     </div>
   );
 }

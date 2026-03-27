@@ -466,19 +466,19 @@ export const useProduct = () => {
     const handleProductUpdated = async (event) => {
       // console.log('✏️ Evento productUpdated recibido:', event.detail);
       await updateProductInCache(true);
-      setRefreshTrigger(prev => prev + 1);
+      // setRefreshTrigger(prev => prev + 1);
     };
     
     const handleProductCreated = async (event) => {
       // console.log('✨ Evento productCreated recibido:', event.detail);
       await updateProductInCache(true);
-      setRefreshTrigger(prev => prev + 1);
+      // setRefreshTrigger(prev => prev + 1);
     };
     
     const handleProductDeleted = async (event) => {
       // console.log('🗑️ Evento productDeleted recibido:', event.detail);
       await updateProductInCache(true);
-      setRefreshTrigger(prev => prev + 1);
+      // setRefreshTrigger(prev => prev + 1);
     };
     
     window.addEventListener('clearProductsFromCache', handleClearProductsFromCache);
@@ -663,90 +663,91 @@ export const useProduct = () => {
   }, [companyId]);
 
   // ✅ Crear producto
-  async function createProduct(productData) {
-    if (!isAuthenticated || !companyId) {
-      setError('Debe iniciar sesión para crear productos');
-      return { success: false, error: 'No autenticado' };
-    }
-    
-    if (productLimits.remaining <= 0) {
-      setError(`❌ Límite de artículos alcanzado (${productLimits.max})`);
-      return { 
-        success: false, 
-        error: 'Límite alcanzado',
-        limitError: true,
-        limits: productLimits
-      };
-    }
-    
-    setLoading(true);
-    setError(null);
-    
-    try {
-      const productToCreate = {
-        artikelName: productData.artikelName.trim(),
-        lagerPlatz: productData.lagerPlatz || "",
-        artikelNumber: productData.artikelNumber || "",
-        description: productData.description || "",
-        stock: productData.stock === '' ? 0 : Number(productData.stock || 0),
-        price: productData.price === '' ? 0 : Number(productData.price || 0),
-        lowStockThreshold: productData.lowStockThreshold !== undefined ? productData.lowStockThreshold : null
-      };
-      
-      if (productData.imagen && productData.imagen instanceof File) {
-        productToCreate.imagen = productData.imagen;
-      }
-      
-      const created = await createProductAPI(productToCreate);
-      
-      setCurrentPage(1);
-      setRefreshTrigger(prev => prev + 1);
-      
-      const storedProducts = localStorage.getItem('currentProducts');
-      const currentProducts = storedProducts ? JSON.parse(storedProducts) : [];
-      currentProducts.push(created.product || created);
-      localStorage.setItem('currentProducts', JSON.stringify(currentProducts));
-      
-      await updateProductInCache(true);
-      await fetchProductLimits(true);
-      
-      // ✅ DISPARAR EVENTO DE PRODUCTO CREADO
-      window.dispatchEvent(new CustomEvent('productCreated', { 
-        detail: { 
-          product: created?.product || created 
-        } 
-      }));
-      
-      return { 
-        success: true, 
-        product: created?.product || created,
-        limits: created.limits
-      };
-      
-    } catch (err) {
-      console.error('Error creating product:', err);
-      
-      if (err.type === 'LIMIT_ERROR') {
-        setError(err.message);
-        setProductLimits(err.limits);
-        return { 
-          success: false, 
-          error: err.message,
-          limitError: true,
-          limits: err.limits
-        };
-      }
-      
-      const errorMessage = err?.message || 'Unbekannter Fehler';
-      setError(errorMessage);
-      return { 
-        success: false, 
-        error: errorMessage 
-      };
-    } finally {
-      setLoading(false);
-    }
+async function createProduct(productData) {
+  if (!isAuthenticated || !companyId) {
+    setError('Debe iniciar sesión para crear productos');
+    return { success: false, error: 'No autenticado' };
   }
+  
+  if (productLimits.remaining <= 0) {
+    setError(`❌ Límite de artículos alcanzado (${productLimits.max})`);
+    return { 
+      success: false, 
+      error: 'Límite alcanzado',
+      limitError: true,
+      limits: productLimits
+    };
+  }
+  
+  setLoading(true);
+  setError(null);
+  
+  try {
+    const productToCreate = {
+      artikelName: productData.artikelName.trim(),
+      lagerPlatz: productData.lagerPlatz || "",
+      artikelNumber: productData.artikelNumber || "",
+      description: productData.description || "",
+      stock: productData.stock === '' ? 0 : Number(productData.stock || 0),
+      price: productData.price === '' ? 0 : Number(productData.price || 0),
+      lowStockThreshold: productData.lowStockThreshold !== undefined ? productData.lowStockThreshold : null
+    };
+    
+    if (productData.imagen && productData.imagen instanceof File) {
+      productToCreate.imagen = productData.imagen;
+    }
+    
+    const created = await createProductAPI(productToCreate);
+    
+    // ✅ ELIMINAR ESTE setRefreshTrigger
+    // setRefreshTrigger(prev => prev + 1); // ❌ ELIMINAR
+    
+    const storedProducts = localStorage.getItem('currentProducts');
+    const currentProducts = storedProducts ? JSON.parse(storedProducts) : [];
+    currentProducts.push(created.product || created);
+    localStorage.setItem('currentProducts', JSON.stringify(currentProducts));
+    
+    // ✅ Actualizar caché
+    await updateProductInCache(true);
+    await fetchProductLimits(true);
+    
+    // ✅ DISPARAR EVENTO DE PRODUCTO CREADO (este hará el refresh)
+    window.dispatchEvent(new CustomEvent('productCreated', { 
+      detail: { 
+        product: created?.product || created 
+      } 
+    }));
+    
+    return { 
+      success: true, 
+      product: created?.product || created,
+      limits: created.limits
+    };
+    
+  } catch (err) {
+    console.error('Error creating product:', err);
+    
+    if (err.type === 'LIMIT_ERROR') {
+      setError(err.message);
+      setProductLimits(err.limits);
+      return { 
+        success: false, 
+        error: err.message,
+        limitError: true,
+        limits: err.limits
+      };
+    }
+    
+    const errorMessage = err?.message || 'Unbekannter Fehler';
+    setError(errorMessage);
+    return { 
+      success: false, 
+      error: errorMessage 
+    };
+  } finally {
+    setLoading(false);
+  }
+}
 
   // ✅ Actualizar producto
   async function updateProduct(productId, updatedProduct) {

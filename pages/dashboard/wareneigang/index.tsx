@@ -8,7 +8,7 @@ import styles from './Wareneingang.module.css';
 
 export default function Wareneingang() {
   const { t } = useLanguage();
-  const { isAuthenticated, loading: authLoading } = useAuth();
+  const { isAuthenticated, loading: authLoading, company } = useAuth();
   const {
     products,
     loading,
@@ -30,6 +30,7 @@ export default function Wareneingang() {
   const [expirationDate, setExpirationDate] = useState('');
   const [batchNumber, setBatchNumber] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
+  const currencySymbol = company?.currency || 'USD';
 
   // Manejar búsqueda
   const handleSearch = (e:any) => {
@@ -40,7 +41,7 @@ export default function Wareneingang() {
   };
 
   // Seleccionar producto
-  const handleSelectProduct = (product) => {
+  const handleSelectProduct = (product:any) => {
     setSelectedProduct(product);
     setQuantity('');
     setNotes('');
@@ -52,7 +53,7 @@ export default function Wareneingang() {
   };
 
   // Procesar ingreso de stock
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
     
     if (!selectedProduct) return;
@@ -87,7 +88,7 @@ export default function Wareneingang() {
   const formatPrice = (price:any) => {
     return new Intl.NumberFormat('de-CH', {
       style: 'currency',
-      currency: 'CHF'
+      currency: currencySymbol
     }).format(price || 0);
   };
 

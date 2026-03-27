@@ -23,7 +23,7 @@ export default function Footer() {
         <div className={styles.brand}>
           <div className={styles.logo}>
             <img
-              src="/img/logo80.webp"
+              src="/img/logo80.png"
               alt="Alpina logo"
               className={styles.logoImg}
             />

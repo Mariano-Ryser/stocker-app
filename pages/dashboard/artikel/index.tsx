@@ -314,8 +314,7 @@ export default function ListProduct() {
 
   const handleCreateSuccess = useCallback(() => {
     setShowModal(false);
-    refreshProducts();
-  }, [refreshProducts]);
+  }, []);
 
   const handleProductClick = useCallback((product) => {
     if (isAuthenticated) {
@@ -343,14 +342,13 @@ export default function ListProduct() {
     return result as ProductResult;
   }, [deleteProduct]);
 
-  const handleCreateProduct = useCallback(async (productData): Promise<ProductResult> => {
+  const handleCreateProduct = useCallback(async (productData:any): Promise<ProductResult> => {
     const result = await createProduct(productData);
     if (result?.success) {
       setShowModal(false);
-      refreshProducts();
     }
     return result as ProductResult;
-  }, [createProduct, refreshProducts]);
+  }, [createProduct]);
 
   // Textos dinámicos memoizados
   const activeFilterText = useMemo(() => {

@@ -1,10 +1,9 @@
-
 {
-  "CTASection":{
-  "title": "Start today with Stocker SaaS",
-  "p": "Experience the future of data-driven business decisions with Stocker – your digital tool for efficient inventory management and full control over your stock.",
-  "login": "Login",
-  "testen": "Try for free",
-  "keywords": ["Stocker SaaS", "stock control", "inventory management", "inventory software", "warehouse management"]
-}
+  "CTASection": {
+    "title": "Take control of your inventory today",
+    "p": "Get your entire inventory organized and error-free in less than 10 minutes.",
+    "login": "Sign in",
+    "testen": "Start free trial",
+    "keywords": ["Stocker SaaS", "stock control", "inventory management", "inventory software", "warehouse management"]
+  }
 }

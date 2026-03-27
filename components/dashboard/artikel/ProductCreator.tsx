@@ -1,3 +1,4 @@
+// ProductCreator.tsx - VERSIÓN CORREGIDA
 import { useState, useEffect } from "react";
 import { useAuth } from '../../auth/AuthProvider';
 import { useLanguage } from '../../../contexts/LanguageContext';
@@ -33,9 +34,16 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [localError, setLocalError] = useState<string | null>(null);
+  const [limitsLoading, setLimitsLoading] = useState(true); // ✅ NUEVO: estado de carga de límites
   
   useEffect(() => {
-    fetchProductLimits();
+    const loadLimits = async () => {
+      setLimitsLoading(true);
+      await fetchProductLimits();
+      setLimitsLoading(false);
+    };
+    
+    loadLimits();
   }, [fetchProductLimits, products?.length]);
   
   const currencySymbol = company?.currency || 'USD';
@@ -124,7 +132,8 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
       return;
     }
 
-    if (productLimits.remaining <= 0) {
+    // ✅ Esperar a que los límites estén cargados antes de validar
+    if (!limitsLoading && productLimits.remaining <= 0) {
       setLocalError(
         `❌ Límite de artículos alcanzado (${productLimits.current}/${productLimits.max}). ` +
         `Elimina algunos productos o actualiza tu plan para seguir creando.`
@@ -153,7 +162,6 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
         if (result.success === true) {
           console.log('✅ Producto creado exitosamente:', result.product);
           
-          // ✅ DISPARAR EVENTO DE PRODUCTO CREADO
           window.dispatchEvent(new CustomEvent('productCreated', { 
             detail: { 
               product: result.product 
@@ -216,9 +224,35 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
 
   const displayError = localError || error;
 
+  // ✅ CALCULAR SI EL BOTÓN DEBE ESTAR DESHABILITADO
+  // Si los límites están cargando, no deshabilitar por límites (aún no sabemos)
+  const isLimitReached = !limitsLoading && productLimits.remaining <= 0;
+  
   const isSubmitDisabled = isSubmitting || 
                           !formData.artikelName.trim() || 
-                          productLimits.remaining <= 0;
+                          (isLimitReached); // ✅ Solo deshabilitar si límites cargados Y alcanzados
+
+  // ✅ TEXTO DEL BOTÓN
+  const getButtonText = () => {
+    if (isSubmitting) {
+      return (
+        <>
+          <div className={`${styles.loadingSpinner} ${styles.spinnerSmall}`}></div>
+          {t('artikel.creator.buttons.creating')}
+        </>
+      );
+    }
+    
+    if (limitsLoading) {
+      return t('artikel.creator.buttons.loading'); // "Cargando..."
+    }
+    
+    if (isLimitReached) {
+      return t('artikel.creator.buttons.limitReached'); // "Límite alcanzado"
+    }
+    
+    return t('artikel.creator.buttons.create'); // "Crear artículo"
+  };
 
   return (
     <div className={styles.modalBackdrop}>
@@ -236,9 +270,18 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
 
         <form onSubmit={handleSubmit} className={styles.modalForm}>
           <div className={styles.modalBody}>
-            {productLimits.max > 0 && (
+            {!limitsLoading && productLimits.max > 0 && (
               <div className={styles.limitSection}>
                 <ProductLimitBadge limits={productLimits} />
+              </div>
+            )}
+            
+            {limitsLoading && (
+              <div className={styles.limitSection}>
+                <div className={styles.loadingLimits}>
+                  <div className={styles.spinnerSmall}></div>
+                  <span>Cargando límites...</span>
+                </div>
               </div>
             )}
             
@@ -415,16 +458,7 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
               type="submit"
               disabled={isSubmitDisabled}
             >
-              {isSubmitting ? (
-                <>
-                  <div className={`${styles.loadingSpinner} ${styles.spinnerSmall}`}></div>
-                  {t('artikel.creator.buttons.creating')}
-                </>
-              ) : productLimits.remaining <= 0 ? (
-                'Límite alcanzado'
-              ) : (
-                t('artikel.creator.buttons.create')
-              )}
+              {getButtonText()}
             </button>
           </div>
         </form>
