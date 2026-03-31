@@ -1,12 +1,13 @@
 {
   "stockMovements": {
     "title": "Stock Movements",
-    "subtitle": "Overview of ins and outs",
+    "subtitle": "Entries and exits in detail",
     "loading": "Loading movements…",
     "loadingAuth": "Loading…",
     "error": "Error loading",
     "noMovements": "No movements",
     "refresh": "Refresh",
+    "viewNotes": "View note",
     "filters": {
       "allTypes": "All types",
       "startDate": "Start date",
@@ -37,11 +38,11 @@
     },
     "movementTypes": {
       "WAREHOUSE_IN": {
-        "label": "Warehouse In",
+        "label": "Stock In",
         "icon": "↓"
       },
       "WAREHOUSE_OUT": {
-        "label": "Warehouse Out",
+        "label": "Stock Out",
         "icon": "↑"
       },
       "MANUAL_ADJUSTMENT": {
@@ -69,6 +70,15 @@
     "view": {
       "table": "Table View",
       "excel": "Excel View"
+    },
+    "notesModal": {
+      "title": "Movement Note",
+      "article": "Article",
+      "date": "Date",
+      "type": "Type",
+      "note": "Note",
+      "noNote": "No note available",
+      "close": "Close"
     }
   }
 }

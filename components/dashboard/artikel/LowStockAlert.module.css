@@ -15,7 +15,23 @@
   justify-content: center;
   transition: all 0.2s ease;
   z-index: 1000;
-  animation: pulse 2s infinite;
+  animation: 
+    slideInRight 0.9s ease-out,
+    pulse 2s 0.6s infinite;
+  
+}
+@keyframes slideInRight {
+  0% {
+    transform: translateX(120px); /* fuera de pantalla */
+    opacity: 0;
+  }
+  60% {
+    transform: translateX(0px);
+    
+  }
+  100% {
+    transform: translateX(0);opacity: 1;
+  }
 }
 @keyframes pulse {
   0% {

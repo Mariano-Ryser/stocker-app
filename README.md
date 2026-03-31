@@ -212,3 +212,16 @@ Es un componente que renderiza las paginas apenas entras al Dashboard principal 
 
 
 
+
+
+                                    TOAST
+
+components/shared/Toast.jsx  ->  es un componente multifuncion succes error warning info..
+                                 para remplazar los alerts y reutilizar en otro componentes,
+                                 se utiliza en el componente RechnungCreator.js. 
+context/ToastContext.jsx ->     Aqui es donde se configura el mensaje de alerta.
+
+_page - ToastContext     -> el Toast tambien se encuentra envolviendo toda la aplicacion para tener su funcionalidad
+                             en toda la aplicacion con mensajes de alerta.
+  
+

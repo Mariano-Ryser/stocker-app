@@ -215,7 +215,7 @@ export default function LoginPage() {
            
             </button> */}
 
-            {/* <div className={styles.registerPrompt}>
+            <div className={styles.registerPrompt}>
               <span>{t('login.register.prompt')} </span>
               <span
                 className={styles.registerLink}
@@ -228,7 +228,7 @@ export default function LoginPage() {
               >
                 {t('login.register.link')}
               </span>
-            </div> */}
+            </div> 
           </form>
 
           <div className={styles.copyright}>

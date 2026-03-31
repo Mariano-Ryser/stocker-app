@@ -5,6 +5,7 @@ import { useStockMovements } from '../../../hooks/useStockMovements';
 import Pagination from '../../../components/shared/Pagination';
 import { useLanguage } from '../../../contexts/LanguageContext';
 import { format } from 'date-fns';
+import NotesModal from '../../../components/dashboard/movements/NotesModal';
 import { de, es, enUS } from 'date-fns/locale';
 import styles from './StockMovements.module.css';
 
@@ -12,6 +13,32 @@ export default function StockMovements() {
   const { t, language } = useLanguage();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const [viewMode, setViewMode] = useState('excel'); // 'table' o 'excel'
+
+ // ++ Estado para el modal de notas NEW ++
+  const [notesModal, setNotesModal] = useState({
+    isOpen: false,
+    note: '',
+    articleName: '',
+    movementDate: '',
+    movementType: ''
+  });
+
+ // Función para abrir el modal con las notas
+  const openNotesModal = (movement: any) => {
+    const type = movementTypes[movement.movementType] || movementTypes.MANUAL_ADJUSTMENT;
+    setNotesModal({
+      isOpen: true,
+      note: movement.notes,
+      articleName: movement.productSnapshot?.artikelName || '-',
+      movementDate: formatDate(movement.movementDate),
+      movementType: type.label
+    });
+  };
+
+   // Función para cerrar el modal
+  const closeNotesModal = () => {
+    setNotesModal(prev => ({ ...prev, isOpen: false }));
+  };
 
   // Obtener locale para date-fns según el idioma
   const getLocale = () => {
@@ -245,10 +272,22 @@ export default function StockMovements() {
                         <td>{m.createdBy?.userName || '-'}</td>
 
                         <td className={styles.ref}>
+
                           {m.reference?.number && (
                             <span className={styles.refNumber}>{m.reference.number}</span>
                           )}
-                          {m.notes && <span title={m.notes}>📝</span>}
+                          
+                          {/* AQUI ES DONDE QUIERO MODIFICAR..  */}
+                          {m.notes && (
+                            <button 
+                              className={styles.notesButton}
+                              onClick={() => openNotesModal(m)}
+                              title={t('stockMovements.viewNotes')}
+                            >
+                              📝
+                            </button>
+                          )}
+
                         </td>
                       </tr>
                     );
@@ -337,13 +376,27 @@ export default function StockMovements() {
                             )}
                           </td>
                           
+
+
+
                           <td className={styles.excelCell}>
+
+
                             {m.notes && (
-                              <span className={styles.excelNotes} title={m.notes}>
-                                📝
-                              </span>
+                                  <button 
+                                  className={styles.notesButton}
+                                  onClick={() => openNotesModal(m)}
+                                  title={t('stockMovements.viewNotes')}
+                                >
+                                  📝
+                                </button>
                             )}
+
+
                           </td>
+
+
+
                         </tr>
                       );
                     })}
@@ -378,6 +431,15 @@ export default function StockMovements() {
             )}
           </>
         )}
+
+         <NotesModal
+        isOpen={notesModal.isOpen}
+        onClose={closeNotesModal}
+        note={notesModal.note}
+        articleName={notesModal.articleName}
+        movementDate={notesModal.movementDate}
+        movementType={notesModal.movementType}
+      />
       </div>
     </div>
   );

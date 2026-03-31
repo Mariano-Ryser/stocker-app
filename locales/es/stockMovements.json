@@ -7,6 +7,7 @@
     "error": "Error al cargar",
     "noMovements": "No hay movimientos",
     "refresh": "Actualizar",
+    "viewNotes": "Ver nota",
     "filters": {
       "allTypes": "Todos los tipos",
       "startDate": "Fecha inicio",
@@ -69,6 +70,15 @@
     "view": {
       "table": "Vista Tabla",
       "excel": "Vista Excel"
+    },
+    "notesModal": {
+      "title": "Nota del movimiento",
+      "article": "Artículo",
+      "date": "Fecha",
+      "type": "Tipo",
+      "note": "Nota",
+      "noNote": "Sin nota disponible",
+      "close": "Cerrar"
     }
   }
 }

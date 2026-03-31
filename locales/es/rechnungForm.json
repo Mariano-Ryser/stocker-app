@@ -12,15 +12,21 @@
       "title": "Nueva Factura",
       "submit": "Crear Factura"
     },
-    "editor": {
-      "title": "Editar Factura",
-      "submit": "Guardar Cambios",
-      "loadingData": "Cargando datos de la factura..."
+    "products": {
+      "searchPlaceholder": "Buscar por nombre, número o descripción...",
+      "noResults": "No se encontraron productos",
+      "empty": "No hay productos disponibles",
+      "units": "uds"
     },
-    "restricted": {
-      "title": "Acceso restringido",
-      "message": "Debe iniciar sesión para gestionar facturas.",
-      "close": "Cerrar"
+    "cart": {
+      "title": "Carrito de compras",
+      "items": "artículos",
+      "empty": "No hay artículos en el carrito",
+      "emptyError": "Agrega al menos un artículo al carrito",
+      "clear": "Vaciar carrito",
+      "clearConfirm": "¿Estás seguro de que deseas vaciar el carrito?",
+      "remove": "Eliminar artículo",
+      "totalItems": "{count} artículos"
     },
     "client": {
       "label": "Cliente",
@@ -72,20 +78,28 @@
         "quantityPositive": "La cantidad debe ser mayor a 0",
         "priceNegative": "El precio no puede ser negativo",
         "stock": "Por favor corrija los errores de stock",
+        "stockItem": "Stock insuficiente para \"{name}\". Disponible: {stock}, necesario: {needed}",
         "minOneItem": "Se requiere al menos un artículo"
       }
     },
     "totals": {
-      "subtotal": "Subtotal:",
-      "tax": "1% IVA:",
-      "total": "Total:"
+      "subtotal": "Subtotal",
+      "tax": "IVA",
+      "total": "Total"
     },
     "messages": {
       "createSuccess": "Factura creada exitosamente",
+      "createSuccessShort": "Factura creada",
       "updateSuccess": "Factura actualizada exitosamente",
       "createError": "Error al crear la factura",
       "updateError": "Error al actualizar la factura",
-      "unknownError": "Error desconocido"
+      "unknownError": "Error desconocido",
+      "cartEmpty": "El carrito está vacío",
+      "stockError": "Stock insuficiente"
+    },
+    "toasts": {
+      "invoiceCreated": "Factura #{number} creada exitosamente",
+      "invoiceCreatedDesc": "La factura ha sido generada correctamente"
     }
   }
 }

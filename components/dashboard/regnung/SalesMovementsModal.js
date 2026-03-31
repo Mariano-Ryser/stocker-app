@@ -1,9 +1,10 @@
-// components/dashboard/regnung/StockMovementsModal.js
 import { useState, useEffect } from 'react';
+import { useLanguage } from '../../../contexts/LanguageContext';
 import { getSaleMovements } from '../../../services/stockMovementService';
 import styles from './StockMovementsModal.module.css';
 
 export default function StockMovementsModal({ sale, onClose }) {
+  const { t, language } = useLanguage();
   const [movements, setMovements] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -25,7 +26,14 @@ export default function StockMovementsModal({ sale, onClose }) {
   };
 
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('de-DE', {
+    const localeMap = {
+      'de': 'de-DE',
+      'es': 'es-ES',
+      'en': 'en-US'
+    };
+    const locale = localeMap[language] || 'de-DE';
+    
+    return new Date(dateString).toLocaleDateString(locale, {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
@@ -45,44 +53,59 @@ export default function StockMovementsModal({ sale, onClose }) {
 
   const getMovementText = (type) => {
     const texts = {
-      'WAREHOUSE_OUT': 'Salida (Venta)',
-      'RETURN': 'Devolución',
-      'MANUAL_ADJUSTMENT': 'Ajuste manual'
+      'WAREHOUSE_OUT': t('sales.modalMovements.types.WAREHOUSE_OUT'),
+      'RETURN': t('sales.modalMovements.types.RETURN'),
+      'MANUAL_ADJUSTMENT': t('sales.modalMovements.types.MANUAL_ADJUSTMENT')
     };
     return texts[type] || type;
+  };
+
+  const getMovementClass = (type) => {
+    const classes = {
+      'WAREHOUSE_OUT': styles.warehouseOut,
+      'RETURN': styles.return,
+      'MANUAL_ADJUSTMENT': styles.manualAdjustment
+    };
+    return classes[type] || '';
   };
 
   return (
     <div className={styles.overlay} onClick={onClose}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         <div className={styles.header}>
-          <h2>Movimientos de Stock</h2>
+          <h2>{t('sales.modalMovements.title')}</h2>
           <button onClick={onClose} className={styles.closeButton}>✕</button>
         </div>
 
         <div className={styles.saleInfo}>
-          <p><strong>Rechnung:</strong> {sale.lieferschein}</p>
-          <p><strong>Kunde:</strong> {sale.clientSnapshot?.name || sale.client?.name}</p>
-          <p><strong>Total:</strong> {sale.total?.toFixed(2)} CHF</p>
+          <p>
+            <strong>{t('sales.modalMovements.invoiceNumber')}:</strong> {sale.lieferschein || sale.invoiceNumber}
+          </p>
+          <p>
+            <strong>{t('sales.modalMovements.customer')}:</strong> {sale.clientSnapshot?.name || sale.client?.name || t('sales.client.unknown')}
+          </p>
+          <p>
+            <strong>{t('sales.modalMovements.total')}:</strong> {sale.total?.toFixed(2)} CHF
+          </p>
         </div>
 
         <div className={styles.content}>
           {loading && (
             <div className={styles.loading}>
               <div className={styles.spinner}></div>
-              <p>Cargando movimientos...</p>
+              <p>{t('sales.modalMovements.loading')}</p>
             </div>
           )}
 
           {error && (
             <div className={styles.error}>
-              Error: {error}
+              {t('sales.modalMovements.error')}: {error}
             </div>
           )}
 
           {!loading && !error && movements.length === 0 && (
             <div className={styles.empty}>
-              No hay movimientos de stock para esta venta
+              {t('sales.modalMovements.noMovements')}
             </div>
           )}
 
@@ -90,11 +113,11 @@ export default function StockMovementsModal({ sale, onClose }) {
             <table className={styles.table}>
               <thead>
                 <tr>
-                  <th>Fecha</th>
-                  <th>Producto</th>
-                  <th>Tipo</th>
-                  <th>Cantidad</th>
-                  <th>Stock</th>
+                  <th>{t('sales.modalMovements.table.date')}</th>
+                  <th>{t('sales.modalMovements.table.product')}</th>
+                  <th>{t('sales.modalMovements.table.type')}</th>
+                  <th>{t('sales.modalMovements.table.quantity')}</th>
+                  <th>{t('sales.modalMovements.table.stock')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -104,7 +127,7 @@ export default function StockMovementsModal({ sale, onClose }) {
                       {formatDate(movement.movementDate)}
                     </td>
                     <td className={styles.productCell}>
-                      <strong>{movement.productSnapshot?.artikelName}</strong>
+                      <strong>{movement.productSnapshot?.artikelName || '-'}</strong>
                       {movement.productSnapshot?.artikelNumber && (
                         <span className={styles.productNumber}>
                           #{movement.productSnapshot.artikelNumber}
@@ -112,7 +135,7 @@ export default function StockMovementsModal({ sale, onClose }) {
                       )}
                     </td>
                     <td>
-                      <span className={`${styles.movementType} ${styles[movement.movementType]}`}>
+                      <span className={`${styles.movementType} ${getMovementClass(movement.movementType)}`}>
                         {getMovementIcon(movement.movementType)} {getMovementText(movement.movementType)}
                       </span>
                     </td>

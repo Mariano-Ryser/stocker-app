@@ -472,13 +472,13 @@ export const useProduct = () => {
     const handleProductCreated = async (event) => {
       // console.log('✨ Evento productCreated recibido:', event.detail);
       await updateProductInCache(true);
-      // setRefreshTrigger(prev => prev + 1);
+       setRefreshTrigger(prev => prev + 1);
     };
     
     const handleProductDeleted = async (event) => {
       // console.log('🗑️ Evento productDeleted recibido:', event.detail);
       await updateProductInCache(true);
-      // setRefreshTrigger(prev => prev + 1);
+      setRefreshTrigger(prev => prev + 1);
     };
     
     window.addEventListener('clearProductsFromCache', handleClearProductsFromCache);

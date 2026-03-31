@@ -17,7 +17,7 @@ export default function ScannerSalesPage() {
     scannerProducts, 
     scannerLoading,
     cacheStats,
-    updateProductInCache,
+    updateProductInCache, 
     fetchAllProductsForScanner,
     findProductInCache,
     searchProductsInCache
@@ -863,7 +863,7 @@ export default function ScannerSalesPage() {
                   onBlur={handleInputBlur}
                   onFocus={() => {
                     setFocusedInput('scanner');
-                    setShouldFocusScanner(true);
+                    // setShouldFocusScanner(true);
                   }}
                   placeholder={t('scanner.scanner.placeholder')}
                   className={`${styles.scannerInput} ${focusedInput === 'scanner' ? styles.inputFocused : ''}`}
@@ -984,11 +984,12 @@ export default function ScannerSalesPage() {
           )}
 
           <div className={styles.clientSection}>
+
             <div className={styles.clientSectionHeader}>
               <h2>{t('scanner.client.title')}</h2>
-              <span className={styles.focusHint}>
+              {/* <span className={styles.focusHint}>
                 {focusedInput === 'client' ? '📝 Modo escritura' : 'Alt+C para buscar'}
-              </span>
+              </span> */}
             </div>
             
             <div ref={clientAutocompleteRef} className={styles.clientAutocomplete}>
@@ -1012,6 +1013,7 @@ export default function ScannerSalesPage() {
                     setFocusedInput('client');
                     setShouldFocusScanner(false);
                   }}
+                  onClick={() => {switchFocus('client');}}
                   onKeyDown={handleClientKeyPress}
                   className={`${styles.clientInput} ${focusedInput === 'client' ? styles.inputFocused : ''}`}
                   disabled={isSubmitting || cashPayment.show}
@@ -1125,9 +1127,9 @@ export default function ScannerSalesPage() {
               </button>
             </div>
             
-            <div className={styles.shortcutHint}>
+            {/* <div className={styles.shortcutHint}>
               <span>Ctrl+Enter para finalizar</span>
-            </div>
+            </div> */}
           </div>
         </div>
 

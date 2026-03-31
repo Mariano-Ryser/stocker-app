@@ -277,12 +277,14 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
             )}
             
             {limitsLoading && (
-              <div className={styles.limitSection}>
-                <div className={styles.loadingLimits}>
-                  <div className={styles.spinnerSmall}></div>
-                  <span>Cargando límites...</span>
-                </div>
-              </div>
+              <>
+              </>
+              // <div className={styles.limitSection}>
+              //   <div className={styles.loadingLimits}>
+              //     <div className={styles.spinnerSmall}></div>
+              //     <span>Cargando límites...</span>
+              //   </div>
+              // </div>
             )}
             
             {displayError && (

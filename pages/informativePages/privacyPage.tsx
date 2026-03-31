@@ -54,12 +54,12 @@ export default function PrivacyPage() {
               <h2>{t("privacy.sections.responsible.title")}</h2>
               <p>{t("privacy.sections.responsible.text")}</p>
               <div className={styles.responsibleInfo}>
-                <p><strong>{t("privacy.sections.responsible.company")}</strong></p>
-                <p>{t("privacy.sections.responsible.address1")}</p>
+                <p><strong>Stockercloud AG</strong></p>
+                <p>Hohlstrasse 405</p>
                 <p>{t("privacy.sections.responsible.address2")}</p>
                 <p>{t("privacy.sections.responsible.address3")}</p>
-                <p>{t("privacy.sections.responsible.email")}</p>
-                <p>{t("privacy.sections.responsible.phone")}</p>
+                <p>rysermariano@gmail.com</p>
+                <p>+41 78 874 79 74</p>
               </div>
             </section>
 
@@ -255,13 +255,13 @@ export default function PrivacyPage() {
               <div className={styles.contactInfo}>
                 <p><strong>{t("privacy.sections.contact.officer.title")}</strong></p>
                 <p>{t("privacy.sections.contact.officer.name")}</p>
-                <p>{t("privacy.sections.contact.officer.email")}</p>
-                <p>{t("privacy.sections.contact.officer.phone")}</p>
+                <p>rysermariano@gmail.com</p>
+                <p>+41 78 874 79 74</p>
                 <br />
-                <p><strong>{t("privacy.sections.contact.authority.title")}</strong></p>
-                <p>{t("privacy.sections.contact.authority.name")}</p>
-                <p>{t("privacy.sections.contact.authority.address1")}</p>
-                <p>{t("privacy.sections.contact.authority.address2")}</p>
+                {/* <p><strong>{t("privacy.sections.contact.authority.title")}</strong></p>
+                <p>{t("privacy.sections.contact.authority.name")}</p> */}
+                <p></p>
+                {/* <p>{t("privacy.sections.contact.authority.address2")}</p> */}
               </div>
             </section>
           </div>

@@ -86,12 +86,13 @@
         "imageChange": "📷 Cambiar imagen",
         "imageDelete": "🗑️ Eliminar imagen",
         "imagePreview": "Vista previa de imagen",
-        "required": "Campo obligatorio"
-      },
+        "required": "Campo obligatorio" 
+      }, 
       "buttons": {
         "cancel": "Cancelar",
         "create": "Crear Artículo",
-        "creating": "Creando..."
+        "creating": "Creando...",
+        "limitReached": "Límite de artículos alcanzado"
       },
       "messages": {
         "success": "Artículo creado exitosamente",

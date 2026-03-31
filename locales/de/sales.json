@@ -18,13 +18,13 @@
       "resetFilters": "Alle Filter zurücksetzen",
       "createFirst": "Erste Rechnung erstellen",
       "loadMore": "Mehr Rechnungen laden ({remaining} verfügbar)",
-      "stock": "Stock Bewegungen anzeigen",
+      "stock": "Lagerbewegungen anzeigen",
       "view": "Anzeigen",
       "delete": "Löschen",
       "confirmDelete": "Sind Sie sicher, dass Sie diese Rechnung löschen möchten?"
     },
     "buttons": {
-      "stock": "Stock",
+      "stock": "Lager",
       "edit": "Bearbeiten"
     },
     "search": {
@@ -65,7 +65,7 @@
       "date": "Datum",
       "client": "Kunde",
       "invoiceNumber": "Lieferschein",
-      "total": "Total",
+      "total": "Gesamt",
       "status": "Status",
       "actions": "Aktionen"
     },
@@ -112,6 +112,27 @@
       "customer": "Kunde",
       "payment": "Zahlung",
       "notes": "Notizen"
+    },
+    "modalMovements": {
+      "title": "Lagerbewegungen",
+      "loading": "Lade Bewegungen...",
+      "error": "Fehler",
+      "noMovements": "Keine Lagerbewegungen für diese Rechnung",
+      "invoiceNumber": "Lieferschein",
+      "customer": "Kunde",
+      "total": "Gesamt",
+      "types": {
+        "WAREHOUSE_OUT": "Abgang (Verkauf)",
+        "RETURN": "Rückgabe",
+        "MANUAL_ADJUSTMENT": "Manuelle Anpassung"
+      },
+      "table": {
+        "date": "Datum",
+        "product": "Produkt",
+        "type": "Typ",
+        "quantity": "Menge",
+        "stock": "Bestand"
+      }
     }
   }
 }

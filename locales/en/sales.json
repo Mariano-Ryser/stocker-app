@@ -15,7 +15,7 @@
     "actions": {
       "new": "New Invoice",
       "retry": "Retry",
-      "resetFilters": "Reset all filters",
+      "resetFilters": "Clear all filters",
       "createFirst": "Create first invoice",
       "loadMore": "Load more invoices ({remaining} available)",
       "stock": "View stock movements",
@@ -73,9 +73,9 @@
       "date": "Date",
       "time": "Time",
       "client": "Customer",
-      "invoiceNumber": "Invoice Number",
+      "invoiceNumber": "Invoice No.",
       "subtotal": "Subtotal",
-      "tax": "Tax",
+      "tax": "VAT",
       "total": "Total",
       "status": "Status",
       "actions": "Actions"
@@ -83,7 +83,7 @@
     "view": {
       "table": "Table View",
       "excel": "Excel View",
-      "cards": "Card View"
+      "cards": "Cards View"
     },
     "client": {
       "unknown": "Unknown"
@@ -112,6 +112,27 @@
       "customer": "Customer",
       "payment": "Payment",
       "notes": "Notes"
+    },
+    "modalMovements": {
+      "title": "Stock Movements",
+      "loading": "Loading movements...",
+      "error": "Error",
+      "noMovements": "No stock movements for this invoice",
+      "invoiceNumber": "Delivery Note",
+      "customer": "Customer",
+      "total": "Total",
+      "types": {
+        "WAREHOUSE_OUT": "Stock Out (Sale)",
+        "RETURN": "Return",
+        "MANUAL_ADJUSTMENT": "Manual Adjustment"
+      },
+      "table": {
+        "date": "Date",
+        "product": "Product",
+        "type": "Type",
+        "quantity": "Quantity",
+        "stock": "Stock"
+      }
     }
   }
 }

@@ -14,8 +14,8 @@
       "indexedDB": "(IndexedDB: {count})",
       "total": "Total:",
       "scanMode": "🔍 Scan Mode",
-      "editMode": "✏️ Edit Mode"
-    },
+      "editMode": "✏️ Edit Mode" 
+    }, 
     "scanner": {
       "title": "Barcode Scanner",
       "itemsCount": "{count} items",

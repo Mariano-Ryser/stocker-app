@@ -50,11 +50,11 @@ export default function SalesPage() {
   const [saleForMovements, setSaleForMovements] = useState(null);
   const [viewMode, setViewMode] = useState('excel'); // 'table', 'excel', 'cards'
 
-  const formatCurrency = (amount) => {
+  const formatCurrency = (amount:any) => {
     return Number(amount || 0).toFixed(2);
   };
 
-  const getStatusColor = (status) => {
+  const getStatusColor = (status:any) => {
     const colors = {
       "paid": "#d1fae5",
       "cancelled": "#fee2e2",
@@ -63,7 +63,7 @@ export default function SalesPage() {
     return colors[status] || "#f8f9fa";
   };
 
-  const getStatusText = (status) => {
+  const getStatusText = (status:any) => {
     const texts = {
       "paid": t('sales.status.paid'),
       "cancelled": t('sales.status.cancelled'),
@@ -72,7 +72,7 @@ export default function SalesPage() {
     return texts[status] || status;
   };
 
-  const getStatusBadge = (status) => {
+  const getStatusBadge = (status:any) => {
     const badges = {
       "paid": { bg: "#d1fae5", color: "#065f46", text: getStatusText(status) },
       "cancelled": { bg: "#fee2e2", color: "#991b1b", text: getStatusText(status) },
@@ -81,7 +81,7 @@ export default function SalesPage() {
     return badges[status] || { bg: "#f3f4f6", color: "#374151", text: status };
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = (dateString:any) => {
     if (!dateString) return '-';
     return new Date(dateString).toLocaleDateString('de-DE', {
       day: '2-digit',
@@ -90,10 +90,15 @@ export default function SalesPage() {
     });
   };
 
-  const handleCreateSuccess = () => {
-    setOpenModal(false);
+const handleCreateSuccess = () => {
+  console.log('handleCreateSuccess llamado - cerrando modal');
+  setOpenModal(false);
+  // 🔥 OPTIMIZACIÓN: No esperar, refrescar en segundo plano
+  setTimeout(() => {
     refreshSales();
-  };
+    console.log('Ventas refrescadas en segundo plano');
+  }, 200);
+};
 
   const handleUpdateSuccess = () => {
     setUpdateModalOpen(false);
@@ -106,7 +111,7 @@ export default function SalesPage() {
     setSaleToEdit(null);
   };
 
-  const handleSort = (field) => {
+  const handleSort = (field:any) => {
     if (sortField === field) {
       setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
@@ -115,7 +120,7 @@ export default function SalesPage() {
     }
   };
 
-  const getSortIcon = (field) => {
+  const getSortIcon = (field:any) => {
     if (sortField !== field) return "↕️";
     return sortDirection === "asc" ? "⬆️" : "⬇️";
   };
@@ -744,22 +749,12 @@ export default function SalesPage() {
         />
       )}
 
-      {openModal && isAuthenticated && (
-        <div className={styles.modalOverlay}>
-          <div className={styles.modalContent}>
-            <button 
-              className={styles.modalClose} 
-              onClick={() => setOpenModal(false)}
-            >
-              ✖
-            </button>
-            <RechnungCreator 
-              onDone={handleCreateSuccess}
-              salesApi={{ createSale }}
-            />
-          </div>
-        </div>
-      )}
+     {openModal && (
+  <RechnungCreator 
+    onDone={handleCreateSuccess}
+    salesApi={{ createSale }}
+  />
+)}
 
       {updateModalOpen && saleToEdit && isAuthenticated && (
         <RechnungUpdate

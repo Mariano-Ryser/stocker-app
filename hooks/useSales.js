@@ -137,39 +137,72 @@ export function useSales() {
     fetchSales(1, false);
   }, [fetchSales]);
 
+
+
+
   // Función createSale optimizada
-  const createSale = async (payload) => {
-    if (!isAuthenticated) {
-      return { success: false, message: 'Debe iniciar sesión' };
-    }
-    
-    try {
-      const res = await createSaleAPI(payload);
+ // Función createSale optimizada - SIN REFRESH BLOQUEANTE
+const createSale = async (payload) => {
+  if (!isAuthenticated) {
+    return { success: false, message: 'Debe iniciar sesión' };
+  }
+  
+  try {
+    const res = await createSaleAPI(payload);
 
-      if (!res.success) {
-        return { 
-          success: false, 
-          message: res.message,
-          type: res.type 
-        };
-      }
-
-      // Refrescar la primera página para ver la nueva venta
-      await fetchSales(1, false);
-      
-      return { 
-        success: true, 
-        sale: res.data?.sale || res.data 
-      };
-      
-    } catch (err) {
-      console.error('Error creating sale:', err);
+    if (!res.success) {
       return { 
         success: false, 
-        message: err.message 
+        message: res.message,
+        type: res.type 
       };
     }
-  };
+
+    const newSale = res.data?.sale || res.data;
+    
+    // 🔥 OPTIMIZACIÓN: Actualizar la lista local INMEDIATAMENTE
+    // Esto hace que la UI se actualice sin esperar una nueva petición
+    setSales(prev => [newSale, ...prev]);
+    
+    // Actualizar estadísticas localmente (opcional)
+    setSalesStats(prev => ({
+      ...prev,
+      totalAllSales: (prev.totalAllSales || 0) + 1,
+      totalUmsatz: (prev.totalUmsatz || 0) + (newSale.total || 0)
+    }));
+    
+    // 🔥 NO hacer fetchSales aquí - eso es lo que causa lentitud
+    // En lugar de eso, actualizar el caché de productos en segundo plano sin esperar
+    setTimeout(() => {
+      // Disparar eventos para actualizar stock en segundo plano
+      if (newSale.items && newSale.items.length > 0) {
+        newSale.items.forEach(item => {
+          window.dispatchEvent(new CustomEvent('stockUpdated', { 
+            detail: { 
+              productId: item.productId,
+              quantitySold: item.quantity,
+              timestamp: new Date().toISOString()
+            } 
+          }));
+        });
+      }
+    }, 100);
+    
+    return { 
+      success: true, 
+      sale: newSale 
+    };
+    
+  } catch (err) {
+    console.error('Error creating sale:', err);
+    return { 
+      success: false, 
+      message: err.message 
+    };
+  }
+};
+
+
 
   // Función updateSale optimizada
   const updateSale = async (id, payload) => {

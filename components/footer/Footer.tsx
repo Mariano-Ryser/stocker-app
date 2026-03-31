@@ -81,7 +81,7 @@ export default function Footer() {
 
           <div className={styles.contactItem}>
             <Phone size={18} />
-            <a href="tel:+41788747974">+41 788 74 79 74</a>
+            <a href="tel:+41788747974">+41 78 874 79 74</a>
           </div>
 
           <div className={styles.contactItem}>

@@ -1,119 +1,163 @@
-// frontend/components/dashboard/regnung/RechnungCreator.jsx
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { useClients } from "../../../hooks/useClients";
 import { useProduct } from "../../../hooks/useProducts";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { COUNTRY_CONFIG } from '../../../utils/countryConfig';
+import { useToast } from '../../../contexts/ToastContext';  // Importar el contexto de Toast mensaje de Succes de error y de información
 import styles from './Creator.module.css';
 
 export default function RechnungCreator({ onDone, salesApi }) {
   const { t } = useLanguage();
-  
+  const { showToast } = useToast();   
+
   if (!salesApi) {
     console.error("RechnungCreator renderizado sin salesApi");
     return null;
-  } 
- 
+  }
+  
   const { createSale } = salesApi;
-
   const { company, isAuthenticated } = useAuth();
   const { clients } = useClients();
   const { 
     products, 
     refreshProducts,
+    updateProductInCache,
+    fetchProductLimits,
     searchProductsInCache,
-    loading: productsLoading
+    loading: productsLoading,
+    productLimits,
+    limitWarning
   } = useProduct();
   
+  // Estados principales
   const [clientId, setClientId] = useState("");
   const [clientSearch, setClientSearch] = useState("");
   const [showClientAutocomplete, setShowClientAutocomplete] = useState(false);
   const [status, setStatus] = useState("paid");
-  const [lines, setLines] = useState([{ productId: "", quantity: 1, unitPrice: 0, stock: 0 }]);
-  const [searches, setSearches] = useState([""]);
-  const [showAutocomplete, setShowAutocomplete] = useState([false]);
+  const [cart, setCart] = useState([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [stockErrors, setStockErrors] = useState({});
-  const [hasStockErrors, setHasStockErrors] = useState(false);
-  const [searchTimeouts, setSearchTimeouts] = useState({});
-  const [searchResults, setSearchResults] = useState({});
-  const [isSearching, setIsSearching] = useState({});
+  const [productSearchTerm, setProductSearchTerm] = useState("");
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [searchTimeout, setSearchTimeout] = useState(null);
   
-  // 🔥 Obtener configuración del país de facturación (de la empresa) - IGUAL QUE INVOICECLASSIC
+  // Refs
+  const clientAutocompleteRef = useRef(null);
+  const searchInputRef = useRef(null);
+  
+  // Configuración de país y moneda
   const countryCode = company?.invoiceSettings?.country || 'DE';
   const countryConfig = COUNTRY_CONFIG[countryCode] || COUNTRY_CONFIG.DE;
-  
-  // 🔥 Obtener el nombre del impuesto según el país - IGUAL QUE INVOICECLASSIC
   const taxName = countryConfig.taxName || 'MwSt';
-  
-  // 🔥 Obtener taxRate de la empresa - IGUAL QUE INVOICECLASSIC
   const taxRate = company?.invoiceSettings?.taxRate || 19;
+  const currencySymbol = company?.currency || 'USD';
   
-  // 🔥 Función para formatear moneda (igual que en InvoiceClassic)
+  // Formatear moneda
   const formatCurrency = (value) => {
     return value?.toFixed(2) || '0.00';
   };
   
-  const currencySymbol = company?.currency || 'USD';
-  const autocompleteRefs = useRef([]);
-  const clientAutocompleteRef = useRef(null);
-
-  // Cargar productos solo una vez al montar
+  // Cargar productos al montar
   useEffect(() => {
     if (isAuthenticated && products.length === 0) {
       refreshProducts();
     }
-  }, [isAuthenticated, refreshProducts, products.length]);
-
-  // Validar stock cuando cambian las líneas
-  useEffect(() => {
-    if (lines.length > 0 && products.length > 0) {
-      validateAllStock();
+    if (isAuthenticated && company?._id) {
+      fetchProductLimits(true);
     }
-  }, [lines, products]);
-
-  if (!isAuthenticated) {
-    return (
-      <div className={styles.modalBackdrop}>
-        <div className={styles.modal}>
-          <div className={styles.modalHeader}>
-            <h2>{t('rechnungForm.restricted.title')}</h2>
-            <button className={styles.closeBtn} onClick={onDone}>×</button>
-          </div>
-          <div className={styles.modalBody}>
-            <p>{t('rechnungForm.restricted.message')}</p>
-          </div>
-          <div className={styles.modalFooter}>
-            <button className={`${styles.btn} ${styles.btnCancel}`} onClick={onDone}>
-              {t('rechnungForm.restricted.close')}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  // Cerrar autocompletes al hacer click fuera
+  }, [isAuthenticated, refreshProducts, fetchProductLimits, company?._id]);
+  
+  // Filtrar productos localmente
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (showClientAutocomplete && clientAutocompleteRef.current &&
-          !clientAutocompleteRef.current.contains(event.target)) {
-        setShowClientAutocomplete(false);
-      }
-
-      showAutocomplete.forEach((isOpen, index) => {
-        if (isOpen && autocompleteRefs.current[index] &&
-            !autocompleteRefs.current[index].contains(event.target)) {
-          setShowAutocomplete(prev => prev.map((s, idx) => idx === index ? false : s));
+    if (!productSearchTerm.trim()) {
+      setFilteredProducts(products.slice(0, 30));
+      return;
+    }
+    
+    const term = productSearchTerm.toLowerCase();
+    const filtered = products.filter(p => 
+      p.artikelName?.toLowerCase().includes(term) ||
+      p.artikelNumber?.toString().toLowerCase().includes(term) ||
+      p.description?.toLowerCase().includes(term)
+    ).slice(0, 50);
+    
+    setFilteredProducts(filtered);
+  }, [productSearchTerm, products]);
+  
+  // Buscar productos con debounce
+  const handleProductSearch = (value) => {
+    setProductSearchTerm(value);
+    
+    if (searchTimeout) clearTimeout(searchTimeout);
+    
+    if (value.length >= 2) {
+      setSearchTimeout(setTimeout(async () => {
+        try {
+          const results = await searchProductsInCache(value);
+          setFilteredProducts(results.slice(0, 50));
+        } catch (error) {
+          console.error('Error en búsqueda:', error);
         }
-      });
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [showAutocomplete, showClientAutocomplete]);
-
+      }, 300));
+    }
+  };
+  
+  // Agregar producto al carrito
+  const addToCart = (product) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(item => item.productId === product._id);
+      
+      if (existingItem) {
+        return prevCart.map(item =>
+          item.productId === product._id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
+        );
+      }
+      
+      return [...prevCart, {
+        productId: product._id,
+        productName: product.artikelName,
+        productNumber: product.artikelNumber,
+        quantity: 1,
+        unitPrice: product.price || 0,
+        stock: product.stock || 0,
+        image: product.imagen
+      }];
+    });
+  };
+  
+  // Actualizar cantidad en carrito
+  const updateCartQuantity = (index, newQuantity) => {
+    if (newQuantity < 1) {
+      removeFromCart(index);
+      return;
+    }
+    
+    setCart(prevCart => prevCart.map((item, i) => 
+      i === index ? { ...item, quantity: newQuantity } : item
+    ));
+  };
+  
+  // Eliminar del carrito
+  const removeFromCart = (index) => {
+    setCart(prevCart => prevCart.filter((_, i) => i !== index));
+  };
+  
+ // Actualiza clearCart
+const clearCart = () => {
+  if (cart.length > 0 && confirm(t('rechnungForm.cart.clearConfirm'))) {
+    setCart([]);
+    showToast(t('rechnungForm.cart.clear'), 'info');
+  }
+};
+  
+  // Calcular totales
+  const subtotal = cart.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
+  const taxAmount = subtotal * (taxRate / 100);
+  const total = subtotal + taxAmount;
+  
+  // Filtrar clientes
   const filteredClients = () => {
     const query = clientSearch?.toLowerCase() || "";
     
@@ -127,713 +171,402 @@ export default function RechnungCreator({ onDone, salesApi }) {
       (c.email && c.email.toLowerCase().includes(query))
     ).slice(0, 8);
   };
-
-  // BÚSQUEDA RÁPIDA
-  const handleProductSearch = async (index, value) => {
-    setSearches(prev => prev.map((s, idx) => idx === index ? value : s));
-    updateLine(index, { productId: "" });
-    setShowAutocomplete(prev => prev.map((s, idx) => idx === index ? true : s));
-    
-    if (value.length >= 2) {
-      if (searchTimeouts[index]) {
-        clearTimeout(searchTimeouts[index]);
-      }
-      
-      const immediateResults = products.filter(p => {
-        const name = p.artikelName?.toLowerCase() || "";
-        const description = p.description?.toLowerCase() || "";
-        const artikelNumber = p.artikelNumber?.toString().toLowerCase() || "";
-        const searchTerm = value.toLowerCase();
-        
-        return name.includes(searchTerm) || 
-               description.includes(searchTerm) || 
-               artikelNumber.includes(searchTerm);
-      }).slice(0, 8);
-      
-      setSearchResults(prev => ({
-        ...prev,
-        [index]: immediateResults
-      }));
-      
-      setIsSearching(prev => ({
-        ...prev,
-        [index]: true
-      }));
-      
-      const timeout = setTimeout(async () => {
-        try {
-          const cachedResults = await searchProductsInCache(value);
-          
-          setSearchResults(prev => ({
-            ...prev,
-            [index]: cachedResults.slice(0, 8)
-          }));
-          
-        } catch (error) {
-          console.error('Error en búsqueda:', error);
-        } finally {
-          setIsSearching(prev => ({
-            ...prev,
-            [index]: false
-          }));
-          
-          setSearchTimeouts(prev => {
-            const newTimeouts = { ...prev };
-            delete newTimeouts[index];
-            return newTimeouts;
-          });
-        }
-      }, 300);
-      
-      setSearchTimeouts(prev => ({
-        ...prev,
-        [index]: timeout
-      }));
-    } else {
-      const recentResults = products.slice(0, 5);
-      setSearchResults(prev => ({
-        ...prev,
-        [index]: recentResults
-      }));
-    }
-  };
-
-  const filteredProducts = (index) => {
-    if (searchResults[index]) {
-      return searchResults[index];
-    }
-    
-    const query = searches[index]?.toLowerCase() || "";
-    
-    if (!query) {
-      return products.slice(0, 5);
-    }
-    
-    return products.filter(p => {
-      const name = p.artikelName?.toLowerCase() || "";
-      const description = p.description?.toLowerCase() || "";
-      const artikelNumber = p.artikelNumber?.toString().toLowerCase() || "";
-      
-      return name.includes(query) || 
-             description.includes(query) || 
-             artikelNumber.includes(query);
-    }).slice(0, 8);
-  };
-
-  const addLine = () => {
-    setLines(prev => [...prev, { productId: "", quantity: 1, unitPrice: 0, stock: 0 }]);
-    setSearches(prev => [...prev, ""]);
-    setShowAutocomplete(prev => [...prev, false]);
-    setSearchResults(prev => ({ ...prev, [lines.length]: [] }));
-    setIsSearching(prev => ({ ...prev, [lines.length]: false }));
-    autocompleteRefs.current.push(null);
-  };
-
-  const removeLine = (i) => {
-    if (lines.length <= 1) {
-      alert(t('rechnungForm.items.errors.minOneItem'));
-      return;
-    }
-    
-    if (searchTimeouts[i]) {
-      clearTimeout(searchTimeouts[i]);
-    }
-    
-    setLines(prev => prev.filter((_, idx) => idx !== i));
-    setSearches(prev => prev.filter((_, idx) => idx !== i));
-    setShowAutocomplete(prev => prev.filter((_, idx) => idx !== i));
-    autocompleteRefs.current = autocompleteRefs.current.filter((_, idx) => idx !== i);
-    
-    setStockErrors(prev => {
-      const newErrors = { ...prev };
-      delete newErrors[i];
-      return newErrors;
-    });
-    
-    setSearchTimeouts(prev => {
-      const newTimeouts = { ...prev };
-      delete newTimeouts[i];
-      return newTimeouts;
-    });
-
-    setSearchResults(prev => {
-      const newResults = { ...prev };
-      delete newResults[i];
-      return newResults;
-    });
-
-    setIsSearching(prev => {
-      const newSearching = { ...prev };
-      delete newSearching[i];
-      return newSearching;
-    });
-  };
-
-  const updateLine = (i, changes) => {
-    const newLines = lines.map((l, idx) => 
-      idx === i ? { ...l, ...changes } : l
-    );
-    setLines(newLines);
-    
-    if (changes.productId) {
-      const product = products.find(p => p._id === changes.productId);
-      if (product) {
-        setSearches(prev => prev.map((s, idx) => 
-          idx === i ? product.artikelName : s
-        ));
-        setShowAutocomplete(prev => prev.map((s, idx) => 
-          idx === i ? false : s
-        ));
-        setSearchResults(prev => {
-          const newResults = { ...prev };
-          delete newResults[i];
-          return newResults;
-        });
-      }
-    }
-  };
-
-  const validateAllStock = () => {
-    const errors = {};
-    let hasErrors = false;
-    
-    const productQuantities = {};
-    
-    lines.forEach((line, index) => {
-      if (line.productId) {
-        if (!productQuantities[line.productId]) {
-          productQuantities[line.productId] = 0;
-        }
-        productQuantities[line.productId] += line.quantity;
-      }
-    });
-    
-    Object.keys(productQuantities).forEach(productId => {
-      const product = products.find(p => p._id === productId);
-      if (product) {
-        const requiredQuantity = productQuantities[productId];
-        
-        if (product.stock < requiredQuantity) {
-          lines.forEach((line, index) => {
-            if (line.productId === productId) {
-              errors[index] = t('rechnungForm.items.stock.error')
-                .replace('{message}', `${product.artikelName}: ${product.stock} ${t('rechnungForm.items.stock.available')}, ${requiredQuantity} ${t('rechnungForm.items.stock.needed')}`);
-              hasErrors = true;
-            }
-          });
-        } else {
-          lines.forEach((line, index) => {
-            if (line.productId === productId && errors[index]) {
-              delete errors[index];
-            }
-          });
-        }
-      }
-    });
-    
-    lines.forEach((line, index) => {
-      if (!line.productId && errors[index]) {
-        delete errors[index];
-      }
-    });
-    
-    setStockErrors(errors);
-    setHasStockErrors(hasErrors);
-    return !hasErrors;
-  };
-
+  
   const getSelectedClientName = () => {
     if (!clientId) return "";
     const client = clients.find(c => c._id === clientId);
     return client ? `${client.vorname} ${client.name}` : "";
   };
-
+  
   const clearClientSelection = () => {
     setClientId("");
     setClientSearch("");
   };
-
-  const handleClientInputChange = (e) => {
-    const value = e.target.value;
-    setClientSearch(value);
+  
+ // También actualiza validateStock para usar toast
+const validateStock = () => {
+  for (const item of cart) {
+    const product = products.find(p => p._id === item.productId);
+    if (product && product.stock < item.quantity) {
+      showToast(t('rechnungForm.items.errors.stockItem')
+        .replace('{name}', item.productName)
+        .replace('{stock}', product.stock)
+        .replace('{needed}', item.quantity), 'error');
+      return false;
+    }
+  }
+  return true;
+};
+  
+const submit = async () => {
+  if (isSubmitting || !isAuthenticated) return;
+  
+  if (cart.length === 0) {
+    showToast(t('rechnungForm.messages.cartEmpty'), 'warning');
+    return;
+  }
+  
+  if (!validateStock()) return;
+  
+  setIsSubmitting(true);
+  
+  const payload = {
+    clientId: clientId || null,
+    items: cart.map(item => ({
+      productId: item.productId,
+      quantity: item.quantity,
+      unitPrice: item.unitPrice
+    })),
+    status,
+    taxRate: Number(taxRate)
+  };
+  
+  try {
+    const res = await createSale(payload);
     
-    if (value !== "") {
-      setShowClientAutocomplete(true);
+    if (res.success && res.sale) {
+      // 🔥 Mostrar toast de éxito
+      const invoiceNumber = res.sale.lieferschein || res.sale.invoiceNumber || '';
+      const successMessage = invoiceNumber 
+        ? t('rechnungForm.toasts.invoiceCreated').replace('{number}', invoiceNumber)
+        : t('rechnungForm.messages.createSuccessShort');
+      
+      showToast(successMessage, 'success',4000);
+      
+      // Resetear estado y cerrar modal
+      setIsSubmitting(false);
+      onDone();
+      
+      // Actualizaciones en segundo plano
+      setTimeout(() => {
+        updateProductInCache(true).catch(console.warn);
+        fetchProductLimits(true).catch(console.warn);
+      }, 200);
+      
     } else {
-      setShowClientAutocomplete(true);
-    }
-  };
-
-  const handleClientFocus = () => {
-    setShowClientAutocomplete(true);
-  };
-
-  // Calcular totales con taxRate de la empresa
-  const subtotal = Number(lines.reduce((sum, l) => sum + (l.quantity * l.unitPrice), 0).toFixed(2));
-  const discount = 0; // Por ahora sin descuento
-  const taxableAmount = subtotal - discount;
-  const taxAmount = Number((taxableAmount * (taxRate / 100)).toFixed(2));
-  const total = Number((taxableAmount + taxAmount).toFixed(2));
-
-  const submit = async () => {
-    if (isSubmitting || !isAuthenticated) return;
-    
-    setIsSubmitting(true);
-    
-    if (lines.some(l => !l.productId)) {
-      alert(t('rechnungForm.items.errors.selectAll'));
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (lines.some(l => l.quantity <= 0)) {
-      alert(t('rechnungForm.items.errors.quantityPositive'));
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (lines.some(l => l.unitPrice < 0)) {
-      alert(t('rechnungForm.items.errors.priceNegative'));
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (!validateAllStock()) {
-      alert(t('rechnungForm.items.errors.stock'));
-      setIsSubmitting(false);
-      return;
-    }
-
-    const groupedItems = {};
-    
-    lines.forEach(line => {
-      if (!line.productId) return;
-      
-      if (!groupedItems[line.productId]) {
-        groupedItems[line.productId] = {
-          productId: line.productId,
-          quantity: 0,
-          unitPrice: line.unitPrice
-        };
-      }
-      
-      groupedItems[line.productId].quantity += line.quantity;
-    });
-
-    const payload = {
-      clientId: clientId || null,
-      items: Object.values(groupedItems).map(item => ({
-        productId: item.productId,
-        quantity: Number(item.quantity),
-        unitPrice: Number(item.unitPrice)
-      })),
-      status,
-      taxRate: Number(taxRate) // Enviar taxRate de la empresa
-    };
-    
-    try {
-      const res = await createSale(payload);
-
-      if (res.success && res.sale) {
-        if (typeof BroadcastChannel !== 'undefined') {
-          try {
-            const channel = new BroadcastChannel('dashboard_updates');
-            channel.postMessage({ type: 'new_sale', sale: res.sale });
-            setTimeout(() => channel.close(), 100);
-          } catch (err) {
-            // console.log('BroadcastChannel error:', err);
-          }
-        }
-        
-        onDone();
-      } else {
-        alert(res.message || t('rechnungForm.messages.createError'));
-      }
-    } catch (error) {
-      console.error("Error creating sale:", error);
-      alert(t('rechnungForm.messages.createError') + ": " + error.message);
-    } finally {
+      showToast(res.message || t('rechnungForm.messages.createError'), 'error');
       setIsSubmitting(false);
     }
-  };
+  } catch (error) {
+    console.error("Error creating sale:", error);
+    showToast(t('rechnungForm.messages.createError') + ": " + error.message, 'error');
+    setIsSubmitting(false);
+  }
+};
 
-  const getStockInfo = (productId, lineIndex) => {
-    if (!productId) return null;
-    
-    const product = products.find(p => p._id === productId);
-    if (!product) return null;
-    
-    const totalQuantityForProduct = lines.reduce((total, l) => {
-      if (l.productId === productId) {
-        return total + l.quantity;
-      }
-      return total;
-    }, 0);
-    
-    const remainingStock = product.stock - totalQuantityForProduct;
-    const hasError = stockErrors[lineIndex];
-    
+  
+  if (!isAuthenticated) {
     return (
-      <div className={styles.stockInfo}>
-        <span className={`${styles.stockBadge} ${
-          hasError ? styles.outOfStock : 
-          remainingStock < 0 ? styles.outOfStock : 
-          remainingStock < 10 ? styles.lowStock : 
-          styles.inStock
-        }`}>
-          {t('rechnungForm.items.stock.label')
-            .replace('{stock}', product.stock)
-            .replace('{needed}', totalQuantityForProduct)
-            .replace('{remaining}', remainingStock)}
-        </span>
-      </div>
+     
+        <div className={styles.modalLarge}>
+          <div className={styles.modalHeader}>
+            <h2>{t('rechnungForm.restricted.title')}</h2>
+            <button className={styles.closeBtn} onClick={onDone}>×</button>
+          </div>
+          <div className={styles.modalBody}>
+            <p>{t('rechnungForm.restricted.message')}</p>
+          </div>
+          <div className={styles.modalFooter}>
+            <button className={`${styles.btn} ${styles.btnCancel}`} onClick={onDone}>
+              {t('rechnungForm.restricted.close')}
+            </button>
+          </div>
+        </div>
+      
     );
-  };
-
+  }
+  
   return (
     <div className={styles.modalBackdrop}>
-      <div className={styles.modal}>
+      <div className={styles.modalLarge}>
         <div className={styles.modalHeader}>
           <h2>{t('rechnungForm.creator.title')}</h2>
-          <button 
+
+         <button 
             className={styles.closeBtn} 
-            onClick={onDone}
+            onClick={() => {
+              if (!isSubmitting) {
+                onDone();
+              }
+            }}
             disabled={isSubmitting}
           >
             ✕
           </button>
         </div>
-
-        <div className={styles.modalBody}>
-          <div className={styles.formSection}>
-            <div className={styles.formGroup}>
-              <label>{t('rechnungForm.client.label')}</label>
-              <div ref={clientAutocompleteRef} className={styles.autocompleteWrapper}>
+        
+        <div className={styles.posContainer}>
+          {/* Panel izquierdo - Lista de productos */}
+          <div className={styles.productsPanel}>
+            <div className={styles.searchSection}>
+              <div className={styles.searchWrapper}>
+                <svg className={styles.searchIcon} viewBox="0 0 24 24" width="20" height="20">
+                  <path fill="currentColor" d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+                </svg>
                 <input
+                  ref={searchInputRef}
                   type="text"
-                  placeholder={t('rechnungForm.client.placeholder')}
-                  value={clientSearch || getSelectedClientName()}
-                  onChange={handleClientInputChange}
-                  onFocus={handleClientFocus}
-                  disabled={isSubmitting}
+                  placeholder={t('rechnungForm.products.searchPlaceholder')}
+                  value={productSearchTerm}
+                  onChange={(e) => handleProductSearch(e.target.value)}
+                  className={styles.productSearchInput}
                 />
-                {clientId && (
-                  <button 
-                    className={styles.clearClientBtn}
-                    onClick={clearClientSelection}
-                    title={t('rechnungForm.client.clearTitle')}
-                    disabled={isSubmitting}
-                  >
-                    ✕
-                  </button>
-                )}
-                {showClientAutocomplete && (
-                  <div className={styles.autocompleteDropdown}>
-                    <div 
-                      className={`${styles.autocompleteItem} ${!clientId ? styles.selected : ''}`}
-                      onClick={() => {
-                        setClientId("");
-                        setClientSearch("");
-                        setShowClientAutocomplete(false);
-                      }}
-                    >
-                      <span className={styles.clientName}>
-                        <span className={styles.randomClientIcon}>🎯</span>
-                        {t('rechnungForm.client.random')}
-                      </span>
-                    </div>
-                    
-                    <div className={styles.autocompleteSeparator}></div>
-                    
-                    {filteredClients().length > 0 ? (
-                      filteredClients().map(c => (
-                        <div 
-                          key={c._id} 
-                          className={`${styles.autocompleteItem} ${clientId === c._id ? styles.selected : ''}`}
-                          onClick={() => {
-                            setClientId(c._id);
-                            setClientSearch(`${c.vorname} ${c.name}`);
-                            setShowClientAutocomplete(false);
-                          }}
-                        >
-                          <span className={styles.clientName}>
-                            {c.vorname} {c.name}
-                            {c.isRandomClient && <span className={styles.randomBadge}>{t('rechnungForm.client.randomBadge')}</span>}
-                          </span>
-                          {c.email && <span className={styles.email}>({c.email})</span>}
-                        </div>
-                      ))
-                    ) : (
-                      <div className={styles.autocompleteEmpty}>
-                        {t('rechnungForm.client.noClients')}
-                      </div>
-                    )}
-                    
-                    {!clientSearch && clients.length > 20 && (
-                      <div className={styles.autocompleteMore}>
-                        {t('rechnungForm.client.moreClients').replace('{count}', clients.length - 20)}
-                      </div>
-                    )}
-                  </div>
-                )}
-
               </div>
-              {/* {!clientId && clientSearch === "" && (
-                <div className={styles.infoNote}>
-                  <span className={styles.infoIcon}>💡</span>
-                  {t('rechnungForm.client.info')} 
-                </div>
-              )} */}
-
-              {/* {showClientAutocomplete && !clientSearch && (
-                <div className={styles.clientCount}>
-                  {t('rechnungForm.client.clientCount')
-                    .replace('{count}', clients.length)
-                    .replace('{plural}', clients.length !== 1 ? 's' : '')}
-                  {clients.length > 20 && ` ${t('rechnungForm.client.showingFirst').replace('{count}', 20)}`}
-                </div>
-              )} */}
-
-            </div>
-
-            <div className={styles.formGroup}>
-              <label>{t('rechnungForm.status.label')}</label>
-              <select 
-                value={status} 
-                onChange={e => setStatus(e.target.value)}
-                disabled={isSubmitting}
-              >
-                <option value="paid">{t('rechnungForm.status.paid')}</option>
-                <option value="pending">{t('rechnungForm.status.pending')}</option>
-                <option value="cancelled">{t('rechnungForm.status.cancelled')}</option>
-              </select>
-            </div>
-          </div>
-
-          <div className={styles.tableSection}>
-            <div className={styles.sectionHeader}>
-              <h3>{t('rechnungForm.items.title').replace('{count}', lines.length)}</h3>
             </div>
             
-            <div className={styles.itemsContainer}>
-              {lines.map((line, i) => {
-                const matches = filteredProducts(i);
-                const lineTotal = line.quantity && line.unitPrice ? (line.quantity * line.unitPrice).toFixed(2) : '0.00';
-                const stockInfo = getStockInfo(line.productId, i);
-                const isSearchingLine = isSearching[i];
-                
-                return (
-                  <div key={i} className={`${styles.itemCard} ${
-                    isSubmitting ? styles.rowDisabled : ""
-                  } ${stockErrors[i] ? styles.rowError : ""}`}>
-                    <div className={styles.itemHeader}>
-                      <span className={styles.itemNumber}>
-                        {t('rechnungForm.items.item').replace('{number}', i + 1)}
-                      </span>
-                      <button 
-                        onClick={() => removeLine(i)}
-                        disabled={lines.length <= 1 || isSubmitting}
-                        className={styles.removeBtn}
-                        title={t('rechnungForm.items.removeTitle')}
-                      >
-                        ✕
-                      </button>
+            <div className={styles.productsGrid}>
+              {productsLoading ? (
+                <div className={styles.loadingProducts}>
+                  <div className={styles.spinner}></div>
+                  <p>{t('rechnungForm.common.loading')}</p>
+                </div>
+              ) : filteredProducts.length === 0 ? (
+                <div className={styles.emptyProducts}>
+                  <span className={styles.emptyIcon}>🔍</span>
+                  <p>{productSearchTerm ? t('rechnungForm.products.noResults') : t('rechnungForm.products.empty')}</p>
+                </div>
+              ) : (
+                filteredProducts.map(product => (
+                  <div 
+                    key={product._id} 
+                    className={styles.productCard}
+                    onClick={() => addToCart(product)}
+                  >
+                    <div className={styles.productImage}>
+                      {product.imagen ? (
+                        <img src={product.imagen} alt={product.artikelName} />
+                      ) : (
+                        <div className={styles.imagePlaceholder}>
+                          <span>📦</span>
+                        </div>
+                      )}
                     </div>
-                    
-                    <div className={styles.itemContent}>
-                      <div className={styles.formGroup}>
-                        <label>{t('rechnungForm.items.fields.article')}</label>
-                        <div className={styles.autocompleteWrapper} ref={el => autocompleteRefs.current[i] = el}>
-                          <input
-                            type="text"
-                            placeholder={t('rechnungForm.items.searchPlaceholder')}
-                            value={searches[i]}
-                            onChange={e => handleProductSearch(i, e.target.value)}
-                            onFocus={() => setShowAutocomplete(prev => prev.map((s, idx) => idx === i ? true : s))}
-                            disabled={isSubmitting}
-                          />
-                          
-                          {showAutocomplete[i] && (
-                            <>
-                              {isSearchingLine && (
-                                <div className={styles.autocompleteLoading}>
-                                  <div className={styles.spinnerSmall}></div>
-                                  <span>{t('rechnungForm.items.searching')}</span>
-                                </div>
-                              )}
-                              
-                              {!isSearchingLine && matches.length > 0 && (
-                                <div className={styles.autocompleteDropdown}>
-                                  {matches.map(p => (
-                                    <div 
-                                      key={p._id}
-                                      className={styles.autocompleteItem}
-                                      onClick={() => {
-                                        updateLine(i, { 
-                                          productId: p._id, 
-                                          unitPrice: p.price,
-                                          stock: p.stock 
-                                        });
-                                      }}
-                                    >
-                                      <div className={styles.productName}>{p.artikelName}</div>
-                                      <div className={styles.productDetails}>
-                                        <span className={styles.productPrice}>{p.price} {currencySymbol}</span>
-                                        <span className={styles.productStock}>
-                                          {t('rechnungForm.items.stock.badge.inStock')}: {p.stock}
-                                        </span>
-                                      </div>
-                                    </div>
-                                  ))}
-                                </div>
-                              )}
-                              
-                              {!isSearchingLine && searches[i].length >= 2 && matches.length === 0 && !productsLoading && (
-                                <div className={styles.autocompleteEmpty}>
-                                  {t('rechnungForm.items.noResults').replace('{search}', searches[i])}
-                                </div>
-                              )}
-                              
-                              {!isSearchingLine && searches[i].length < 2 && (
-                                <div className={styles.autocompleteHint}>
-                                  {t('rechnungForm.items.minChars')}
-                                </div>
-                              )}
-                            </>
+                    <div className={styles.productInfo}>
+                      <h4 className={styles.productName}>{product.artikelName}</h4>
+                      <p className={styles.productNumber}>{product.artikelNumber || '-'}</p>
+                      <div className={styles.productFooter}>
+                        <span className={styles.productPrice}>
+                          {formatCurrency(product.price || 0)} {currencySymbol}
+                        </span>
+                        <span className={`${styles.productStock} ${product.stock <= 0 ? styles.outOfStock : product.stock < 10 ? styles.lowStock : ''}`}>
+                          {product.stock || 0} {t('rechnungForm.products.units')}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          
+          {/* Panel derecho - Carrito */}
+          <div className={styles.cartPanel}>
+            {/* Cliente y estado */}
+            <div className={styles.cartHeader}>
+              <div className={styles.clientSection}>
+                <label>{t('rechnungForm.client.label')}</label>
+                <div ref={clientAutocompleteRef} className={styles.clientAutocomplete}>
+                  <input
+                    type="text"
+                    placeholder={t('rechnungForm.client.placeholder')}
+                    value={clientSearch || getSelectedClientName()}
+                    onChange={(e) => {
+                      setClientSearch(e.target.value);
+                      setShowClientAutocomplete(true);
+                    }}
+                    onFocus={() => setShowClientAutocomplete(true)}
+                    disabled={isSubmitting}
+                  />
+                  {clientId && (
+                    <button 
+                      className={styles.clearClientBtn}
+                      onClick={clearClientSelection}
+                      title={t('rechnungForm.client.clearTitle')}
+                    >
+                      ✕
+                    </button>
+                  )}
+                  {showClientAutocomplete && (
+                    <div className={styles.autocompleteDropdown}>
+                      <div 
+                        className={`${styles.autocompleteItem} ${!clientId ? styles.selected : ''}`}
+                        onClick={() => {
+                          setClientId("");
+                          setClientSearch("");
+                          setShowClientAutocomplete(false);
+                        }}
+                      >
+                        <span className={styles.clientName}>
+                          <span className={styles.randomClientIcon}>🎯</span>
+                          {t('rechnungForm.client.random')}
+                        </span>
+                      </div>
+                      <div className={styles.autocompleteSeparator}></div>
+                      {filteredClients().length > 0 ? (
+                        filteredClients().map(c => (
+                          <div 
+                            key={c._id} 
+                            className={`${styles.autocompleteItem} ${clientId === c._id ? styles.selected : ''}`}
+                            onClick={() => {
+                              setClientId(c._id);
+                              setClientSearch(`${c.vorname} ${c.name}`);
+                              setShowClientAutocomplete(false);
+                            }}
+                          >
+                            <span className={styles.clientName}>
+                              {c.vorname} {c.name}
+                            </span>
+                            {c.email && <span className={styles.email}>({c.email})</span>}
+                          </div>
+                        ))
+                      ) : (
+                        <div className={styles.autocompleteEmpty}>
+                          {t('rechnungForm.client.noClients')}
+                        </div>
+                      )}
+                    </div>
+                  )}
+                </div>
+              </div>
+              
+              <div className={styles.statusSection}>
+                <label>{t('rechnungForm.status.label')}</label>
+                <select 
+                  value={status} 
+                  onChange={e => setStatus(e.target.value)}
+                  disabled={isSubmitting}
+                >
+                  <option value="paid">{t('rechnungForm.status.paid')}</option>
+                  <option value="pending">{t('rechnungForm.status.pending')}</option>
+                  <option value="cancelled">{t('rechnungForm.status.cancelled')}</option>
+                </select>
+              </div>
+            </div>
+            
+            {/* Lista de artículos en carrito */}
+            <div className={styles.cartItems}>
+              <div className={styles.cartItemsHeader}>
+                <h3>{t('rechnungForm.cart.title')} ({cart.length} {t('rechnungForm.cart.items')})</h3>
+                {cart.length > 0 && (
+                  <button className={styles.clearCartBtn} onClick={clearCart}>
+                    {t('rechnungForm.cart.clear')}
+                  </button>
+                )}
+              </div>
+              
+              {cart.length === 0 ? (
+                <div className={styles.emptyCart}>
+                  <span className={styles.emptyCartIcon}>🛒</span>
+                  <p>{t('rechnungForm.cart.empty')}</p>
+                </div>
+              ) : (
+                <div className={styles.cartList}>
+                  {cart.map((item, index) => (
+                    <div key={`${item.productId}-${index}`} className={styles.cartItem}>
+                      <div className={styles.cartItemInfo}>
+                        <div className={styles.cartItemImage}>
+                          {item.image ? (
+                            <img src={item.image} alt={item.productName} />
+                          ) : (
+                            <div className={styles.cartItemPlaceholder}>📦</div>
                           )}
                         </div>
-                        
-                        {stockInfo}
-                        
-                        {stockErrors[i] && (
-                          <div className={styles.stockError}>
-                            ⚠️ {stockErrors[i]}
-                          </div>
-                        )}
+                        <div className={styles.cartItemDetails}>
+                          <h4 className={styles.cartItemName}>{item.productName}</h4>
+                          <span className={styles.cartItemNumber}>{item.productNumber}</span>
+                          <span className={styles.cartItemPrice}>
+                            {formatCurrency(item.unitPrice)} {currencySymbol}
+                          </span>
+                        </div>
                       </div>
                       
-                      <div className={styles.itemDetails}>
-                        <div className={styles.formGroup}>
-                          <label>{t('rechnungForm.items.fields.quantity')}</label>
+                      <div className={styles.cartItemControls}>
+                        <div className={styles.quantityControl}>
+                          <button 
+                            onClick={() => updateCartQuantity(index, item.quantity - 1)}
+                            disabled={isSubmitting}
+                            className={styles.qtyBtn}
+                          >
+                            -
+                          </button>
                           <input
                             type="number"
                             min="1"
-                            value={line.quantity}
-                            onChange={e => {
-                              const value = e.target.value;
-                              if (value === '') {
-                                updateLine(i, { quantity: '' });
-                              } else {
-                                const numValue = Number(value);
-                                if (numValue >= 1) {
-                                  updateLine(i, { quantity: numValue });
-                                }
+                            value={item.quantity}
+                            onChange={(e) => {
+                              const val = parseInt(e.target.value);
+                              if (!isNaN(val) && val >= 1) {
+                                updateCartQuantity(index, val);
                               }
                             }}
-                            onBlur={e => {
-                              if (e.target.value === '') {
-                                updateLine(i, { quantity: 1 });
-                              }
-                            }}
-                            disabled={isSubmitting}
+                            className={styles.qtyInput}
                           />
-                        </div>
-                        
-                        <div className={styles.formGroup}>
-                          <label>{t('rechnungForm.items.fields.unitPrice')} {currencySymbol}</label> 
-                          <input
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            value={line.unitPrice}
-                            onChange={e => {
-                              const value = e.target.value;
-                              if (value === '') {
-                                updateLine(i, { unitPrice: '' });
-                              } else {
-                                const numValue = Number(value);
-                                if (numValue >= 0) {
-                                  updateLine(i, { unitPrice: numValue });
-                                }
-                              }
-                            }}
-                            onBlur={e => {
-                              if (e.target.value === '') {
-                                updateLine(i, { unitPrice: 0 });
-                              }
-                            }}
+                          <button 
+                            onClick={() => updateCartQuantity(index, item.quantity + 1)}
                             disabled={isSubmitting}
-                          />
+                            className={styles.qtyBtn}
+                          >
+                            +
+                          </button>
                         </div>
-                        
-                        <div className={`${styles.formGroup} ${styles.totalGroup}`}>
-                          <label>{t('rechnungForm.items.fields.total')}</label>
-                          <div className={styles.totalDisplay}>{lineTotal} {currencySymbol}</div>
+                        <div className={styles.itemSubtotal}>
+                          {formatCurrency(item.quantity * item.unitPrice)} {currencySymbol}
                         </div>
+                        <button 
+                          onClick={() => removeFromCart(index)}
+                          className={styles.removeItemBtn}
+                          title={t('rechnungForm.cart.remove')}
+                        >
+                          ✕
+                        </button>
                       </div>
                     </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <button 
-              className={styles.addBtn} 
-              onClick={addLine}
-              disabled={isSubmitting}
-            >
-              {t('rechnungForm.items.add')}
-            </button>
-          </div>
-
-          {/* 🔥 SECCIÓN DE TOTALES - IGUAL QUE INVOICECLASSIC */}
-          <div className={styles.totalsSection}>
-            <div className={styles.totalRow}>
-              <span>{t('rechnungForm.totals.subtotal')}</span>
-              <span>{formatCurrency(subtotal)} {currencySymbol}</span>
+                  ))}
+                </div>
+              )}
             </div>
             
-            {discount > 0 && (
+            {/* Totales */}
+            <div className={styles.cartTotals}>
               <div className={styles.totalRow}>
-                <span>{t('rechnungForm.totals.discount')}</span>
-                <span>-{formatCurrency(discount)} {currencySymbol}</span>
+                <span>{t('rechnungForm.totals.subtotal')}</span>
+                <span>{formatCurrency(subtotal)} {currencySymbol}</span>
               </div>
-            )}
-            
-            <div className={styles.totalRow}>
-              <span>{taxName} {taxRate.toFixed(1)}%</span>
-              <span>{formatCurrency(taxAmount)} {currencySymbol}</span>
+              <div className={styles.totalRow}>
+                <span>{taxName} {taxRate.toFixed(1)}%</span>
+                <span>{formatCurrency(taxAmount)} {currencySymbol}</span>
+              </div>
+              <div className={`${styles.totalRow} ${styles.grandTotal}`}>
+                <span>{t('rechnungForm.totals.total')}</span>
+                <span>{formatCurrency(total)} {currencySymbol}</span>
+              </div>
             </div>
             
-            <div className={`${styles.totalRow} ${styles.grandTotal}`}>
-              <span>{t('rechnungForm.totals.total')}</span>
-              <span>{formatCurrency(total)} {currencySymbol}</span>
+            {/* Botones de acción */}
+            <div className={styles.cartActions}>
+              <button 
+                className={`${styles.btn} ${styles.btnCancel}`} 
+                onClick={onDone}
+                disabled={isSubmitting}
+              >
+                {t('rechnungForm.common.cancel')}
+              </button>
+              <button 
+                className={`${styles.btn} ${styles.btnSave}`} 
+                onClick={submit} 
+                disabled={isSubmitting || cart.length === 0}
+              >
+                {isSubmitting ? (
+                  <>
+                    <div className={styles.loadingSpinnerSmall}></div>
+                    {t('rechnungForm.common.saving')}
+                  </>
+                ) : (
+                  t('rechnungForm.creator.submit')
+                )}
+              </button>
             </div>
           </div>
-        </div>
-
-        <div className={styles.modalFooter}>
-          <button 
-            className={`${styles.btn} ${styles.btnCancel}`} 
-            onClick={onDone}
-            disabled={isSubmitting}
-          >
-            {t('rechnungForm.common.cancel')}
-          </button>
-          <button 
-            className={`${styles.btn} ${styles.btnSave}`} 
-            onClick={submit} 
-            disabled={isSubmitting || hasStockErrors}
-          >
-            {isSubmitting ? (
-              <>
-                <div className={`${styles.loadingSpinner} ${styles.small}`}></div>
-                {t('rechnungForm.common.saving')}
-              </>
-            ) : (
-              t('rechnungForm.creator.submit')
-            )}
-          </button>
         </div>
       </div>
     </div>

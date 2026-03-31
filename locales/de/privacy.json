@@ -14,7 +14,7 @@
         "address2": "Altstetten",
         "address3": "Schweiz",
         "email": "Email: rysermariano@gmail.com",
-        "phone": "Telefon: +41 788 74 79 74"
+        "phone": "Telefon: +41 78 874 79 74"
       },
       
       "principles": {
@@ -187,8 +187,8 @@
         "authority": {
           "title": "Aufsichtsbehörde",
           "name": "Berliner Beauftragte für Datenschutz und Informationsfreiheit",
-          "address1": "Friedrichstraße 219",
-          "address2": "10969 Berlin"
+          "address1": "Hohlstrasse 405",
+          "address2": ""
         }
       }
     }

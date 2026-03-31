@@ -5,7 +5,7 @@
       "cache": "Initialer Cache wird aufgebaut...",
       "cacheHint": "Dies geschieht nur einmal",
       "products": "Produkte werden geladen..."
-    },
+    }, 
     "header": {
       "title": "Kiosk-Verkauf",
       "subtitle": "Schnelles Scannen und Bezahlen",
@@ -41,7 +41,7 @@
     "client": {
       "title": "Kunde",
       "placeholder": "Kunde suchen...",
-      "randomClient": "ClienteRandom",
+      "randomClient": "Zufalls-Kunde",
       "clear": "Löschen"
     },
     "totals": {

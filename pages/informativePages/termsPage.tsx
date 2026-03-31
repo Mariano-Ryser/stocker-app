@@ -130,8 +130,11 @@ export default function TermsPage() {
               <p>{t("terms.sections.termination.outro")}</p>
             </section>
 
+            {/* ${styles.cancellationSection} */}
             {/* 5. Jederzeitiges Kündigungsrecht (NUEVA SECCIÓN) */}
-            <section className={`${styles.termsSection} ${styles.cancellationSection}`}>
+            <section className={`${styles.termsSection} 
+            `}
+            >
               <h2>{t("terms.sections.cancellation.title")}</h2>
               {asArray(
                 t("terms.sections.cancellation.paragraphs", {
@@ -205,7 +208,7 @@ export default function TermsPage() {
             {/* Contact */}
             <section className={styles.contactSection}>
               <h2>{t("terms.contact.title")}</h2>
-              <p>{t("terms.contact.company")}</p>
+              <p>Stockercloud AG</p>
 
               {asArray(
                 t("terms.contact.address", {
@@ -215,8 +218,8 @@ export default function TermsPage() {
                 <p key={idx}>{line}</p>
               ))}
 
-              <p>Email: {t("terms.contact.email")}</p>
-              <p>Tel: {t("terms.contact.phone")}</p>
+              <p>Email: rysermariano@gmail.com</p>
+              <p>Tel: +41 78 874 79 74</p>
             </section>
           </div>
         </main>

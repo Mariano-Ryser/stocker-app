@@ -112,6 +112,27 @@
       "customer": "Cliente",
       "payment": "Pago",
       "notes": "Notas"
+    },
+    "modalMovements": {
+      "title": "Movimientos de Stock",
+      "loading": "Cargando movimientos...",
+      "error": "Error",
+      "noMovements": "No hay movimientos de stock para esta factura",
+      "invoiceNumber": "Albarán",
+      "customer": "Cliente",
+      "total": "Total",
+      "types": {
+        "WAREHOUSE_OUT": "Salida (Venta)",
+        "RETURN": "Devolución",
+        "MANUAL_ADJUSTMENT": "Ajuste manual"
+      },
+      "table": {
+        "date": "Fecha",
+        "product": "Producto",
+        "type": "Tipo",
+        "quantity": "Cantidad",
+        "stock": "Stock"
+      }
     }
   }
 }

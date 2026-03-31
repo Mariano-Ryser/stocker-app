@@ -1,7 +1,8 @@
-// pages/dashboard/wareneingang/index.tsx - VERSIÓN COMPLETA Y CORREGIDA CON TRADUCCIONES
-import { useState } from 'react';
+// pages/dashboard/wareneingang/index.tsx - VERSIÓN CORREGIDA CON ACTUALIZACIÓN DE STOCK
+import { useState, useEffect } from 'react';
 import { useAuth } from '../../../components/auth/AuthProvider';
 import { useStockEntry } from '../../../hooks/useStockEntry';
+import { useProduct } from '../../../hooks/useProducts'; // ✅ AÑADIR: Importar useProduct
 import { useLanguage } from '../../../contexts/LanguageContext';
 
 import styles from './Wareneingang.module.css';
@@ -21,6 +22,13 @@ export default function Wareneingang() {
     clearSearch,
   } = useStockEntry();
 
+  // ✅ AÑADIR: Obtener funciones de useProduct
+  const { 
+    updateProductInCache, 
+    fetchProductLimits,
+    forceRefreshLimits
+  } = useProduct();
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [quantity, setQuantity] = useState('');
@@ -31,6 +39,28 @@ export default function Wareneingang() {
   const [batchNumber, setBatchNumber] = useState('');
   const [showSuccess, setShowSuccess] = useState(false);
   const currencySymbol = company?.currency || 'USD';
+
+  // ✅ AÑADIR: Escuchar eventos de stockUpdated para mantener sincronización
+  useEffect(() => {
+    const handleStockUpdated = async () => {
+      console.log('📦 Evento stockUpdated recibido en Wareneingang');
+      // Actualizar caché y límites cuando ocurra un cambio de stock externo
+      await updateProductInCache(true);
+      await fetchProductLimits(true);
+    };
+
+    window.addEventListener('stockUpdated', handleStockUpdated);
+    window.addEventListener('productUpdated', handleStockUpdated);
+    window.addEventListener('productCreated', handleStockUpdated);
+    window.addEventListener('productDeleted', handleStockUpdated);
+
+    return () => {
+      window.removeEventListener('stockUpdated', handleStockUpdated);
+      window.removeEventListener('productUpdated', handleStockUpdated);
+      window.removeEventListener('productCreated', handleStockUpdated);
+      window.removeEventListener('productDeleted', handleStockUpdated);
+    };
+  }, [updateProductInCache, fetchProductLimits]);
 
   // Manejar búsqueda
   const handleSearch = (e:any) => {
@@ -69,7 +99,28 @@ export default function Wareneingang() {
     });
 
     if (result.success) {
+      // ✅ DISPARAR EVENTO DE STOCK ACTUALIZADO
+      window.dispatchEvent(new CustomEvent('stockUpdated', { 
+        detail: { 
+          productId: selectedProduct._id,
+          quantityAdded: parseInt(quantity),
+          newStock: (selectedProduct.stock || 0) + parseInt(quantity),
+          timestamp: new Date().toISOString()
+        } 
+      }));
+
+      // ✅ ACTUALIZAR CACHÉ Y LÍMITES INMEDIATAMENTE
+      await updateProductInCache(true);
+      await fetchProductLimits(true);
+      
+      // ✅ Actualizar el producto seleccionado con el nuevo stock para mostrar inmediatamente
+      setSelectedProduct(prev => ({
+        ...prev,
+        stock: (prev?.stock || 0) + parseInt(quantity)
+      }));
+
       setShowSuccess(true);
+      
       // Opcional: resetear formulario después de éxito
       setQuantity('');
       setNotes('');

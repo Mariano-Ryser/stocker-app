@@ -5,6 +5,7 @@ import SideBar from '../components/dashboard/sideBar/sideBarAdmin'
 import { DashboardProvider } from '../contexts/DashboardContext'
 import { AuthProvider } from '../components/auth/AuthProvider'
 import { LanguageProvider } from '../contexts/LanguageContext'
+import { ToastProvider } from '../contexts/ToastContext' // ✅ Agregar import
 
 function MyApp({ Component, pageProps, router }) {
   const isDashboard = router.pathname.startsWith("/dashboard");
@@ -18,21 +19,7 @@ function MyApp({ Component, pageProps, router }) {
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
         <meta name="description" content="Stocker is your SaaS for easy and fast inventory management. Track stock, manage products, and optimize your warehouse with real-time analytics. Try Stocker today." />
         <meta name="robots" content="index, follow" />
-        <meta name="keywords" content="
-Stocker, Stocker SaaS, inventory management, stock control, inventory software, warehouse management, 
-inventory tracking, business inventory, stock app, SaaS inventory, product management software, 
-digital inventory management, inventory system, stock management software, small business inventory,
-logistics software, stock control app, inventory control system, stock tracking, inventory planning,
-warehouse inventory, inventory dashboard, stock monitoring, stock management tool, inventory optimization,
-
-Bestandskontrolle, Inventarverwaltung, Software für Inventar, Lagerverwaltung, Bestandsmanagement, Lagersoftware, 
-Lagerbestandskontrolle, Inventar-App, Lagerverwaltungssystem, SaaS Inventar, Produktverwaltung Software, Bestandsanalyse, 
-Lageroptimierung, Lagerüberwachung, Inventarkontrolle, Bestandsplanung, Lagerberichte, Lagerdashboard, digitale Bestandsverwaltung, 
-
-control de stock, gestión de inventarios, software de inventario, gestión de almacén, inventario, control de inventario, 
-aplicación de inventario, software para empresas, gestión de productos, seguimiento de inventario, optimización de stock, 
-informes de inventario, dashboard de inventario, gestión digital de inventario, sistema de inventario, herramienta de inventario
-" />
+              
         {/* Canonical URL */}
         <link rel="canonical" href={baseUrl} />
         <link rel="manifest" href="/manifest.json" />
@@ -85,28 +72,31 @@ informes de inventario, dashboard de inventario, gestión digital de inventario,
                 "ratingCount": "156"
               },
               "url": baseUrl,
-              // "sameAs": [
-              //   "https://twitter.com/stockercloud",
-              //   "https://www.linkedin.com/company/stocker"
-              // ]
+              "sameAs": [
+              "https://twitter.com/stockercloud",
+             "https://www.linkedin.com/company/stocker"
+               ]
             })
           }}
         />
       </Head>
       
+      {/* ✅ Envolver toda la aplicación con ToastProvider */}
       <AuthProvider>
         <LanguageProvider>
-          {isDashboard ? (
-            <DashboardProvider>
-              <SideBar>
+          <ToastProvider> {/* ✅ ToastProvider envuelve todo */}
+            {isDashboard ? (
+              <DashboardProvider>
+                <SideBar>
+                  <Component {...pageProps} />
+                </SideBar>
+              </DashboardProvider>
+            ) : (
+              <Layout>
                 <Component {...pageProps} />
-              </SideBar>
-            </DashboardProvider>
-          ) : (
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          )}
+              </Layout>
+            )}
+          </ToastProvider>
         </LanguageProvider>
       </AuthProvider>
     </>

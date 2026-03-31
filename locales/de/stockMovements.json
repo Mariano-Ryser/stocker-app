@@ -1,18 +1,19 @@
 {
   "stockMovements": {
     "title": "Lagerbewegungen",
-    "subtitle": "Ein- und Ausgänge im Überblick",
+    "subtitle": "Ein- und Ausgänge im Detail",
     "loading": "Lade Bewegungen…",
-    "loadingAuth": "Laden…",
+    "loadingAuth": "Lade…",
     "error": "Fehler beim Laden",
     "noMovements": "Keine Bewegungen",
     "refresh": "Aktualisieren",
+    "viewNotes": "Notiz anzeigen",
     "filters": {
       "allTypes": "Alle Typen",
       "startDate": "Startdatum",
       "endDate": "Enddatum",
       "search": "Artikel suchen…",
-      "clear": "Zurücksetzen"
+      "clear": "Löschen"
     },
     "table": {
       "date": "Datum",
@@ -26,22 +27,22 @@
     "excel": {
       "date": "Datum",
       "article": "Artikel",
-      "articleNumber": "Artikelnummer",
+      "articleNumber": "Artikel-Nr.",
       "type": "Typ",
       "quantity": "Menge",
-      "previousStock": "Bestand Vorher",
-      "newStock": "Bestand Neu",
+      "previousStock": "Vorheriger Bestand",
+      "newStock": "Neuer Bestand",
       "user": "Benutzer",
       "reference": "Referenz",
       "notes": "Notizen"
     },
     "movementTypes": {
       "WAREHOUSE_IN": {
-        "label": "Wareneingang",
+        "label": "Zugang",
         "icon": "↓"
       },
       "WAREHOUSE_OUT": {
-        "label": "Warenausgang",
+        "label": "Abgang",
         "icon": "↑"
       },
       "MANUAL_ADJUSTMENT": {
@@ -57,7 +58,7 @@
         "icon": "⚠"
       },
       "INITIAL_STOCK": {
-        "label": "Erstbestand",
+        "label": "Anfangsbestand",
         "icon": "●"
       }
     },
@@ -69,6 +70,15 @@
     "view": {
       "table": "Tabellenansicht",
       "excel": "Excel-Ansicht"
+    },
+    "notesModal": {
+      "title": "Bewegungsnotiz",
+      "article": "Artikel",
+      "date": "Datum",
+      "type": "Typ",
+      "note": "Notiz",
+      "noNote": "Keine Notiz verfügbar",
+      "close": "Schließen"
     }
   }
 }

@@ -14,7 +14,7 @@
       "indexedDB": "(IndexedDB: {count})",
       "total": "Total:",
       "scanMode": "🔍 Modo Escáner",
-      "editMode": "✏️ Modo Edición"
+      "editMode": "✏️ Modo Edición" 
     },
     "scanner": {
       "title": "Escáner de Código",
