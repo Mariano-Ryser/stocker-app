@@ -13,7 +13,6 @@
 
 .modal {
   background: white;
-  border-radius: 0.875rem;
   width: 100%;
   max-width: 30rem; /* Reduje de 32rem a 30rem */
   max-height: 85vh; /* Un poco menos de altura */
@@ -110,7 +109,6 @@
 .formGroup input {
   padding: 0.5rem 0.75rem; /* Reduje de 0.75rem 1rem a 0.5rem 0.75rem */
   border: 1.5px solid #e1e5e9; /* Borde un poco más fino */
-  border-radius: 0.5rem; /* Reduje de 0.75rem a 0.5rem */
   font-size: 0.875rem; /* Reduje de 1rem a 0.875rem */
   width: 100%;
   box-sizing: border-box;
@@ -132,7 +130,6 @@
 .btn {
   padding: 0.5rem 1.25rem; /* Reduje de 0.75rem 1.5rem a 0.5rem 1.25rem */
   border: none;
-  border-radius: 0.5rem; /* Reduje de 0.75rem a 0.5rem */
   font-size: 0.875rem; /* Reduje de 0.9375rem a 0.875rem */
   font-weight: 500;
   cursor: pointer;
@@ -149,7 +146,6 @@
 
   .modal {
     max-height: 98vh;
-    border-radius: 0.5rem;
   }
 
   .header {

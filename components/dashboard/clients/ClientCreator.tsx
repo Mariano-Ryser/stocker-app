@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useAuth } from "../../../components/auth/AuthProvider";
+import { useState, useEffect } from "react";
+import { useAuth } from "../../auth/AuthProvider";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import styles from "./ClientCreator.module.css";
 
@@ -35,6 +35,21 @@ export default function ClientsCreator({ onClose, onCreated, createClient }) {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+
+  // ✅ Cerrar modal con tecla Escape - CORREGIDO
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && !loading) {
+        onClose();
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [loading, onClose]);
 
   if (!isAuthenticated) {
     return (
@@ -74,20 +89,7 @@ export default function ClientsCreator({ onClose, onCreated, createClient }) {
       setForm(prev => ({ ...prev, [name]: value }));
     }
   };
-    // Cerrar modal con tecla Escape
-  useEffect(() => {
-    const handleEscape = (event) => {
-      if (event.key === 'Escape' && !isSubmitting) {
-        onDone();
-      }
-    };
-    
-    window.addEventListener('keydown', handleEscape);
-    
-    return () => {
-      window.removeEventListener('keydown', handleEscape);
-    };
-  }, [isSubmitting, onDone]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
@@ -153,8 +155,6 @@ export default function ClientsCreator({ onClose, onCreated, createClient }) {
           <div className={styles.body}>
             <div className={styles.formSection}>
               {/* Datos personales */}
-              {/* <h3 className={styles.sectionTitle}>Persönliche Daten</h3>
-               */}
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
                   <label htmlFor="vorname">{t('clientForm.fields.firstName.label')}</label>
