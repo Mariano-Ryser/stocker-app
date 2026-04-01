@@ -1,105 +1,112 @@
 {
   "rechnungForm": {
     "common": {
-      "cancel": "Abbrechen",
-      "close": "Schließen",
-      "save": "Speichern",
-      "saving": "Speichern...",
-      "loading": "Laden...",
-      "error": "Fehler"
+      "cancel": "Cancel",
+      "close": "Close",
+      "save": "Save",
+      "saving": "Saving...",
+      "loading": "Loading...",
+      "error": "Error"
+    },
+     "editor": {
+      "title": "Invoice",
+      "submit": "Edit Invoice"
     },
     "creator": {
-      "title": "Neue Rechnung",
-      "submit": "Rechnung erstellen"
+      "title": "New Invoice",
+      "submit": "Create Invoice"
     },
     "products": {
-      "searchPlaceholder": "Suche nach Name, Nummer oder Beschreibung...",
-      "noResults": "Keine Produkte gefunden",
-      "empty": "Keine Produkte verfügbar",
-      "units": "Stk"
+      "searchPlaceholder": "Search by name, number or description...",
+      "noResults": "No products found",
+      "empty": "No products available",
+      "units": "units",
+      "outOfStockMessage": "Cannot add \"{name}\" because it is out of stock",
+      "exceedsStock": "Cannot add more {name}. Available stock: {stock} units",
+      "outOfStockBadge": "OUT OF STOCK"
     },
     "cart": {
-      "title": "Warenkorb",
-      "items": "Artikel",
-      "empty": "Keine Artikel im Warenkorb",
-      "emptyError": "Fügen Sie mindestens einen Artikel zum Warenkorb hinzu",
-      "clear": "Warenkorb leeren",
-      "clearConfirm": "Sind Sie sicher, dass Sie den Warenkorb leeren möchten?",
-      "remove": "Artikel entfernen",
-      "totalItems": "{count} Artikel"
+      "title": "Shopping Cart",
+      "items": "items",
+      "empty": "No items in cart",
+      "emptyError": "Add at least one item to the cart",
+      "clear": "Clear cart",
+      "clearConfirm": "Are you sure you want to clear the cart?",
+      "remove": "Remove item",
+      "totalItems": "{count} items"
     },
     "client": {
-      "label": "Kunde",
-      "placeholder": "Kunden suchen oder auswählen...",
-      "search": "Kunden suchen...",
-      "random": "Zufälliger Kunde (Standard)",
+      "label": "Customer",
+      "placeholder": "Search or select customer...",
+      "search": "Search customers...",
+      "random": "Random Customer (Default)",
       "randomBadge": "🎯",
-      "noClients": "Keine Kunden verfügbar",
-      "moreClients": "... und {count} weitere Kunden",
-      "clientCount": "{count} Kunde verfügbar",
-      "showingFirst": "(erste {count} werden angezeigt)",
-      "info": "Wählen Sie einen Kunden aus der Liste oder verwenden Sie \"Zufälliger Kunde\"",
-      "clearTitle": "Auswahl löschen (Zufälliger Kunde verwenden)"
+      "noClients": "No customers available",
+      "moreClients": "... and {count} more customers",
+      "clientCount": "{count} customer available",
+      "showingFirst": "(showing first {count})",
+      "info": "Select a customer from the list or use \"Random Customer\"",
+      "clearTitle": "Clear selection (use Random Customer)"
     },
     "status": {
       "label": "Status",
-      "paid": "Bezahlt",
-      "pending": "Ausstehend",
-      "cancelled": "Storniert"
+      "paid": "Paid",
+      "pending": "Pending",
+      "cancelled": "Cancelled"
     },
     "items": {
-      "title": "Artikel ({count})",
-      "add": "+ Artikel hinzufügen",
-      "item": "Artikel {number}",
-      "searchPlaceholder": "Artikel suchen... (min. 2 Zeichen)",
-      "noResults": "Keine Artikel gefunden für \"{search}\"",
-      "minChars": "Geben Sie mindestens 2 Zeichen ein",
-      "searchHint": "Suchergebnisse für: \"{search}\"",
-      "searching": "Suche...",
-      "removeTitle": "Artikel entfernen",
+      "title": "Items ({count})",
+      "add": "+ Add item",
+      "item": "Item {number}",
+      "searchPlaceholder": "Search items... (min. 2 characters)",
+      "noResults": "No items found for \"{search}\"",
+      "minChars": "Enter at least 2 characters to search",
+      "searchHint": "Search results for: \"{search}\"",
+      "searching": "Searching...",
+      "removeTitle": "Remove item",
       "fields": {
-        "article": "Artikel",
-        "quantity": "Menge",
-        "unitPrice": "Einzelpreis",
-        "total": "Gesamt"
+        "article": "Article",
+        "quantity": "Quantity",
+        "unitPrice": "Unit Price",
+        "total": "Total"
       },
       "stock": {
-        "label": "Bestand: {stock} | Benötigt: {needed} | Verbleibend: {remaining}",
-        "otherLines": "Andere Positionen: {count}",
+        "label": "Stock: {stock} | Needed: {needed} | Remaining: {remaining}",
+        "otherLines": "Other lines: {count}",
         "error": "⚠️ {message}",
         "badge": {
-          "inStock": "Ausreichend",
-          "lowStock": "Niedriger Bestand",
-          "outOfStock": "Unzureichender Bestand"
+          "inStock": "In Stock",
+          "lowStock": "Low Stock",
+          "outOfStock": "Out of Stock"
         }
       },
       "errors": {
-        "selectAll": "Bitte wählen Sie alle Artikel aus",
-        "quantityPositive": "Die Menge muss größer als 0 sein",
-        "priceNegative": "Der Preis darf nicht negativ sein",
-        "stock": "Bitte korrigieren Sie die Bestandsfehler",
-        "stockItem": "Unzureichender Bestand für \"{name}\". Verfügbar: {stock}, benötigt: {needed}",
-        "minOneItem": "Mindestens ein Artikel ist erforderlich"
+        "selectAll": "Please select all items",
+        "quantityPositive": "Quantity must be greater than 0",
+        "priceNegative": "Price cannot be negative",
+        "stock": "Please fix stock errors",
+        "stockItem": "Insufficient stock for \"{name}\". Available: {stock}, needed: {needed}",
+        "minOneItem": "At least one item is required"
       }
     },
     "totals": {
-      "subtotal": "Zwischensumme",
-      "tax": "MwSt",
-      "total": "Gesamt"
+      "subtotal": "Subtotal",
+      "tax": "VAT",
+      "total": "Total"
     },
     "messages": {
-      "createSuccess": "Rechnung erfolgreich erstellt",
-      "createSuccessShort": "Rechnung erstellt",
-      "updateSuccess": "Rechnung erfolgreich aktualisiert",
-      "createError": "Fehler beim Erstellen der Rechnung",
-      "updateError": "Fehler beim Aktualisieren der Rechnung",
-      "unknownError": "Unbekannter Fehler",
-      "cartEmpty": "Warenkorb ist leer",
-      "stockError": "Unzureichender Bestand"
+      "createSuccess": "Invoice created successfully",
+      "createSuccessShort": "Invoice created",
+      "updateSuccess": "Invoice updated successfully",
+      "createError": "Error creating invoice",
+      "updateError": "Error updating invoice",
+      "unknownError": "Unknown error",
+      "cartEmpty": "Cart is empty",
+      "stockError": "Insufficient stock"
     },
     "toasts": {
-      "invoiceCreated": "Rechnung #{number} erfolgreich erstellt",
-      "invoiceCreatedDesc": "Die Rechnung wurde korrekt generiert"
+      "invoiceCreated": "Invoice #{number} created successfully",
+      "invoiceCreatedDesc": "The invoice has been generated correctly"
     }
   }
 }

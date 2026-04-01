@@ -1,22 +1,20 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "../../auth/AuthProvider";
+import { useAuth } from "../../../components/auth/AuthProvider";
 import { useLanguage } from "../../../contexts/LanguageContext";
-import styles from "./ClientEditor.module.css";
+import styles from "./ClientCreator.module.css";
 
-// Mapa de códigos de error a claves de traducción (MISMO QUE EN CREATOR)
+
+// Mapa de códigos de error a claves de traducción
 const ERROR_CODE_MAP = {
   'EMAIL_ALREADY_EXISTS': 'clientForm.errors.emailExists',
   'REQUIRED_FIELDS_MISSING': 'clientForm.errors.requiredFields',
-  'CLIENT_NOT_FOUND': 'clientForm.errors.clientNotFound',
-  'VALIDATION_ERROR': 'clientForm.errors.validationError',
   'SERVER_ERROR': 'clientForm.errors.serverError',
   'NETWORK_ERROR': 'clientForm.errors.networkError',
-  'UNAUTHORIZED': 'clientForm.restricted.message',
   'UNKNOWN_ERROR': 'clientForm.errors.unknown',
   'UNEXPECTED_ERROR': 'clientForm.errors.unknown'
 };
 
-export default function ClientEditor({ client, onClose, onUpdated, updateClient }) {
+export default function ClientsCreator({ onClose, onCreated, createClient }) {
   const { t } = useLanguage();
   const { isAuthenticated } = useAuth();
   const [form, setForm] = useState({ 
@@ -38,26 +36,20 @@ export default function ClientEditor({ client, onClose, onUpdated, updateClient 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // ✅ Cerrar modal con tecla Escape
   useEffect(() => {
-    if (client) {
-      setForm({
-        name: client.name || "",
-        vorname: client.vorname || "",
-        company: client.company || "",
-        email: client.email || "",
-        phone: client.phone || "",
-        address: {
-          street: client.address?.street || "",
-          number: client.address?.number || "",
-          complement: client.address?.complement || "",
-          postalCode: client.address?.postalCode || "",
-          city: client.address?.city || "",
-          state: client.address?.state || "",
-          country: client.address?.country || ""
-        }
-      });
-    }
-  }, [client]);
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !loading) {
+        onClose();
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [loading, onClose]);
 
   if (!isAuthenticated) {
     return (
@@ -80,11 +72,10 @@ export default function ClientEditor({ client, onClose, onUpdated, updateClient 
     );
   }
 
-  if (!client) return null;
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     
+    // Manejar campos anidados de address
     if (name.startsWith('address.')) {
       const addressField = name.split('.')[1];
       setForm(prev => ({
@@ -111,6 +102,7 @@ export default function ClientEditor({ client, onClose, onUpdated, updateClient 
     setError("");
 
     try {
+      // Construir objeto para enviar al backend
       const clientData = {
         name: form.name,
         vorname: form.vorname,
@@ -128,28 +120,27 @@ export default function ClientEditor({ client, onClose, onUpdated, updateClient 
         }
       };
       
-      const res = await updateClient(client._id, clientData);
+      const res = await createClient(clientData);
       
       if (res.success) {
-        onUpdated();
+        onCreated();
         onClose();
       } else {
-        // ✅ Traducir según el errorCode (IGUAL QUE EN CREATOR)
         const errorKey = ERROR_CODE_MAP[res.errorCode] || 'clientForm.errors.unknown';
         setError(t(errorKey));
       }
     } catch (err) {
-       setError(t('clientForm.errors.unknown'));
+      setError(t('clientForm.errors.unknown'));
     } finally {
       setLoading(false);
     }
   };
 
-   return (
+  return (
     <div className={styles.backdrop}>
       <div className={styles.modal}>
         <div className={styles.header}>
-          <h2>{t('clientForm.editor.title')}</h2>
+          <h2>{t('clientForm.creator.title')}</h2>
           <button 
             className={styles.closeBtn} 
             onClick={onClose} 
@@ -163,15 +154,7 @@ export default function ClientEditor({ client, onClose, onUpdated, updateClient 
         <form onSubmit={handleSubmit} className={styles.form}>
           <div className={styles.body}>
             <div className={styles.formSection}>
-              <div className={styles.clientInfo}>
-                <span className={styles.clientId}>
-                  {t('clientForm.editor.id').replace('{id}', client._id.substring(0, 8))}...
-                </span>
-              </div>
-              
               {/* Datos personales */}
-              <h3 className={styles.sectionTitle}>Persönliche Daten</h3>
-              
               <div className={styles.formRow}>
                 <div className={styles.formGroup}>
                   <label htmlFor="vorname">{t('clientForm.fields.firstName.label')}</label>
@@ -348,7 +331,7 @@ export default function ClientEditor({ client, onClose, onUpdated, updateClient 
               {error && (
                 <div className={styles.errorMessage} role="alert">
                   <div className={styles.errorIcon}>⚠️</div>
-                  <div className={styles.errorText}>{error}</div>
+                  {error}
                 </div>
               )}
             </div>
@@ -368,12 +351,7 @@ export default function ClientEditor({ client, onClose, onUpdated, updateClient 
               className={`${styles.btn} ${styles.save}`} 
               disabled={loading || !form.name.trim() || !form.vorname.trim()}
             >
-              {loading ? (
-                <span className={styles.loadingText}>
-                  <span className={styles.spinner}></span>
-                  {t('clientForm.buttons.updating')}
-                </span>
-              ) : t('clientForm.buttons.save')}
+              {loading ? t('clientForm.buttons.creating') : t('clientForm.buttons.create')}
             </button>
           </div>
         </form>

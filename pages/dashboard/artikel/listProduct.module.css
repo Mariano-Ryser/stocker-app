@@ -19,7 +19,7 @@
 
 .headerContent {
   flex: 1;
-}
+} 
 
 .headerActions {
   display: flex;
@@ -450,7 +450,6 @@
   position: relative;
   width: 100%;
   height: 200px;
-  background: #f8f9fa;
   display: flex;
   align-items: center;
   justify-content: center;

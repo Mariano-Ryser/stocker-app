@@ -1,4 +1,4 @@
-// ProductCreator.tsx - VERSIÓN CORREGIDA
+// ProductCreator.tsx - VERSIÓN CORREGIDA CON TECLA ESCAPE
 import { useState, useEffect } from "react";
 import { useAuth } from '../../auth/AuthProvider';
 import { useLanguage } from '../../../contexts/LanguageContext';
@@ -34,7 +34,22 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [localError, setLocalError] = useState<string | null>(null);
-  const [limitsLoading, setLimitsLoading] = useState(true); // ✅ NUEVO: estado de carga de límites
+  const [limitsLoading, setLimitsLoading] = useState(true);
+  
+  // ✅ Cerrar modal con tecla Escape
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !isSubmitting) {
+        onClose();
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [isSubmitting, onClose]);
   
   useEffect(() => {
     const loadLimits = async () => {
@@ -225,12 +240,11 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
   const displayError = localError || error;
 
   // ✅ CALCULAR SI EL BOTÓN DEBE ESTAR DESHABILITADO
-  // Si los límites están cargando, no deshabilitar por límites (aún no sabemos)
   const isLimitReached = !limitsLoading && productLimits.remaining <= 0;
   
   const isSubmitDisabled = isSubmitting || 
                           !formData.artikelName.trim() || 
-                          (isLimitReached); // ✅ Solo deshabilitar si límites cargados Y alcanzados
+                          (isLimitReached);
 
   // ✅ TEXTO DEL BOTÓN
   const getButtonText = () => {
@@ -244,14 +258,14 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
     }
     
     if (limitsLoading) {
-      return t('artikel.creator.buttons.loading'); // "Cargando..."
+      return t('artikel.creator.buttons.loading');
     }
     
     if (isLimitReached) {
-      return t('artikel.creator.buttons.limitReached'); // "Límite alcanzado"
+      return t('artikel.creator.buttons.limitReached');
     }
     
-    return t('artikel.creator.buttons.create'); // "Crear artículo"
+    return t('artikel.creator.buttons.create');
   };
 
   return (
@@ -279,12 +293,6 @@ export const ProductCreator: React.FC<ProductCreatorProps> = ({
             {limitsLoading && (
               <>
               </>
-              // <div className={styles.limitSection}>
-              //   <div className={styles.loadingLimits}>
-              //     <div className={styles.spinnerSmall}></div>
-              //     <span>Cargando límites...</span>
-              //   </div>
-              // </div>
             )}
             
             {displayError && (

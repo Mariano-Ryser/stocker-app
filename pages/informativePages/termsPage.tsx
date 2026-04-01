@@ -29,7 +29,7 @@ export default function TermsPage() {
   
     <div className={styles.termsContainer}>
       {/* Background / watermark */}
-      <div className={styles.termsBackground}>
+      {/* <div className={styles.termsBackground}>
         <div className={styles.logoWatermark}>
           <img
             src="/img/logo80.webp"
@@ -37,7 +37,7 @@ export default function TermsPage() {
             className={styles.watermarkLogo}
           />
         </div>
-      </div>
+      </div> */}
 
       <div className={styles.termsContent}>
         {/* Header */}

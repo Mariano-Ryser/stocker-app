@@ -4,7 +4,7 @@ import { useClients } from "../../../hooks/useClients";
 import { useProduct } from "../../../hooks/useProducts";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { COUNTRY_CONFIG } from '../../../utils/countryConfig';
-import { useToast } from '../../../contexts/ToastContext';  // Importar el contexto de Toast mensaje de Succes de error y de información
+import { useToast } from '../../../contexts/ToastContext';
 import styles from './Creator.module.css';
 
 export default function RechnungCreator({ onDone, salesApi }) {
@@ -67,6 +67,21 @@ export default function RechnungCreator({ onDone, salesApi }) {
     }
   }, [isAuthenticated, refreshProducts, fetchProductLimits, company?._id]);
   
+    // Cerrar modal con tecla Escape
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && !isSubmitting) {
+        onDone();
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [isSubmitting, onDone]);
+  
   // Filtrar productos localmente
   useEffect(() => {
     if (!productSearchTerm.trim()) {
@@ -102,15 +117,27 @@ export default function RechnungCreator({ onDone, salesApi }) {
     }
   };
   
-  // Agregar producto al carrito
+  // Agregar producto al carrito (solo si tiene stock > 0)
   const addToCart = (product) => {
+    // Verificar si el producto tiene stock disponible
+    if (product.stock <= 0) {
+      showToast(t('rechnungForm.products.outOfStockMessage').replace('{name}', product.artikelName), 'warning');
+      return;
+    }
+    
     setCart(prevCart => {
       const existingItem = prevCart.find(item => item.productId === product._id);
       
+      // Si ya existe en el carrito, verificar que no exceda el stock
       if (existingItem) {
+        const newQuantity = existingItem.quantity + 1;
+        if (newQuantity > product.stock) {
+          showToast(t('rechnungForm.products.exceedsStock').replace('{name}', product.artikelName).replace('{stock}', product.stock), 'warning');
+          return prevCart;
+        }
         return prevCart.map(item =>
           item.productId === product._id
-            ? { ...item, quantity: item.quantity + 1 }
+            ? { ...item, quantity: newQuantity }
             : item
         );
       }
@@ -134,6 +161,15 @@ export default function RechnungCreator({ onDone, salesApi }) {
       return;
     }
     
+    const item = cart[index];
+    const product = products.find(p => p._id === item.productId);
+    
+    // Verificar que la nueva cantidad no exceda el stock
+    if (product && newQuantity > product.stock) {
+      showToast(t('rechnungForm.products.exceedsStock').replace('{name}', product.artikelName).replace('{stock}', product.stock), 'warning');
+      return;
+    }
+    
     setCart(prevCart => prevCart.map((item, i) => 
       i === index ? { ...item, quantity: newQuantity } : item
     ));
@@ -144,13 +180,13 @@ export default function RechnungCreator({ onDone, salesApi }) {
     setCart(prevCart => prevCart.filter((_, i) => i !== index));
   };
   
- // Actualiza clearCart
-const clearCart = () => {
-  if (cart.length > 0 && confirm(t('rechnungForm.cart.clearConfirm'))) {
-    setCart([]);
-    showToast(t('rechnungForm.cart.clear'), 'info');
-  }
-};
+  // Actualiza clearCart
+  const clearCart = () => {
+    if (cart.length > 0 && confirm(t('rechnungForm.cart.clearConfirm'))) {
+      setCart([]);
+      showToast(t('rechnungForm.cart.clear'), 'info');
+    }
+  };
   
   // Calcular totales
   const subtotal = cart.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
@@ -183,96 +219,90 @@ const clearCart = () => {
     setClientSearch("");
   };
   
- // También actualiza validateStock para usar toast
-const validateStock = () => {
-  for (const item of cart) {
-    const product = products.find(p => p._id === item.productId);
-    if (product && product.stock < item.quantity) {
-      showToast(t('rechnungForm.items.errors.stockItem')
-        .replace('{name}', item.productName)
-        .replace('{stock}', product.stock)
-        .replace('{needed}', item.quantity), 'error');
-      return false;
+  // También actualiza validateStock para usar toast
+  const validateStock = () => {
+    for (const item of cart) {
+      const product = products.find(p => p._id === item.productId);
+      if (product && product.stock < item.quantity) {
+        showToast(t('rechnungForm.items.errors.stockItem')
+          .replace('{name}', item.productName)
+          .replace('{stock}', product.stock)
+          .replace('{needed}', item.quantity), 'error');
+        return false;
+      }
     }
-  }
-  return true;
-};
-  
-const submit = async () => {
-  if (isSubmitting || !isAuthenticated) return;
-  
-  if (cart.length === 0) {
-    showToast(t('rechnungForm.messages.cartEmpty'), 'warning');
-    return;
-  }
-  
-  if (!validateStock()) return;
-  
-  setIsSubmitting(true);
-  
-  const payload = {
-    clientId: clientId || null,
-    items: cart.map(item => ({
-      productId: item.productId,
-      quantity: item.quantity,
-      unitPrice: item.unitPrice
-    })),
-    status,
-    taxRate: Number(taxRate)
+    return true;
   };
   
-  try {
-    const res = await createSale(payload);
+  const submit = async () => {
+    if (isSubmitting || !isAuthenticated) return;
     
-    if (res.success && res.sale) {
-      // 🔥 Mostrar toast de éxito
-      const invoiceNumber = res.sale.lieferschein || res.sale.invoiceNumber || '';
-      const successMessage = invoiceNumber 
-        ? t('rechnungForm.toasts.invoiceCreated').replace('{number}', invoiceNumber)
-        : t('rechnungForm.messages.createSuccessShort');
+    if (cart.length === 0) {
+      showToast(t('rechnungForm.messages.cartEmpty'), 'warning');
+      return;
+    }
+    
+    if (!validateStock()) return;
+    
+    setIsSubmitting(true);
+    
+    const payload = {
+      clientId: clientId || null,
+      items: cart.map(item => ({
+        productId: item.productId,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice
+      })),
+      status,
+      taxRate: Number(taxRate)
+    };
+    
+    try {
+      const res = await createSale(payload);
       
-      showToast(successMessage, 'success',4000);
-      
-      // Resetear estado y cerrar modal
-      setIsSubmitting(false);
-      onDone();
-      
-      // Actualizaciones en segundo plano
-      setTimeout(() => {
-        updateProductInCache(true).catch(console.warn);
-        fetchProductLimits(true).catch(console.warn);
-      }, 200);
-      
-    } else {
-      showToast(res.message || t('rechnungForm.messages.createError'), 'error');
+      if (res.success && res.sale) {
+        const invoiceNumber = res.sale.lieferschein || res.sale.invoiceNumber || '';
+        const successMessage = invoiceNumber 
+          ? t('rechnungForm.toasts.invoiceCreated').replace('{number}', invoiceNumber)
+          : t('rechnungForm.messages.createSuccessShort');
+        
+        showToast(successMessage, 'success', 4000);
+        
+        setIsSubmitting(false);
+        onDone();
+        
+        setTimeout(() => {
+          updateProductInCache(true).catch(console.warn);
+          fetchProductLimits(true).catch(console.warn);
+        }, 200);
+        
+      } else {
+        showToast(res.message || t('rechnungForm.messages.createError'), 'error');
+        setIsSubmitting(false);
+      }
+    } catch (error) {
+      console.error("Error creating sale:", error);
+      showToast(t('rechnungForm.messages.createError') + ": " + error.message, 'error');
       setIsSubmitting(false);
     }
-  } catch (error) {
-    console.error("Error creating sale:", error);
-    showToast(t('rechnungForm.messages.createError') + ": " + error.message, 'error');
-    setIsSubmitting(false);
-  }
-};
-
+  };
   
   if (!isAuthenticated) {
     return (
-     
-        <div className={styles.modalLarge}>
-          <div className={styles.modalHeader}>
-            <h2>{t('rechnungForm.restricted.title')}</h2>
-            <button className={styles.closeBtn} onClick={onDone}>×</button>
-          </div>
-          <div className={styles.modalBody}>
-            <p>{t('rechnungForm.restricted.message')}</p>
-          </div>
-          <div className={styles.modalFooter}>
-            <button className={`${styles.btn} ${styles.btnCancel}`} onClick={onDone}>
-              {t('rechnungForm.restricted.close')}
-            </button>
-          </div>
+      <div className={styles.modalLarge}>
+        <div className={styles.modalHeader}>
+          <h2>{t('rechnungForm.restricted.title')}</h2>
+          <button className={styles.closeBtn} onClick={onDone}>×</button>
         </div>
-      
+        <div className={styles.modalBody}>
+          <p>{t('rechnungForm.restricted.message')}</p>
+        </div>
+        <div className={styles.modalFooter}>
+          <button className={`${styles.btn} ${styles.btnCancel}`} onClick={onDone}>
+            {t('rechnungForm.restricted.close')}
+          </button>
+        </div>
+      </div>
     );
   }
   
@@ -281,8 +311,7 @@ const submit = async () => {
       <div className={styles.modalLarge}>
         <div className={styles.modalHeader}>
           <h2>{t('rechnungForm.creator.title')}</h2>
-
-         <button 
+          <button 
             className={styles.closeBtn} 
             onClick={() => {
               if (!isSubmitting) {
@@ -326,35 +355,51 @@ const submit = async () => {
                   <p>{productSearchTerm ? t('rechnungForm.products.noResults') : t('rechnungForm.products.empty')}</p>
                 </div>
               ) : (
-                filteredProducts.map(product => (
-                  <div 
-                    key={product._id} 
-                    className={styles.productCard}
-                    onClick={() => addToCart(product)}
-                  >
-                    <div className={styles.productImage}>
-                      {product.imagen ? (
-                        <img src={product.imagen} alt={product.artikelName} />
-                      ) : (
-                        <div className={styles.imagePlaceholder}>
-                          <span>📦</span>
+                filteredProducts.map(product => {
+                  const isOutOfStock = product.stock <= 0;
+                  return (
+                    <div 
+                      key={product._id} 
+                      className={`${styles.productCard} ${isOutOfStock ? styles.disabledProduct : ''}`}
+                      onClick={() => !isOutOfStock && addToCart(product)}
+                      style={{ cursor: isOutOfStock ? 'not-allowed' : 'pointer' }}
+                    >
+                      {isOutOfStock && (
+                        <div className={styles.outOfStockBadge}>
+                          {t('rechnungForm.products.outOfStockBadge') || 'SIN STOCK'}
                         </div>
                       )}
-                    </div>
-                    <div className={styles.productInfo}>
-                      <h4 className={styles.productName}>{product.artikelName}</h4>
-                      <p className={styles.productNumber}>{product.artikelNumber || '-'}</p>
-                      <div className={styles.productFooter}>
-                        <span className={styles.productPrice}>
-                          {formatCurrency(product.price || 0)} {currencySymbol}
-                        </span>
-                        <span className={`${styles.productStock} ${product.stock <= 0 ? styles.outOfStock : product.stock < 10 ? styles.lowStock : ''}`}>
-                          {product.stock || 0} {t('rechnungForm.products.units')}
-                        </span>
+                      <div className={styles.productImage}>
+                        {product.imagen ? (
+                          <img src={product.imagen} alt={product.artikelName} />
+                        ) : (
+                           (
+                                      <div className={styles.cardPlaceholder}>
+                                        <img
+                                          src="/img/moving-box.png"
+                                          alt="Placeholder"
+                                          className={styles.placeholderImage}
+                                          loading="lazy"
+                                        />
+                                      </div>
+                                    )
+                        )}
+                      </div>
+                      <div className={styles.productInfo}>
+                        <h4 className={styles.productName}>{product.artikelName}</h4>
+                        <p className={styles.productNumber}>{product.artikelNumber || '-'}</p>
+                        <div className={styles.productFooter}>
+                          <span className={styles.productPrice}>
+                            {formatCurrency(product.price || 0)} {currencySymbol}
+                          </span>
+                          <span className={`${styles.productStock} ${isOutOfStock ? styles.outOfStock : product.stock < 10 ? styles.lowStock : ''}`}>
+                            {product.stock || 0} {t('rechnungForm.products.units')}
+                          </span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))
+                  );
+                })
               )}
             </div>
           </div>
@@ -569,6 +614,6 @@ const submit = async () => {
           </div>
         </div>
       </div>
-    </div>
+    </div> 
   );
 }

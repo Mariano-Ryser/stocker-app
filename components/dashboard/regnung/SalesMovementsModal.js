@@ -12,6 +12,21 @@ export default function StockMovementsModal({ sale, onClose }) {
   useEffect(() => {
     loadMovements();
   }, [sale._id]);
+  
+  // ✅ Cerrar modal con tecla Escape
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && !loading) {
+        onClose();
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [loading, onClose]);
 
   const loadMovements = async () => {
     try {
@@ -74,7 +89,13 @@ export default function StockMovementsModal({ sale, onClose }) {
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         <div className={styles.header}>
           <h2>{t('sales.modalMovements.title')}</h2>
-          <button onClick={onClose} className={styles.closeButton}>✕</button>
+          <button 
+            onClick={onClose} 
+            className={styles.closeButton}
+            disabled={loading}
+          >
+            ✕
+          </button>
         </div>
 
         <div className={styles.saleInfo}>

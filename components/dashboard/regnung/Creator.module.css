@@ -160,7 +160,6 @@
   flex-shrink: 0;
   border-radius: 4px;
   overflow: hidden;
-  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -170,7 +169,7 @@
 .productImage img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   transition: transform 0.3s ease;
 }
 
@@ -856,4 +855,54 @@
   .cartItemInfo {
     margin-bottom: 0.5rem;
   }
+}
+
+/* Producto deshabilitado (sin stock) */
+.productCard.disabledProduct {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: auto; /* Permitir eventos pero con cursor not-allowed */
+  filter: grayscale(0.1);
+}
+
+.productCard.disabledProduct:hover {
+  transform: none;
+  border-color: #e5e7eb;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.productCard.disabledProduct:active {
+  transform: none;
+}
+
+/* Badge de "Sin stock" superpuesto opcional */
+.productCard.disabledProduct::before {
+  content: "SIN STOCK";
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: #dc2626;
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  z-index: 1;
+  opacity: 0.9;
+}
+
+.cardPlaceholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8f9fa;
+}
+
+.placeholderImage {
+  width: 80px;
+  height: 80px;
+  opacity: 0.5;
+  object-fit: contain;
 }

@@ -74,7 +74,20 @@ export default function ClientsCreator({ onClose, onCreated, createClient }) {
       setForm(prev => ({ ...prev, [name]: value }));
     }
   };
-
+    // Cerrar modal con tecla Escape
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape' && !isSubmitting) {
+        onDone();
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [isSubmitting, onDone]);
   const handleSubmit = async (e) => {
     e.preventDefault();
     

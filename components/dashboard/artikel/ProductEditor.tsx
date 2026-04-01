@@ -71,6 +71,21 @@ export const ProductEditor = ({
   const svgRef = useRef<SVGSVGElement>(null);
   const [valor, setValor] = useState(localProduct.artikelNumber);
 
+  // ✅ Cerrar modal con tecla Escape
+  useEffect(() => {
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && !isSubmitting && !showDeleteConfirm) {
+        onClose();
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [isSubmitting, showDeleteConfirm, onClose]);
+
   useEffect(() => {
     if (svgRef.current && valor) {
       JsBarcode(svgRef.current, valor, {

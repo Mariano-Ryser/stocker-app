@@ -1,5 +1,5 @@
 // frontend/components/dashboard/regnung/RechnungPrint.jsx
-import React, { useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { InvoiceClassic } from "./templates/InvoiceClassic";
 import { InvoiceClassic2 } from "./templates/InvoiceClassic2";
@@ -20,7 +20,7 @@ const TEMPLATES = {
     type: 'invoice',
     styleClass: 'invoice-classic'
   },
-   classic2: { 
+  classic2: { 
     name: 'Klassisch-2', 
     component: InvoiceClassic2,
     icon: '📄',
@@ -34,7 +34,7 @@ const TEMPLATES = {
     type: 'invoice',
     styleClass: 'invoice-modern'
   },
-    letter: { // <-- NUEVA PLANTILLA
+  letter: {
     name: 'Brief', 
     component: InvoiceLetter,
     icon: '✉️',
@@ -77,6 +77,21 @@ export default function RechnungPrint({ sale, onClose }) {
     iban: "CH93 0076 2011 6238 5295 7",
     bank: "Mustermann Bank AG"
   };
+
+  // ✅ Cerrar modal con tecla Escape
+  useEffect(() => {
+    const handleEscape = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+    
+    window.addEventListener('keydown', handleEscape);
+    
+    return () => {
+      window.removeEventListener('keydown', handleEscape);
+    };
+  }, [onClose]);
 
   // Utilidades comunes
   const formatAddress = (address) => {

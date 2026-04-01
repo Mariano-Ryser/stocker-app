@@ -57,6 +57,19 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
       refreshProducts();
     }
   }, [sale]);
+useEffect(() => {
+  const handleEscape = (event) => {
+    if (event.key === 'Escape' && !isSubmitting) { // Cambia 'isSubmitting' por tu estado de carga
+      onClose(); // Cambia 'onClose' por la función que cierra tu modal
+    }
+  };
+  
+  window.addEventListener('keydown', handleEscape);
+  
+  return () => {
+    window.removeEventListener('keydown', handleEscape);
+  };
+}, [isSubmitting, onClose]);
 
   // Validar stock cada vez que cambian los items
   useEffect(() => {
@@ -356,7 +369,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
                 }}
                 disabled={isSubmitting}
               >
-                <option value="">-- {t('rechnungForm.client.select')} --</option>
+                {/* <option value="">-- {t('rechnungForm.client.select')} --</option> */}
                 {clients.map(c => (
                   <option key={c._id} value={c._id}>
                     {c.name} {c.vorname ? `(${c.vorname})` : ''}
@@ -415,7 +428,7 @@ export default function RechnungUpdate({ sale, onClose, onSaved }) {
                             disabled={isSubmitting}
                             className={hasError ? styles.inputError : ""}
                           >
-                            <option value="">-- {t('rechnungForm.items.selectArticle')} --</option>
+                            <option value="">-- {t('rechnungForm.items.searchPlaceholder')} --</option> 
                             {products.map(p => (
                               <option key={p._id} value={p._id}>
                                 {p.artikelName} ({t('rechnungForm.items.stock.badge.inStock')}: {p.stock})

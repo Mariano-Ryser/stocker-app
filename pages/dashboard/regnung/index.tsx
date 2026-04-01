@@ -177,7 +177,7 @@ const handleCreateSuccess = () => {
                 <path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h5v2H7v-2z"/>
               </svg>
             </button>
-            <button
+            {/* <button
               className={`${styles.viewButton} ${viewMode === 'cards' ? styles.activeView : ''}`}
               onClick={() => setViewMode('cards')}
               title={t('sales.view.cards')}
@@ -185,7 +185,7 @@ const handleCreateSuccess = () => {
               <svg viewBox="0 0 24 24" width="20" height="20">
                 <path fill="currentColor" d="M4 4h16v2H4V4zm0 4h16v2H4V8zm0 4h16v2H4v-2zm0 4h10v2H4v-2z"/>
               </svg>
-            </button>
+            </button> */}
           </div>
 
           <button 
@@ -219,7 +219,7 @@ const handleCreateSuccess = () => {
               disabled={loading}
               title={t('sales.search.clear')}
             >
-              ✕
+              ✕ 
             </button>
           )}
         </div>
@@ -725,7 +725,7 @@ const handleCreateSuccess = () => {
                 onPrev={() => goToPage(currentPage - 1)}
                 loading={loadingMore}
               />
-              <div className={styles.paginationInfo}>
+              {/* <div className={styles.paginationInfo}>
                 {t('sales.pagination.showing', {
                   count: sales.length,
                   total: totalItems
@@ -735,7 +735,7 @@ const handleCreateSuccess = () => {
                   current: currentPage,
                   total: totalPages
                 })}
-              </div>
+              </div> */}
             </>
           )}
         </>

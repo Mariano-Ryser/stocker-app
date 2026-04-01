@@ -1,12 +1,16 @@
 {
   "rechnungForm": {
-    "common": {
+    "common": { 
       "cancel": "Cancelar",
       "close": "Cerrar",
       "save": "Guardar",
       "saving": "Guardando...",
       "loading": "Cargando...",
       "error": "Error"
+    },
+     "editor": {
+      "title": "Factura",
+      "submit": "Editar"
     },
     "creator": {
       "title": "Nueva Factura",
@@ -16,7 +20,10 @@
       "searchPlaceholder": "Buscar por nombre, número o descripción...",
       "noResults": "No se encontraron productos",
       "empty": "No hay productos disponibles",
-      "units": "uds"
+      "units": "uds",
+       "outOfStockMessage": "No se puede agregar \"{name}\" porque no hay stock disponible",
+      "exceedsStock": "No se puede agregar más de {name}. Stock disponible: {stock} unidades",
+      "outOfStockBadge": "SIN STOCK"
     },
     "cart": {
       "title": "Carrito de compras",

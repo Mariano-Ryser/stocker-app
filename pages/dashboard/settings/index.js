@@ -483,7 +483,7 @@ const currentUserId = user._id || user.id;
                                     <span className={styles.excelUserName}>
                                       {companyUser.name || 'Unbekannt'}
                                       {companyUser._id === currentUserId && (
-                                        <span className={styles.excelCurrentUser}> (Tú)</span>
+                                        <span className={styles.excelCurrentUser}></span>
                                       )}
                                     </span>
                                   </div>

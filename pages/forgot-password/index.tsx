@@ -10,14 +10,41 @@ export default function ForgotPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [cooldown, setCooldown] = useState<{
+    remainingMinutes: number;
+    canRequest: boolean;
+    nextAvailable?: Date;
+  } | null>(null);
+  
   const router = useRouter();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+
+  // ✅ Función para formatear el mensaje de cooldown con pluralización manual
+  const getCooldownMessage = (minutes: number) => {
+    // Formatear según el idioma
+    switch(language) {
+      case 'de':
+        return minutes === 1 
+          ? 'Bitte warte 1 Minute, bevor du einen weiteren Wiederherstellungslink anforderst'
+          : `Bitte warte ${minutes} Minuten, bevor du einen weiteren Wiederherstellungslink anforderst`;
+      case 'en':
+        return minutes === 1
+          ? 'Please wait 1 minute before requesting another recovery link'
+          : `Please wait ${minutes} minutes before requesting another recovery link`;
+      case 'es':
+      default:
+        return minutes === 1
+          ? 'Por favor espera 1 minuto antes de solicitar otro enlace de recuperación'
+          : `Por favor espera ${minutes} minutos antes de solicitar otro enlace de recuperación`;
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError("");
     setSuccess("");
+    setCooldown(null);
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/forgot-password`, {
@@ -32,6 +59,13 @@ export default function ForgotPasswordPage() {
 
       if (response.ok) {
         setSuccess(data.message || t('forgotPassword.messages.success'));
+        setEmail("");
+      } else if (response.status === 429) {
+        // ✅ Error de rate limiting - usar traducción manual
+        setCooldown(data.cooldown);
+        // Traducir el mensaje de error con el tiempo restante
+        const translatedError = getCooldownMessage(data.cooldown.remainingMinutes);
+        setError(translatedError);
       } else {
         setError(data.message || t('forgotPassword.messages.error'));
       }
@@ -43,16 +77,41 @@ export default function ForgotPasswordPage() {
     }
   };
 
+  // ✅ Timer para actualizar el cooldown en tiempo real
+  useEffect(() => {
+    if (!cooldown || cooldown.canRequest) return;
+
+    const interval = setInterval(() => {
+      if (cooldown.nextAvailable) {
+        const now = Date.now();
+        const nextAvailable = new Date(cooldown.nextAvailable).getTime();
+        const remaining = Math.ceil((nextAvailable - now) / 60000);
+        
+        if (remaining <= 0) {
+          setCooldown(null);
+          setError(""); // Limpiar error cuando termina el cooldown
+          clearInterval(interval);
+        } else {
+          setCooldown(prev => prev ? { ...prev, remainingMinutes: remaining } : null);
+          // ✅ Actualizar el mensaje de error con el tiempo restante
+          setError(getCooldownMessage(remaining));
+        }
+      }
+    }, 60000); // Actualizar cada minuto
+
+    return () => clearInterval(interval);
+  }, [cooldown, language]);
+
   return (
     <div className={styles.container}>
       <div className={styles.formContainer}>
         <div className={styles.logoSection}>
           <img 
-            src="/img/logo80.webp" 
+            src="/img/logo80.png" 
             alt="Alpina Logo" 
             className={styles.logo}
           />
-          <h1 className={styles.title}>{t('forgotPassword.title')}</h1>
+          <h1 className={styles.title}>Stocker Cloud</h1>
         </div>
 
         <div className={styles.formContent}>
@@ -63,7 +122,7 @@ export default function ForgotPasswordPage() {
 
           <form onSubmit={handleSubmit} className={styles.form}>
             {error && (
-              <div className={styles.errorMessage}>
+              <div className={`${styles.errorMessage} ${cooldown ? styles.warningMessage : ''}`}>
                 <svg className={styles.errorIcon} fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
@@ -96,7 +155,7 @@ export default function ForgotPasswordPage() {
                 className={styles.inputField}
                 placeholder={t('forgotPassword.email.placeholder')}
                 required
-                disabled={loading}
+                disabled={loading || (cooldown && !cooldown.canRequest)}
                 autoComplete="email"
               />
             </div>
@@ -104,7 +163,7 @@ export default function ForgotPasswordPage() {
             <button
               className={`${styles.submitButton} ${loading ? styles.loading : ""}`}
               type="submit"
-              disabled={loading}
+              disabled={loading || (cooldown && !cooldown.canRequest)}
             >
               {loading ? (
                 <>
