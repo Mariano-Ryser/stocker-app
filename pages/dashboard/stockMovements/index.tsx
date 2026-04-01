@@ -4,17 +4,15 @@ import { useAuth } from '../../../components/auth/AuthProvider';
 import { useStockMovements } from '../../../hooks/useStockMovements';
 import Pagination from '../../../components/shared/Pagination';
 import { useLanguage } from '../../../contexts/LanguageContext';
-import { format } from 'date-fns';
 import NotesModal from '../../../components/dashboard/movements/NotesModal';
-import { de, es, enUS } from 'date-fns/locale';
 import styles from './StockMovements.module.css';
 
 export default function StockMovements() {
-  const { t, language } = useLanguage();
+  const { t } = useLanguage();
   const { isAuthenticated, loading: authLoading } = useAuth();
   const [viewMode, setViewMode] = useState('excel'); // 'table' o 'excel'
 
- // ++ Estado para el modal de notas NEW ++
+  // Estado para el modal de notas
   const [notesModal, setNotesModal] = useState({
     isOpen: false,
     note: '',
@@ -23,7 +21,7 @@ export default function StockMovements() {
     movementType: ''
   });
 
- // Función para abrir el modal con las notas
+  // Función para abrir el modal con las notas
   const openNotesModal = (movement: any) => {
     const type = movementTypes[movement.movementType] || movementTypes.MANUAL_ADJUSTMENT;
     setNotesModal({
@@ -35,17 +33,27 @@ export default function StockMovements() {
     });
   };
 
-   // Función para cerrar el modal
+  // Función para cerrar el modal
   const closeNotesModal = () => {
     setNotesModal(prev => ({ ...prev, isOpen: false }));
   };
 
-  // Obtener locale para date-fns según el idioma
-  const getLocale = () => {
-    switch (language) {
-      case 'de': return de;
-      case 'es': return es;
-      default: return enUS;
+  // Formatear fecha con JavaScript nativo (sin date-fns)
+  const formatDate = (dateString: string) => {
+    if (!dateString) return '-';
+    try {
+      const date = new Date(dateString);
+      if (isNaN(date.getTime())) return '-';
+      
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+      
+      return `${day}.${month}.${year} ${hours}:${minutes}`;
+    } catch {
+      return '-';
     }
   };
 
@@ -101,14 +109,6 @@ export default function StockMovements() {
       color: '#1e40af', 
       bg: '#dbeafe', 
       icon: t('stockMovements.movementTypes.INITIAL_STOCK.icon') 
-    }
-  };
-
-  const formatDate = (date: string) => {
-    try {
-      return format(new Date(date), 'dd.MM.yyyy HH:mm', { locale: getLocale() });
-    } catch {
-      return '-';
     }
   };
 
@@ -272,12 +272,10 @@ export default function StockMovements() {
                         <td>{m.createdBy?.userName || '-'}</td>
 
                         <td className={styles.ref}>
-
                           {m.reference?.number && (
                             <span className={styles.refNumber}>{m.reference.number}</span>
                           )}
                           
-                          {/* AQUI ES DONDE QUIERO MODIFICAR..  */}
                           {m.notes && (
                             <button 
                               className={styles.notesButton}
@@ -287,7 +285,6 @@ export default function StockMovements() {
                               📝
                             </button>
                           )}
-
                         </td>
                       </tr>
                     );
@@ -375,28 +372,18 @@ export default function StockMovements() {
                               </span>
                             )}
                           </td>
-                          
-
-
 
                           <td className={styles.excelCell}>
-
-
                             {m.notes && (
-                                  <button 
-                                  className={styles.notesButton}
-                                  onClick={() => openNotesModal(m)}
-                                  title={t('stockMovements.viewNotes')}
-                                >
-                                  📝
-                                </button>
+                              <button 
+                                className={styles.notesButton}
+                                onClick={() => openNotesModal(m)}
+                                title={t('stockMovements.viewNotes')}
+                              >
+                                📝
+                              </button>
                             )}
-
-
                           </td>
-
-
-
                         </tr>
                       );
                     })}
@@ -432,14 +419,14 @@ export default function StockMovements() {
           </>
         )}
 
-         <NotesModal
-        isOpen={notesModal.isOpen}
-        onClose={closeNotesModal}
-        note={notesModal.note}
-        articleName={notesModal.articleName}
-        movementDate={notesModal.movementDate}
-        movementType={notesModal.movementType}
-      />
+        <NotesModal
+          isOpen={notesModal.isOpen}
+          onClose={closeNotesModal}
+          note={notesModal.note}
+          articleName={notesModal.articleName}
+          movementDate={notesModal.movementDate}
+          movementType={notesModal.movementType}
+        />
       </div>
     </div>
   );
