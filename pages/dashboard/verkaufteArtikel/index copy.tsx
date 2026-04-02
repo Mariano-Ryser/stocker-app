@@ -1,5 +1,4 @@
-// pages/dashboard/admin/verkaufteArtikel.jsx
-import { useState, useMemo, useEffect } from "react";
+ import { useState, useMemo, useEffect } from "react";
 import { useSales } from "../../../hooks/useSales";
 import { useInfiniteScroll } from "../../../hooks/useInfiniteScroll";
 import { useAuth } from '../../../components/auth/AuthProvider';
@@ -9,7 +8,7 @@ import styles from "./verkaufteArtikel.module.css";
 
 export default function VerkauftetArtikelPage() {
   const { t } = useLanguage();
-  const { sales, loading, error, refreshSales, isCacheReady } = useSales();
+  const { sales, loading, error, refreshSales } = useSales();
   const [productFilter, setProductFilter] = useState("");
   const [clientFilter, setClientFilter] = useState("");
   const [liefFilter, setLiefFilter] = useState("");
@@ -17,28 +16,15 @@ export default function VerkauftetArtikelPage() {
   const [dateTo, setDateTo] = useState("");
   const [showCancelled, setShowCancelled] = useState(false);
   const [showPending, setShowPending] = useState(false);
-  const [viewMode, setViewMode] = useState('excel');
-  
-  // 🔥 Estado para saber si es el primer render
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [viewMode, setViewMode] = useState('excel'); // 'table', 'excel', 'cards'
 
   const { company } = useAuth();
   const currencySymbol = company?.currency || 'USD';
 
-  // 🔥 Cuando el caché está listo, ocultar loading
-  useEffect(() => {
-    if (isCacheReady && isInitialLoad) {
-      setIsInitialLoad(false);
-    }
-  }, [isCacheReady, isInitialLoad]);
-
-  // Construimos array plano de items vendidos (optimizado con useMemo)
+  // Construimos array plano de items vendidos
   const soldItems = useMemo(() => {
-    if (!sales || sales.length === 0) return [];
-    
     return sales
       .filter(sale => {
-        // Filtrar por estado
         if (sale.status === 'cancelled') return showCancelled;
         if (sale.status === 'pending') return showPending;
         return true;
@@ -107,7 +93,6 @@ export default function VerkauftetArtikelPage() {
 
   // Función para refrescar datos
   const handleRefresh = async () => {
-    setIsInitialLoad(false);
     await refreshSales();
   };
 
@@ -131,24 +116,8 @@ export default function VerkauftetArtikelPage() {
     return badges[status] || { bg: "#f3f4f6", color: "#374151", text: status };
   };
 
-  // 🔥 Determinar si mostrar loading
-  const showLoading = () => {
-    // Si es carga inicial y no hay caché, mostrar loading
-    if (isInitialLoad && !isCacheReady && loading) return true;
-    // Si no es carga inicial pero está cargando y no hay datos
-    if (!isInitialLoad && loading && soldItems.length === 0) return true;
-    return false;
-  };
-
   return (
     <div className={styles.container}>
-      {/* 🔥 Indicador de actualización en segundo plano */}
-      {/* {!isInitialLoad && loading && soldItems.length > 0 && (
-        <div className={styles.backgroundUpdate}>
-          <span>🔄 {t('verkaufteArtikel.loading.updating') || 'Actualizando artículos...'}</span>
-        </div>
-      )} */}
-
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <h1 className={styles.pageTitle}>{t('verkaufteArtikel.title')}</h1>
@@ -189,7 +158,7 @@ export default function VerkauftetArtikelPage() {
             </button>
           </div>
 
-          {showLoading() && (
+          {loading && (
             <div className={styles.loadingMessage}>
               🔄 {t('verkaufteArtikel.loadingData')}
             </div>
@@ -241,7 +210,7 @@ export default function VerkauftetArtikelPage() {
               className={styles.searchInput}
               value={productFilter}
               onChange={(e) => setProductFilter(e.target.value)}
-              disabled={loading && !isCacheReady}
+              disabled={loading}
             />
             {productFilter && (
               <button 
@@ -262,7 +231,7 @@ export default function VerkauftetArtikelPage() {
             className={styles.filterInput}
             value={clientFilter}
             onChange={(e) => setClientFilter(e.target.value)}
-            disabled={loading && !isCacheReady}
+            disabled={loading}
           />
           <input
             type="text"
@@ -270,7 +239,7 @@ export default function VerkauftetArtikelPage() {
             className={styles.filterInput}
             value={liefFilter}
             onChange={(e) => setLiefFilter(e.target.value)}
-            disabled={loading && !isCacheReady}
+            disabled={loading}
           />
           <div className={styles.dateContainer}>
             <input
@@ -279,7 +248,7 @@ export default function VerkauftetArtikelPage() {
               onChange={(e) => setDateFrom(e.target.value)}
               className={styles.dateInput}
               placeholder={t('verkaufteArtikel.filters.dateFrom')}
-              disabled={loading && !isCacheReady}
+              disabled={loading}
             />
             <span className={styles.dateSeparator}>{t('verkaufteArtikel.filters.dateSeparator')}</span>
             <input
@@ -288,7 +257,7 @@ export default function VerkauftetArtikelPage() {
               onChange={(e) => setDateTo(e.target.value)}
               className={styles.dateInput}
               placeholder={t('verkaufteArtikel.filters.dateTo')}
-              disabled={loading && !isCacheReady}
+              disabled={loading}
             />
           </div>
         </div>
@@ -296,7 +265,7 @@ export default function VerkauftetArtikelPage() {
         <div className={styles.filtersFooter}>
           <div className={styles.resultsInfo}>
             <span>
-              {showLoading() ? t('verkaufteArtikel.loadingShort') : (
+              {loading ? t('verkaufteArtikel.loadingShort') : (
                 <>
                   <strong>{filteredItems.length}</strong> {t('verkaufteArtikel.stats.items')}
                 </>
@@ -317,7 +286,7 @@ export default function VerkauftetArtikelPage() {
       </div>
 
       {/* Loading State */}
-      {showLoading() ? (
+      {loading ? (
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
           <p>{t('verkaufteArtikel.loading')}</p>
@@ -380,7 +349,7 @@ export default function VerkauftetArtikelPage() {
                               {t('verkaufteArtikel.table.lieferschein').replace('{number}', row.lieferschein)}
                             </div>
                           )}
-                         </td>
+                        </td>
                         <td className={styles.quantityCell}>
                           <span className={styles.quantityBadge}>{row.quantity}</span>
                         </td>
@@ -570,42 +539,6 @@ export default function VerkauftetArtikelPage() {
           )}
         </>
       )}
-
-      <style jsx>{`
-        .backgroundUpdate {
-          position: fixed;
-          top: 70px;
-          right: 20px;
-          background: #e1f0fa;
-          border: 1px solid #7bb3e0;
-          border-radius: 8px;
-          padding: 8px 16px;
-          font-size: 0.8rem;
-          color: #1e4b7a;
-          z-index: 1000;
-          animation: slideIn 0.3s ease, fadeOut 2s ease-in-out 1s forwards;
-          pointer-events: none;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        
-        @keyframes fadeOut {
-          to {
-            opacity: 0;
-            visibility: hidden;
-          }
-        }
-      `}</style>
     </div>
   );
 }

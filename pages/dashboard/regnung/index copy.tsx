@@ -1,5 +1,4 @@
-// pages/dashboard/admin/rechnungen/SalesPage.jsx
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { useSales } from "../../../hooks/useSales";
 import Pagination from "../../../components/shared/Pagination";
 import RechnungCreator from "../../../components/dashboard/regnung/RechnungCreator";
@@ -17,7 +16,7 @@ export default function SalesPage() {
   
   const {
     sales,
-    salesStats,
+    salesStats, 
     loading,
     loadingMore,
     error,
@@ -41,7 +40,6 @@ export default function SalesPage() {
     refreshSales,
     createSale,
     updateSale,
-    isCacheReady,
     isAuthenticated: hookAuth
   } = useSales();
   
@@ -50,17 +48,7 @@ export default function SalesPage() {
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [saleToEdit, setSaleToEdit] = useState(null);
   const [saleForMovements, setSaleForMovements] = useState(null);
-  const [viewMode, setViewMode] = useState('excel');
-  
-  // 🔥 Estado para saber si es el primer render
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
-
-  // 🔥 Cuando el caché está listo, ocultar loading
-  useEffect(() => {
-    if (isCacheReady && isInitialLoad) {
-      setIsInitialLoad(false);
-    }
-  }, [isCacheReady, isInitialLoad]);
+  const [viewMode, setViewMode] = useState('excel'); // 'table', 'excel', 'cards'
 
   const formatCurrency = (amount:any) => {
     return Number(amount || 0).toFixed(2);
@@ -102,17 +90,20 @@ export default function SalesPage() {
     });
   };
 
-  // 🔥 handleCreateSuccess - sin refresh bloqueante
-  const handleCreateSuccess = () => {
-    setOpenModal(false);
-    // No llamar a refreshSales aquí, ya se actualizó localmente
-  };
+const handleCreateSuccess = () => {
+  console.log('handleCreateSuccess llamado - cerrando modal');
+  setOpenModal(false);
+  // 🔥 OPTIMIZACIÓN: No esperar, refrescar en segundo plano
+  setTimeout(() => {
+    refreshSales();
+    console.log('Ventas refrescadas en segundo plano');
+  }, 200);
+};
 
   const handleUpdateSuccess = () => {
     setUpdateModalOpen(false);
     setSaleToEdit(null);
-    // Refresh en segundo plano
-    setTimeout(() => refreshSales(), 100);
+    refreshSales();
   };
 
   const handleUpdateClose = () => {
@@ -134,17 +125,6 @@ export default function SalesPage() {
     return sortDirection === "asc" ? "⬆️" : "⬇️";
   };
 
-  // 🔥 Determinar si mostrar loading
-  const showLoading = () => {
-    if (authLoading) return true;
-    if (!isAuthenticated) return false;
-    // Si es carga inicial y no hay caché, mostrar loading
-    if (isInitialLoad && !isCacheReady && loading) return true;
-    // Si no es carga inicial pero está cargando y no hay datos
-    if (!isInitialLoad && loading && sales.length === 0) return true;
-    return false;
-  };
-
   if (authLoading) {
     return (
       <div className={styles.loadingContainer}>
@@ -156,23 +136,17 @@ export default function SalesPage() {
 
   return (
     <div className={styles.container}>
-      {/* 🔥 Indicador de actualización en segundo plano */}
-      {/* {!isInitialLoad && loading && sales.length > 0 && (
-        <div className={styles.backgroundUpdate}>
-          <span>🔄 {t('sales.loading.updating') || 'Actualizando...'}</span>
-        </div>
-      )} */}
-
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerLeft}>
           <h1>{t('sales.title')}</h1>
+          {/* <p>{t('sales.subtitle')}</p> */}
           
-          {/* {!isInitialLoad && loading && !loadingMore && sales.length > 0 && (
+          {loading && !loadingMore && (
             <div className={styles.loadingMessage}>
-              🔄 {t('sales.loading.updating') || 'Actualizando...'}
+              🔄 {t('sales.loading.invoices')}
             </div>
-          )} */}
+          )}
           {error && (
             <div className={styles.errorMessage}>
               ❌ {t('sales.error.general')}: {error}
@@ -203,6 +177,15 @@ export default function SalesPage() {
                 <path fill="currentColor" d="M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h5v2H7v-2z"/>
               </svg>
             </button>
+            {/* <button
+              className={`${styles.viewButton} ${viewMode === 'cards' ? styles.activeView : ''}`}
+              onClick={() => setViewMode('cards')}
+              title={t('sales.view.cards')}
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20">
+                <path fill="currentColor" d="M4 4h16v2H4V4zm0 4h16v2H4V8zm0 4h16v2H4v-2zm0 4h10v2H4v-2z"/>
+              </svg>
+            </button> */}
           </div>
 
           <button 
@@ -216,7 +199,7 @@ export default function SalesPage() {
         </div>
       </div>
 
-      {/* Search and Filters (igual que antes) */}
+      {/* Search and Filters */}
       <div className={styles.filtersSection}>
         <div className={styles.searchBox}>
           <svg className={styles.searchIcon} viewBox="0 0 24 24" width="20" height="20">
@@ -291,7 +274,7 @@ export default function SalesPage() {
         
         <div className={styles.resultsInfo}>
           <span>
-            {showLoading() ? (
+            {loading ? (
               t('sales.loading.short')
             ) : (
               t('sales.search.results')
@@ -362,7 +345,7 @@ export default function SalesPage() {
       </div>
 
       {/* Main Content */}
-      {showLoading() ? (
+      {loading && !loadingMore ? (
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
           <p>{t('sales.loading.invoices')}</p>
@@ -490,7 +473,7 @@ export default function SalesPage() {
             </div>
           )}
 
-          {/* Vista Excel - Mantener igual */}
+          {/* Vista Excel */}
           {viewMode === 'excel' && (
             <div className={styles.excelView}>
               {sales.length === 0 ? (
@@ -552,9 +535,11 @@ export default function SalesPage() {
                           <td className={styles.excelCell}>
                             <span className={styles.excelDate}>{fecha}</span>
                           </td>
+                          
                           <td className={styles.excelCell}>
                             <span className={styles.excelTime}>{hora}</span>
                           </td>
+                          
                           <td className={styles.excelCell}>
                             <span className={styles.excelClient}>
                               {s.clientSnapshot?.name || s.client?.name || t('sales.client.unknown')}
@@ -565,16 +550,19 @@ export default function SalesPage() {
                               </span>
                             )}
                           </td>
+                          
                           <td className={styles.excelCell}>
                             <span className={styles.excelInvoiceNumber}>
                               {s.lieferschein || '-'}
                             </span>
                           </td>
+                          
                           <td className={`${styles.excelCell} ${styles.excelNumber}`}>
                             <span className={styles.excelSubtotal}>
                               {formatCurrency(s.subtotal || 0)} {currencySymbol}
                             </span>
                           </td>
+                          
                           <td className={`${styles.excelCell} ${styles.excelNumber}`}>
                             <span className={styles.excelTax}>
                               {formatCurrency(s.tax || 0)} {currencySymbol}
@@ -583,11 +571,13 @@ export default function SalesPage() {
                               ({s.taxRate || 19}%)
                             </span>
                           </td>
+                          
                           <td className={`${styles.excelCell} ${styles.excelNumber}`}>
                             <span className={styles.excelTotal}>
                               {formatCurrency(s.total || 0)} {currencySymbol}
                             </span>
                           </td>
+                          
                           <td className={styles.excelCell}>
                             <span 
                               className={styles.excelStatus}
@@ -599,6 +589,7 @@ export default function SalesPage() {
                               {status.text}
                             </span>
                           </td>
+                          
                           <td className={styles.excelCell}>
                             <div className={styles.excelActions}>
                               <button
@@ -633,6 +624,96 @@ export default function SalesPage() {
             </div>
           )}
 
+          {/* Vista Tarjetas (Mobile) */}
+          {viewMode === 'cards' && (
+            <div className={styles.mobileCards}>
+              {sales.length === 0 ? (
+                <div className={`${styles.emptyState} ${styles.emptyStateMobile}`}>
+                  {search || statusFilter || dateFrom || dateTo ? (
+                    <>
+                      <div className={styles.emptyIcon}>🔍</div>
+                      <h3>{t('sales.empty.notFound.title')}</h3>
+                      <p>{t('sales.empty.notFound.text')}</p>
+                      <button 
+                        className={styles.clearFiltersButton}
+                        onClick={clearFilters}
+                      >
+                        {t('sales.actions.resetFilters')}
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <div className={styles.emptyIcon}>🧾</div>
+                      <h3>{t('sales.empty.noInvoices.title')}</h3>
+                      <p>{t('sales.empty.noInvoices.text')}</p>
+                      <button 
+                        className={`${styles.createButton} ${styles.createButtonOutline}`}
+                        onClick={() => setOpenModal(true)}
+                      >
+                        {t('sales.actions.createFirst')}
+                      </button>
+                    </>
+                  )}
+                </div>
+              ) : (
+                sales.map(s => (
+                  <div 
+                    key={s._id} 
+                    className={styles.saleCard}
+                    onClick={() => setSelectedSale(s)}
+                    style={{ borderLeftColor: getStatusColor(s.status) }}
+                  >
+                    <div className={styles.cardHeader}>
+                      <div className={styles.cardClient}>
+                        <h3>{s.clientSnapshot?.name || s.client?.name || t('sales.client.unknown')}</h3>
+                        <span className={styles.cardDate}>{formatDate(s.createdAt)}</span>
+                      </div>
+                      <span 
+                        className={`${styles.statusTag} ${styles.statusTagMobile}`}
+                        style={{ backgroundColor: getStatusColor(s.status) }}
+                      >
+                        {getStatusText(s.status)}
+                      </span>
+                    </div>
+                    
+                    <div className={styles.cardDetails}>
+                      <div className={styles.detailRow}>
+                        <span>{t('sales.table.invoiceNumber')}:</span>
+                        <span>{s.lieferschein || '-'}</span>
+                      </div>
+                      <div className={styles.detailRow}>
+                        <span>{t('sales.table.total')}:</span>
+                        <span className={styles.cardTotal}>{formatCurrency(s.total)} {currencySymbol}</span>
+                      </div>
+                    </div>
+
+                    <div className={styles.cardActions}>
+                      <button
+                        className={`${styles.stockButton} ${styles.stockButtonMobile}`}
+                        onClick={(e) => {
+                          setSaleForMovements(s);
+                          e.stopPropagation();
+                        }}
+                      >
+                        📦 {t('sales.buttons.stock')}
+                      </button>
+                      <button
+                        className={`${styles.editButton} ${styles.editButtonMobile}`}
+                        onClick={(e) => {
+                          setSaleToEdit(s);
+                          setUpdateModalOpen(true);
+                          e.stopPropagation();
+                        }}
+                      >
+                        {t('sales.buttons.edit')}
+                      </button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          )}
+
           {/* Paginación */}
           {totalPages > 1 && (
             <>
@@ -644,6 +725,17 @@ export default function SalesPage() {
                 onPrev={() => goToPage(currentPage - 1)}
                 loading={loadingMore}
               />
+              {/* <div className={styles.paginationInfo}>
+                {t('sales.pagination.showing', {
+                  count: sales.length,
+                  total: totalItems
+                })}
+                {' · '}
+                {t('sales.pagination.pageInfo', {
+                  current: currentPage,
+                  total: totalPages
+                })}
+              </div> */}
             </>
           )}
         </>
@@ -657,12 +749,12 @@ export default function SalesPage() {
         />
       )}
 
-      {openModal && (
-        <RechnungCreator 
-          onDone={handleCreateSuccess}
-          salesApi={{ createSale }}
-        />
-      )}
+     {openModal && (
+  <RechnungCreator 
+    onDone={handleCreateSuccess}
+    salesApi={{ createSale }}
+  />
+)}
 
       {updateModalOpen && saleToEdit && isAuthenticated && (
         <RechnungUpdate
@@ -678,8 +770,6 @@ export default function SalesPage() {
           onClose={() => setSaleForMovements(null)}
         />
       )}
-
-     
     </div>
   );
 }

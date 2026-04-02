@@ -8,55 +8,42 @@
   border-top: 1px solid #e5e7eb;
   padding-top: 2.2rem;
   width: 100%;
-  overflow: hidden; /* Previene desbordamientos */
 }
 
 .container {
   max-width: 1280px;
   margin: 10px auto;
-  padding: 10px 16px; /* Reducido para móviles */
+  padding: 10px 16px;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 32px; /* Reducido para móviles */
+  gap: 32px;
 }
 
 /* BRAND */
 .brand {
   display: flex;
   flex-direction: column;
-}
-
-.logo { 
-  margin-bottom: 0px;
-  display: flex;
-  align-items: center;
-  justify-content: center; /* Centrado en móviles */
-  
+  text-align: center;
 }
 
 .logoImg {
-  margin:10px 10px 10px 10px;
-  width: 100%; /* Responsivo */
-  max-width: 10rem; /* Máximo tamaño */
-  height: 7.5rem; /* Mantiene proporción */
-  
+  margin: 10px auto;
+  width: 100%;
+  max-width: 10rem;
+  height: auto;
 }
 
 .brandDesc {
-  max-width: 100%; /* Ocupa todo el ancho disponible */
+  max-width: 100%;
   font-size: 0.95rem;
   color: var(--gray);
   line-height: 1.6;
 }
 
 /* COLUMNS */
-.column {
-  padding: 0 8px; /* Padding interno para móviles */
-}
-
 .column h3 {
   margin-bottom: 14px;
-  font-size: 1.1rem; /* Ligeramente más grande */
+  font-size: 1.1rem;
   color: var(--dark);
   font-weight: 600;
 }
@@ -67,12 +54,12 @@
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Un poco más de espacio */
+  gap: 10px;
 }
 
 .column ul li {
   cursor: pointer;
-  font-size: 0.95rem; /* Ligeramente más grande */
+  font-size: 0.95rem;
   color: var(--gray);
   transition: color 0.2s;
 }
@@ -84,121 +71,59 @@
 /* CONTACT */
 .contactItem {
   display: flex;
-  align-items: flex-start; /* Alineación superior para mejor ajuste */
+  align-items: center;
   gap: 10px;
-  margin-bottom: 14px; /* Más espacio entre items */
+  margin-bottom: 14px;
   font-size: 0.95rem;
   color: var(--gray);
-  flex-wrap: wrap; /* Permite que el contenido se ajuste */
+  flex-wrap: wrap;
 }
 
 .contactItem a {
   color: inherit;
   text-decoration: none;
-  word-break: break-word; /* Rompe palabras largas */
+  word-break: break-word;
 }
 
 .contactItem a:hover {
   color: var(--primary);
 }
 
-.loginBtn {
-  margin-top: 20px;
-  background: transparent;
-  border: 1px solid #e5e7eb;
-  padding: 10px 20px;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 500;
-  width: 100%; /* Ancho completo en móviles */
-  transition: all 0.2s;
-}
-
-.loginBtn:hover {
-  border-color: var(--primary);
-  color: var(--primary);
-  transform: translateY(-1px);
-}
-
 /* BOTTOM */
 .bottom {
   margin-top: 48px;
-  padding: 18px 16px; /* Padding reducido para móviles */
+  padding: 18px 16px;
   border-top: 1px solid #e5e7eb;
   text-align: center;
   font-size: 0.8rem;
   color: var(--gray);
-  width: 100%;
 }
 
 /* RESPONSIVE */
-@media (min-width: 480px) {
-
-  .container {
-    padding: 0 20px;
-  }
-  
-  .logoImg {
-  max-width: 10rem; /* Máximo tamaño */
-  height: 7.5rem; /* Mantiene proporción */
-  
-}
-  
-  .loginBtn {
-    width: fit-content; /* Botón ajustado a contenido */
-  }
-}
-
 @media (min-width: 640px) {
   .container {
-    grid-template-columns: repeat(2, 1fr); /* 2 columnas en tablets */
+    grid-template-columns: repeat(2, 1fr);
     gap: 40px;
   }
   
   .brand {
-    grid-column: span 2; /* La marca ocupa 2 columnas */
+    text-align: left;
   }
   
-  .column {
-    padding: 0;
+  .logoImg {
+    margin: 10px 0;
   }
 }
 
 @media (min-width: 768px) {
-
   .container {
-    grid-template-columns: 2.2fr 1fr 1fr 1.3fr;
+    grid-template-columns: 2fr 1fr 1.2fr;
     padding: 0 24px;
-    gap: 40px;
   }
-  
-  .brand {
-    grid-column: span 1; /* Vuelve a ocupar 1 columna */
-  }
-  
-  .logo {
-    justify-content: flex-start; /* Alineación izquierda en desktop */
-  }
-  
-
 }
 
 @media (min-width: 1024px) {
-  
   .container {
     padding: 0 32px;
-  }
-}
-
-/* Ajustes para pantallas muy pequeñas */
-@media (max-width: 360px) {
- .footer {
-    padding-top: 24px;
-  }
-  
-  
-  
-  .contactItem {
-    font-size: 0.9rem;
   }
 }

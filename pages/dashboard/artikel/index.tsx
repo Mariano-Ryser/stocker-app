@@ -16,9 +16,7 @@ type ProductResult = {
   result?: any;
 };
 
-// ===== COMPONENTES INTERNOS =====
-
-// Componente para vista de tabla
+// ===== COMPONENTES INTERNOS (igual que antes) =====
 const TableView = ({ products, currencySymbol, getStockStatus, getStockStatusText, onProductClick, t }) => (
   <table className={styles.productsTable}>
     <thead>
@@ -60,7 +58,6 @@ const TableView = ({ products, currencySymbol, getStockStatus, getStockStatusTex
   </table>
 );
 
-// Componente para vista de cuadrícula
 const GridView = ({ products, currencySymbol, getStockStatus, getStockStatusText, onProductClick, t }) => (
   <div className={styles.productGrid}>
     {products.map((product) => (
@@ -125,9 +122,7 @@ const GridView = ({ products, currencySymbol, getStockStatus, getStockStatusText
   </div>
 );
 
-// Componente para vista Excel
 const ExcelView = ({ products, currencySymbol, getStockStatus, getStockStatusText, onProductClick, t }) => {
-  // Calcular valores totales con useMemo dentro del componente
   const productsWithTotal = useMemo(() => 
     products.map(product => ({
       ...product,
@@ -205,7 +200,6 @@ const ExcelView = ({ products, currencySymbol, getStockStatus, getStockStatusTex
   );
 };
 
-// Componente para los botones de vista
 const ViewToggle = ({ viewMode, setViewMode, loading, t }) => {
   const views = useMemo(() => [
     { mode: 'table', title: t('artikel.view.table'), path: 'M3 3h18v18H3V3zm2 2v14h14V5H5zm2 2h10v2H7V7zm0 4h10v2H7v-2zm0 4h10v2H7v-2z' },
@@ -232,13 +226,14 @@ const ViewToggle = ({ viewMode, setViewMode, loading, t }) => {
   );
 };
 
-// Componente principal
+// ===== COMPONENTE PRINCIPAL MODIFICADO =====
 export default function ListProduct() {
   const { t } = useLanguage();
   const { company, isAuthenticated, loading: authLoading } = useAuth();
 
   const currencySymbol = useMemo(() => company?.currency || 'USD', [company?.currency]);
   const [viewMode, setViewMode] = useState('excel');
+  const [isInitialRender, setIsInitialRender] = useState(true);
   
   const {
     products,
@@ -267,48 +262,71 @@ export default function ListProduct() {
     setProductToEdit,
     refreshProducts,
     editingProduct,
+    // 🔥 NUEVOS: Métodos de caché para renderizado instantáneo
+    scannerProducts,
+    scannerLoading,
+    isCacheInitialized,
   } = useProduct();
 
   const [showModal, setShowModal] = useState(false);
 
-  // 🔥 NUEVA FUNCIÓN: Obtener el umbral efectivo del producto
-  const getEffectiveThreshold = useCallback((product: any): number => {
-    // Si el producto tiene lowStockThreshold configurado y es mayor que 0, usarlo
-    if (product.lowStockThreshold !== null && 
-        product.lowStockThreshold !== undefined && 
-        product.lowStockThreshold > 0) {
-      return product.lowStockThreshold;
+  // 🔥 CLAVE: Usar productos del caché para renderizado instantáneo
+  const displayProducts = useMemo(() => {
+    // Si tenemos productos paginados y no estamos en carga inicial, usarlos
+    if (products.length > 0 && !isInitialRender) {
+      return products;
     }
-    // Si no tiene umbral personalizado, usar valor por defecto (10)
-    // Este valor por defecto puede venir del localStorage o ser fijo
-    const defaultThreshold = parseInt(localStorage.getItem('lowStockThreshold') || '10');
-    return defaultThreshold;
-  }, []);
+    // Si no hay productos paginados pero hay caché, usar caché
+    if (scannerProducts.length > 0 && isInitialRender) {
+      return scannerProducts.slice(0, 30); // Mostrar primeros 30 del caché
+    }
+    return products;
+  }, [products, scannerProducts, isInitialRender]);
 
-  // 🔥 MODIFICADA: Usar lowStockThreshold del producto en lugar de 50
+  // 🔥 Efecto para manejar el renderizado inicial
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
+    // Después de 2 segundos, cambiar a renderizado normal
+    const timer = setTimeout(() => {
+      setIsInitialRender(false);
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [isAuthenticated]);
+
+  // Mostrar loading solo en primera carga sin caché
+  const showLoading = () => {
+    if (authLoading) return true;
+    if (!isAuthenticated) return false;
+    // Solo mostrar loading si no hay caché y estamos cargando
+    if (isInitialRender && !isCacheInitialized && productsLoading) return true;
+    if (!isInitialRender && productsLoading && displayProducts.length === 0) return true;
+    return false;
+  };
+
   const getStockStatus = useCallback((product: any) => {
     const stock = product.stock || 0;
-    const threshold = getEffectiveThreshold(product);
+    const threshold = product.lowStockThreshold || 10;
     
     if (stock <= 0) return 'outOfStock';
     if (stock <= threshold) return 'lowStock';
     return 'inStock';
-  }, [getEffectiveThreshold]);
+  }, []);
 
-  // 🔥 MODIFICADA: Usar lowStockThreshold para el texto
   const getStockStatusText = useCallback((product: any) => {
     const stock = product.stock || 0;
-    const threshold = getEffectiveThreshold(product);
+    const threshold = product.lowStockThreshold || 10;
     
     if (stock <= 0) return t('artikel.stock.outOfStock');
     if (stock <= threshold) return t('artikel.stock.lowStock');
     return t('artikel.stock.inStock');
-  }, [t, getEffectiveThreshold]);
+  }, [t]);
 
-  // Handlers memoizados con useCallback
   const handleSearchKeyPress = useCallback((e) => {
     if (e.key === 'Enter') {
       confirmSearch();
+      setIsInitialRender(false);
     }
   }, [confirmSearch]);
 
@@ -350,7 +368,6 @@ export default function ListProduct() {
     return result as ProductResult;
   }, [createProduct]);
 
-  // Textos dinámicos memoizados
   const activeFilterText = useMemo(() => {
     if (stockFilter === 'inStock') return t('artikel.filter.filterInStock');
     if (stockFilter === 'lowStock') return t('artikel.filter.filterLowStock');
@@ -365,7 +382,7 @@ export default function ListProduct() {
   }, [sortOrder, t]);
 
   const resultsText = useMemo(() => {
-    let text = t('artikel.search.results').replace('{count}', products.length);
+    let text = t('artikel.search.results').replace('{count}', displayProducts.length);
     if (paginationInfo.total > 0) {
       text += ` ${t('artikel.search.resultsOf').replace('{total}', paginationInfo.total)}`;
     }
@@ -373,7 +390,7 @@ export default function ListProduct() {
       text += ` ${t('artikel.search.for').replace('{term}', activeSearch)}`;
     }
     return text;
-  }, [products.length, paginationInfo.total, activeSearch, t]);
+  }, [displayProducts.length, paginationInfo.total, activeSearch, t]);
 
   const paginationText = useMemo(() => {
     let text = t('artikel.pagination.page')
@@ -396,6 +413,13 @@ export default function ListProduct() {
 
   return (
     <div className={styles.container}>
+      {/* 🔥 Indicador de actualización en segundo plano (opcional) */}
+      {/* {isInitialRender && isCacheInitialized && productsLoading && (
+        <div className={styles.backgroundUpdate}>
+          <span>🔄 Actualizando datos...</span>
+        </div>
+      )} */}
+
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <h1 className={styles.title}>{t('artikel.title')}</h1>
@@ -442,7 +466,10 @@ export default function ListProduct() {
             
             <button 
               className={styles.searchButton}
-              onClick={confirmSearch}
+              onClick={() => {
+                confirmSearch();
+                setIsInitialRender(false);
+              }}
               disabled={productsLoading || !searchInput.trim()}
             >
               {t('artikel.search.button')}
@@ -472,7 +499,10 @@ export default function ListProduct() {
                 id="stock-filter"
                 className={styles.filterSelect}
                 value={stockFilter}
-                onChange={(e) => setStock(e.target.value)}
+                onChange={(e) => {
+                  setStock(e.target.value);
+                  setIsInitialRender(false);
+                }}
                 disabled={productsLoading}
               >
                 <option value="all">{t('artikel.filter.all')}</option>
@@ -490,7 +520,10 @@ export default function ListProduct() {
                 id="sort-order"
                 className={styles.filterSelect}
                 value={sortOrder}
-                onChange={(e) => setSort(e.target.value)}
+                onChange={(e) => {
+                  setSort(e.target.value);
+                  setIsInitialRender(false);
+                }}
                 disabled={productsLoading}
               >
                 <option value="none">{t('artikel.filter.sortNone')}</option>
@@ -535,7 +568,10 @@ export default function ListProduct() {
             {(activeSearch || stockFilter !== 'all' || sortOrder !== 'none') && (
               <button 
                 className={styles.resetAllFilters}
-                onClick={resetFilters}
+                onClick={() => {
+                  resetFilters();
+                  setIsInitialRender(false);
+                }}
                 disabled={productsLoading}
               >
                 {t('artikel.filter.resetAll')}
@@ -546,7 +582,7 @@ export default function ListProduct() {
       </div>
    
       <div className={styles.tableContainer}>
-        {productsLoading ? (
+        {showLoading() ? (
           <div className={styles.loading}>
             <div className={styles.loadingSpinner}></div>
             {t('artikel.loading.products')}
@@ -557,7 +593,7 @@ export default function ListProduct() {
             <h3 className={styles.emptyTitle}>{t('artikel.empty.restricted.title')}</h3>
             <p className={styles.emptyText}>{t('artikel.empty.restricted.text')}</p>
           </div>
-        ) : products.length === 0 ? (
+        ) : displayProducts.length === 0 ? (
           <div className={styles.emptyState}>
             {activeSearch || stockFilter !== 'all' || sortOrder !== 'none' ? (
               <>
@@ -569,7 +605,10 @@ export default function ListProduct() {
                 </p>
                 <button 
                   className={styles.clearSearchBtn}
-                  onClick={resetFilters}
+                  onClick={() => {
+                    resetFilters();
+                    setIsInitialRender(false);
+                  }}
                 >
                   {t('artikel.empty.resetButton')}
                 </button>
@@ -586,7 +625,7 @@ export default function ListProduct() {
           <>
             {viewMode === 'table' && (
               <TableView 
-                products={products}
+                products={displayProducts}
                 currencySymbol={currencySymbol}
                 getStockStatus={getStockStatus}
                 getStockStatusText={getStockStatusText}
@@ -597,7 +636,7 @@ export default function ListProduct() {
 
             {viewMode === 'grid' && (
               <GridView 
-                products={products}
+                products={displayProducts}
                 currencySymbol={currencySymbol}
                 getStockStatus={getStockStatus}
                 getStockStatusText={getStockStatusText}
@@ -608,7 +647,7 @@ export default function ListProduct() {
 
             {viewMode === 'excel' && (
               <ExcelView 
-                products={products}
+                products={displayProducts}
                 currencySymbol={currencySymbol}
                 getStockStatus={getStockStatus}
                 getStockStatusText={getStockStatusText}
@@ -617,20 +656,24 @@ export default function ListProduct() {
               />
             )}
 
-            <div className={styles.paginationWrapper}>
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={goToPage}
-                onNext={nextPage}
-                onPrev={prevPage}
-                loading={productsLoading}
-              />
-            </div>
+            {!isInitialRender && (
+              <>
+                <div className={styles.paginationWrapper}>
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={goToPage}
+                    onNext={nextPage}
+                    onPrev={prevPage}
+                    loading={productsLoading}
+                  />
+                </div>
 
-            <div className={styles.paginationInfo}>
-              {paginationText}
-            </div>
+                <div className={styles.paginationInfo}>
+                  {paginationText}
+                </div>
+              </>
+            )}
           </>
         )}
       </div>
@@ -657,6 +700,29 @@ export default function ListProduct() {
           onCreateProduct={handleCreateProduct}
         />
       )}
+
+      <style jsx>{`
+        .backgroundUpdate {
+          position: fixed;
+          top: 70px;
+          right: 20px;
+          background: #f0f7ff;
+          border: 1px solid #7bb3e0;
+          border-radius: 8px;
+          padding: 6px 12px;
+          font-size: 0.75rem;
+          color: #1e4b7a;
+          z-index: 100;
+          animation: fadeOut 2s ease-in-out;
+          pointer-events: none;
+        }
+        
+        @keyframes fadeOut {
+          0% { opacity: 1; }
+          70% { opacity: 1; }
+          100% { opacity: 0; visibility: hidden; }
+        }
+      `}</style>
     </div>
   );
 }

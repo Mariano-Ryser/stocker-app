@@ -1,17 +1,15 @@
 import React from "react";
 import Router from "next/router";
 import { Mail, Phone, MapPin } from "lucide-react";
-import { useEffect } from "react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import styles from "./Footer.module.css";
 
 export default function Footer() { 
   const { t } = useLanguage();
 
-  // Definir las rutas para los items de compañía
+  // Definir las rutas SOLO para about, privacy e imprint
   const companyItems = [
     { key: "about", route: "/informativePages/uberUns" },
-    { key: "roadmap", route: "#" },
     { key: "privacy", route: "/informativePages/privacyPage" },
     { key: "imprint", route: "/informativePages/termsPage" }
   ];
@@ -33,34 +31,15 @@ export default function Footer() {
           </p>
         </div>
 
-       {/* PRODUCT */}
-<div className={styles.column}>
-  <h3>{t("footer.product")}</h3>
-  <ul>
-    <li onClick={() => Router.push("/products/business-intelligence")} className={styles.clickable}>
-      {t("footer.productItems.bi")}
-    </li>
-    <li onClick={() => Router.push("/products/analytics-reports")} className={styles.clickable}>
-      {t("footer.productItems.analytics")}
-    </li>
-    <li onClick={() => Router.push("/products/automation")} className={styles.clickable}>
-      {t("footer.productItems.automation")}
-    </li>
-    <li onClick={() => Router.push("/products/security")} className={styles.clickable}>
-      {t("footer.productItems.security")}
-    </li>
-  </ul>
-</div>
-
-        {/* COMPANY */}
+        {/* COMPANY - SOLO about, privacy, imprint */}
         <div className={styles.column}>
           <h3>{t("footer.company")}</h3>
           <ul>
             {companyItems.map((item, index) => (
               <li 
                 key={index}
-                onClick={() => item.route !== "#" && Router.push(item.route)}
-                className={item.route !== "#" ? styles.clickable : ""}
+                onClick={() => Router.push(item.route)}
+                className={styles.clickable}
               >
                 {t(`footer.companyItems.${item.key}`)}
               </li>
@@ -88,13 +67,6 @@ export default function Footer() {
             <MapPin size={18} />
             <span>{t("footer.country")}</span>
           </div>
-
-          {/* <button
-            className={styles.loginBtn}
-            onClick={() => Router.push("/login")}
-          >
-            {t("header.login")}
-          </button> */}
         </div>
       </div>
 

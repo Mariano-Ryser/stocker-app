@@ -8,7 +8,7 @@ interface SplashScreenProps {
   duration?: number; // en milisegundos
 }
 
-export default function SplashScreen({ onComplete, duration = 1500 }: SplashScreenProps) {
+export default function SplashScreen({ onComplete, duration = 1000 }: SplashScreenProps) {
     const { t } = useLanguage();
   const [fadeOut, setFadeOut] = useState(false);
 

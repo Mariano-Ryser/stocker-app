@@ -10,10 +10,7 @@ import styles from './StockMovements.module.css';
 export default function StockMovements() {
   const { t } = useLanguage();
   const { isAuthenticated, loading: authLoading } = useAuth();
-  const [viewMode, setViewMode] = useState('excel');
-  
-  // 🔥 Estado para saber si es el primer render
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  const [viewMode, setViewMode] = useState('excel'); // 'table' o 'excel'
 
   // Estado para el modal de notas
   const [notesModal, setNotesModal] = useState({
@@ -24,44 +21,24 @@ export default function StockMovements() {
     movementType: ''
   });
 
-  const {
-    movements,
-    loading,
-    loadingMore,
-    error,
-    filters,
-    updateFilter,
-    clearFilters,
-    pagination,
-    goToPage,
-    nextPage,
-    prevPage,
-    refresh,
-    isCacheReady
-  } = useStockMovements(50);
-
-  // 🔥 Cuando el caché está listo, ocultar loading
-  useEffect(() => {
-    if (isCacheReady && isInitialLoad) {
-      setIsInitialLoad(false);
-    }
-  }, [isCacheReady, isInitialLoad]);
-
+  // Función para abrir el modal con las notas
   const openNotesModal = (movement: any) => {
     const type = movementTypes[movement.movementType] || movementTypes.MANUAL_ADJUSTMENT;
     setNotesModal({
       isOpen: true,
-      note: movement.notes || '',
+      note: movement.notes,
       articleName: movement.productSnapshot?.artikelName || '-',
       movementDate: formatDate(movement.movementDate),
       movementType: type.label
     });
   };
 
+  // Función para cerrar el modal
   const closeNotesModal = () => {
     setNotesModal(prev => ({ ...prev, isOpen: false }));
   };
 
+  // Formatear fecha con JavaScript nativo (sin date-fns)
   const formatDate = (dateString: string) => {
     if (!dateString) return '-';
     try {
@@ -80,6 +57,22 @@ export default function StockMovements() {
     }
   };
 
+  const {
+    movements,
+    loading,
+    loadingMore,
+    error,
+    filters,
+    updateFilter,
+    clearFilters,
+    pagination,
+    goToPage,
+    nextPage,
+    prevPage,
+    refresh
+  } = useStockMovements(50); // 50 items por página
+
+  // Movimientos tipificados con traducciones
   const movementTypes: any = {
     WAREHOUSE_IN: { 
       label: t('stockMovements.movementTypes.WAREHOUSE_IN.label'), 
@@ -119,17 +112,6 @@ export default function StockMovements() {
     }
   };
 
-  // 🔥 Determinar si mostrar loading
-  const showLoading = () => {
-    if (authLoading) return true;
-    if (!isAuthenticated) return false;
-    // Si es carga inicial y no hay caché, mostrar loading
-    if (isInitialLoad && !isCacheReady && loading) return true;
-    // Si no es carga inicial pero está cargando y no hay datos
-    if (!isInitialLoad && loading && movements.length === 0) return true;
-    return false;
-  };
-
   if (authLoading) {
     return (
       <div className={styles.center}>
@@ -141,13 +123,6 @@ export default function StockMovements() {
 
   return (
     <div className={styles.container}>
-      {/* 🔥 Indicador de actualización en segundo plano */}
-      {/* {!isInitialLoad && loading && movements.length > 0 && (
-        <div className={styles.backgroundUpdate}>
-          <span>🔄 {t('stockMovements.loading.updating') || 'Actualizando movimientos...'}</span>
-        </div>
-      )} */}
-
       {/* Header */}
       <div className={styles.header}>
         <div className={styles.headerContent}>
@@ -156,6 +131,7 @@ export default function StockMovements() {
         </div>
         
         <div className={styles.headerActions}>
+          {/* Toggle de vista */}
           <div className={styles.viewToggle}>
             <button
               className={`${styles.viewButton} ${viewMode === 'table' ? styles.activeView : ''}`}
@@ -184,7 +160,6 @@ export default function StockMovements() {
         <select
           value={filters.type}
           onChange={(e) => updateFilter('type', e.target.value)}
-          disabled={loading && !isCacheReady}
         >
           <option value="">{t('stockMovements.filters.allTypes')}</option>
           {Object.entries(movementTypes).map(([key, val]: any) => (
@@ -197,7 +172,6 @@ export default function StockMovements() {
           value={filters.startDate}
           onChange={(e) => updateFilter('startDate', e.target.value)}
           placeholder={t('stockMovements.filters.startDate')}
-          disabled={loading && !isCacheReady}
         />
 
         <input
@@ -205,7 +179,6 @@ export default function StockMovements() {
           value={filters.endDate}
           onChange={(e) => updateFilter('endDate', e.target.value)}
           placeholder={t('stockMovements.filters.endDate')}
-          disabled={loading && !isCacheReady}
         />
 
         <input
@@ -213,11 +186,10 @@ export default function StockMovements() {
           placeholder={t('stockMovements.filters.search')}
           value={filters.search}
           onChange={(e) => updateFilter('search', e.target.value)}
-          disabled={loading && !isCacheReady}
         />
 
         {(filters.type || filters.startDate || filters.endDate || filters.search) && (
-          <button onClick={clearFilters} className={styles.clearBtn} disabled={loading}>
+          <button onClick={clearFilters} className={styles.clearBtn}>
             {t('stockMovements.filters.clear')}
           </button>
         )}
@@ -233,7 +205,7 @@ export default function StockMovements() {
 
       {/* Table */}
       <div className={styles.tableContainer}>
-        {showLoading() ? (
+        {loading && !loadingMore ? (
           <div className={styles.center}>
             <div className={styles.spinner} />
             <p>{t('stockMovements.loading')}</p>
@@ -274,7 +246,7 @@ export default function StockMovements() {
                           <div className={styles.productSku}>
                             {m.productSnapshot?.artikelNumber}
                           </div>
-                         </td>
+                        </td>
 
                         <td>
                           <span
@@ -283,7 +255,7 @@ export default function StockMovements() {
                           >
                             {type.icon} {type.label}
                           </span>
-                         </td>
+                        </td>
 
                         <td className={styles.quantity}>
                           <span className={positive ? styles.positive : styles.negative}>
@@ -456,42 +428,6 @@ export default function StockMovements() {
           movementType={notesModal.movementType}
         />
       </div>
-
-      <style jsx>{`
-        .backgroundUpdate {
-          position: fixed;
-          top: 70px;
-          right: 20px;
-          background: #e1f0fa;
-          border: 1px solid #7bb3e0;
-          border-radius: 8px;
-          padding: 8px 16px;
-          font-size: 0.8rem;
-          color: #1e4b7a;
-          z-index: 1000;
-          animation: slideIn 0.3s ease, fadeOut 2s ease-in-out 1s forwards;
-          pointer-events: none;
-          box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        
-        @keyframes slideIn {
-          from {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          to {
-            transform: translateX(0);
-            opacity: 1;
-          }
-        }
-        
-        @keyframes fadeOut {
-          to {
-            opacity: 0;
-            visibility: hidden;
-          }
-        }
-      `}</style>
     </div>
   );
 }

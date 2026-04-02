@@ -5,7 +5,7 @@
     "monthly": "Mensual",
     "yearly": "Anual",
     "month": "mes",
-    "year": "año",
+    "year": "año", 
     "popular": "MÁS POPULAR",
     "subscribe": "Empezar ahora",
     "trial": "Prueba gratis 14 días • Sin tarjeta de crédito",
@@ -13,28 +13,28 @@
     "save": "Ahorra 2 meses",
     
     "starter": {
-      "name": "Starter",
-      "desc": "Ideal para tiendas pequeñas y principiantes",
-      "f1": "Hasta 500 productos",
+      "name": "Modo Gratuito",
+      "desc": "Para testear la aplicacion y conocer sus funciones",
+      "f1": "Hasta 15 productos",
       "f2": "Escaneo de códigos de barras",
-      "f3": "2 usuarios",
+      "f3": "1 usuarios",
       "f4": "Soporte básico"
     },
     "basic": {
       "name": "Básico",
-      "desc": "Perfecto para negocios en crecimiento",
-      "f1": "Hasta 2000 productos",
+      "desc": "Ideal para tiendas pequeñas y principiantes",
+      "f1": "Hasta 1000 productos",
       "f2": "Escaneo de códigos de barras",
-      "f3": "3 usuarios",
+      "f3": "5 usuarios",
       "f4": "Historial de ventas",
       "f5": "Alertas de stock"
     },
     "pro": {
       "name": "Profesional",
-      "desc": "La mejor relación calidad-precio 🚀",
+      "desc": "Perfecto para negocios en crecimiento 🚀",
       "f1": "Hasta 5000 productos",
       "f2": "Escaneo de códigos de barras",
-      "f3": "6 usuarios",
+      "f3": "10 usuarios",
       "f4": "Informes avanzados",
       "f5": "Soporte prioritario",
       "f6": "Integración con e-commerce"

@@ -175,7 +175,7 @@ export default function DashboardHome() {
   }, []);
 
   if (showSplash) {
-    return <SplashScreen onComplete={handleSplashComplete} duration={2100} />;
+    return <SplashScreen onComplete={handleSplashComplete} duration={1300} />;
   }
 
   if (authLoading) {
@@ -305,12 +305,13 @@ export default function DashboardHome() {
             </div>
           </section>
           
-          {isPremiumUser && (
+        {isPremiumUser && (
             <SalesChart 
               sales={sales as Sale[]}
               loading={salesLoading}
             /> 
-          )}    
+          )}
+          
         </div>
 
         {/* Right Column - Profile & Info */}

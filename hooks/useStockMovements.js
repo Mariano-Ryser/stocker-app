@@ -1,7 +1,10 @@
-// hooks/useStockMovements.js
+// hooks/useStockMovements.js - VERSIÓN CON CACHÉ EN MEMORIA
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
 import { getStockMovements } from '../services/stockMovementService';
+
+// 🔥 CACHÉ EN MEMORIA PARA MOVIMIENTOS DE STOCK
+const movementsCache = new Map(); // key: companyId
 
 export function useStockMovements(initialLimit = 50) {
   const [movements, setMovements] = useState([]);
@@ -28,14 +31,84 @@ export function useStockMovements(initialLimit = 50) {
     hasPrev: false
   });
 
-  const { isAuthenticated } = useAuth();
+  // 🔥 Estado para renderizado instantáneo
+  const [isCacheReady, setIsCacheReady] = useState(false);
+  const [isInitialRender, setIsInitialRender] = useState(true);
+
+  const { isAuthenticated, user } = useAuth();
+  const companyId = user?.companyId || null;
   const isFetchingRef = useRef(false);
   const initialLoadRef = useRef(false);
 
-  // Función principal para obtener movimientos
-  const fetchMovements = useCallback(async (page = 1, isLoadMore = false) => {
+  // 🔥 Obtener caché de la empresa
+  const getCompanyCache = useCallback(() => {
+    if (!companyId) return null;
+    
+    if (!movementsCache.has(companyId)) {
+      movementsCache.set(companyId, {
+        movements: [],
+        pagination: {},
+        filtersKey: '',
+        timestamp: null,
+        initialized: false
+      });
+    }
+    return movementsCache.get(companyId);
+  }, [companyId]);
+
+  // 🔥 Generar clave única para los filtros actuales
+  const getFiltersKey = useCallback(() => {
+    return JSON.stringify({
+      type: filters.type,
+      startDate: filters.startDate,
+      endDate: filters.endDate,
+      search: filters.search,
+      page: filters.page
+    });
+  }, [filters.type, filters.startDate, filters.endDate, filters.search, filters.page]);
+
+  // 🔥 Cargar desde caché inmediatamente
+  const loadFromCache = useCallback(() => {
+    const cache = getCompanyCache();
+    const currentFiltersKey = getFiltersKey();
+    
+    if (cache && cache.initialized && cache.filtersKey === currentFiltersKey && cache.movements.length > 0) {
+      // console.log('⚡ Cargando movimientos desde caché en memoria');
+      setMovements(cache.movements);
+      setPagination(cache.pagination);
+      setIsCacheReady(true);
+      return true;
+    }
+    return false;
+  }, [getCompanyCache, getFiltersKey]);
+
+  // 🔥 Guardar en caché
+  const saveToCache = useCallback((movementsData, paginationData) => {
+    const cache = getCompanyCache();
+    const currentFiltersKey = getFiltersKey();
+    
+    if (cache) {
+      cache.movements = movementsData;
+      cache.pagination = paginationData;
+      cache.filtersKey = currentFiltersKey;
+      cache.timestamp = Date.now();
+      cache.initialized = true;
+    }
+  }, [getCompanyCache, getFiltersKey]);
+
+  // Función principal para obtener movimientos (con caché)
+  const fetchMovements = useCallback(async (page = 1, isLoadMore = false, forceRefresh = false) => {
     if (!isAuthenticated) {
       setMovements([]);
+      return;
+    }
+
+    // 🔥 Si no es forceRefresh y estamos en renderizado inicial, usar caché
+    if (!forceRefresh && isInitialRender && !isLoadMore && loadFromCache()) {
+      // Ya mostramos datos del caché, actualizar en segundo plano
+      setTimeout(() => {
+        fetchMovements(page, false, true);
+      }, 100);
       return;
     }
 
@@ -73,20 +146,35 @@ export function useStockMovements(initialLimit = 50) {
         hasPrev: false
       };
 
-      if (isLoadMore) {
-        setMovements(prev => [...prev, ...newMovements]);
-      } else {
-        setMovements(newMovements);
-      }
-
-      setPagination({
+      const updatedPagination = {
         total: newPagination.total,
         pages: newPagination.pages,
         current: page,
         limit: pagination.limit,
         hasNext: newPagination.hasNext || page < newPagination.pages,
         hasPrev: newPagination.hasPrev || page > 1
-      });
+      };
+
+      if (isLoadMore) {
+        setMovements(prev => {
+          const merged = [...prev, ...newMovements];
+          // 🔥 Guardar en caché también para loadMore
+          if (page === 1) {
+            saveToCache(merged, updatedPagination);
+          }
+          return merged;
+        });
+      } else {
+        setMovements(newMovements);
+        // 🔥 Guardar en caché solo si es página 1 y sin filtros complejos
+        if (page === 1 && !filters.type && !filters.startDate && !filters.endDate && !filters.search) {
+          saveToCache(newMovements, updatedPagination);
+        }
+      }
+
+      setPagination(updatedPagination);
+      setIsCacheReady(true);
+      setIsInitialRender(false);
 
     } catch (err) {
       console.error('Error fetching movements:', err);
@@ -97,24 +185,37 @@ export function useStockMovements(initialLimit = 50) {
       isFetchingRef.current = false;
       initialLoadRef.current = true;
     }
-  }, [isAuthenticated, filters, pagination.limit]);
+  }, [isAuthenticated, filters, pagination.limit, loadFromCache, saveToCache, isInitialRender]);
 
-  // Efecto para cargar datos iniciales cuando cambian los filtros
+  // Efecto para cargar datos iniciales con caché
   useEffect(() => {
-    if (isAuthenticated) {
+    if (isAuthenticated && companyId) {
+      // Intentar cargar desde caché primero
+      const hasCache = loadFromCache();
+      if (hasCache) {
+        // Ya mostramos datos, actualizar en segundo plano
+        setTimeout(() => {
+          fetchMovements(1, false, true);
+        }, 100);
+      } else {
+        fetchMovements(1, false, false);
+      }
+    }
+  }, [isAuthenticated, companyId, fetchMovements, loadFromCache]);
+
+  // Efecto para cuando cambian los filtros
+  useEffect(() => {
+    if (isAuthenticated && initialLoadRef.current) {
+      // Resetear renderizado inicial cuando cambian filtros
+      setIsInitialRender(false);
       fetchMovements(1, false);
     }
-  }, [
-    isAuthenticated, 
-    filters.type, 
-    filters.startDate, 
-    filters.endDate, 
-    filters.search
-  ]);
+  }, [isAuthenticated, filters.type, filters.startDate, filters.endDate, filters.search]);
 
   // Función para cambiar página
   const goToPage = useCallback((page) => {
     if (page >= 1 && page <= pagination.pages) {
+      setIsInitialRender(false);
       setFilters(prev => ({ ...prev, page }));
       fetchMovements(page, false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -125,6 +226,7 @@ export function useStockMovements(initialLimit = 50) {
   const nextPage = useCallback(() => {
     if (pagination.current < pagination.pages) {
       const next = pagination.current + 1;
+      setIsInitialRender(false);
       setFilters(prev => ({ ...prev, page: next }));
       fetchMovements(next, false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -135,6 +237,7 @@ export function useStockMovements(initialLimit = 50) {
   const prevPage = useCallback(() => {
     if (pagination.current > 1) {
       const prev = pagination.current - 1;
+      setIsInitialRender(false);
       setFilters(prev => ({ ...prev, page: prev }));
       fetchMovements(prev, false);
       window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -152,15 +255,17 @@ export function useStockMovements(initialLimit = 50) {
 
   // Función para actualizar filtros
   const updateFilter = useCallback((key, value) => {
+    setIsInitialRender(false);
     setFilters(prev => ({
       ...prev,
       [key]: value,
-      page: 1 // Resetear a primera página al cambiar filtros
+      page: 1
     }));
   }, []);
 
   // Función para limpiar todos los filtros
   const clearFilters = useCallback(() => {
+    setIsInitialRender(false);
     setFilters({
       type: '',
       startDate: '',
@@ -172,8 +277,16 @@ export function useStockMovements(initialLimit = 50) {
 
   // Función para refrescar manualmente
   const refresh = useCallback(() => {
-    fetchMovements(1, false);
+    setIsInitialRender(false);
+    fetchMovements(1, false, true);
   }, [fetchMovements]);
+
+  // 🔥 Limpiar caché de la empresa (útil al cerrar sesión)
+  const clearCache = useCallback(() => {
+    if (companyId) {
+      movementsCache.delete(companyId);
+    }
+  }, [companyId]);
 
   // Función para cambiar límite por página
   const setLimit = useCallback((newLimit) => {
@@ -182,27 +295,22 @@ export function useStockMovements(initialLimit = 50) {
   }, []);
 
   return {
-    // Datos
     movements,
     loading,
     loadingMore,
     error,
-    
-    // Filtros
     filters,
     updateFilter,
     clearFilters,
-    
-    // Paginación
     pagination,
     goToPage,
     nextPage,
     prevPage,
     loadMore,
     setLimit,
-    
-    // Acciones
     refresh,
+    clearCache,
+    isCacheReady,
     isAuthenticated
   };
 }

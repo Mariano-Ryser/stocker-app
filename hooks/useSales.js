@@ -1,4 +1,4 @@
-// hooks/useSales.js - VERSIÓN CON PAGINACIÓN
+// hooks/useSales.js - VERSIÓN CON CACHÉ EN MEMORIA
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
 import { 
@@ -7,6 +7,9 @@ import {
   updateSaleAPI,
   deleteSaleAPI 
 } from '../services/saleService';
+
+// 🔥 CACHÉ EN MEMORIA PARA FACTURAS
+const salesCache = new Map(); // key: companyId
 
 export function useSales() {
   const [sales, setSales] = useState([]);
@@ -19,14 +22,12 @@ export function useSales() {
     totalAllSales: 0
   });
   
-  // Estados de paginación
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [itemsPerPage] = useState(20);
   const [hasMore, setHasMore] = useState(false);
   
-  // Estados de filtros
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [dateFrom, setDateFrom] = useState('');
@@ -39,7 +40,12 @@ export function useSales() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   
-  const { isAuthenticated } = useAuth();
+  // 🔥 Nuevo: Estado para renderizado instantáneo
+  const [isCacheReady, setIsCacheReady] = useState(false);
+  const [isInitialRender, setIsInitialRender] = useState(true);
+  
+  const { isAuthenticated, user } = useAuth();
+  const companyId = user?.companyId || null;
   
   // Debounce para búsqueda
   useEffect(() => {
@@ -53,13 +59,67 @@ export function useSales() {
   // Resetear página cuando cambian filtros
   useEffect(() => {
     setCurrentPage(1);
+    // Cuando se aplican filtros, salir del modo renderizado inicial
+    setIsInitialRender(false);
   }, [debouncedSearch, dateFrom, dateTo, statusFilter, sortField, sortDirection]);
 
-  // Función principal para obtener ventas
-  const fetchSales = useCallback(async (page = 1, isLoadMore = false) => {
+  // 🔥 Obtener caché de la empresa
+  const getCompanyCache = useCallback(() => {
+    if (!companyId) return null;
+    
+    if (!salesCache.has(companyId)) {
+      salesCache.set(companyId, {
+        sales: [],
+        stats: {},
+        pagination: {},
+        timestamp: null,
+        initialized: false
+      });
+    }
+    return salesCache.get(companyId);
+  }, [companyId]);
+
+  // 🔥 Cargar desde caché inmediatamente
+  const loadFromCache = useCallback(() => {
+    const cache = getCompanyCache();
+    if (cache && cache.initialized && cache.sales.length > 0) {
+      // console.log('⚡ Cargando facturas desde caché en memoria');
+      setSales(cache.sales);
+      setSalesStats(cache.stats);
+      setTotalPages(cache.pagination.pages || 1);
+      setTotalItems(cache.pagination.total || 0);
+      setIsCacheReady(true);
+      return true;
+    }
+    return false;
+  }, [getCompanyCache]);
+
+  // 🔥 Guardar en caché
+  const saveToCache = useCallback((salesData, statsData, paginationData) => {
+    const cache = getCompanyCache();
+    if (cache) {
+      cache.sales = salesData;
+      cache.stats = statsData;
+      cache.pagination = paginationData;
+      cache.timestamp = Date.now();
+      cache.initialized = true;
+    }
+  }, [getCompanyCache]);
+
+  // 🔥 Función principal para obtener ventas (con caché)
+  const fetchSales = useCallback(async (page = 1, isLoadMore = false, forceRefresh = false) => {
     if (!isAuthenticated) {
       setSales([]);
       setSalesStats({});
+      return;
+    }
+
+    // Si no es forceRefresh y hay caché disponible para la página 1, usarlo
+    if (!forceRefresh && page === 1 && !isLoadMore && isInitialRender && loadFromCache()) {
+      // Ya tenemos datos del caché, pero actualizamos en segundo plano
+      setTimeout(() => {
+        fetchSales(1, false, true); // Actualizar en segundo plano
+      }, 100);
       return;
     }
 
@@ -93,6 +153,11 @@ export function useSales() {
         setSales(prev => [...prev, ...newSales]);
       } else {
         setSales(newSales);
+        // Solo guardar en caché si es la página 1 y no hay filtros activos
+        if (page === 1 && !debouncedSearch && !dateFrom && !dateTo && !statusFilter && 
+            sortField === 'createdAt' && sortDirection === 'desc') {
+          saveToCache(newSales, stats, pagination);
+        }
       }
       
       setSalesStats(stats);
@@ -100,6 +165,8 @@ export function useSales() {
       setTotalItems(pagination.total);
       setHasMore(page < pagination.pages);
       setCurrentPage(page);
+      setIsCacheReady(true);
+      setIsInitialRender(false);
       
     } catch (err) {
       console.error('Error fetching sales:', err);
@@ -108,14 +175,24 @@ export function useSales() {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [isAuthenticated, itemsPerPage, debouncedSearch, dateFrom, dateTo, statusFilter, sortField, sortDirection]);
+  }, [isAuthenticated, itemsPerPage, debouncedSearch, dateFrom, dateTo, statusFilter, 
+      sortField, sortDirection, loadFromCache, saveToCache, isInitialRender]);
 
-  // Cargar primera página
+  // Cargar primera página - con caché instantáneo
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchSales(1, false);
+    if (isAuthenticated && companyId) {
+      // Intentar cargar desde caché primero
+      const hasCache = loadFromCache();
+      if (hasCache) {
+        // Ya mostramos datos, actualizar en segundo plano
+        setTimeout(() => {
+          fetchSales(1, false, true);
+        }, 100);
+      } else {
+        fetchSales(1, false, false);
+      }
     }
-  }, [isAuthenticated, fetchSales]);
+  }, [isAuthenticated, companyId, fetchSales, loadFromCache]);
 
   // Cargar más (para infinite scroll)
   const loadMore = useCallback(() => {
@@ -134,77 +211,71 @@ export function useSales() {
 
   // Función de refresh manual
   const refreshSales = useCallback(() => {
-    fetchSales(1, false);
+    setIsInitialRender(false);
+    fetchSales(1, false, true);
   }, [fetchSales]);
 
-
-
-
-  // Función createSale optimizada
- // Función createSale optimizada - SIN REFRESH BLOQUEANTE
-const createSale = async (payload) => {
-  if (!isAuthenticated) {
-    return { success: false, message: 'Debe iniciar sesión' };
-  }
-  
-  try {
-    const res = await createSaleAPI(payload);
-
-    if (!res.success) {
-      return { 
-        success: false, 
-        message: res.message,
-        type: res.type 
-      };
+  // 🔥 createSale optimizada - con actualización instantánea
+  const createSale = async (payload) => {
+    if (!isAuthenticated) {
+      return { success: false, message: 'Debe iniciar sesión' };
     }
+    
+    try {
+      const res = await createSaleAPI(payload);
 
-    const newSale = res.data?.sale || res.data;
-    
-    // 🔥 OPTIMIZACIÓN: Actualizar la lista local INMEDIATAMENTE
-    // Esto hace que la UI se actualice sin esperar una nueva petición
-    setSales(prev => [newSale, ...prev]);
-    
-    // Actualizar estadísticas localmente (opcional)
-    setSalesStats(prev => ({
-      ...prev,
-      totalAllSales: (prev.totalAllSales || 0) + 1,
-      totalUmsatz: (prev.totalUmsatz || 0) + (newSale.total || 0)
-    }));
-    
-    // 🔥 NO hacer fetchSales aquí - eso es lo que causa lentitud
-    // En lugar de eso, actualizar el caché de productos en segundo plano sin esperar
-    setTimeout(() => {
-      // Disparar eventos para actualizar stock en segundo plano
-      if (newSale.items && newSale.items.length > 0) {
-        newSale.items.forEach(item => {
-          window.dispatchEvent(new CustomEvent('stockUpdated', { 
-            detail: { 
-              productId: item.productId,
-              quantitySold: item.quantity,
-              timestamp: new Date().toISOString()
-            } 
-          }));
-        });
+      if (!res.success) {
+        return { 
+          success: false, 
+          message: res.message,
+          type: res.type 
+        };
       }
-    }, 100);
-    
-    return { 
-      success: true, 
-      sale: newSale 
-    };
-    
-  } catch (err) {
-    console.error('Error creating sale:', err);
-    return { 
-      success: false, 
-      message: err.message 
-    };
-  }
-};
 
+      const newSale = res.data?.sale || res.data;
+      
+      // 🔥 Actualizar lista local INMEDIATAMENTE
+      setSales(prev => [newSale, ...prev]);
+      
+      // Actualizar estadísticas localmente
+      setSalesStats(prev => ({
+        ...prev,
+        totalAllSales: (prev.totalAllSales || 0) + 1,
+        totalUmsatz: (prev.totalUmsatz || 0) + (newSale.total || 0)
+      }));
+      
+      // 🔥 Actualizar caché en memoria
+      const cache = getCompanyCache();
+      if (cache && cache.initialized) {
+        cache.sales = [newSale, ...cache.sales];
+        cache.stats.totalAllSales = (cache.stats.totalAllSales || 0) + 1;
+        cache.stats.totalUmsatz = (cache.stats.totalUmsatz || 0) + (newSale.total || 0);
+      }
+      
+      // Disparar eventos para actualizar stock en segundo plano
+      setTimeout(() => {
+        if (newSale.items && newSale.items.length > 0) {
+          newSale.items.forEach(item => {
+            window.dispatchEvent(new CustomEvent('stockUpdated', { 
+              detail: { 
+                productId: item.productId,
+                quantitySold: item.quantity,
+                timestamp: new Date().toISOString()
+              } 
+            }));
+          });
+        }
+      }, 100);
+      
+      return { success: true, sale: newSale };
+      
+    } catch (err) {
+      console.error('Error creating sale:', err);
+      return { success: false, message: err.message };
+    }
+  };
 
-
-  // Función updateSale optimizada
+  // updateSale optimizada
   const updateSale = async (id, payload) => {
     if (!isAuthenticated) {
       setError('Debe iniciar sesión para actualizar ventas');
@@ -219,23 +290,25 @@ const createSale = async (payload) => {
         setSales(prev => prev.map(sale => 
           sale._id === id ? res.sale : sale
         ));
+        
+        // Actualizar caché
+        const cache = getCompanyCache();
+        if (cache && cache.initialized) {
+          cache.sales = cache.sales.map(sale => 
+            sale._id === id ? res.sale : sale
+          );
+        }
       }
       
-      return { 
-        success: true, 
-        sale: res.sale 
-      };
+      return { success: true, sale: res.sale };
     } catch (err) {
       console.error('Error updating sale:', err);
       setError(err.message);
-      return { 
-        success: false, 
-        message: err.message 
-      };
+      return { success: false, message: err.message };
     }
   };
 
-  // Función deleteSale optimizada
+  // deleteSale optimizada
   const deleteSale = async (id) => {
     if (!isAuthenticated) {
       setError('Debe iniciar sesión para eliminar ventas');
@@ -248,21 +321,21 @@ const createSale = async (payload) => {
       // Eliminar de la lista local
       setSales(prev => prev.filter(sale => sale._id !== id));
       
-      // Refrescar estadísticas
-      await fetchSales(currentPage, false);
+      // Actualizar caché
+      const cache = getCompanyCache();
+      if (cache && cache.initialized) {
+        cache.sales = cache.sales.filter(sale => sale._id !== id);
+      }
       
       return { success: true };
     } catch (err) {
       console.error('Error deleting sale:', err);
       setError(err.message);
-      return { 
-        success: false, 
-        message: err.message 
-      };
+      return { success: false, message: err.message };
     }
   };
 
-  // Función para limpiar filtros
+  // Limpiar filtros
   const clearFilters = useCallback(() => {
     setSearch('');
     setDebouncedSearch('');
@@ -271,19 +344,22 @@ const createSale = async (payload) => {
     setStatusFilter('');
     setSortField('createdAt');
     setSortDirection('desc');
+    setIsInitialRender(false);
   }, []);
 
+  // 🔥 Limpiar caché de la empresa (útil al cerrar sesión)
+  const clearCache = useCallback(() => {
+    if (companyId) {
+      salesCache.delete(companyId);
+    }
+  }, [companyId]);
+
   return {
-    // Datos
     sales,
     salesStats,
-    
-    // Estados
     loading,
     loadingMore,
     error,
-    
-    // Paginación
     currentPage,
     totalPages,
     totalItems,
@@ -291,8 +367,6 @@ const createSale = async (payload) => {
     hasMore,
     goToPage,
     loadMore,
-    
-    // Filtros
     search,
     setSearch,
     dateFrom,
@@ -306,13 +380,13 @@ const createSale = async (payload) => {
     sortDirection,
     setSortDirection,
     clearFilters,
-    
-    // Acciones
     fetchSales,
     refreshSales,
     createSale,
     updateSale,
     deleteSale,
+    clearCache,
+    isCacheReady,
     isAuthenticated
   };
 }
