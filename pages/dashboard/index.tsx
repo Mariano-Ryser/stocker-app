@@ -306,11 +306,8 @@ export default function DashboardHome() {
           </section>
           
         {isPremiumUser && (
-            <SalesChart 
-              sales={sales as Sale[]}
-              loading={salesLoading}
-            /> 
-          )}
+            <SalesChart /> 
+          )} 
           
         </div>
 
@@ -340,16 +337,7 @@ export default function DashboardHome() {
                 <span>{t('index.profile.date')}</span>
                 <span className={styles.detailVal}>{new Date().toLocaleDateString("de-DE")}</span>
               </div>
-              <div className={styles.detailRow}>
-                <span>{t('index.profile.sales')}</span>
-                <span className={styles.detailVal}>
-                  {formatted.verkaeufe} {t('index.profile.paid')}
-                </span>
-              </div>
-              <div className={styles.detailRow}>
-                <span>{t('index.profile.userId')}</span>
-                <span className={styles.detailVal}>{user._id?.substring(0, 8)}...</span>
-              </div>
+            
             </div>
 
             <div className={styles.logoutWrapper}>
@@ -358,7 +346,7 @@ export default function DashboardHome() {
           </div>
  
           {/* Recent Activity / Tips */}
-          {/* <div className={`${styles.card} ${styles.tipsCard}`}>
+         {/* <div className={`${styles.card} ${styles.tipsCard}`}>
             <h3>{t('index.tips.title')}</h3>
             <ul className={styles.tipsList}>
               <li>{t('index.tips.tip1')}</li>

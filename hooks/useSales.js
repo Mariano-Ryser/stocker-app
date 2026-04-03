@@ -212,7 +212,7 @@ export function useSales() {
   // Función de refresh manual
   const refreshSales = useCallback(() => {
     setIsInitialRender(false);
-    fetchSales(1, false, true);
+    return fetchSales(1, false, true);
   }, [fetchSales]);
 
   // 🔥 createSale optimizada - con actualización instantánea

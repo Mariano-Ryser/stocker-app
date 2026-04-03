@@ -1,4 +1,4 @@
-// hooks/useClients.js
+// hooks/useClients.js - VERSIÓN CON CACHÉ EN MEMORIA
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
 import { 
@@ -8,7 +8,10 @@ import {
   updateClientAPI,
   deleteClientAPI
 } from '../services/clientService';
- 
+
+// 🔥 CACHÉ EN MEMORIA PARA CLIENTES
+const clientsCache = new Map(); // key: companyId
+
 export function useClients() {
   const [clients, setClients] = useState([]);
   const [clientsStats, setClientsStats] = useState({ total: 0 });
@@ -16,28 +19,89 @@ export function useClients() {
   const [error, setError] = useState(null);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   
-  const { isAuthenticated } = useAuth();
+  // 🔥 Nuevo estado para renderizado instantáneo
+  const [isCacheReady, setIsCacheReady] = useState(false);
+  const [isInitialRender, setIsInitialRender] = useState(true);
+  
+  const { isAuthenticated, user } = useAuth();
+  const companyId = user?.companyId || null;
 
   const isFetchingRef = useRef(false);
   const hasFetchedRef = useRef(false);
   const isMountedRef = useRef(true);
 
-  // Obtener lista completa con estadísticas
+  // 🔥 Obtener caché de la empresa
+  const getCompanyCache = useCallback(() => {
+    if (!companyId) return null;
+    
+    if (!clientsCache.has(companyId)) {
+      clientsCache.set(companyId, {
+        clients: [],
+        stats: { total: 0 },
+        timestamp: null,
+        initialized: false
+      });
+    }
+    return clientsCache.get(companyId);
+  }, [companyId]);
+
+  // 🔥 Cargar desde caché inmediatamente
+  const loadFromCache = useCallback(() => {
+    const cache = getCompanyCache();
+    if (cache && cache.initialized && cache.clients.length > 0) {
+      // console.log('⚡ Cargando clientes desde caché en memoria');
+      setClients(cache.clients);
+      setClientsStats(cache.stats);
+      setIsCacheReady(true);
+      return true;
+    }
+    return false;
+  }, [getCompanyCache]);
+
+  // 🔥 Guardar en caché
+  const saveToCache = useCallback((clientsData, statsData) => {
+    const cache = getCompanyCache();
+    if (cache) {
+      cache.clients = clientsData;
+      cache.stats = statsData;
+      cache.timestamp = Date.now();
+      cache.initialized = true;
+    }
+  }, [getCompanyCache]);
+
+  // 🔥 Limpiar caché (útil al cerrar sesión o forzar refresh)
+  const clearCache = useCallback(() => {
+    if (companyId) {
+      clientsCache.delete(companyId);
+    }
+    setIsCacheReady(false);
+    setIsInitialRender(true);
+  }, [companyId]);
+
+  // Obtener lista completa con estadísticas (con caché)
   const fetchClients = useCallback(async (forceRefresh = false) => {
     if (!isAuthenticated) {
       setClients([]);
       setClientsStats({ total: 0 });
       hasFetchedRef.current = false;
+      setIsCacheReady(false);
+      return;
+    }
+
+    // 🔥 Si no es forceRefresh y estamos en renderizado inicial, usar caché
+    if (!forceRefresh && isInitialRender && loadFromCache()) {
+      // Ya mostramos datos del caché, actualizar en segundo plano
+      setTimeout(() => {
+        fetchClients(true);
+      }, 100);
       return;
     }
 
     if (isFetchingRef.current && !forceRefresh) {
-      // console.log('Clients: Already fetching, skipping...');
       return;
     }
 
     if (hasFetchedRef.current && !forceRefresh) {
-      // console.log('Clients: Already fetched, skipping...');
       return;
     }
 
@@ -46,7 +110,6 @@ export function useClients() {
     setError(null);
     
     try {
-      // console.log('Clients: Fetching data...');
       const data = await getClients();
       
       if (data.ok === false) {
@@ -55,9 +118,17 @@ export function useClients() {
       }
       
       if (isMountedRef.current) {
-        setClients(data.clients || data || []);
-        setClientsStats(data.stats || { total: data.total || 0 });
+        const clientsData = data.clients || data || [];
+        const statsData = data.stats || { total: data.total || 0 };
+        
+        setClients(clientsData);
+        setClientsStats(statsData);
         hasFetchedRef.current = true;
+        
+        // 🔥 Guardar en caché
+        saveToCache(clientsData, statsData);
+        setIsCacheReady(true);
+        setIsInitialRender(false);
         
         if (forceRefresh) {
           setRefreshTrigger(prev => prev + 1);
@@ -77,12 +148,13 @@ export function useClients() {
         isFetchingRef.current = false;
       }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, isInitialRender, loadFromCache, saveToCache]);
 
   // Función para refrescar manualmente
   const refreshClients = useCallback(() => {
     // console.log('Clients: Manual refresh triggered');
     hasFetchedRef.current = false;
+    setIsInitialRender(false);
     fetchClients(true);
   }, [fetchClients]);
 
@@ -94,7 +166,6 @@ export function useClients() {
     }
 
     try {
-      // console.log('Clients: Fetching stats only...');
       const data = await getClientsStats();
       
       if (data.ok === false) {
@@ -103,22 +174,35 @@ export function useClients() {
       }
       
       if (isMountedRef.current) {
-        setClientsStats(data.stats || { total: 0 });
+        const statsData = data.stats || { total: 0 };
+        setClientsStats(statsData);
+        
+        // 🔥 Actualizar estadísticas en caché también
+        const cache = getCompanyCache();
+        if (cache && cache.initialized) {
+          cache.stats = statsData;
+        }
       }
-      
-      // console.log('Clients: Stats fetch completed');
     } catch (err) {
       console.error("Error fetching clients stats:", err);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, getCompanyCache]);
 
-  // Ejecutar al iniciar
+  // Ejecutar al iniciar - con caché
   useEffect(() => {
     isMountedRef.current = true;
     
-    if (isAuthenticated && !hasFetchedRef.current && isMountedRef.current) {
-      // console.log('Clients: Initial fetch triggered');
-      fetchClients();
+    if (isAuthenticated && companyId) {
+      // Intentar cargar desde caché primero
+      const hasCache = loadFromCache();
+      if (hasCache) {
+        // Ya mostramos datos, actualizar en segundo plano
+        setTimeout(() => {
+          fetchClients(true);
+        }, 100);
+      } else {
+        fetchClients();
+      }
     }
     
     return () => {
@@ -127,90 +211,107 @@ export function useClients() {
         setClients([]);
         setClientsStats({ total: 0 });
         hasFetchedRef.current = false;
+        setIsCacheReady(false);
+        setIsInitialRender(true);
       }
     };
-  }, [isAuthenticated, fetchClients]);
+  }, [isAuthenticated, companyId, fetchClients, loadFromCache]);
 
-  /** CREAR CLIENTE */
- const createClient = async (client:any) => {
-  if (!isAuthenticated) {
-    setError('Debe iniciar sesión para crear clientes');
-    return { success: false, message: 'No autenticado' };
-  }
-  
-  try {
-    const res = await createClientAPI(client);
-    
-    if (res.ok) {
-      if (res.client) {
-        setClients(prev => [...prev, res.client]);
-        setClientsStats(prev => ({ 
-          total: prev.total + 1 
-        }));
-        setRefreshTrigger(prev => prev + 1);
-      }
-      
-      return { success: true, client: res.client };
-    } else {
-      // ✅ Pasar tanto el errorCode como el mensaje
-      return { 
-        success: false, 
-        errorCode: res.errorCode,  // <--- NUEVO
-        message: res.message 
-      };
+  /** CREAR CLIENTE - CON ACTUALIZACIÓN DE CACHÉ */
+  const createClient = async (client: any) => {
+    if (!isAuthenticated) {
+      setError('Debe iniciar sesión para crear clientes');
+      return { success: false, message: 'No autenticado' };
     }
     
-  } catch (err) {
-    console.error('Error inesperado:', err);
-    return { 
-      success: false, 
-      errorCode: 'UNEXPECTED_ERROR',
-      message: err.message 
-    };
-  }
-};
-
-  /** EDITAR CLIENTE */
-// EDITAR CLIENTE - VERSIÓN ACTUAL (INCORRECTA)
-/** EDITAR CLIENTE - VERSIÓN CORREGIDA */
-const editClient = async (id:any, clientData:any) => {
-  if (!isAuthenticated) {
-    setError('Debe iniciar sesión para editar clientes');
-    return { success: false, message: 'No autenticado' };
-  }
-  
-  try {
-    const res = await updateClientAPI(id, clientData);
-    
-    if (res.ok) {
-      if (res.client) {
-        setClients(prev => prev.map(client => 
-          client._id === id ? res.client : client
-        ));
-        setRefreshTrigger(prev => prev + 1);
+    try {
+      const res = await createClientAPI(client);
+      
+      if (res.ok) {
+        if (res.client) {
+          // 🔥 Actualizar estado local inmediatamente
+          setClients(prev => [res.client, ...prev]);
+          setClientsStats(prev => ({ 
+            total: prev.total + 1 
+          }));
+          
+          // 🔥 Actualizar caché
+          const cache = getCompanyCache();
+          if (cache && cache.initialized) {
+            cache.clients = [res.client, ...cache.clients];
+            cache.stats = { total: cache.stats.total + 1 };
+          }
+          
+          setRefreshTrigger(prev => prev + 1);
+        }
+        
+        return { success: true, client: res.client };
+      } else {
+        return { 
+          success: false, 
+          errorCode: res.errorCode,
+          message: res.message 
+        };
       }
       
-      return { success: true, client: res.client };
-    } else {
-      // ✅ CORREGIDO: Devolver errorCode también
+    } catch (err) {
+      console.error('Error inesperado:', err);
       return { 
         success: false, 
-        errorCode: res.errorCode,  // <--- AHORA SÍ
-        message: res.message 
+        errorCode: 'UNEXPECTED_ERROR',
+        message: err.message 
       };
     }
-  } catch (err) {
-    console.error('Error inesperado updating client:', err);
-    return { 
-      success: false, 
-      errorCode: 'UNEXPECTED_ERROR',
-      message: err.message 
-    };
-  }
-};
+  };
 
-  // Función deleteClient
-  const deleteClient = async (id:any) => {
+  /** EDITAR CLIENTE - CON ACTUALIZACIÓN DE CACHÉ */
+  const editClient = async (id: any, clientData: any) => {
+    if (!isAuthenticated) {
+      setError('Debe iniciar sesión para editar clientes');
+      return { success: false, message: 'No autenticado' };
+    }
+    
+    try {
+      const res = await updateClientAPI(id, clientData);
+      
+      if (res.ok) {
+        if (res.client) {
+          // 🔥 Actualizar estado local inmediatamente
+          setClients(prev => prev.map(client => 
+            client._id === id ? res.client : client
+          ));
+          
+          // 🔥 Actualizar caché
+          const cache = getCompanyCache();
+          if (cache && cache.initialized) {
+            cache.clients = cache.clients.map(client => 
+              client._id === id ? res.client : client
+            );
+          }
+          
+          setRefreshTrigger(prev => prev + 1);
+        }
+        
+        return { success: true, client: res.client };
+      } else {
+        return { 
+          success: false, 
+          errorCode: res.errorCode,
+          message: res.message 
+        };
+      }
+    } catch (err) {
+      console.error('Error inesperado updating client:', err);
+      return { 
+        success: false, 
+        errorCode: 'UNEXPECTED_ERROR',
+        message: err.message 
+      };
+    }
+  };
+
+  /** ELIMINAR CLIENTE - CON ACTUALIZACIÓN DE CACHÉ */
+  const deleteClient = async (id: any) => {
     if (!isAuthenticated) {
       setError('Debe iniciar sesión para eliminar clientes');
       return { success: false, message: 'No autenticado' };
@@ -220,10 +321,19 @@ const editClient = async (id:any, clientData:any) => {
       const res = await deleteClientAPI(id);
       
       if (res.ok) {
+        // 🔥 Actualizar estado local inmediatamente
         setClients(prev => prev.filter(client => client._id !== id));
         setClientsStats(prev => ({ 
           total: Math.max(0, prev.total - 1) 
         }));
+        
+        // 🔥 Actualizar caché
+        const cache = getCompanyCache();
+        if (cache && cache.initialized) {
+          cache.clients = cache.clients.filter(client => client._id !== id);
+          cache.stats = { total: Math.max(0, cache.stats.total - 1) };
+        }
+        
         setRefreshTrigger(prev => prev + 1);
         
         return { success: true };
@@ -244,11 +354,18 @@ const editClient = async (id:any, clientData:any) => {
   };
 
   return {
+    // Datos
     clients,
     clientsStats,
     loading,
     error,
     refreshTrigger,
+    
+    // 🔥 Nuevos estados de caché
+    isCacheReady,
+    isInitialRender,
+    
+    // Acciones
     setError: clearError,
     fetchClients,
     refreshClients,
@@ -256,6 +373,7 @@ const editClient = async (id:any, clientData:any) => {
     createClient,
     editClient,        
     deleteClient,
+    clearCache, // 🔥 Nueva función para limpiar caché
     isAuthenticated
   };
 }

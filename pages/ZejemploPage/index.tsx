@@ -2,13 +2,13 @@ import {useEffect} from 'react'
 import styles from "./EjemploPage.module.css"
 
 
-export default function codigoDeBarras() {
+export default function ejemploPage() {
 
 
   return (
     <>
-       <h2>Codigo de Barras creador</h2>
-       <p>Page</p>
+       <h2>Ejemplo de Página</h2>
+       <p>Esta es una página de ejemplo</p>
       </>
   );
 }

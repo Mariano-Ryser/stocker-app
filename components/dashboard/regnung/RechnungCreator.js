@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import { useAuth } from "../../auth/AuthProvider";
 import { useClients } from "../../../hooks/useClients";
 import { useProduct } from "../../../hooks/useProducts";
@@ -18,7 +18,7 @@ export default function RechnungCreator({ onDone, salesApi }) {
   
   const { createSale } = salesApi;
   const { company, isAuthenticated } = useAuth();
-  const { clients } = useClients();
+  const { clients, isCacheReady: clientsCacheReady } = useClients();
   const { 
     products, 
     refreshProducts,
@@ -27,7 +27,9 @@ export default function RechnungCreator({ onDone, salesApi }) {
     searchProductsInCache,
     loading: productsLoading,
     productLimits,
-    limitWarning
+    limitWarning,
+    isCacheReady: productsCacheReady, // 🔥 Nuevo: saber si el caché está listo
+    scannerProducts // 🔥 Productos del caché para búsqueda rápida
   } = useProduct();
   
   // Estados principales
@@ -40,6 +42,7 @@ export default function RechnungCreator({ onDone, salesApi }) {
   const [productSearchTerm, setProductSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTimeout, setSearchTimeout] = useState(null);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
   
   // Refs
   const clientAutocompleteRef = useRef(null);
@@ -52,22 +55,32 @@ export default function RechnungCreator({ onDone, salesApi }) {
   const taxRate = company?.invoiceSettings?.taxRate || 19;
   const currencySymbol = company?.currency || 'USD';
   
+  // 🔥 Cuando el caché está listo, ocultar loading
+  useEffect(() => {
+    if (productsCacheReady && isInitialLoad) {
+      setIsInitialLoad(false);
+    }
+  }, [productsCacheReady, isInitialLoad]);
+  
   // Formatear moneda
   const formatCurrency = (value) => {
     return value?.toFixed(2) || '0.00';
   };
   
-  // Cargar productos al montar
+  // 🔥 Cargar productos al montar - usando caché
   useEffect(() => {
-    if (isAuthenticated && products.length === 0) {
-      refreshProducts();
+    if (isAuthenticated) {
+      // Si ya hay productos en caché, no necesitamos recargar
+      if (products.length === 0 && !productsCacheReady) {
+        refreshProducts();
+      }
+      if (company?._id) {
+        fetchProductLimits(true);
+      }
     }
-    if (isAuthenticated && company?._id) {
-      fetchProductLimits(true);
-    }
-  }, [isAuthenticated, refreshProducts, fetchProductLimits, company?._id]);
+  }, [isAuthenticated, refreshProducts, fetchProductLimits, company?._id, products.length, productsCacheReady]);
   
-    // Cerrar modal con tecla Escape
+  // Cerrar modal con tecla Escape
   useEffect(() => {
     const handleEscape = (event) => {
       if (event.key === 'Escape' && !isSubmitting) {
@@ -82,25 +95,28 @@ export default function RechnungCreator({ onDone, salesApi }) {
     };
   }, [isSubmitting, onDone]);
   
-  // Filtrar productos localmente
+  // 🔥 Filtrar productos localmente (usando scannerProducts si está disponible)
   useEffect(() => {
+    // Usar scannerProducts (caché) si está disponible, si no usar products
+    const sourceProducts = scannerProducts.length > 0 ? scannerProducts : products;
+    
     if (!productSearchTerm.trim()) {
-      setFilteredProducts(products.slice(0, 30));
+      setFilteredProducts(sourceProducts.slice(0, 30));
       return;
     }
     
     const term = productSearchTerm.toLowerCase();
-    const filtered = products.filter(p => 
+    const filtered = sourceProducts.filter(p => 
       p.artikelName?.toLowerCase().includes(term) ||
       p.artikelNumber?.toString().toLowerCase().includes(term) ||
       p.description?.toLowerCase().includes(term)
     ).slice(0, 50);
     
     setFilteredProducts(filtered);
-  }, [productSearchTerm, products]);
+  }, [productSearchTerm, products, scannerProducts]);
   
-  // Buscar productos con debounce
-  const handleProductSearch = (value) => {
+  // Buscar productos con debounce (optimizado)
+  const handleProductSearch = useCallback((value) => {
     setProductSearchTerm(value);
     
     if (searchTimeout) clearTimeout(searchTimeout);
@@ -108,17 +124,35 @@ export default function RechnungCreator({ onDone, salesApi }) {
     if (value.length >= 2) {
       setSearchTimeout(setTimeout(async () => {
         try {
+          // 🔥 Usar búsqueda en caché primero
           const results = await searchProductsInCache(value);
-          setFilteredProducts(results.slice(0, 50));
+          if (results.length > 0) {
+            setFilteredProducts(results.slice(0, 50));
+          } else {
+            // Si no hay resultados en caché, buscar en products
+            const term = value.toLowerCase();
+            const fallbackResults = products.filter(p => 
+              p.artikelName?.toLowerCase().includes(term) ||
+              p.artikelNumber?.toString().toLowerCase().includes(term)
+            ).slice(0, 50);
+            setFilteredProducts(fallbackResults);
+          }
         } catch (error) {
           console.error('Error en búsqueda:', error);
+          // Fallback a búsqueda local
+          const term = value.toLowerCase();
+          const fallbackResults = products.filter(p => 
+            p.artikelName?.toLowerCase().includes(term) ||
+            p.artikelNumber?.toString().toLowerCase().includes(term)
+          ).slice(0, 50);
+          setFilteredProducts(fallbackResults);
         }
       }, 300));
     }
-  };
+  }, [searchTimeout, searchProductsInCache, products]);
   
   // Agregar producto al carrito (solo si tiene stock > 0)
-  const addToCart = (product) => {
+  const addToCart = useCallback((product) => {
     // Verificar si el producto tiene stock disponible
     if (product.stock <= 0) {
       showToast(t('rechnungForm.products.outOfStockMessage').replace('{name}', product.artikelName), 'warning');
@@ -152,17 +186,19 @@ export default function RechnungCreator({ onDone, salesApi }) {
         image: product.imagen
       }];
     });
-  };
+  }, [showToast, t]);
   
   // Actualizar cantidad en carrito
-  const updateCartQuantity = (index, newQuantity) => {
+  const updateCartQuantity = useCallback((index, newQuantity) => {
     if (newQuantity < 1) {
       removeFromCart(index);
       return;
     }
     
     const item = cart[index];
-    const product = products.find(p => p._id === item.productId);
+    // 🔥 Buscar producto en products o scannerProducts
+    const product = products.find(p => p._id === item.productId) || 
+                    scannerProducts.find(p => p._id === item.productId);
     
     // Verificar que la nueva cantidad no exceda el stock
     if (product && newQuantity > product.stock) {
@@ -173,28 +209,28 @@ export default function RechnungCreator({ onDone, salesApi }) {
     setCart(prevCart => prevCart.map((item, i) => 
       i === index ? { ...item, quantity: newQuantity } : item
     ));
-  };
+  }, [cart, products, scannerProducts, showToast, t]);
   
   // Eliminar del carrito
-  const removeFromCart = (index) => {
+  const removeFromCart = useCallback((index) => {
     setCart(prevCart => prevCart.filter((_, i) => i !== index));
-  };
+  }, []);
   
   // Actualiza clearCart
-  const clearCart = () => {
+  const clearCart = useCallback(() => {
     if (cart.length > 0 && confirm(t('rechnungForm.cart.clearConfirm'))) {
       setCart([]);
       showToast(t('rechnungForm.cart.clear'), 'info');
     }
-  };
+  }, [cart.length, showToast, t]);
   
   // Calcular totales
   const subtotal = cart.reduce((sum, item) => sum + (item.quantity * item.unitPrice), 0);
   const taxAmount = subtotal * (taxRate / 100);
   const total = subtotal + taxAmount;
   
-  // Filtrar clientes
-  const filteredClients = () => {
+  // Filtrar clientes (con caché)
+  const filteredClients = useCallback(() => {
     const query = clientSearch?.toLowerCase() || "";
     
     if (!query) {
@@ -206,23 +242,24 @@ export default function RechnungCreator({ onDone, salesApi }) {
       c.vorname?.toLowerCase().includes(query) ||
       (c.email && c.email.toLowerCase().includes(query))
     ).slice(0, 8);
-  };
+  }, [clientSearch, clients]);
   
-  const getSelectedClientName = () => {
+  const getSelectedClientName = useCallback(() => {
     if (!clientId) return "";
     const client = clients.find(c => c._id === clientId);
     return client ? `${client.vorname} ${client.name}` : "";
-  };
+  }, [clientId, clients]);
   
-  const clearClientSelection = () => {
+  const clearClientSelection = useCallback(() => {
     setClientId("");
     setClientSearch("");
-  };
+  }, []);
   
-  // También actualiza validateStock para usar toast
-  const validateStock = () => {
+  // Validar stock
+  const validateStock = useCallback(() => {
     for (const item of cart) {
-      const product = products.find(p => p._id === item.productId);
+      const product = products.find(p => p._id === item.productId) ||
+                      scannerProducts.find(p => p._id === item.productId);
       if (product && product.stock < item.quantity) {
         showToast(t('rechnungForm.items.errors.stockItem')
           .replace('{name}', item.productName)
@@ -232,9 +269,10 @@ export default function RechnungCreator({ onDone, salesApi }) {
       }
     }
     return true;
-  };
+  }, [cart, products, scannerProducts, showToast, t]);
   
-  const submit = async () => {
+  // Submit optimizado
+  const submit = useCallback(async () => {
     if (isSubmitting || !isAuthenticated) return;
     
     if (cart.length === 0) {
@@ -271,9 +309,17 @@ export default function RechnungCreator({ onDone, salesApi }) {
         setIsSubmitting(false);
         onDone();
         
+        // 🔥 Actualizar caché en segundo plano
         setTimeout(() => {
           updateProductInCache(true).catch(console.warn);
           fetchProductLimits(true).catch(console.warn);
+          // Disparar evento para actualizar otros componentes
+          window.dispatchEvent(new CustomEvent('stockUpdated', { 
+            detail: { 
+              items: cart,
+              timestamp: new Date().toISOString()
+            } 
+          }));
         }, 200);
         
       } else {
@@ -285,7 +331,7 @@ export default function RechnungCreator({ onDone, salesApi }) {
       showToast(t('rechnungForm.messages.createError') + ": " + error.message, 'error');
       setIsSubmitting(false);
     }
-  };
+  }, [isSubmitting, isAuthenticated, cart.length, validateStock, clientId, cart, status, taxRate, createSale, showToast, t, onDone, updateProductInCache, fetchProductLimits]);
   
   if (!isAuthenticated) {
     return (
@@ -344,7 +390,8 @@ export default function RechnungCreator({ onDone, salesApi }) {
             </div>
             
             <div className={styles.productsGrid}>
-              {productsLoading ? (
+              {/* 🔥 Mostrar loading solo en primera carga sin caché */}
+              {isInitialLoad && productsLoading ? (
                 <div className={styles.loadingProducts}>
                   <div className={styles.spinner}></div>
                   <p>{t('rechnungForm.common.loading')}</p>
@@ -373,16 +420,14 @@ export default function RechnungCreator({ onDone, salesApi }) {
                         {product.imagen ? (
                           <img src={product.imagen} alt={product.artikelName} />
                         ) : (
-                           (
-                                      <div className={styles.cardPlaceholder}>
-                                        <img
-                                          src="/img/moving-box.png"
-                                          alt="Placeholder"
-                                          className={styles.placeholderImage}
-                                          loading="lazy"
-                                        />
-                                      </div>
-                                    )
+                          <div className={styles.cardPlaceholder}>
+                            <img
+                              src="/img/moving-box.png"
+                              alt="Placeholder"
+                              className={styles.placeholderImage}
+                              loading="lazy"
+                            />
+                          </div>
                         )}
                       </div>
                       <div className={styles.productInfo}>

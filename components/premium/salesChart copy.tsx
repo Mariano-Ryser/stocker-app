@@ -1,5 +1,5 @@
 // components/premium/salesChart.tsx
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect ,useMemo} from 'react';
 import { useSales } from '../../hooks/useSales';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Sale } from '../../types';
@@ -24,7 +24,7 @@ export default function SalesChart({
   loading: propLoading 
 }: SalesChartProps) {
   const { t } = useLanguage();
-  const { sales: hookSales, loading: hookLoading, refreshSales } = useSales();
+  const { sales: hookSales, loading: hookLoading } = useSales();
   const { company } = useAuth();
   const sales = propSales || hookSales;
   const loading = propLoading !== undefined ? propLoading : hookLoading;
@@ -41,54 +41,25 @@ export default function SalesChart({
     averageSale: 0,
     growth: 0
   });
-  const [isRefreshing, setIsRefreshing] = useState(false);
-  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  const months = useMemo(() => [
-    t('salesChart.months.jan'),
-    t('salesChart.months.feb'),
-    t('salesChart.months.mar'),
-    t('salesChart.months.apr'),
-    t('salesChart.months.may'),
-    t('salesChart.months.jun'),
-    t('salesChart.months.jul'),
-    t('salesChart.months.aug'),
-    t('salesChart.months.sep'),
-    t('salesChart.months.oct'),
-    t('salesChart.months.nov'),
-    t('salesChart.months.dec')
-  ], [t]);
+const months = useMemo(() => [
+  t('salesChart.months.jan'),
+  t('salesChart.months.feb'),
+  t('salesChart.months.mar'),
+  t('salesChart.months.apr'),
+  t('salesChart.months.may'),
+  t('salesChart.months.jun'),
+  t('salesChart.months.jul'),
+  t('salesChart.months.aug'),
+  t('salesChart.months.sep'),
+  t('salesChart.months.oct'),
+  t('salesChart.months.nov'),
+  t('salesChart.months.dec')
+], [t]);
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
   
-  // 🔥 Forzar actualización de datos cuando el componente se monta
-  useEffect(() => {
-    const shouldRefresh = () => {
-      if (!lastUpdated) return true;
-      const minutesSinceUpdate = (Date.now() - lastUpdated.getTime()) / (1000 * 60);
-      return minutesSinceUpdate > 5;
-    };
-    
-    const refreshData = async () => {
-      if (shouldRefresh() && !loading && !isRefreshing) {
-        console.log('🔄 Forzando actualización de datos del gráfico...');
-        setIsRefreshing(true);
-        try {
-          await refreshSales();
-        } catch (error) {
-          console.error('Error refrescando datos:', error);
-        } finally {
-          setIsRefreshing(false);
-          setLastUpdated(new Date());
-        }
-      }
-    };
-    
-    refreshData();
-  }, [refreshSales, loading, isRefreshing, lastUpdated]);
-
-  // 🔥 Procesar datos
   useEffect(() => {
     if (!sales || loading) return;
 
@@ -105,7 +76,6 @@ export default function SalesChart({
           })
         : [];
 
-      // Solo contar facturas pagadas
       const paidSales = filteredSales.filter(sale => sale.status === 'paid');
       
       if (timeRange === 'yearly') {
@@ -179,22 +149,9 @@ export default function SalesChart({
     };
 
     processData();
-  }, [sales, loading, timeRange, selectedYear, selectedMonth, months]);
+}, [sales, loading, timeRange, selectedYear, selectedMonth, months]);
 
-  // 🔥 Botón manual de refresco
-  const handleManualRefresh = async () => {
-    setIsRefreshing(true);
-    try {
-      await refreshSales();
-    } catch (error) {
-      console.error('Error refrescando datos:', error);
-    } finally {
-      setIsRefreshing(false);
-      setLastUpdated(new Date());
-    }
-  };
-
-  if (loading && !isRefreshing) {
+  if (loading) {
     return (
       <div className={styles.loading}>
         <div className={styles.spinner}></div>
@@ -212,29 +169,6 @@ export default function SalesChart({
 
   return (
     <div className={styles.container}>
-      {/* 🔥 Barra de refresco */}
-      <div className={styles.refreshBar}>
-        {isRefreshing && (
-          <div className={styles.refreshingIndicator}>
-            <div className={styles.smallSpinner}></div>
-            {/* <span>{t('salesChart.refreshing') || 'Actualizando datos...'}</span> */}
-          </div>
-        )}
-        {lastUpdated && !isRefreshing && (
-          <div className={styles.lastUpdated}>
-            {/* 📅 {t('salesChart.lastUpdated') || 'Última actualización'}: {lastUpdated.toLocaleTimeString()} */}
-          </div>
-        )}
-        <button 
-          className={styles.refreshButton} 
-          onClick={handleManualRefresh}
-          disabled={isRefreshing}
-          title={t('salesChart.refreshTooltip') || 'Actualizar datos'}
-        >
-          🔄
-        </button>
-      </div>
-
       {/* Header */}
       <div className={styles.header}>
         <div>
@@ -269,6 +203,17 @@ export default function SalesChart({
               </svg>
               {t('salesChart.views.matrix')}
             </button>
+            {/* <button
+              className={`${styles.viewButton} ${viewMode === 'trend' ? styles.activeView : ''}`}
+              onClick={() => setViewMode('trend')}
+              title={t('salesChart.views.trend')}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M3 17L9 11L13 15L21 6" />
+                <path d="M3 21h18" />
+              </svg>
+              {t('salesChart.views.trend')}
+            </button> */}
           </div>
 
           {/* Time Controls */}
@@ -363,7 +308,7 @@ export default function SalesChart({
                   <th>{t('salesChart.table.revenue')}</th>
                   <th>{t('salesChart.table.avgSale')}</th>
                   <th>{t('salesChart.table.contribution')}</th>
-                </tr>
+                 </tr>
               </thead>
               <tbody>
                 {salesData.map((item, index) => {
@@ -465,6 +410,96 @@ export default function SalesChart({
         </div>
       )}
 
+      {/* Trend View */}
+      {viewMode === 'trend' && (
+        <div className={styles.trendView}>
+          <div className={styles.trendHeader}>
+            <div className={styles.tableTitle}>{t('salesChart.trend.title')}</div>
+            <div className={styles.tableSubtitle}>{t('salesChart.trend.subtitle')}</div>
+          </div>
+          
+          <div className={styles.trendTable}>
+            <table className={styles.comparativeTable}>
+              <thead>
+                <tr>
+                  <th>{timeRange === 'yearly' ? t('salesChart.table.month') : t('salesChart.table.day')}</th>
+                  <th>{t('salesChart.trend.revenue')}</th>
+                  <th>{t('salesChart.trend.sales')}</th>
+                  <th>{t('salesChart.trend.trend')}</th>
+                  <th>{t('salesChart.trend.vsAvg')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {salesData.map((item, index) => {
+                  const prevItem = index > 0 ? salesData[index - 1] : null;
+                  const revenueTrend = prevItem 
+                    ? ((item.revenue - prevItem.revenue) / prevItem.revenue) * 100 
+                    : 0;
+                  const vsAvgRevenue = ((item.revenue - totalStats.totalRevenue / salesData.length) / (totalStats.totalRevenue / salesData.length)) * 100;
+                  
+                  return (
+                    <tr key={index} className={index % 2 === 0 ? styles.evenRow : styles.oddRow}>
+                      <td className={styles.trendPeriod}><strong>{item.month}</strong></td>
+                      <td className={styles.revenueCell}>{formatCurrency(item.revenue)}</td>
+                      <td>{item.sales}</td>
+                      <td>
+                        <div className={styles.trendIndicator}>
+                          {revenueTrend !== 0 && (
+                            <>
+                              <span className={revenueTrend > 0 ? styles.trendUp : styles.trendDown}>
+                                {revenueTrend > 0 ? '↑' : '↓'}
+                              </span>
+                              <span className={styles.trendValue}>
+                                {Math.abs(revenueTrend).toFixed(1)}%
+                              </span>
+                            </>
+                          )}
+                          {revenueTrend === 0 && <span className={styles.trendFlat}>→</span>}
+                        </div>
+                      </td>
+                      <td>
+                        <div className={styles.vsAvgIndicator}>
+                          <span className={vsAvgRevenue > 0 ? styles.aboveAvg : styles.belowAvg}>
+                            {vsAvgRevenue > 0 ? '+' : ''}{vsAvgRevenue.toFixed(1)}%
+                          </span>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+
+          <div className={styles.trendSummary}>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>{t('salesChart.trend.bestPerformance')}</span>
+              <span className={styles.summaryValue}>
+                {salesData.reduce((best, current) => 
+                  current.revenue > best.revenue ? current : best, salesData[0]
+                )?.month}
+              </span>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>{t('salesChart.trend.growthMomentum')}</span>
+              <span className={styles.summaryValue}>
+                {salesData.length > 1 && salesData[salesData.length - 1].revenue > salesData[0].revenue 
+                  ? t('salesChart.trend.positive') 
+                  : t('salesChart.trend.needsAttention')}
+              </span>
+            </div>
+            <div className={styles.summaryItem}>
+              <span className={styles.summaryLabel}>{t('salesChart.trend.peakSeason')}</span>
+              <span className={styles.summaryValue}>
+                {salesData.reduce((peak, current) => 
+                  current.sales > peak.sales ? current : peak, salesData[0]
+                )?.month}
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Insights */}
       <div className={styles.insights}>
         <div className={styles.insightItem}>
@@ -484,67 +519,6 @@ export default function SalesChart({
           </span>
         </div>
       </div>
-
-      <style jsx>{`
-        .refreshBar {
-          display: flex;
-          justify-content: flex-end;
-          align-items: center;
-          gap: 12px;
-          margin-bottom: 16px;
-          padding: 8px 0;
-          border-bottom: 1px solid #e5e7eb;
-        }
-        
-        .refreshButton {
-          background: none;
-          border: none;
-          font-size: 1.2rem;
-          cursor: pointer;
-          padding: 6px 10px;
-          border-radius: 8px;
-          transition: all 0.2s;
-          background: #f3f4f6;
-        }
-        
-        .refreshButton:hover {
-          background: #e5e7eb;
-          transform: scale(1.05);
-        }
-        
-        .refreshButton:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-        
-        .refreshingIndicator {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 0.8rem;
-          color: #6b7280;
-        }
-        
-        .smallSpinner {
-          width: 16px;
-          height: 16px;
-          border: 2px solid #e5e7eb;
-          border-top-color: #3b82f6;
-          border-radius: 50%;
-          animation: spin 0.8s linear infinite;
-        }
-        
-        .lastUpdated {
-          font-size: 0.75rem;
-          color: #9ca3af;
-        }
-        
-        @keyframes spin {
-          to {
-            transform: rotate(360deg);
-          }
-        }
-      `}</style>
     </div>
   );
-}
+} 
