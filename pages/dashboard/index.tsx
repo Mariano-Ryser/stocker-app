@@ -1,4 +1,4 @@
-// pages/dashboard/index.tsx (versión mejorada)
+// pages/dashboard/index.tsx - VERSIÓN CORREGIDA
 import {preloadDashboardOnce} from '../../PreloadDashboard'
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { useAuth } from "../../components/auth/AuthProvider";
@@ -27,7 +27,8 @@ import { User, Sale } from '../../types';
 
 export default function DashboardHome() {
   const { t } = useLanguage(); 
-  const [showSplash, setShowSplash] = useState(false);
+  // 🔥 CAMBIO 1: Inicializar showSplash como true para que el splash sea lo primero que se vea
+  const [showSplash, setShowSplash] = useState(true); // 👈 ANTES era false
   const [isMobile, setIsMobile] = useState(false);
   
   // Detectar si es móvil para ajustes adicionales
@@ -53,14 +54,17 @@ export default function DashboardHome() {
   const router = useRouter();
   const { refreshAllData: coordinatedRefresh, isRefreshing } = useDashboard();
 
+  // 🔥 CAMBIO 2: Controlar el splash SOLO cuando estamos autenticados
   useEffect(() => {
+    // Solo mostrar splash si estamos autenticados y nunca se ha mostrado
     if (isAuthenticated && !authLoading) {
       const hasShownSplash = sessionStorage.getItem('splashShown');
       
-      if (!hasShownSplash) {
-        setShowSplash(true);
-        sessionStorage.setItem('splashShown', 'true');
+      // Si ya se mostró antes, ocultar splash inmediatamente
+      if (hasShownSplash) {
+        setShowSplash(false);
       }
+      // Si no, mantener splash visible (ya está true por defecto)
     }
   }, [isAuthenticated, authLoading]);
 
@@ -172,8 +176,11 @@ export default function DashboardHome() {
 
   const handleSplashComplete = useCallback(() => {
     setShowSplash(false);
+    // 🔥 CAMBIO 3: Marcar que el splash ya se mostró
+    sessionStorage.setItem('splashShown', 'true');
   }, []);
 
+  // 🔥 CAMBIO 4: Mostrar splash PRIMERO, antes que cualquier otra cosa
   if (showSplash) {
     return <SplashScreen onComplete={handleSplashComplete} duration={1300} />;
   }
@@ -345,85 +352,7 @@ export default function DashboardHome() {
             </div>
           </div>
  
-          {/* Recent Activity / Tips */}
-         {/* <div className={`${styles.card} ${styles.tipsCard}`}>
-            <h3>{t('index.tips.title')}</h3>
-            <ul className={styles.tipsList}>
-              <li>{t('index.tips.tip1')}</li>
-              <li>{t('index.tips.tip2')}</li>
-              <li>{t('index.tips.tip3')}</li>
-              {!isPremiumUser && (
-                <li>
-                  <strong>{t('index.tips.upgrade')}</strong> {t('index.tips.upgradeDesc')}
-                  <button 
-                    className={styles.upgradeButton}
-                    onClick={() => router.push("/settings")}
-                  >
-                    {t('index.tips.upgradeButton')}
-                  </button>
-                </li>
-              )}
-            </ul>
-          </div> */}
-
-          {/* Stats Grid */}
-          {/* <section className={styles.statsGrid}>
-            <article className={styles.statCard}>
-              <div className={`${styles.iconWrapper} ${styles.blue}`}>
-                <IconBox className={styles.icon} />
-              </div>
-              <div className={styles.statInfo} onClick={() => router.push('./dashboard/artikel')}>
-                <h3>{t('index.stats.products')}</h3>
-                <p className={styles.statValue}>{allLoading ? "..." : formatted.produkte}</p>
-                <span className={styles.statLabel}>{t('index.stats.productsDesc')}</span>
-              </div>
-            </article>
-
-            <article className={styles.statCard}>
-              <div className={`${styles.iconWrapper} ${styles.purple}`}>
-                <IconUsers className={styles.icon} />
-              </div>
-              <div className={styles.statInfo} onClick={() => router.push('./dashboard/clients')}>
-                <h3>{t('index.stats.customers')}</h3>
-                <p className={styles.statValue}>{allLoading ? "..." : formatted.kunden}</p>
-                <span className={styles.statLabel}>{t('index.stats.customersDesc')}</span>
-              </div>
-            </article>
-
-            <article className={styles.statCard}>
-              <div className={`${styles.iconWrapper} ${styles.orange}`}>
-                <IconInvoice className={styles.icon} />
-              </div>
-              <div className={styles.statInfo} onClick={() => router.push('./dashboard/regnung')}>
-                <h3>{t('index.stats.sales')}</h3>
-                <p className={styles.statValue}>{allLoading ? "..." : formatted.verkaeufe}</p>
-                <span className={styles.statLabel}>{t('index.stats.salesDesc')}</span>
-                <div className={styles.extraInfo}>
-                  {stats.pendingCount > 0 && (
-                    <span className={styles.pendingInfo}>{formatted.pending} {t('index.stats.pending')}</span>
-                  )}
-                  {stats.cancelledCount > 0 && (
-                    <span className={styles.cancelledInfo}>{formatted.cancelled} {t('index.stats.cancelled')}</span>
-                  )}
-                </div>
-              </div>
-            </article>
-
-             <article className={`${styles.statCard} ${styles.revenueCard}`}>
-              <div className={`${styles.iconWrapper} ${styles.green}`}>
-                <IconChart className={styles.icon} />
-              </div>
-              <div className={styles.statInfo} onClick={() => router.push('./dashboard/verkaufteArtikel')}>
-                <h3>{t('index.stats.revenue')}</h3>
-                <p className={`${styles.statValue} ${styles.money}`}>{allLoading ? "..." : formatted.umsatz}</p>
-                <span className={styles.statLabel}>
-                  {t('index.stats.revenueDesc').replace('{amount}', allLoading ? "..." : formatted.durchschnitt)}
-                  <br/>
-                  <small className={styles.infoText}>{t('index.stats.revenueNote')}</small>
-                </span>
-              </div>
-            </article> 
-          </section> */}
+    
         </aside>
       </div>
     </div>

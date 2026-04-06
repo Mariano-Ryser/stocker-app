@@ -16,7 +16,7 @@ export default function HomeHero() {
         <div className="content">
           <h1 className="hero-title">{t('homeHero.title')}</h1>
           <p>{t('homeHero.subtitle')}</p>
-
+ 
           <div className="actions">
             <button
               className="btn secondary"
@@ -35,7 +35,8 @@ export default function HomeHero() {
         </div>
         <div className="image">
           <Image
-            src="/img/homeHero3.webp" 
+            // src="/img/homeHero3.webp" 
+            src="/img/heroo23.jpeg" 
             alt="Stocker Dashboard"
             width={760}
             height={30}
@@ -46,6 +47,7 @@ export default function HomeHero() {
 
       <style jsx>{`
         .hero {
+          margin-top:80px;
           background: linear-gradient(
             180deg,
             #ffffff 0%,

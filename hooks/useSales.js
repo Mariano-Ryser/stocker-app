@@ -1,4 +1,4 @@
-// hooks/useSales.js - VERSIÓN CON CACHÉ EN MEMORIA
+// hooks/useSales.js - VERSIÓN CORREGIDA (sin doble carga)
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
 import { 
@@ -40,12 +40,11 @@ export function useSales() {
   const [loadingMore, setLoadingMore] = useState(false);
   const [error, setError] = useState(null);
   
-  // 🔥 Nuevo: Estado para renderizado instantáneo
   const [isCacheReady, setIsCacheReady] = useState(false);
-  const [isInitialRender, setIsInitialRender] = useState(true);
   
   const { isAuthenticated, user } = useAuth();
   const companyId = user?.companyId || null;
+  const initialLoadDone = useRef(false); // 🔥 Prevenir carga múltiple
   
   // Debounce para búsqueda
   useEffect(() => {
@@ -59,8 +58,6 @@ export function useSales() {
   // Resetear página cuando cambian filtros
   useEffect(() => {
     setCurrentPage(1);
-    // Cuando se aplican filtros, salir del modo renderizado inicial
-    setIsInitialRender(false);
   }, [debouncedSearch, dateFrom, dateTo, statusFilter, sortField, sortDirection]);
 
   // 🔥 Obtener caché de la empresa
@@ -83,13 +80,16 @@ export function useSales() {
   const loadFromCache = useCallback(() => {
     const cache = getCompanyCache();
     if (cache && cache.initialized && cache.sales.length > 0) {
-      // console.log('⚡ Cargando facturas desde caché en memoria');
-      setSales(cache.sales);
-      setSalesStats(cache.stats);
-      setTotalPages(cache.pagination.pages || 1);
-      setTotalItems(cache.pagination.total || 0);
-      setIsCacheReady(true);
-      return true;
+      // Verificar si el caché es válido (menos de 5 minutos)
+      const cacheAge = Date.now() - (cache.timestamp || 0);
+      if (cacheAge < 5 * 60 * 1000) {
+        setSales(cache.sales);
+        setSalesStats(cache.stats);
+        setTotalPages(cache.pagination.pages || 1);
+        setTotalItems(cache.pagination.total || 0);
+        setIsCacheReady(true);
+        return true;
+      }
     }
     return false;
   }, [getCompanyCache]);
@@ -97,29 +97,20 @@ export function useSales() {
   // 🔥 Guardar en caché
   const saveToCache = useCallback((salesData, statsData, paginationData) => {
     const cache = getCompanyCache();
-    if (cache) {
+    if (cache && !debouncedSearch && !dateFrom && !dateTo && !statusFilter) {
       cache.sales = salesData;
       cache.stats = statsData;
       cache.pagination = paginationData;
       cache.timestamp = Date.now();
       cache.initialized = true;
     }
-  }, [getCompanyCache]);
+  }, [getCompanyCache, debouncedSearch, dateFrom, dateTo, statusFilter]);
 
-  // 🔥 Función principal para obtener ventas (con caché)
+  // 🔥 Función principal para obtener ventas
   const fetchSales = useCallback(async (page = 1, isLoadMore = false, forceRefresh = false) => {
     if (!isAuthenticated) {
       setSales([]);
       setSalesStats({});
-      return;
-    }
-
-    // Si no es forceRefresh y hay caché disponible para la página 1, usarlo
-    if (!forceRefresh && page === 1 && !isLoadMore && isInitialRender && loadFromCache()) {
-      // Ya tenemos datos del caché, pero actualizamos en segundo plano
-      setTimeout(() => {
-        fetchSales(1, false, true); // Actualizar en segundo plano
-      }, 100);
       return;
     }
 
@@ -166,7 +157,6 @@ export function useSales() {
       setHasMore(page < pagination.pages);
       setCurrentPage(page);
       setIsCacheReady(true);
-      setIsInitialRender(false);
       
     } catch (err) {
       console.error('Error fetching sales:', err);
@@ -176,23 +166,30 @@ export function useSales() {
       setLoadingMore(false);
     }
   }, [isAuthenticated, itemsPerPage, debouncedSearch, dateFrom, dateTo, statusFilter, 
-      sortField, sortDirection, loadFromCache, saveToCache, isInitialRender]);
+      sortField, sortDirection, saveToCache]);
 
-  // Cargar primera página - con caché instantáneo
+  // 🔥 CARGA INICIAL ÚNICA - SIN DOBLE REFRESCO
   useEffect(() => {
-    if (isAuthenticated && companyId) {
+    if (isAuthenticated && companyId && !initialLoadDone.current) {
+      initialLoadDone.current = true;
+      
       // Intentar cargar desde caché primero
       const hasCache = loadFromCache();
+      
       if (hasCache) {
-        // Ya mostramos datos, actualizar en segundo plano
+        // Si hay caché, ya mostramos datos, no hacemos fetch inmediato
+        // Solo refrescamos después de 30 segundos (opcional)
         setTimeout(() => {
-          fetchSales(1, false, true);
-        }, 100);
+          if (!loading && !loadingMore) {
+            fetchSales(1, false, true);
+          }
+        }, 30000);
       } else {
+        // Sin caché, cargar normalmente
         fetchSales(1, false, false);
       }
     }
-  }, [isAuthenticated, companyId, fetchSales, loadFromCache]);
+  }, [isAuthenticated, companyId, loadFromCache, fetchSales, loading, loadingMore]);
 
   // Cargar más (para infinite scroll)
   const loadMore = useCallback(() => {
@@ -209,13 +206,12 @@ export function useSales() {
     }
   }, [totalPages, fetchSales]);
 
-  // Función de refresh manual
+  // Función de refresh manual (solo cuando el usuario hace clic)
   const refreshSales = useCallback(() => {
-    setIsInitialRender(false);
     return fetchSales(1, false, true);
   }, [fetchSales]);
 
-  // 🔥 createSale optimizada - con actualización instantánea
+  // 🔥 createSale optimizada
   const createSale = async (payload) => {
     if (!isAuthenticated) {
       return { success: false, message: 'Debe iniciar sesión' };
@@ -234,7 +230,7 @@ export function useSales() {
 
       const newSale = res.data?.sale || res.data;
       
-      // 🔥 Actualizar lista local INMEDIATAMENTE
+      // Actualizar lista local INMEDIATAMENTE
       setSales(prev => [newSale, ...prev]);
       
       // Actualizar estadísticas localmente
@@ -244,12 +240,13 @@ export function useSales() {
         totalUmsatz: (prev.totalUmsatz || 0) + (newSale.total || 0)
       }));
       
-      // 🔥 Actualizar caché en memoria
+      // Actualizar caché en memoria
       const cache = getCompanyCache();
       if (cache && cache.initialized) {
         cache.sales = [newSale, ...cache.sales];
         cache.stats.totalAllSales = (cache.stats.totalAllSales || 0) + 1;
         cache.stats.totalUmsatz = (cache.stats.totalUmsatz || 0) + (newSale.total || 0);
+        cache.timestamp = Date.now(); // Actualizar timestamp
       }
       
       // Disparar eventos para actualizar stock en segundo plano
@@ -286,17 +283,16 @@ export function useSales() {
       const res = await updateSaleAPI(id, payload);
 
       if (res.sale) {
-        // Actualizar en la lista local
         setSales(prev => prev.map(sale => 
           sale._id === id ? res.sale : sale
         ));
         
-        // Actualizar caché
         const cache = getCompanyCache();
         if (cache && cache.initialized) {
           cache.sales = cache.sales.map(sale => 
             sale._id === id ? res.sale : sale
           );
+          cache.timestamp = Date.now();
         }
       }
       
@@ -318,13 +314,12 @@ export function useSales() {
     try {
       await deleteSaleAPI(id);
 
-      // Eliminar de la lista local
       setSales(prev => prev.filter(sale => sale._id !== id));
       
-      // Actualizar caché
       const cache = getCompanyCache();
       if (cache && cache.initialized) {
         cache.sales = cache.sales.filter(sale => sale._id !== id);
+        cache.timestamp = Date.now();
       }
       
       return { success: true };
@@ -344,10 +339,9 @@ export function useSales() {
     setStatusFilter('');
     setSortField('createdAt');
     setSortDirection('desc');
-    setIsInitialRender(false);
   }, []);
 
-  // 🔥 Limpiar caché de la empresa (útil al cerrar sesión)
+  // Limpiar caché de la empresa
   const clearCache = useCallback(() => {
     if (companyId) {
       salesCache.delete(companyId);

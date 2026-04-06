@@ -62,31 +62,28 @@ export default function SalesChart({
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
   
-  // 🔥 Forzar actualización de datos cuando el componente se monta
-  useEffect(() => {
-    const shouldRefresh = () => {
-      if (!lastUpdated) return true;
-      const minutesSinceUpdate = (Date.now() - lastUpdated.getTime()) / (1000 * 60);
-      return minutesSinceUpdate > 5;
-    };
-    
-    const refreshData = async () => {
-      if (shouldRefresh() && !loading && !isRefreshing) {
-        console.log('🔄 Forzando actualización de datos del gráfico...');
-        setIsRefreshing(true);
-        try {
-          await refreshSales();
-        } catch (error) {
-          console.error('Error refrescando datos:', error);
-        } finally {
-          setIsRefreshing(false);
-          setLastUpdated(new Date());
-        }
-      }
-    };
-    
-    refreshData();
-  }, [refreshSales, loading, isRefreshing, lastUpdated]);
+
+useEffect(() => {
+  if (!lastUpdated && sales && sales.length > 0) {
+    setLastUpdated(new Date());
+  }
+}, [sales, lastUpdated]);
+
+// 🔥 También optimizar el useEffect de procesamiento de datos
+useEffect(() => {
+  if (!sales || loading) return;
+
+  // Usar requestIdleCallback para no bloquear el UI
+  const processData = () => {
+    // ... tu lógica de procesamiento existente
+  };
+
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(processData, { timeout: 2000 });
+  } else {
+    setTimeout(processData, 50);
+  }
+}, [sales, loading, timeRange, selectedYear, selectedMonth, months]);
 
   // 🔥 Procesar datos
   useEffect(() => {

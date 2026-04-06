@@ -187,7 +187,7 @@ export function useClients() {
       console.error("Error fetching clients stats:", err);
     }
   }, [isAuthenticated, getCompanyCache]);
-
+ 
   // Ejecutar al iniciar - con caché
   useEffect(() => {
     isMountedRef.current = true;

@@ -1,7 +1,7 @@
 {
   "pricing": {
-    "title": "Einfache Pläne, die mit Ihrem Unternehmen wachsen",
-    "subtitle": "Klein anfangen und grenzenlos skalieren",
+    "title": "Einfache Tarife, die mit deinem Unternehmen wachsen",
+    "subtitle": "Kostenlos starten in 2 Minuten. Keine Installation. Keine Verpflichtung.",
     "monthly": "Monatlich",
     "yearly": "Jährlich",
     "month": "Monat",
@@ -10,38 +10,38 @@
     "subscribe": "Jetzt starten",
     "trial": "14 Tage kostenlos testen • Keine Kreditkarte erforderlich",
     "trialBtn": "Kostenlos testen",
-    "save": "2 Monate sparen",
+    "save": "Spare 2 Monate",
     
     "starter": {
-      "name": "Starter",
-      "desc": "Ideal für kleine Geschäfte und Einsteiger",
-      "f1": "Bis zu 500 Produkte",
+      "name": "Kostenlos-Modus",
+      "desc": "Zum Testen der App und ihrer Funktionen",
+      "f1": "Bis zu 15 Produkte",
       "f2": "Barcode-Scan",
-      "f3": "2 Benutzer",
+      "f3": "1 Benutzer",
       "f4": "Basis-Support"
     },
     "basic": {
       "name": "Basic",
-      "desc": "Perfekt für wachsende Unternehmen",
-      "f1": "Bis zu 2000 Produkte",
+      "desc": "Ideal für kleine Läden und Einsteiger",
+      "f1": "Bis zu 1.000 Produkte",
       "f2": "Barcode-Scan",
-      "f3": "3 Benutzer",
-      "f4": "Verkaufsverlauf",
-      "f5": "Lagerwarnungen"
+      "f3": "5 Benutzer",
+      "f4": "Verkaufshistorie",
+      "f5": "Bestandsalarme"
     },
     "pro": {
       "name": "Professional",
-      "desc": "Bestes Preis-Leistungs-Verhältnis 🚀",
-      "f1": "Bis zu 5000 Produkte",
+      "desc": "Perfekt für wachsende Unternehmen 🚀",
+      "f1": "Bis zu 5.000 Produkte",
       "f2": "Barcode-Scan",
-      "f3": "6 Benutzer",
+      "f3": "15 Benutzer",
       "f4": "Erweiterte Berichte",
-      "f5": "Priorisierter Support",
-      "f6": "E-Commerce-Integration"
+      "f5": "Prioritäts-Support",
+      "f6": "E‑Commerce-Integration"
     },
     "enterprise": {
-      "name": "Unternehmen",
-      "desc": "Maßgeschneiderte Lösungen für große Unternehmen",
+      "name": "Enterprise",
+      "desc": "Maßgeschneiderte Lösungen für große Betriebe",
       "f1": "Bis zu 10.000 Produkte",
       "f2": "Unbegrenzte Benutzer",
       "f3": "Individuelle API",

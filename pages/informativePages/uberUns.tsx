@@ -70,7 +70,7 @@ const UberUns = () => {
         <div className={styles.sectionImage}>
           <Image
             src="/img/wharehouse.png" 
-            alt="Equipo trabajando"
+            alt="Equipo trabajando" 
             width={800}
             height={400}
             className={styles.responsiveImage}

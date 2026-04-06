@@ -1,4 +1,3 @@
-// pages/register/index.tsx
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../components/auth/AuthProvider";
@@ -17,12 +16,14 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   
-  // ✅ CORREGIDO: Extraer loading y register directamente
-  const { loading: authLoading, register , user, isAuthenticated} = useAuth();
+  // Estados para mostrar/ocultar contraseñas
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  
+  const { loading: authLoading, register, user, isAuthenticated } = useAuth();
   const router = useRouter();
   const { t } = useLanguage();
   
-  // Estados para validación de contraseña en tiempo real
   const [passwordErrors, setPasswordErrors] = useState({
     minLength: false,
     hasUpperCase: false,
@@ -30,16 +31,6 @@ export default function RegisterPage() {
     hasSpecialChar: false
   });
 
-  //   useEffect(() => {
-  //   if (!authLoading && !isAuthenticated) {
-  //     router.push('/login');
-  //   }
-  //   if (user && user.role !== 'ceo') {
-  //     router.push('/dashboard');
-  //   }
-  // }, [authLoading, isAuthenticated, user, router]);
-
-  // Validación en tiempo real de la contraseña
   useEffect(() => {
     const errors = {
       minLength: password.length >= 6,
@@ -50,7 +41,6 @@ export default function RegisterPage() {
     setPasswordErrors(errors);
   }, [password]);
   
-  // ✅ AHORA authLoading existe
   if (authLoading) {
     return (
       <div className={styles.loadingContainer}>
@@ -101,7 +91,6 @@ export default function RegisterPage() {
     }
     
     try {
-      // ✅ Usar register directamente
       const result = await register(email, password, name, company);
       if (result.success) {
         setSuccess(t('register.success'));
@@ -121,7 +110,6 @@ export default function RegisterPage() {
 
   return (
     <div className={styles.container}>
-      {/* Sección izquierda: Imagen corporativa */}
       <div className={styles.imageSection}>
         <div className={styles.imageOverlay}></div>
         <div className={styles.imageContent}>
@@ -135,7 +123,6 @@ export default function RegisterPage() {
         </div>
       </div>
 
-      {/* Sección derecha: Formulario de registro */}
       <div className={styles.formSection}>
         <div className={styles.formContainer}>
           <div className={styles.formHeader}>
@@ -204,6 +191,7 @@ export default function RegisterPage() {
             </div>
 
             <div className={styles.twoColumn}>
+              {/* Input de Password con toggle */}
               <div className={styles.inputGroup}>
                 <label htmlFor="password" className={styles.inputLabel}>
                   <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
@@ -211,21 +199,44 @@ export default function RegisterPage() {
                   </svg>
                   {t('register.password.label')}
                 </label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className={styles.inputField}
-                  placeholder={t('register.password.placeholder')}
-                  required
-                  disabled={loading}
-                />
+                <div className={styles.passwordWrapper}>
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className={styles.inputFieldWithToggle}
+                    placeholder={t('register.password.placeholder')}
+                    required
+                    disabled={loading}
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    className={styles.togglePasswordButton}
+                    onClick={() => setShowPassword(!showPassword)}
+                    disabled={loading}
+                    tabIndex={-1}
+                  >
+                    {showPassword ? (
+                      <svg className={styles.eyeIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
+                      </svg>
+                    ) : (
+                      <svg className={styles.eyeIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
                 <div className={styles.passwordHint}>
                   {t('register.password.hint')}
                 </div>
               </div>
 
+              {/* Input de Confirm Password con toggle */}
               <div className={styles.inputGroup}>
                 <label htmlFor="confirmPassword" className={styles.inputLabel}>
                   <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
@@ -233,16 +244,38 @@ export default function RegisterPage() {
                   </svg>
                   {t('register.confirmPassword.label')}
                 </label>
-                <input
-                  id="confirmPassword"
-                  type="password"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  className={styles.inputField}
-                  placeholder={t('register.confirmPassword.placeholder')}
-                  required
-                  disabled={loading}
-                />
+                <div className={styles.passwordWrapper}>
+                  <input
+                    id="confirmPassword"
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    className={styles.inputFieldWithToggle}
+                    placeholder={t('register.confirmPassword.placeholder')}
+                    required
+                    disabled={loading}
+                    autoComplete="new-password"
+                  />
+                  <button
+                    type="button"
+                    className={styles.togglePasswordButton}
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    disabled={loading}
+                    tabIndex={-1}
+                  >
+                    {showConfirmPassword ? (
+                      <svg className={styles.eyeIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24" />
+                        <line x1="1" y1="1" x2="23" y2="23" />
+                      </svg>
+                    ) : (
+                      <svg className={styles.eyeIcon} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                        <circle cx="12" cy="12" r="3" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
                 <div className={styles.passwordHint}>
                   {confirmPassword && password !== confirmPassword ? (
                     <span className={styles.passwordMismatch}>{t('register.confirmPassword.mismatch')}</span>
@@ -329,7 +362,6 @@ export default function RegisterPage() {
                 className={styles.termsCheckbox}
               />
               <label htmlFor="terms" className={styles.termsLabel}>
-                {/* CORREGIDO: Usar termsSection en lugar de terms */}
                 {t('register.termsSection.text')
                   .replace('{termsLink}', '')
                   .replace('{privacyLink}', '')}
@@ -387,7 +419,6 @@ export default function RegisterPage() {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              {/* {t('register.google')} */}
             </button>
 
             <div className={styles.loginLink}>
@@ -409,7 +440,6 @@ export default function RegisterPage() {
             {t('register.copyright').replace('{year}', new Date().getFullYear().toString())}
             <br />
             <span className={styles.terms}>
-              {/* CORREGIDO: Usar los strings directamente */}
               <a href="/privacy">{t('register.privacy')}</a> | <a href="/terms"> {t('register.terms')} </a>
             </span>
           </div>

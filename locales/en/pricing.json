@@ -1,7 +1,7 @@
 {
   "pricing": {
     "title": "Simple plans that grow with your business",
-    "subtitle": "Start small and scale without limits",
+    "subtitle": "Start free in 2 minutes. No installation. No commitment.",
     "monthly": "Monthly",
     "yearly": "Yearly",
     "month": "month",
@@ -13,35 +13,35 @@
     "save": "Save 2 months",
     
     "starter": {
-      "name": "Starter",
-      "desc": "Ideal for small shops and beginners",
-      "f1": "Up to 500 products",
+      "name": "Free Mode",
+      "desc": "Test the app and explore its features",
+      "f1": "Up to 15 products",
       "f2": "Barcode scanning",
-      "f3": "2 users",
+      "f3": "1 user",
       "f4": "Basic support"
     },
     "basic": {
       "name": "Basic",
-      "desc": "Perfect for growing businesses",
-      "f1": "Up to 2000 products",
+      "desc": "Ideal for small stores and beginners",
+      "f1": "Up to 1,000 products",
       "f2": "Barcode scanning",
-      "f3": "3 users",
+      "f3": "5 users",
       "f4": "Sales history",
       "f5": "Stock alerts"
     },
     "pro": {
       "name": "Professional",
-      "desc": "Best value for money 🚀",
-      "f1": "Up to 5000 products",
+      "desc": "Perfect for growing businesses 🚀",
+      "f1": "Up to 5,000 products",
       "f2": "Barcode scanning",
-      "f3": "6 users",
+      "f3": "15 users",
       "f4": "Advanced reports",
       "f5": "Priority support",
-      "f6": "E-commerce integration"
+      "f6": "E‑commerce integration"
     },
     "enterprise": {
       "name": "Enterprise",
-      "desc": "Custom solutions for large operations",
+      "desc": "Tailored solutions for large operations",
       "f1": "Up to 10,000 products",
       "f2": "Unlimited users",
       "f3": "Custom API",

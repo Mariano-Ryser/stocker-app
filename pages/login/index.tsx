@@ -25,7 +25,7 @@ export default function LoginPage() {
 
   if (auth.loading) {
     return (
-      <div className={styles.loadingContainer}>
+      <div className={styles.loadingContainer}> 
         <div className={styles.loader}></div>
         <p>{t('login.loading')}</p>
       </div>

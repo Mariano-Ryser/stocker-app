@@ -13,7 +13,7 @@ interface Client {
   name?: string;
   vorname?: string;
   email?: string;
-  adresse?: string;
+  adresse?: string;  
   phone?: string;
   company?: string;
   [key: string]: any;
