@@ -62,8 +62,6 @@ class ScannerCacheService {
       const stringCompanyId = String(companyId);
       
       // Limpiar productos antiguos
-      // console.log(`🧹 Limpiando caché para empresa ${stringCompanyId}...`);
-      
       const index = store.index('companyId');
       const range = IDBKeyRange.only(stringCompanyId);
       
@@ -73,28 +71,33 @@ class ScannerCacheService {
         request.onerror = () => reject(request.error);
       });
       
-      // console.log(`📊 Eliminando ${keys.length} productos antiguos`);
-      
       keys.forEach(key => {
         store.delete(key);
       });
       
       // Guardar nuevos productos con TODOS los campos
-      // console.log(`💾 Guardando ${products.length} productos nuevos...`);
-      
       for (const product of products) {
         const productId = product._id || `temp_${Date.now()}_${Math.random()}`;
         
-        // Asegurar que lowStockThreshold existe
+        // 🔥 Asegurar que TODOS los campos están presentes
         const productToCache = {
-          ...product,
-          lowStockThreshold: product.lowStockThreshold !== undefined ? product.lowStockThreshold : null
+          _id: product._id,
+          artikelName: product.artikelName || '',
+          artikelNumber: product.artikelNumber || '',
+          lagerPlatz: product.lagerPlatz || '',        // 🔥 INCLUIR
+          imagen: product.imagen || null,               // 🔥 INCLUIR
+          price: product.price || 0,
+          stock: product.stock || 0,
+          lowStockThreshold: product.lowStockThreshold !== undefined ? product.lowStockThreshold : null,
+          description: product.description || '',
+          publicId: product.publicId || null,
+          totalValue: product.totalValue || 0
         };
         
         store.put({
           id: `${stringCompanyId}_${productId}`,
           companyId: stringCompanyId,
-          product: productToCache, // Guardar producto completo
+          product: productToCache,
           artikelNumber: product.artikelNumber || '',
           artikelName: product.artikelName || '',
           timestamp: timestamp
@@ -102,9 +105,6 @@ class ScannerCacheService {
       }
       
       await tx.complete;
-      
-      // console.log(`✅ Caché actualizado: ${products.length} productos para empresa ${companyId}`);
-      // console.log(`   - Ejemplo: ${products[0]?.artikelName} tiene lowStockThreshold: ${products[0]?.lowStockThreshold}`);
       
       return { success: true, count: products.length, deleted: keys.length };
       
@@ -132,18 +132,23 @@ class ScannerCacheService {
         request.onerror = () => reject(request.error);
       });
       
+      // 🔥 Asegurar que los productos recuperados tienen todos los campos
       const products = items.map(item => {
-        // Verificar que lowStockThreshold está presente
-        if (item.product.lowStockThreshold === undefined) {
-          console.warn(`⚠️ Producto ${item.product.artikelName} no tiene lowStockThreshold, asignando null`);
-          item.product.lowStockThreshold = null;
-        }
-        return item.product;
+        const product = item.product;
+        return {
+          _id: product._id,
+          artikelName: product.artikelName || '',
+          artikelNumber: product.artikelNumber || '',
+          lagerPlatz: product.lagerPlatz || '',        // 🔥 INCLUIR
+          imagen: product.imagen || null,               // 🔥 INCLUIR
+          price: product.price || 0,
+          stock: product.stock || 0,
+          lowStockThreshold: product.lowStockThreshold !== undefined ? product.lowStockThreshold : null,
+          description: product.description || '',
+          publicId: product.publicId || null,
+          totalValue: product.totalValue || 0
+        };
       });
-      
-      // Log para depuración
-      const withThreshold = products.filter(p => p.lowStockThreshold > 0);
-      // console.log(`📦 Caché cargado: ${products.length} productos, ${withThreshold.length} con umbral`);
       
       return {
         products: products,

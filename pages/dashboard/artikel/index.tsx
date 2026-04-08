@@ -8,7 +8,7 @@ import Pagination from '../../../components/shared/Pagination';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
 import styles from './listProduct.module.css';
-
+ 
 type ProductResult = {
   success: boolean;
   product?: any;

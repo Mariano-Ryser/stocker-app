@@ -47,6 +47,28 @@ export async function getAllProductsForScanner() {
     }
     
     const data = await res.json();
+    
+    // 🔥 Verificar que los productos tienen los campos necesarios
+    if (data && data.products) {
+      // Verificar campos del primer producto
+      const sample = data.products[0];
+      if (sample) {
+        console.log('📦 Producto recibido del backend:', {
+          nombre: sample.artikelName,
+          tieneLagerPlatz: !!sample.lagerPlatz,
+          lagerPlatz: sample.lagerPlatz,
+          tieneImagen: !!sample.imagen
+        });
+      }
+      
+      // Asegurar que todos los productos tienen los campos
+      data.products = data.products.map(product => ({
+        ...product,
+        lagerPlatz: product.lagerPlatz || '',
+        imagen: product.imagen || null
+      }));
+    }
+    
     return data;
   } catch (error) {
     console.error('Error in getAllProductsForScanner:', error);
@@ -54,7 +76,6 @@ export async function getAllProductsForScanner() {
   }
 }
 
-// 🔹 Obtener productos con paginación y filtros
 export async function getProductsPaginated(queryParams) {
   try {
     const API_URL = `${API_BASE_URL}/products/paginated?${queryParams.toString()}`;
@@ -77,6 +98,16 @@ export async function getProductsPaginated(queryParams) {
     }
     
     const data = await res.json();
+    
+    // 🔥 Verificar y asegurar campos
+    if (data && data.products) {
+      data.products = data.products.map(product => ({
+        ...product,
+        lagerPlatz: product.lagerPlatz || '',
+        imagen: product.imagen || null
+      }));
+    }
+    
     return data;
   } catch (error) {
     console.error('Error in getProductsPaginated:', error);
