@@ -1014,7 +1014,7 @@ async function createProduct(productData) {
     clearProductsFromCache,
     clearCompanyCache,
     
-    // Productos paginados
+    // Productos paginados 
     products,
     editingProduct,
     totalProducts,

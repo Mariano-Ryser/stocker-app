@@ -1,0 +1,316 @@
+/* components/skeletons/SalesChartSkeleton.module.css */
+
+.container {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  padding: 24px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* ========== SKELETON BASE ========== */
+.skeletonTitle,
+.skeletonSubtitle,
+.skeletonStatLabel,
+.skeletonStatValue,
+.skeletonTh,
+.skeletonTd,
+.skeletonTableTitle,
+.skeletonTableSubtitle,
+.skeletonInsightItem {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 4px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ========== HEADER SKELETON ========== */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.headerLeft {
+  flex: 1;
+}
+
+.skeletonTitle {
+  width: 180px;
+  height: 28px;
+  margin-bottom: 8px;
+}
+
+.skeletonSubtitle {
+  width: 250px;
+  height: 18px;
+}
+
+.controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.skeletonViewSelector {
+  width: 180px;
+  height: 38px;
+  border-radius: 8px;
+}
+
+.skeletonTimeSelector {
+  width: 160px;
+  height: 38px;
+  border-radius: 8px;
+}
+
+.skeletonSelectors {
+  display: flex;
+  gap: 8px;
+}
+
+.skeletonSelect {
+  width: 100px;
+  height: 38px;
+  border-radius: 8px;
+}
+
+/* ========== STATS GRID SKELETON ========== */
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.statCardSkeleton {
+  background: #ffffff;
+  padding: 20px;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.skeletonStatLabel {
+  width: 100px;
+  height: 14px;
+  margin-bottom: 12px;
+}
+
+.skeletonStatValue {
+  width: 140px;
+  height: 36px;
+}
+
+/* ========== TABLE SKELETON ========== */
+.tableSkeleton {
+  margin-bottom: 24px;
+}
+
+.tableHeaderSkeleton {
+  margin-bottom: 16px;
+}
+
+.skeletonTableTitle {
+  width: 200px;
+  height: 22px;
+  margin-bottom: 6px;
+}
+
+.skeletonTableSubtitle {
+  width: 280px;
+  height: 16px;
+}
+
+.tableWrapper {
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+}
+
+.skeletonTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.skeletonTable th {
+  padding: 14px 16px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.skeletonTh {
+  height: 16px;
+  width: 80px;
+}
+
+.skeletonTable td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.skeletonTd {
+  height: 20px;
+  width: 60px;
+}
+
+/* Contribution bar skeleton */
+.skeletonContributionBar {
+  position: relative;
+  background: #e5e7eb;
+  height: 28px;
+  width: 100%;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.skeletonContributionFill {
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 60%;
+  background: linear-gradient(
+    90deg,
+    #d1d5db 25%,
+    #c0c4c9 50%,
+    #d1d5db 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 6px;
+}
+
+/* ========== INSIGHTS SKELETON ========== */
+.insightsSkeleton {
+  display: flex;
+  gap: 24px;
+  padding: 20px 0 0 0;
+  border-top: 1px solid #e5e7eb;
+  margin-top: 8px;
+}
+
+.skeletonInsightItem {
+  flex: 1;
+  height: 48px;
+  border-radius: 8px;
+}
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 1024px) {
+  .statsGrid {
+    gap: 12px;
+  }
+  
+  .skeletonStatValue {
+    width: 120px;
+    height: 32px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+  
+  .statsGrid {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .controls {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .skeletonViewSelector {
+    width: 100%;
+  }
+  
+  .skeletonTimeSelector {
+    width: 100%;
+  }
+  
+  .skeletonSelectors {
+    width: 100%;
+    flex-direction: column;
+  }
+  
+  .skeletonSelect {
+    width: 100%;
+  }
+  
+  .insightsSkeleton {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .skeletonInsightItem {
+    height: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
+  
+  .skeletonTitle {
+    width: 140px;
+    height: 24px;
+  }
+  
+  .skeletonSubtitle {
+    width: 180px;
+    height: 14px;
+  }
+  
+  .skeletonStatValue {
+    width: 100px;
+    height: 28px;
+  }
+  
+  .skeletonTable th,
+  .skeletonTable td {
+    padding: 8px 12px;
+  }
+  
+  .skeletonTh {
+    width: 50px;
+    height: 12px;
+  }
+  
+  .skeletonTd {
+    width: 40px;
+    height: 16px;
+  }
+}

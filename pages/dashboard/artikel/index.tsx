@@ -60,7 +60,7 @@ const TableView = ({ products, currencySymbol, getStockStatus, getStockStatusTex
 
 const GridView = ({ products, currencySymbol, getStockStatus, getStockStatusText, onProductClick, t }) => (
   <div className={styles.productGrid}>
-    {products.map((product) => (
+    {products.map((product:any) => (
       <div
         key={product._id}
         className={styles.productCard}

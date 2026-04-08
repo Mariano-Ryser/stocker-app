@@ -300,7 +300,8 @@ export default function ScannerSalesPage() {
         artikelName: product.artikelName,
         quantity,
         unitPrice: product.price || 0,
-        stock: product.stock || 0
+        stock: product.stock || 0,
+        image: product.imagen || null
       }]);
     }
     
@@ -1161,98 +1162,127 @@ export default function ScannerSalesPage() {
                 const isLowStock = product && item.quantity > product.stock;
                 
                 return (
-                  <div 
-                    key={index} 
-                    className={`${styles.itemCard} ${isLowStock ? styles.itemLowStock : ''}`}
-                  >
-                    <div className={styles.itemMain}>
-                      <div className={styles.itemInfo}>
-                        <div className={styles.itemHeader}>
-                          <h4>{item.artikelName}</h4>
-                          <button 
-                            className={styles.removeItemButton}
-                            onClick={() => removeItem(index)}
-                            disabled={isSubmitting || cashPayment.show}
-                          >
-                            ✕
-                          </button>
-                        </div>
-                        
-                        <div className={styles.itemMeta}>
-                          <span className={styles.itemNumber}>
-                            {t('scanner.items.articleNumber').replace('{number}', product?.artikelNumber || '-')}
-                          </span>
-                          <span className={`${styles.itemStock} ${
-                            isLowStock ? styles.stockWarning : styles.stockGood
-                          }`}>
-                            {t('scanner.items.available').replace('{stock}', product?.stock || 0)}
-                            {isLowStock && (
-                              <span className={styles.stockWarningIcon}>⚠️</span>
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                      
-                      <div className={styles.itemControls}>
-                        <div className={styles.quantityControl}>
-                          <div className={styles.controlLabel}>{t('scanner.items.quantity')}</div>
-                          <div className={styles.quantityInputGroup}>
-                            <button 
-                              className={styles.quantityButton}
-                              onClick={() => updateQuantity(index, item.quantity - 1)}
-                              disabled={item.quantity <= 1 || isSubmitting || cashPayment.show}
-                            >
-                              -
-                            </button>
-                            <input
-                              type="number"
-                              min="1"
-                              value={item.quantity}
-                              onChange={(e) => updateQuantity(index, parseInt(e.target.value) || 1)}
-                              className={`${styles.quantityInput} ${isLowStock ? styles.inputWarning : ''}`}
-                              disabled={isSubmitting || cashPayment.show}
-                            />
-                            <button 
-                              className={styles.quantityButton}
-                              onClick={() => updateQuantity(index, item.quantity + 1)}
-                              disabled={isSubmitting || cashPayment.show}
-                            >
-                              +
-                            </button>
-                          </div>
-                        </div>
-                        
-                        <div className={styles.priceControl}>
-                          <div className={styles.controlLabel}>
-                            {t('scanner.items.unitPrice').replace('{symbol}', currencySymbol)}
-                          </div>
-                          <input
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            value={item.unitPrice}
-                            onChange={(e) => updatePrice(index, parseFloat(e.target.value) || 0)}
-                            className={styles.priceInput}
-                            disabled={isSubmitting || cashPayment.show}
-                          />
-                        </div>
-                        
-                        <div className={styles.lineTotal}>
-                          <div className={styles.controlLabel}>{t('scanner.items.total')}</div>
-                          <div className={styles.lineTotalAmount}>
-                            {(item.quantity * item.unitPrice).toFixed(2)} {currencySymbol}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {isLowStock && (
-                      <div className={styles.stockWarningBanner}>
-                        <span className={styles.warningIcon}>⚠️</span>
-                        {t('scanner.items.lowStock').replace('{stock}', product.stock)}
-                      </div>
-                    )}
-                  </div>
+
+
+
+              <div 
+  key={index} 
+  className={`${styles.itemCard} ${isLowStock ? styles.itemLowStock : ''}`}
+>
+  <div className={styles.itemMain}>
+    {/* 🔥 NUEVA SECCIÓN DE IMAGEN */}
+    {item.image && (
+      <div className={styles.itemImageContainer}>
+        <img 
+          src={item.image} 
+          alt={item.artikelName}
+          className={styles.itemImage}
+          loading="lazy"
+          onError={(e) => {
+  const imgElement = e.currentTarget as HTMLImageElement;
+  imgElement.onerror = null;
+  imgElement.style.display = 'none';
+  // Si quieres ocultar también el contenedor padre:
+  const parent = imgElement.parentElement;
+  if (parent) {
+    parent.style.display = 'none';
+  }
+}}
+        />
+      </div>
+    )}
+    
+    <div className={styles.itemContent}>
+      <div className={styles.itemInfo}>
+        <div className={styles.itemHeader}>
+          <h4>{item.artikelName}</h4>
+          <button 
+            className={styles.removeItemButton}
+            onClick={() => removeItem(index)}
+            disabled={isSubmitting || cashPayment.show}
+          >
+            ✕
+          </button>
+        </div>
+        
+        <div className={styles.itemMeta}>
+          <span className={styles.itemNumber}>
+            {t('scanner.items.articleNumber').replace('{number}', product?.artikelNumber || '-')}
+          </span>
+          <span className={`${styles.itemStock} ${
+            isLowStock ? styles.stockWarning : styles.stockGood
+          }`}>
+            {t('scanner.items.available').replace('{stock}', product?.stock || 0)}
+            {isLowStock && (
+              <span className={styles.stockWarningIcon}>⚠️</span>
+            )}
+          </span>
+        </div>
+      </div>
+      
+      <div className={styles.itemControls}>
+        <div className={styles.quantityControl}>
+          <div className={styles.controlLabel}>{t('scanner.items.quantity')}</div>
+          <div className={styles.quantityInputGroup}>
+            <button 
+              className={styles.quantityButton}
+              onClick={() => updateQuantity(index, item.quantity - 1)}
+              disabled={item.quantity <= 1 || isSubmitting || cashPayment.show}
+            >
+              -
+            </button>
+            <input
+              type="number"
+              min="1"
+              value={item.quantity}
+              onChange={(e) => updateQuantity(index, parseInt(e.target.value) || 1)}
+              className={`${styles.quantityInput} ${isLowStock ? styles.inputWarning : ''}`}
+              disabled={isSubmitting || cashPayment.show}
+            />
+            <button 
+              className={styles.quantityButton}
+              onClick={() => updateQuantity(index, item.quantity + 1)}
+              disabled={isSubmitting || cashPayment.show}
+            >
+              +
+            </button>
+          </div>
+        </div>
+        
+        <div className={styles.priceControl}>
+          <div className={styles.controlLabel}>
+            {t('scanner.items.unitPrice').replace('{symbol}', currencySymbol)}
+          </div>
+          <input
+            type="number"
+            min="0"
+            step="0.01"
+            value={item.unitPrice}
+            onChange={(e) => updatePrice(index, parseFloat(e.target.value) || 0)}
+            className={styles.priceInput}
+            disabled={isSubmitting || cashPayment.show}
+          />
+        </div>
+        
+        <div className={styles.lineTotal}>
+          <div className={styles.controlLabel}>{t('scanner.items.total')}</div>
+          <div className={styles.lineTotalAmount}>
+            {(item.quantity * item.unitPrice).toFixed(2)} {currencySymbol}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  {isLowStock && (
+    <div className={styles.stockWarningBanner}>
+      <span className={styles.warningIcon}>⚠️</span>
+      {t('scanner.items.lowStock').replace('{stock}', product.stock)}
+    </div>
+  )}
+</div>
+
+
                 );
               })}
             </div>

@@ -29,7 +29,7 @@ export async function getAllProductsForScanner() {
   try {
     const API_URL = `${API_BASE_URL}/products/scanner`;
     
-    const res = await fetch(API_URL, {
+    const res = await fetch(API_URL, { 
       headers: getAuthHeaders()
     });
     

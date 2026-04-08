@@ -5,6 +5,7 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { Sale } from '../../types';
 import styles from './SalesChart.module.css';
 import { useAuth } from "../../components/auth/AuthProvider";
+import SalesChartSkeleton from '../../components/skeletons/salesChartSkeleton';
 
 interface SalesData {
   month: string; 
@@ -191,14 +192,9 @@ useEffect(() => {
     }
   };
 
-  if (loading && !isRefreshing) {
-    return (
-      <div className={styles.loading}>
-        <div className={styles.spinner}></div>
-        <p>{t('salesChart.loading')}</p>
-      </div>
-    );
-  }
+if (loading && !isRefreshing) {
+  return <SalesChartSkeleton />;
+}
 
   const formatCurrency = (value: number) => {
     return `${currencySymbol} ${value.toLocaleString('de-DE', {
