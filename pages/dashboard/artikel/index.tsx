@@ -8,7 +8,7 @@ import Pagination from '../../../components/shared/Pagination';
 import { useLanguage } from '../../../contexts/LanguageContext';
 
 import styles from './listProduct.module.css';
- 
+
 type ProductResult = {
   success: boolean;
   product?: any;
@@ -16,7 +16,31 @@ type ProductResult = {
   result?: any;
 };
 
-// ===== COMPONENTES INTERNOS (igual que antes) =====
+// ===== FUNCIONES DE FORMATO DE NÚMEROS =====
+const formatCurrency = (value: number, currencySymbol: string) => {
+  if (value === null || value === undefined || isNaN(value)) {
+    return `${currencySymbol} 0.00`;
+  }
+  
+  const roundedValue = Math.round(value * 100) / 100;
+  const [integerPart, decimalPart] = roundedValue.toFixed(2).split('.');
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+  
+  return `${currencySymbol} ${formattedInteger}.${decimalPart}`;
+};
+
+const formatNumber = (value: number) => {
+  if (value === null || value === undefined || isNaN(value)) {
+    return '0';
+  }
+  
+  const integerPart = Math.floor(value).toString();
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+  
+  return formattedInteger;
+};
+
+// ===== COMPONENTES INTERNOS =====
 const TableView = ({ products, currencySymbol, getStockStatus, getStockStatusText, onProductClick, t }) => (
   <table className={styles.productsTable}>
     <thead>
@@ -45,11 +69,11 @@ const TableView = ({ products, currencySymbol, getStockStatus, getStockStatusTex
             {product.artikelNumber || '-'}
           </td>
           <td className={`${styles.tableCell} ${styles.productPrice}`}>
-            {product.price ? `${currencySymbol} ${Number(product.price).toFixed(2)}` : '-'}
+            {product.price ? formatCurrency(product.price, currencySymbol) : '-'}
           </td>
           <td className={styles.tableCell}>
             <span className={`${styles.stockBadge} ${styles[getStockStatus(product)]}`}>
-              {product.stock || 0}
+              {formatNumber(product.stock || 0)}
             </span>
           </td>
         </tr>
@@ -60,7 +84,7 @@ const TableView = ({ products, currencySymbol, getStockStatus, getStockStatusTex
 
 const GridView = ({ products, currencySymbol, getStockStatus, getStockStatusText, onProductClick, t }) => (
   <div className={styles.productGrid}>
-    {products.map((product:any) => (
+    {products.map((product: any) => (
       <div
         key={product._id}
         className={styles.productCard}
@@ -86,7 +110,7 @@ const GridView = ({ products, currencySymbol, getStockStatus, getStockStatusText
           )}
           
           <span className={`${styles.cardStockBadge} ${styles[getStockStatus(product)]}`}>
-            {product.stock || 0} {product.stock === 1 ? t('artikel.card.unit') : t('artikel.card.units')}
+            {formatNumber(product.stock || 0)} {product.stock === 1 ? t('artikel.card.unit') : t('artikel.card.units')}
           </span>
         </div>
         
@@ -107,7 +131,7 @@ const GridView = ({ products, currencySymbol, getStockStatus, getStockStatusText
           <div className={styles.cardFooter}>
             {product.price ? (
               <span className={styles.cardPrice}>
-                {currencySymbol} {Number(product.price).toFixed(2)}
+                {formatCurrency(product.price, currencySymbol)}
               </span>
             ) : (
               <span className={styles.cardPrice}>-</span>
@@ -168,24 +192,14 @@ const ExcelView = ({ products, currencySymbol, getStockStatus, getStockStatusTex
               </td>
               <td className={`${styles.excelCell} ${styles.excelStock}`}>
                 <span className={`${styles.excelStockBadge} ${styles[getStockStatus(product)]}`}>
-                  {product.stock || 0}
+                  {formatNumber(product.stock || 0)}
                 </span>
               </td>
               <td className={`${styles.excelCell} ${styles.excelPrice}`}>
-                {product.price ? (
-                  <>
-                    <span className={styles.excelCurrency}>{currencySymbol}</span>
-                    {Number(product.price).toFixed(2)}
-                  </>
-                ) : '-'}
+                {product.price ? formatCurrency(product.price, currencySymbol) : '-'}
               </td>
               <td className={`${styles.excelCell} ${styles.excelTotal}`}>
-                {product.totalValue > 0 ? (
-                  <>
-                    <span className={styles.excelCurrency}>{currencySymbol}</span>
-                    {product.totalValue.toFixed(2)}
-                  </>
-                ) : '-'}
+                {product.totalValue > 0 ? formatCurrency(product.totalValue, currencySymbol) : '-'}
               </td>
               <td className={styles.excelCell}>
                 <span className={`${styles.excelStatus} ${styles[getStockStatus(product)]}`}>
@@ -226,7 +240,7 @@ const ViewToggle = ({ viewMode, setViewMode, loading, t }) => {
   );
 };
 
-// ===== COMPONENTE PRINCIPAL MODIFICADO =====
+// ===== COMPONENTE PRINCIPAL =====
 export default function ListProduct() {
   const { t } = useLanguage();
   const { company, isAuthenticated, loading: authLoading } = useAuth();
@@ -262,7 +276,6 @@ export default function ListProduct() {
     setProductToEdit,
     refreshProducts,
     editingProduct,
-    // 🔥 NUEVOS: Métodos de caché para renderizado instantáneo
     scannerProducts,
     scannerLoading,
     isCacheInitialized,
@@ -270,24 +283,21 @@ export default function ListProduct() {
 
   const [showModal, setShowModal] = useState(false);
 
-  // 🔥 CLAVE: Usar productos del caché para renderizado instantáneo
+  // Usar productos del caché para renderizado instantáneo
   const displayProducts = useMemo(() => {
-    // Si tenemos productos paginados y no estamos en carga inicial, usarlos
     if (products.length > 0 && !isInitialRender) {
       return products;
     }
-    // Si no hay productos paginados pero hay caché, usar caché
     if (scannerProducts.length > 0 && isInitialRender) {
-      return scannerProducts.slice(0, 30); // Mostrar primeros 30 del caché
+      return scannerProducts.slice(0, 30);
     }
     return products;
   }, [products, scannerProducts, isInitialRender]);
 
-  // 🔥 Efecto para manejar el renderizado inicial
+  // Efecto para manejar el renderizado inicial
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    // Después de 2 segundos, cambiar a renderizado normal
     const timer = setTimeout(() => {
       setIsInitialRender(false);
     }, 2000);
@@ -299,7 +309,6 @@ export default function ListProduct() {
   const showLoading = () => {
     if (authLoading) return true;
     if (!isAuthenticated) return false;
-    // Solo mostrar loading si no hay caché y estamos cargando
     if (isInitialRender && !isCacheInitialized && productsLoading) return true;
     if (!isInitialRender && productsLoading && displayProducts.length === 0) return true;
     return false;
@@ -360,7 +369,7 @@ export default function ListProduct() {
     return result as ProductResult;
   }, [deleteProduct]);
 
-  const handleCreateProduct = useCallback(async (productData:any): Promise<ProductResult> => {
+  const handleCreateProduct = useCallback(async (productData: any): Promise<ProductResult> => {
     const result = await createProduct(productData);
     if (result?.success) {
       setShowModal(false);
@@ -413,13 +422,6 @@ export default function ListProduct() {
 
   return (
     <div className={styles.container}>
-      {/* 🔥 Indicador de actualización en segundo plano (opcional) */}
-      {/* {isInitialRender && isCacheInitialized && productsLoading && (
-        <div className={styles.backgroundUpdate}>
-          <span>🔄 Actualizando datos...</span>
-        </div>
-      )} */}
-
       <header className={styles.header}>
         <div className={styles.headerContent}>
           <h1 className={styles.title}>{t('artikel.title')}</h1>
@@ -700,29 +702,6 @@ export default function ListProduct() {
           onCreateProduct={handleCreateProduct}
         />
       )}
-
-      <style jsx>{`
-        .backgroundUpdate {
-          position: fixed;
-          top: 70px;
-          right: 20px;
-          background: #f0f7ff;
-          border: 1px solid #7bb3e0;
-          border-radius: 8px;
-          padding: 6px 12px;
-          font-size: 0.75rem;
-          color: #1e4b7a;
-          z-index: 100;
-          animation: fadeOut 2s ease-in-out;
-          pointer-events: none;
-        }
-        
-        @keyframes fadeOut {
-          0% { opacity: 1; }
-          70% { opacity: 1; }
-          100% { opacity: 0; visibility: hidden; }
-        }
-      `}</style>
     </div>
   );
 }

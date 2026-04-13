@@ -1,6 +1,6 @@
 // components/premium/salesChart.tsx
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { useSales } from '../../hooks/useSales';
+import { useAllSales } from '../../hooks/useAllSales';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { Sale } from '../../types';
 import styles from './SalesChart.module.css';
@@ -25,11 +25,13 @@ export default function SalesChart({
   loading: propLoading 
 }: SalesChartProps) {
   const { t } = useLanguage();
-  const { sales: hookSales, loading: hookLoading, refreshSales } = useSales();
+  // ✅ USAR EL NUEVO HOOK QUE TRAE TODAS LAS FACTURAS
+  const { sales: allSales, loading: allSalesLoading, refreshSales: refreshAllSales } = useAllSales();
   const { company } = useAuth();
-  const sales = propSales || hookSales;
-  const loading = propLoading !== undefined ? propLoading : hookLoading;
-  const currencySymbol = company?.currency || 'USD';
+  
+  const sales = propSales || allSales;
+  const loading = propLoading !== undefined ? propLoading : allSalesLoading;
+  const currencySymbol = company?.currency || 'EUR';
   
   const [viewMode, setViewMode] = useState<ViewMode>('synoptic');
   const [timeRange, setTimeRange] = useState<'monthly' | 'yearly'>('yearly');
@@ -62,49 +64,33 @@ export default function SalesChart({
 
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
-  
 
-useEffect(() => {
-  if (!lastUpdated && sales && sales.length > 0) {
-    setLastUpdated(new Date());
-  }
-}, [sales, lastUpdated]);
+  useEffect(() => {
+    if (!lastUpdated && sales && sales.length > 0) {
+      setLastUpdated(new Date());
+    }
+  }, [sales, lastUpdated]);
 
-// 🔥 También optimizar el useEffect de procesamiento de datos
-useEffect(() => {
-  if (!sales || loading) return;
-
-  // Usar requestIdleCallback para no bloquear el UI
-  const processData = () => {
-    // ... tu lógica de procesamiento existente
-  };
-
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(processData, { timeout: 2000 });
-  } else {
-    setTimeout(processData, 50);
-  }
-}, [sales, loading, timeRange, selectedYear, selectedMonth, months]);
-
-  // 🔥 Procesar datos
+  // 🔥 Procesar datos - AHORA CON TODAS LAS FACTURAS
   useEffect(() => {
     if (!sales || loading) return;
 
     const processData = () => {
-      const filteredSales = Array.isArray(sales) 
-        ? sales.filter(sale => {
-            const saleDate = new Date(sale.createdAt || sale.date || Date.now());
-            if (timeRange === 'yearly') {
-              return saleDate.getFullYear() === selectedYear;
-            } else {
-              return saleDate.getFullYear() === selectedYear && 
-                     saleDate.getMonth() === selectedMonth;
-            }
-          })
+      // Filtrar solo ventas pagadas
+      const paidSales = Array.isArray(sales) 
+        ? sales.filter(sale => sale.status === 'paid')
         : [];
-
-      // Solo contar facturas pagadas
-      const paidSales = filteredSales.filter(sale => sale.status === 'paid');
+      
+      // Filtrar por año seleccionado
+      const filteredSales = paidSales.filter(sale => {
+        const saleDate = new Date(sale.createdAt || sale.date || Date.now());
+        if (timeRange === 'yearly') {
+          return saleDate.getFullYear() === selectedYear;
+        } else {
+          return saleDate.getFullYear() === selectedYear && 
+                 saleDate.getMonth() === selectedMonth;
+        }
+      });
       
       if (timeRange === 'yearly') {
         const monthlyData: { [key: number]: { sales: number, revenue: number } } = {};
@@ -113,7 +99,7 @@ useEffect(() => {
           monthlyData[index] = { sales: 0, revenue: 0 };
         });
 
-        paidSales.forEach(sale => {
+        filteredSales.forEach(sale => {
           const saleDate = new Date(sale.createdAt || sale.date || Date.now());
           const month = saleDate.getMonth();
           monthlyData[month].sales += 1;
@@ -132,7 +118,7 @@ useEffect(() => {
         const dailyData: SalesData[] = [];
 
         for (let day = 1; day <= daysInMonth; day++) {
-          const daySales = paidSales.filter(sale => {
+          const daySales = filteredSales.filter(sale => {
             const saleDate = new Date(sale.createdAt || sale.date || Date.now());
             return saleDate.getDate() === day;
           });
@@ -149,28 +135,25 @@ useEffect(() => {
         setSalesData(dailyData);
       }
 
-      const totalSales = paidSales.length;
-      const totalRevenue = paidSales.reduce((sum, sale) => sum + (sale.total || 0), 0);
-      const averageSale = totalSales > 0 ? totalRevenue / totalSales : 0;
+      const totalSalesFiltered = filteredSales.length;
+      const totalRevenueFiltered = filteredSales.reduce((sum, sale) => sum + (sale.total || 0), 0);
+      const averageSale = totalSalesFiltered > 0 ? totalRevenueFiltered / totalSalesFiltered : 0;
 
       let growth = 0;
       if (timeRange === 'yearly') {
-        const previousYearSales = Array.isArray(sales)
-          ? sales.filter(sale => {
-              const saleDate = new Date(sale.createdAt || sale.date || Date.now());
-              return saleDate.getFullYear() === selectedYear - 1 && 
-                     sale.status === 'paid';
-            }).length
-          : 0;
+        const previousYearSales = paidSales.filter(sale => {
+          const saleDate = new Date(sale.createdAt || sale.date || Date.now());
+          return saleDate.getFullYear() === selectedYear - 1;
+        }).length;
         
         growth = previousYearSales > 0 
-          ? ((totalSales - previousYearSales) / previousYearSales) * 100 
+          ? ((totalSalesFiltered - previousYearSales) / previousYearSales) * 100 
           : 0;
       }
 
       setTotalStats({
-        totalSales,
-        totalRevenue,
+        totalSales: totalSalesFiltered,
+        totalRevenue: totalRevenueFiltered,
         averageSale,
         growth
       });
@@ -183,25 +166,44 @@ useEffect(() => {
   const handleManualRefresh = async () => {
     setIsRefreshing(true);
     try {
-      await refreshSales();
+      await refreshAllSales();
+      setLastUpdated(new Date());
     } catch (error) {
       console.error('Error refrescando datos:', error);
     } finally {
       setIsRefreshing(false);
-      setLastUpdated(new Date());
     }
   };
 
-if (loading && !isRefreshing) {
-  return <SalesChartSkeleton />;
-}
+  if (loading && !isRefreshing) {
+    return <SalesChartSkeleton />;
+  }
 
-  const formatCurrency = (value: number) => {
-    return `${currencySymbol} ${value.toLocaleString('de-DE', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    })}`;
-  };
+  // const formatCurrency = (value: number) => {
+  //   return `${currencySymbol} ${value.toLocaleString('de-DE', {
+  //     minimumFractionDigits: 2,
+  //     maximumFractionDigits: 2
+  //   })}`;
+  // };
+
+const formatCurrency = (value: number) => {
+  // Manejar valores nulos o indefinidos
+  if (value === null || value === undefined || isNaN(value)) {
+    return `${currencySymbol} 0.00`;
+  }
+  
+  // Separar parte entera y decimal
+  const roundedValue = Math.round(value * 100) / 100;
+  const [integerPart, decimalPart] = roundedValue.toFixed(2).split('.');
+  
+  // Agregar separador de miles (apóstrofe) cada 3 dígitos
+  const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+  
+  // Unir con punto decimal
+  const formattedValue = `${formattedInteger}.${decimalPart}`;
+  
+  return `${currencySymbol} ${formattedValue}`;
+};
 
   return (
     <div className={styles.container}>
@@ -210,12 +212,11 @@ if (loading && !isRefreshing) {
         {isRefreshing && (
           <div className={styles.refreshingIndicator}>
             <div className={styles.smallSpinner}></div>
-            {/* <span>{t('salesChart.refreshing') || 'Actualizando datos...'}</span> */}
           </div>
         )}
         {lastUpdated && !isRefreshing && (
           <div className={styles.lastUpdated}>
-            {/* 📅 {t('salesChart.lastUpdated') || 'Última actualización'}: {lastUpdated.toLocaleTimeString()} */}
+            {/* Última actualización: {lastUpdated.toLocaleTimeString()} */}
           </div>
         )}
         <button 

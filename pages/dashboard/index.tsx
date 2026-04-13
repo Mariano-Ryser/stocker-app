@@ -13,12 +13,13 @@ import QuickStats from "../../components/premium/QuickStats";
 import SalesChart from '../../components/premium/salesChart';
 import SplashScreen from '../../components/ui/SplashScreen';
 
-import {
+import { 
   GoodsInIcon,
-   IconBox, 
-   IconUsers,
-    IconInvoice, 
-    IconChart  } from '../../components/icons/DashboardIcons';
+  IconBox, 
+  IconUsers,
+  IconInvoice, 
+  IconChart
+  } from '../../components/icons/DashboardIcons';
     
 import styles from './DashboardHome.module.css';
 

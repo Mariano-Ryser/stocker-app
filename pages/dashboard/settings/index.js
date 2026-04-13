@@ -31,9 +31,9 @@ export default function Settings() {
     email: '',
     password: '',
   });
-   
+    
   const [editFormData, setEditFormData] = useState({
-    name: user?.name || '',
+    name: user?.name || '', 
     company: company?.name || '',
     language: user?.language || 'de',
   });

@@ -5,6 +5,7 @@ import { useProduct } from "../../../hooks/useProducts";
 import { useLanguage } from "../../../contexts/LanguageContext";
 import { COUNTRY_CONFIG } from '../../../utils/countryConfig';
 import { useToast } from '../../../contexts/ToastContext';
+
 import styles from './Creator.module.css';
 
 export default function RechnungCreator({ onDone, salesApi }) {
@@ -28,8 +29,9 @@ export default function RechnungCreator({ onDone, salesApi }) {
     loading: productsLoading,
     productLimits,
     limitWarning,
-    isCacheReady: productsCacheReady, // 🔥 Nuevo: saber si el caché está listo
-    scannerProducts // 🔥 Productos del caché para búsqueda rápida
+    isCacheReady: productsCacheReady,
+    scannerProducts, // 🔥 Productos del caché para búsqueda rápida
+    isCacheInitialized // 🔥 Saber si el caché ya está listo
   } = useProduct();
   
   // Estados principales
@@ -42,7 +44,8 @@ export default function RechnungCreator({ onDone, salesApi }) {
   const [productSearchTerm, setProductSearchTerm] = useState("");
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [searchTimeout, setSearchTimeout] = useState(null);
-  const [isInitialLoad, setIsInitialLoad] = useState(true);
+  
+  // 🔥 ELIMINADO isInitialLoad - usamos isCacheInitialized directamente
   
   // Refs
   const clientAutocompleteRef = useRef(null);
@@ -55,30 +58,30 @@ export default function RechnungCreator({ onDone, salesApi }) {
   const taxRate = company?.invoiceSettings?.taxRate || 19;
   const currencySymbol = company?.currency || 'USD';
   
-  // 🔥 Cuando el caché está listo, ocultar loading
-  useEffect(() => {
-    if (productsCacheReady && isInitialLoad) {
-      setIsInitialLoad(false);
-    }
-  }, [productsCacheReady, isInitialLoad]);
-  
   // Formatear moneda
   const formatCurrency = (value) => {
-    return value?.toFixed(2) || '0.00';
+    // Formatear con separador de miles ' y decimales .
+    if (value === null || value === undefined || isNaN(value)) {
+      return `0.00`;
+    }
+    const roundedValue = Math.round(value * 100) / 100;
+    const [integerPart, decimalPart] = roundedValue.toFixed(2).split('.');
+    const formattedInteger = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, "'");
+    return `${formattedInteger}.${decimalPart}`;
   };
   
-  // 🔥 Cargar productos al montar - usando caché
+  // 🔥 Cargar productos al montar - usar caché inmediatamente
   useEffect(() => {
     if (isAuthenticated) {
       // Si ya hay productos en caché, no necesitamos recargar
-      if (products.length === 0 && !productsCacheReady) {
+      if (scannerProducts.length === 0 && !isCacheInitialized) {
         refreshProducts();
       }
       if (company?._id) {
         fetchProductLimits(true);
       }
     }
-  }, [isAuthenticated, refreshProducts, fetchProductLimits, company?._id, products.length, productsCacheReady]);
+  }, [isAuthenticated, refreshProducts, fetchProductLimits, company?._id, scannerProducts.length, isCacheInitialized]);
   
   // Cerrar modal con tecla Escape
   useEffect(() => {
@@ -95,12 +98,13 @@ export default function RechnungCreator({ onDone, salesApi }) {
     };
   }, [isSubmitting, onDone]);
   
-  // 🔥 Filtrar productos localmente (usando scannerProducts si está disponible)
+  // 🔥 FILTRAR PRODUCTOS INSTANTÁNEAMENTE usando scannerProducts (caché)
   useEffect(() => {
     // Usar scannerProducts (caché) si está disponible, si no usar products
     const sourceProducts = scannerProducts.length > 0 ? scannerProducts : products;
     
     if (!productSearchTerm.trim()) {
+      // 🔥 Mostrar primeros 30 productos INSTANTÁNEAMENTE
       setFilteredProducts(sourceProducts.slice(0, 30));
       return;
     }
@@ -115,12 +119,13 @@ export default function RechnungCreator({ onDone, salesApi }) {
     setFilteredProducts(filtered);
   }, [productSearchTerm, products, scannerProducts]);
   
-  // Buscar productos con debounce (optimizado)
+  // 🔥 Buscar productos con debounce (optimizado para búsquedas más largas)
   const handleProductSearch = useCallback((value) => {
     setProductSearchTerm(value);
     
     if (searchTimeout) clearTimeout(searchTimeout);
     
+    // Solo hacer búsqueda avanzada si hay más de 2 caracteres
     if (value.length >= 2) {
       setSearchTimeout(setTimeout(async () => {
         try {
@@ -129,9 +134,9 @@ export default function RechnungCreator({ onDone, salesApi }) {
           if (results.length > 0) {
             setFilteredProducts(results.slice(0, 50));
           } else {
-            // Si no hay resultados en caché, buscar en products
+            // Si no hay resultados en caché, buscar en scannerProducts
             const term = value.toLowerCase();
-            const fallbackResults = products.filter(p => 
+            const fallbackResults = (scannerProducts.length > 0 ? scannerProducts : products).filter(p => 
               p.artikelName?.toLowerCase().includes(term) ||
               p.artikelNumber?.toString().toLowerCase().includes(term)
             ).slice(0, 50);
@@ -141,7 +146,8 @@ export default function RechnungCreator({ onDone, salesApi }) {
           console.error('Error en búsqueda:', error);
           // Fallback a búsqueda local
           const term = value.toLowerCase();
-          const fallbackResults = products.filter(p => 
+          const sourceProducts = scannerProducts.length > 0 ? scannerProducts : products;
+          const fallbackResults = sourceProducts.filter(p => 
             p.artikelName?.toLowerCase().includes(term) ||
             p.artikelNumber?.toString().toLowerCase().includes(term)
           ).slice(0, 50);
@@ -149,7 +155,7 @@ export default function RechnungCreator({ onDone, salesApi }) {
         }
       }, 300));
     }
-  }, [searchTimeout, searchProductsInCache, products]);
+  }, [searchTimeout, searchProductsInCache, scannerProducts, products]);
   
   // Agregar producto al carrito (solo si tiene stock > 0)
   const addToCart = useCallback((product) => {
@@ -196,9 +202,8 @@ export default function RechnungCreator({ onDone, salesApi }) {
     }
     
     const item = cart[index];
-    // 🔥 Buscar producto en products o scannerProducts
-    const product = products.find(p => p._id === item.productId) || 
-                    scannerProducts.find(p => p._id === item.productId);
+    // 🔥 Buscar producto en scannerProducts o products
+    const product = (scannerProducts.length > 0 ? scannerProducts : products).find(p => p._id === item.productId);
     
     // Verificar que la nueva cantidad no exceda el stock
     if (product && newQuantity > product.stock) {
@@ -209,7 +214,7 @@ export default function RechnungCreator({ onDone, salesApi }) {
     setCart(prevCart => prevCart.map((item, i) => 
       i === index ? { ...item, quantity: newQuantity } : item
     ));
-  }, [cart, products, scannerProducts, showToast, t]);
+  }, [cart, scannerProducts, products, showToast, t]);
   
   // Eliminar del carrito
   const removeFromCart = useCallback((index) => {
@@ -257,9 +262,9 @@ export default function RechnungCreator({ onDone, salesApi }) {
   
   // Validar stock
   const validateStock = useCallback(() => {
+    const sourceProducts = scannerProducts.length > 0 ? scannerProducts : products;
     for (const item of cart) {
-      const product = products.find(p => p._id === item.productId) ||
-                      scannerProducts.find(p => p._id === item.productId);
+      const product = sourceProducts.find(p => p._id === item.productId);
       if (product && product.stock < item.quantity) {
         showToast(t('rechnungForm.items.errors.stockItem')
           .replace('{name}', item.productName)
@@ -269,7 +274,7 @@ export default function RechnungCreator({ onDone, salesApi }) {
       }
     }
     return true;
-  }, [cart, products, scannerProducts, showToast, t]);
+  }, [cart, scannerProducts, products, showToast, t]);
   
   // Submit optimizado
   const submit = useCallback(async () => {
@@ -352,6 +357,9 @@ export default function RechnungCreator({ onDone, salesApi }) {
     );
   }
   
+  // 🔥 Determinar si mostrar loading (solo si no hay caché Y está cargando)
+  const showLoading = !isCacheInitialized && productsLoading && scannerProducts.length === 0;
+  
   return (
     <div className={styles.modalBackdrop}>
       <div className={styles.modalLarge}>
@@ -385,13 +393,14 @@ export default function RechnungCreator({ onDone, salesApi }) {
                   value={productSearchTerm}
                   onChange={(e) => handleProductSearch(e.target.value)}
                   className={styles.productSearchInput}
+                  autoFocus
                 />
               </div>
             </div>
             
             <div className={styles.productsGrid}>
-              {/* 🔥 Mostrar loading solo en primera carga sin caché */}
-              {isInitialLoad && productsLoading ? (
+              {/* 🔥 Mostrar loading SOLO si no hay caché */}
+              {showLoading ? (
                 <div className={styles.loadingProducts}>
                   <div className={styles.spinner}></div>
                   <p>{t('rechnungForm.common.loading')}</p>

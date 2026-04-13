@@ -261,52 +261,29 @@ const createCompanyUser = async (userData) => {
 };
 
 /** SUBIR LOGO DE EMPRESA */
-const uploadCompanyLogo = async (id, file, company, updateCompany) => {
-  if (!isAuthenticated) {
-    setError('No autenticado');
-    return { success: false, error: 'No autenticado' };
-  }
-
-  const canUpload = currentUser.id === id || hasAdminPermissions();
-  if (!canUpload) {
-    setError('No tienes permisos para subir el logo');
-    return { success: false, error: 'Permisos insuficientes' };
-  }
-
-  if (!file) {
-    setError('No se seleccionó ningún archivo');
-    return { success: false, error: 'Archivo vacío' };
-  }
-
-  setLoading(true);
+const uploadCompanyLogo = async (companyId, file, company, updateCompany) => {
   try {
     const formData = new FormData();
     formData.append('logo', file);
-
-    // Preview inmediato
-    if (updateCompany && company) {
-      const previewURL = URL.createObjectURL(file);
-      updateCompany({ ...company, logo: previewURL });
+    
+    // ✅ Llamar a la NUEVA función que apunta a COMPANY
+    const result = await uploadCompanyLogoAPI(companyId, formData);
+    
+    if (result.ok && result.company) {
+      // ✅ Actualizar el contexto con la compañía actualizada
+      if (updateCompany) {
+        updateCompany(result.company);
+      }
+      return { success: true, company: result.company };
     }
-
-    const res = await uploadCompanyLogoAPI(id, formData);
-
-    if (res.company && updateCompany) {
-      // Actualización final con la info real
-      updateCompany(res.company);
-    }
-
-    setRefreshTrigger(prev => prev + 1);
-
-    return { success: true, company: res.company, ok: true };
-  } catch (err) {
-    console.error('Error subiendo logo:', err);
-    setError(err.message);
-    return { success: false, error: err.message, ok: false };
-  } finally {
-    setLoading(false);
+    
+    return { success: false, error: result.message };
+  } catch (error) {
+    console.error('Error in uploadCompanyLogo:', error);
+    return { success: false, error: error.message };
   }
 };
+
 const deleteCompanyUser = async (userId) => {
   if (!isAuthenticated || !hasAdminPermissions()) {
     setError('No tienes permisos para eliminar usuarios');

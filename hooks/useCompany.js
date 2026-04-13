@@ -5,7 +5,7 @@ import { useAuth } from '../components/auth/AuthProvider';
 
 export function useCompany() {
   const { company, updateCompany } = useAuth();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); 
   const [error, setError] = useState(null);
 
   const updateCompanyData = async (data) => {

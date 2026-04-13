@@ -183,3 +183,31 @@ export async function deleteSaleAPI(saleId) {
     throw new Error(`Error: ${error.message}`);
   }
 }
+// services/saleService.js
+export async function getAllSalesAPI() {
+  try {
+    const API_URL = `${API_BASE_URL}/sales/all`;
+    
+    const res = await fetch(API_URL, {
+      headers: getAuthHeaders()
+    });
+    
+    if (!res.ok) {
+      if (res.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/login';
+        return { ok: false, sales: [] };
+      }
+      
+      throw new Error(`Error al obtener ventas: ${res.status}`);
+    }
+    
+    const data = await res.json();
+    return data;
+    
+  } catch (error) {
+    console.error('Error in getAllSalesAPI:', error);
+    return { ok: false, sales: [], error: error.message };
+  }
+}

@@ -47,7 +47,7 @@ export default function HomeHero() {
 
       <style jsx>{`
         .hero {
-          margin-top:80px;
+          margin-top:5rem;
           background: linear-gradient(
             180deg,
             #ffffff 0%,
@@ -246,6 +246,7 @@ export default function HomeHero() {
 
         @media (max-width: 480px) {
           .hero {
+             margin-top:0rem;
             padding: 6rem 0 4rem;
           }
           

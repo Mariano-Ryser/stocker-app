@@ -534,71 +534,122 @@ export async function updateCompanyAPI(data) {
   }
 }
 // Subir logo de empresa
-export async function uploadCompanyLogoAPI(id, formData) {
+// export async function uploadCompanyLogoAPI(id, formData) {
+//   try {
+//     const API_URL = `${API_BASE_URL}/users/${id}/logo`;
+
+//     if (!id) {
+//       throw new Error('ID de usuario inválido');
+//     }
+
+//     if (!formData || !(formData instanceof FormData)) {
+//       throw new Error('Datos de archivo inválidos');
+//     }
+
+//     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+
+//     if (!token) {
+//       throw new Error('No autenticado. Por favor, inicia sesión.');
+//     }
+
+//     // console.log('📦 Subiendo logo para usuario:', id);
+
+//     const res = await fetch(API_URL, {
+//       method: 'PUT',
+//       headers: {
+//         Authorization: `Bearer ${token}`
+//         // ⚠️ NO Content-Type
+//       },
+//       body: formData
+//     });
+
+//     const responseText = await res.text();
+
+//     let responseData;
+//     try {
+//       responseData = JSON.parse(responseText);
+//     } catch (err) {
+//       console.error('Respuesta no JSON:', responseText);
+//       throw new Error('Respuesta inválida del servidor');
+//     }
+
+//     if (!res.ok) {
+//       if (res.status === 401) {
+//         localStorage.removeItem('token');
+//         localStorage.removeItem('user');
+//         window.location.href = '/login';
+//         return;
+//       }
+
+//       if (res.status === 413) {
+//         throw new Error('El archivo es demasiado grande. Máximo 5MB.');
+//       }
+
+//       throw new Error(responseData.message || `Error ${res.status}`);
+//     }
+
+//     return responseData;
+//   } catch (error) {
+//     console.error('❌ Error in uploadCompanyLogoAPI:', error);
+
+//     if (
+//       error.message.includes('Network Error') ||
+//       error.message.includes('Failed to fetch')
+//     ) {
+//       throw new Error('Problema de conexión con el servidor');
+//     }
+
+//     throw new Error(error.message || 'Error al subir el logo');
+//   }
+// }
+
+export async function uploadCompanyLogoAPI(companyId, formData) {
   try {
-    const API_URL = `${API_BASE_URL}/users/${id}/logo`;
-
-    if (!id) {
-      throw new Error('ID de usuario inválido');
-    }
-
-    if (!formData || !(formData instanceof FormData)) {
-      throw new Error('Datos de archivo inválidos');
-    }
-
+    // ✅ Cambiar la URL a company, no a users
+    const API_URL = `${API_BASE_URL}/company/${companyId}/logo`; 
+    
     const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-
+    
     if (!token) {
       throw new Error('No autenticado. Por favor, inicia sesión.');
     }
-
-    // console.log('📦 Subiendo logo para usuario:', id);
-
+    
+    if (!companyId) {
+      throw new Error('ID de compañía inválido');
+    }
+    
+    if (!formData || !(formData instanceof FormData)) {
+      throw new Error('Datos de archivo inválidos');
+    }
+    
+    console.log('📦 Subiendo logo para compañía:', companyId);
+    
     const res = await fetch(API_URL, {
       method: 'PUT',
       headers: {
-        Authorization: `Bearer ${token}`
-        // ⚠️ NO Content-Type
+        'Authorization': `Bearer ${token}`
+        // ⚠️ NO poner Content-Type, fetch lo setea automáticamente con FormData
       },
       body: formData
     });
-
-    const responseText = await res.text();
-
-    let responseData;
-    try {
-      responseData = JSON.parse(responseText);
-    } catch (err) {
-      console.error('Respuesta no JSON:', responseText);
-      throw new Error('Respuesta inválida del servidor');
-    }
-
+    
+    const responseData = await res.json();
+    
     if (!res.ok) {
       if (res.status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         window.location.href = '/login';
-        return;
+        return { ok: false, message: 'Sesión expirada' };
       }
-
-      if (res.status === 413) {
-        throw new Error('El archivo es demasiado grande. Máximo 5MB.');
-      }
-
+      
       throw new Error(responseData.message || `Error ${res.status}`);
     }
-
-    return responseData;
+    
+    return responseData; // Debe tener { ok: true, company: {...}, logoUrl: "..." }
+    
   } catch (error) {
-    console.error('❌ Error in uploadCompanyLogoAPI:', error);
-
-    if (
-      error.message.includes('Network Error') ||
-      error.message.includes('Failed to fetch')
-    ) {
-      throw new Error('Problema de conexión con el servidor');
-    }
-
+    console.error('❌ Error en uploadCompanyLogoAPI:', error);
     throw new Error(error.message || 'Error al subir el logo');
   }
 }
