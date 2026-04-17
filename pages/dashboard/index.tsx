@@ -9,8 +9,6 @@ import { useSales } from "../../hooks/useSales";
 import { useDashboard } from "../../contexts/DashboardContext";
 import { useLanguage } from "../../contexts/LanguageContext"; 
 import LogoutButton from "../../components/ui/LogoutButton";
-import QuickStats from "../../components/premium/QuickStats";
-import SalesChart from '../../components/premium/salesChart';
 import SplashScreen from '../../components/ui/SplashScreen';
 
 import { 
@@ -20,7 +18,7 @@ import {
   IconInvoice, 
   IconChart
   } from '../../components/icons/DashboardIcons';
-    
+  
 import styles from './DashboardHome.module.css';
 
 // Importar tipos desde el archivo compartido
@@ -271,6 +269,26 @@ export default function DashboardHome() {
                   </div>
                 </button>
               )}
+               {isPremiumUser && (
+                <button className={`${styles.actionItem} ${styles.highlightAction}`} onClick={() => router.push("/dashboard/salesChart")}>
+                  <div className={styles.actionIconBox}>
+                    <svg className={styles.svgIcon} viewBox="0 0 24 24" fill="none">
+                      <path d="M3 17V20H21V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M7 14L7 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      <path d="M12 11L12 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      <path d="M17 8L17 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      <path d="M21 4L17 8L12 11L7 14L3 17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      <path d="M21 4H17" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                      <path d="M21 4V8" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+                    </svg>
+                  </div>
+                  <div className={styles.actionDetails}>
+                   <strong>{t('index.actions.salesChart')}</strong>
+                   <small>{t('index.actions.salesChartDescription')}</small>
+                  </div>
+                </button>
+              )}
+
 
               <button className={`${styles.actionItem} ${styles.highlightAction}`} onClick={() => router.push("/dashboard/verkaufteArtikel")}>
                 <div className={styles.actionIconBox}>
@@ -312,10 +330,10 @@ export default function DashboardHome() {
               </button>
             </div>
           </section>
-          
+{/*           
         {isPremiumUser && (
             <SalesChart /> 
-          )} 
+          )}  */}
           
         </div>
 

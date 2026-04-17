@@ -37,7 +37,9 @@
       "barcode": "Barcode Creator",
       "barcodeDesc": "Codebar",
       "goodsIn": "Goods Receipt",
-      "goodsInDesc": "Add items"
+      "goodsInDesc": "Add items",
+       "salesChart": "Sales Chart",
+      "salesChartDescription": "View your sales and statistics"
     },
     "profile": {
       "email": "Email:",

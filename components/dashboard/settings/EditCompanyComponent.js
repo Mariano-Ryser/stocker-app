@@ -6,6 +6,7 @@ import { useLanguage } from '../../../contexts/LanguageContext';
 import { COUNTRY_CONFIG } from '../../../utils/countryConfig';
 import styles from './EditCompany.module.css';
 
+const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 // Opciones de monedas
 const CURRENCY_OPTIONS = [
   { value: 'EUR', label: 'settings.currencies.EUR' },
@@ -167,6 +168,32 @@ export default function EditCompanyComponent({ user, company, updateCompany: upd
       return { ...prev, ...updates };
     });
   }, [companyForm.invoiceCountry]);
+
+useEffect(() => {
+  const refreshLogo = async () => {
+    if (!company?._id) return;
+    
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${API_BASE_URL}/company/${company._id}/logo/refresh`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await response.json();
+      
+      if (data.ok && data.logoUrl) {
+        setLogoPreview(data.logoUrl);
+        // Actualizar en el contexto si es necesario
+        if (updateCompanyContext) {
+          updateCompanyContext({ ...company, logo: data.logoUrl });
+        }
+      }
+    } catch (error) {
+      console.error('Error refreshing logo:', error);
+    }
+  };
+  
+  refreshLogo();
+}, [company?._id]);
 
   // Actualizar cuando cambia company
   useEffect(() => {

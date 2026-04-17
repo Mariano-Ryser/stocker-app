@@ -37,7 +37,9 @@
       "barcode": "Creador de Códigos",
       "barcodeDesc": "Código de barras",
       "goodsIn": "Entrada de Mercancía",
-      "goodsInDesc": "Agregar artículos"
+      "goodsInDesc": "Agregar artículos",
+      "salesChart": "Grafico de Ventas",
+      "salesChartDescription": "Visualiza tus ventas y estadísticas"
     },
     "profile": {
       "email": "Email:",
