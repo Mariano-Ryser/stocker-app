@@ -36,7 +36,7 @@ export default function HomeHero() {
         <div className="image">
           <Image
             // src="/img/homeHero3.webp" 
-            src="/img/heroo23.jpeg" 
+            src="/img/heroo23.png" 
             alt="Stocker Dashboard"
             width={760}
             height={30}

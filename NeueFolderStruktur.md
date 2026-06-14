@@ -45,39 +45,52 @@ medida cel 380 x 700
 /backend
 ├─.github
 ├─ config
-│   └─ cloudinary.js
+│   ├─ azureStorage.js
+│   └─ imageCompression.js
 ├─ db
 │   └─ index.js //conexion a mongoDb
 ├─ middleware
-│   ├─ authAdmin.js
+│   ├─ auth.js
 │   ├─ corsMiddleware.js
-│   ├─ multer.product.js // fotos cloudinary
-│   └─ rateLimitMiddleware.js
+│   ├─ multer.product.js
+│   ├─ multer.user.js
+│   ├─ rateLimitMiddleware.js
+│   └─ upload.js
 ├─ modules
-│   ├─ admin
-│   │   ├─ admin.controller.js
-│   │   └─ admin.routes.js
 │   ├─ client
 │   │   ├─ client.controller.js
 │   │   ├─ client.model.js
 │   │   └─ client.routes.js
+│   ├─ company
+│   │   ├─ company.controller.js
+│   │   ├─ company.model.js
+│   │   └─ company.routes.js
 │   ├─ product
 │   │   ├─ product.controller.js
 │   │   ├─ product.model.js
 │   │   └─ product.routes.js
-│   └─ sale
-│       ├─ sale.controller.js
-│       ├─ sale.model.js
-│       └─ sale.routes.js
+│   ├─ sale
+│   │   ├─ sale.controller.js
+│   │   ├─ sale.model.js
+│   │   └─ sale.routes.js
+│   ├─ stockMovement
+│   │   ├─ stockMovement.controller.js
+│   │   ├─ stockMovement.model.js
+│   │   └─ stockMovement.routes.js
+│   └─ user
+│       ├─ user.controller.js
+│       ├─ user.model.js
+│       └─ user.routes.js
 ├─ node_modules
 ├─ public
 │   └─ index.html
+├─ services
+│   └─ emailService.js
 ├─ .env
 ├─ .gitignore
 ├─ app.js
 ├─ package-lock.json
-├─ package.json
-└─ scripts.js
+└─ package.json
 
 
 /frontend
@@ -89,110 +102,146 @@ medida cel 380 x 700
 │   │   ├─ ProtectedRoute.js
 │   │   └─ withAdminAuth.js
 │   ├─ dashboard
-│   │   ├─ DashboardLayout.mocule.css
-│   │   └─ DashboardLayout.js
+│   │   ├─ artikel
+│   │   ├─ CEO
+│   │   ├─ clients
+│   │   ├─ headerAdmin
+│   │   ├─ limitProduct
+│   │   ├─ movements
+│   │   ├─ regnung
+│   │   ├─ scanner
+│   │   ├─ settings
+│   │   └─ sideBar
+│   ├─ footer
+│   │   ├─ Footer.module.css
+│   │   └─ Footer.tsx
 │   ├─ header
 │   │   ├─ Header.module.css
 │   │   └─ Header.tsx
 │   ├─ homeComponents
 │   │   ├─ CTASection.tsx
 │   │   ├─ FeaturesSection.tsx
-│   │   ├─ Foter.tsx
 │   │   ├─ HomeHero.tsx
-│   │   ├─ ShowcaseSection.tsx.tsx
-│   │   └─ TrustedBySection.tsx
+│   │   ├─ PricingSection.tsx
+│   │   ├─ TechCarrousel.js
+│   │   └─ TestimonialsSection.tsx
 │   ├─ icons
 │   │   └─ DashboardIcons.js
+│   ├─ LanguageSelector
+│   │   ├─ LenguageSelector.js
+│   │   └─ LenguageSelector.module.css
 │   ├─ medium
 │   ├─ premium
-│   │   ├─ PerformanceMetrics.module.css
-│   │   ├─ PerformanceMetrics.tsx
 │   │   ├─ PremiumFeatures.js
 │   │   ├─ QuickStarts.module.css
 │   │   ├─ QuickStarts.tsx
 │   │   ├─ SalesChart.module.css
 │   │   └─ salesChart.tsx
 │   ├─ shared
-│   │   └─ LoadMoreTrigger.js
+│   │   ├─ LoadMoreTrigger.js
+│   │   ├─ Pagination.module.css
+│   │   ├─ Pagination.tsx
+│   │   ├─ Toast.tsx
+│   │   └─ Toast.module.css
+│   ├─ skeletons
+│   │   ├─ rechnungCreatorSkeleton.module.css
+│   │   ├─ rechnungCreatorSkeleton.tsx
+│   │   ├─ salesChartSkeleton.module.css
+│   │   └─ salesChartSkeleton.tsx
 │   ├─ ui
 │   │   ├─ ExcelImportExport.js
 │   │   ├─ ExcelTemplate.js
+│   │   ├─ ExcelTemplate.module.css
 │   │   ├─ ExportExcelButton.js
-│   │   └─ LogoutButton.tsx
+│   │   ├─ logo.tsx
+│   │   ├─ LogoutButton.tsx
+│   │   ├─ SplashScreen.module.css
+│   │   └─ SplashScreen.tsx
 │   ├─ Layout.js
-│   ├─ MapaAlmacen.js
 │   └─ Skeleton.js
-│
+├─ contexts
+│   ├─ DashboardContext.js
+│   ├─ LanguageContext.js
+│   └─ ToastContext.jsx
 ├─ hooks
+│   ├─ bulkImportService.js
+│   ├─ useAllSales.js
 │   ├─ useApi.js
+│   ├─ useBarcodeExporter.js
+│   ├─ useCEOData.js
 │   ├─ useClients.js
+│   ├─ useClientsPaginated.js
+│   ├─ useCompany.js
+│   ├─ useCompanyCleanup.js
 │   ├─ useInfiniteScroll.js
 │   ├─ useProducts.js
-│   ├─ useSale.js
+│   ├─ useSales.js
+│   ├─ useSalesForImport.js
+│   ├─ useStockEntry.js
+│   ├─ useStockMovements.js
+│   ├─ useUserDetails.js
 │   └─ useUser.js
 ├─ locales
 │   ├─ de
 │   │   ├─ artikel.js
 │   │   ├─ homeHero.js
 │   │   ├─ index.js
-│   │   └─ login.tsx
+│   │   └─ etc....
 │   ├─ en
 │   │   ├─ artikel.js
 │   │   ├─ homeHero.js
 │   │   ├─ index.js
-│   │   └─ login.tsx
-│   ├─ es
-│   │   ├─ artikel.js
-│   │   ├─ homeHero.js
-│   │   ├─ index.js
-│   │   └─ login.tsx
+│   │   └─ etc...
+│   └─ es
+│       ├─ artikel.js
+│       ├─ homeHero.js
+│       ├─ index.js
+│       └─ etc...
 ├─ pages
 │   ├─ dashboard
 │   │   ├─ artikel
-│   │   │    ├─ components
-│   │   │    │    ├─ ProductCreator.module.css
-│   │   │    │    ├─ ProductCreator.tsx
-│   │   │    │    ├─ ProductEditor.module.css
-│   │   │    │    └─ ProductEditor.tsx
-│   │   │    ├─ index.module.css
+│   │   │    ├─ listProduct.module.css
 │   │   │    └─ index.tsx
 │   │   ├─ CEO
-│   │   │    ├─ components
-│   │   │    │    ├─ UserEditModal.module.css
-│   │   │    │    └─ UserEditModal.tsx
 │   │   │    ├─ ceoDashboard.module.css
 │   │   │    └─ index.tsx
 │   │   ├─ clients
-│   │   │    ├─ components
-│   │   │    │    ├─ ClientCreator.js
-│   │   │    │    └─ ClientEditor.tsx
 │   │   │    ├─ clients.module.css
 │   │   │    └─ index.tsx
+│   │   ├─ code
+│   │   │    ├─ code.module.css
+│   │   │    └─ index.tsx
 │   │   ├─ importExport
+│   │   │    ├─ importExportPage.module.css
+│   │   │    └─ index.tsx
+│   │   ├─ importExport
+│   │   │    ├─ register.module.css
 │   │   │    └─ index.tsx
 │   │   ├─ regnung
-│   │   │    ├─ components
-│   │   │    │    ├─ Creator.module.css
-│   │   │    │    ├─ RechnungCreator.js
-│   │   │    │    ├─ RechnungPrint.js
-│   │   │    │    ├─ RechnungUpdate.js
-│   │   │    │    └─ Update.module.css
 │   │   │    ├─ index.tsx
 │   │   │    └─ SalesPage.module.css
+│   │   ├─ salesChart
+│   │   │    └─ index.tsx
 │   │   ├─ scanner
 │   │   │    ├─ index.tsx
 │   │   │    └─ ScannerSalesPage.module.css
 │   │   ├─ settings
-│   │   │    ├─ components
-│   │   │    │    └─ SettingsComponent.tsx
 │   │   │    ├─ index.js
 │   │   │    └─ settings.module.css
+│   │   ├─ stockMovements
+│   │   │    ├─ index.js
+│   │   │    └─ stockMovements.module.css
 │   │   ├─ verkauftteArtikel
+│   │   │    ├─ index.tsx
+│   │   │    └─ verkaufteArtikel.module.css
+│   │   ├─ wareneigang
 │   │   │    ├─ index.tsx
 │   │   │    └─ verkaufteArtikel.module.css
 │   │   ├─ DashboardHome.module.css
 │   │   └─ index.tsx
-│   ├─ api
+│   ├─ forgot-password
+│   │   ├─ fortgor-password.module.css
+│   │   └─ index.tsx
 │   ├─ informativePages
 │   │   ├─ privacyPage.js
 │   │   ├─ privacyPage.module.css
@@ -204,7 +253,12 @@ medida cel 380 x 700
 │   │   └─ login.module.css
 │   ├─ register
 │   │   ├─ index.tsx
-│   │   └─ register.module.css
+│   │   ├─ register.module.css
+│   │   ├─ verify-email.module,css
+│   │   └─ verify.email.tsx
+│   ├─ reset-password
+│   │   ├─ [token].tsx
+│   │   └─ reset-password.module.css
 │   ├─ _app.js
 │   ├─ _document.js
 │   └─ index.tsx
@@ -213,13 +267,21 @@ medida cel 380 x 700
 │
 ├─ services
 │    ├─ bulkImportService.js
+│    ├─ bulkImportSalesService.js
+│    ├─ bulkImportService.js
 │    ├─ clientService.js
+│    ├─ companyCleanupService.js
+│    ├─ companyService.js
+│    ├─ limitsService.js
 │    ├─ productService.js
 │    ├─ saleService.js
+│    ├─ scannerCacheSercice.js
+│    ├─ stockMovementService.js
 │    └─ userService.js
 ├─ styles
 │
 ├─ utils
+│   ├─ countryConfig.js
 │   ├─ formatters.js
 │   └─ loader.js
 ├─ .env
