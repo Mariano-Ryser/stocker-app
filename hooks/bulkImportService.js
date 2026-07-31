@@ -19,7 +19,7 @@ export async function bulkImportProducts(products) {
       },
       body: JSON.stringify({ products })
     });
-
+     
     const data = await res.json();
 
     if (!res.ok) {

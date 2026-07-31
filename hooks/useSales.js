@@ -1,4 +1,4 @@
-// hooks/useSales.js - VERSIÓN CORREGIDA (sin doble carga)
+// hooks/useSales.js - VERSIÓN CORREGIDA
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { useAuth } from '../components/auth/AuthProvider';
 import { 
@@ -9,7 +9,7 @@ import {
 } from '../services/saleService';
 
 // 🔥 CACHÉ EN MEMORIA PARA FACTURAS
-const salesCache = new Map(); // key: companyId
+const salesCache = new Map();
 
 export function useSales() {
   const [sales, setSales] = useState([]);
@@ -28,8 +28,9 @@ export function useSales() {
   const [itemsPerPage] = useState(20);
   const [hasMore, setHasMore] = useState(false);
   
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
+  // 🔥 Estados de búsqueda - separados para mejor control
+  const [searchInput, setSearchInput] = useState(''); // Lo que el usuario escribe
+  const [searchTerm, setSearchTerm] = useState(''); // Término real usado en la API
   const [dateFrom, setDateFrom] = useState('');
   const [dateTo, setDateTo] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -44,23 +45,43 @@ export function useSales() {
   
   const { isAuthenticated, user } = useAuth();
   const companyId = user?.companyId || null;
-  const initialLoadDone = useRef(false); // 🔥 Prevenir carga múltiple
-  
-  // Debounce para búsqueda
+  const initialLoadDone = useRef(false);
+  const searchTimeout = useRef(null);
+  const isFiltering = useRef(false);
+
+  // 🔥 Debounce para búsqueda - VERSIÓN CORREGIDA
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearch(search);
+    // Limpiar timeout anterior
+    if (searchTimeout.current) {
+      clearTimeout(searchTimeout.current);
+    }
+    
+    // Si el input está vacío, actualizar inmediatamente
+    if (searchInput === '') {
+      setSearchTerm('');
+      setCurrentPage(1);
+      return;
+    }
+    
+    // Si no, esperar 500ms
+    searchTimeout.current = setTimeout(() => {
+      setSearchTerm(searchInput);
+      setCurrentPage(1);
     }, 500);
     
-    return () => clearTimeout(timer);
-  }, [search]);
+    return () => {
+      if (searchTimeout.current) {
+        clearTimeout(searchTimeout.current);
+      }
+    };
+  }, [searchInput]);
 
-  // Resetear página cuando cambian filtros
+  // 🔥 Resetear página cuando cambian otros filtros
   useEffect(() => {
     setCurrentPage(1);
-  }, [debouncedSearch, dateFrom, dateTo, statusFilter, sortField, sortDirection]);
+  }, [dateFrom, dateTo, statusFilter, sortField, sortDirection]);
 
-  // 🔥 Obtener caché de la empresa
+  // 🔥 Obtener caché de la empresa - SOLO PARA BÚSQUEDA VACÍA
   const getCompanyCache = useCallback(() => {
     if (!companyId) return null;
     
@@ -76,11 +97,21 @@ export function useSales() {
     return salesCache.get(companyId);
   }, [companyId]);
 
-  // 🔥 Cargar desde caché inmediatamente
+  // 🔥 Verificar si hay filtros activos (incluyendo búsqueda)
+  const hasActiveFilters = useCallback(() => {
+    return searchTerm !== '' || dateFrom !== '' || dateTo !== '' || statusFilter !== '' ||
+           sortField !== 'createdAt' || sortDirection !== 'desc';
+  }, [searchTerm, dateFrom, dateTo, statusFilter, sortField, sortDirection]);
+
+  // 🔥 Cargar desde caché - SOLO cuando no hay filtros
   const loadFromCache = useCallback(() => {
+    // Si hay filtros activos, NO usar caché
+    if (hasActiveFilters()) {
+      return false;
+    }
+    
     const cache = getCompanyCache();
     if (cache && cache.initialized && cache.sales.length > 0) {
-      // Verificar si el caché es válido (menos de 5 minutos)
       const cacheAge = Date.now() - (cache.timestamp || 0);
       if (cacheAge < 5 * 60 * 1000) {
         setSales(cache.sales);
@@ -92,27 +123,33 @@ export function useSales() {
       }
     }
     return false;
-  }, [getCompanyCache]);
+  }, [getCompanyCache, hasActiveFilters]);
 
-  // 🔥 Guardar en caché
+  // 🔥 Guardar en caché - SOLO cuando no hay filtros
   const saveToCache = useCallback((salesData, statsData, paginationData) => {
-    const cache = getCompanyCache();
-    if (cache && !debouncedSearch && !dateFrom && !dateTo && !statusFilter) {
-      cache.sales = salesData;
-      cache.stats = statsData;
-      cache.pagination = paginationData;
-      cache.timestamp = Date.now();
-      cache.initialized = true;
+    // Solo guardar si NO hay filtros activos
+    if (!hasActiveFilters()) {
+      const cache = getCompanyCache();
+      if (cache) {
+        cache.sales = salesData;
+        cache.stats = statsData;
+        cache.pagination = paginationData;
+        cache.timestamp = Date.now();
+        cache.initialized = true;
+      }
     }
-  }, [getCompanyCache, debouncedSearch, dateFrom, dateTo, statusFilter]);
+  }, [getCompanyCache, hasActiveFilters]);
 
-  // 🔥 Función principal para obtener ventas
+  // 🔥 Función principal para obtener ventas - ACTUALIZADA
   const fetchSales = useCallback(async (page = 1, isLoadMore = false, forceRefresh = false) => {
     if (!isAuthenticated) {
       setSales([]);
       setSalesStats({});
       return;
     }
+
+    // Si hay filtros activos, siempre refrescar
+    const shouldRefresh = forceRefresh || hasActiveFilters();
 
     if (isLoadMore) {
       setLoadingMore(true);
@@ -126,13 +163,15 @@ export function useSales() {
       const params = {
         page,
         limit: itemsPerPage,
-        search: debouncedSearch,
+        search: searchTerm, // Usar searchTerm (el que tiene debounce)
         dateFrom,
         dateTo,
         status: statusFilter,
         sortField,
         sortDirection
       };
+      
+      // console.log('🔍 Fetching sales with params:', params);
       
       const data = await getSales(params);
       
@@ -144,9 +183,8 @@ export function useSales() {
         setSales(prev => [...prev, ...newSales]);
       } else {
         setSales(newSales);
-        // Solo guardar en caché si es la página 1 y no hay filtros activos
-        if (page === 1 && !debouncedSearch && !dateFrom && !dateTo && !statusFilter && 
-            sortField === 'createdAt' && sortDirection === 'desc') {
+        // Guardar en caché SOLO si no hay filtros
+        if (page === 1 && !hasActiveFilters()) {
           saveToCache(newSales, stats, pagination);
         }
       }
@@ -165,22 +203,21 @@ export function useSales() {
       setLoading(false);
       setLoadingMore(false);
     }
-  }, [isAuthenticated, itemsPerPage, debouncedSearch, dateFrom, dateTo, statusFilter, 
-      sortField, sortDirection, saveToCache]);
+  }, [isAuthenticated, itemsPerPage, searchTerm, dateFrom, dateTo, statusFilter, 
+      sortField, sortDirection, saveToCache, hasActiveFilters]);
 
-  // 🔥 CARGA INICIAL ÚNICA - SIN DOBLE REFRESCO
+  // 🔥 CARGA INICIAL - MEJORADA
   useEffect(() => {
     if (isAuthenticated && companyId && !initialLoadDone.current) {
       initialLoadDone.current = true;
       
-      // Intentar cargar desde caché primero
+      // Solo cargar desde caché si no hay filtros
       const hasCache = loadFromCache();
       
       if (hasCache) {
-        // Si hay caché, ya mostramos datos, no hacemos fetch inmediato
-        // Solo refrescamos después de 30 segundos (opcional)
+        // Si hay caché, mostrar datos y refrescar en background después de 30s
         setTimeout(() => {
-          if (!loading && !loadingMore) {
+          if (!loading && !loadingMore && !hasActiveFilters()) {
             fetchSales(1, false, true);
           }
         }, 30000);
@@ -189,16 +226,31 @@ export function useSales() {
         fetchSales(1, false, false);
       }
     }
-  }, [isAuthenticated, companyId, loadFromCache, fetchSales, loading, loadingMore]);
+  }, [isAuthenticated, companyId, loadFromCache, fetchSales, loading, loadingMore, hasActiveFilters]);
 
-  // Cargar más (para infinite scroll)
+  // 🔥 Efecto para cuando cambia searchTerm
+  useEffect(() => {
+    if (initialLoadDone.current && isAuthenticated) {
+      // Si hay término de búsqueda, siempre refrescar
+      fetchSales(1, false, true);
+    }
+  }, [searchTerm]);
+
+  // 🔥 Efecto para otros filtros
+  useEffect(() => {
+    if (initialLoadDone.current && isAuthenticated) {
+      fetchSales(1, false, true);
+    }
+  }, [dateFrom, dateTo, statusFilter, sortField, sortDirection]);
+
+  // Cargar más
   const loadMore = useCallback(() => {
     if (hasMore && !loadingMore && !loading) {
       fetchSales(currentPage + 1, true);
     }
   }, [hasMore, loadingMore, loading, currentPage, fetchSales]);
 
-  // Cambiar página (para paginación tradicional)
+  // Cambiar página
   const goToPage = useCallback((page) => {
     if (page >= 1 && page <= totalPages) {
       fetchSales(page, false);
@@ -206,12 +258,12 @@ export function useSales() {
     }
   }, [totalPages, fetchSales]);
 
-  // Función de refresh manual (solo cuando el usuario hace clic)
+  // Refresh manual
   const refreshSales = useCallback(() => {
     return fetchSales(1, false, true);
   }, [fetchSales]);
 
-  // 🔥 createSale optimizada
+  // 🔥 createSale - ACTUALIZADA
   const createSale = async (payload) => {
     if (!isAuthenticated) {
       return { success: false, message: 'Debe iniciar sesión' };
@@ -230,39 +282,26 @@ export function useSales() {
 
       const newSale = res.data?.sale || res.data;
       
-      // Actualizar lista local INMEDIATAMENTE
+      // Actualizar lista local
       setSales(prev => [newSale, ...prev]);
       
-      // Actualizar estadísticas localmente
+      // Actualizar estadísticas
       setSalesStats(prev => ({
         ...prev,
         totalAllSales: (prev.totalAllSales || 0) + 1,
         totalUmsatz: (prev.totalUmsatz || 0) + (newSale.total || 0)
       }));
       
-      // Actualizar caché en memoria
-      const cache = getCompanyCache();
-      if (cache && cache.initialized) {
-        cache.sales = [newSale, ...cache.sales];
-        cache.stats.totalAllSales = (cache.stats.totalAllSales || 0) + 1;
-        cache.stats.totalUmsatz = (cache.stats.totalUmsatz || 0) + (newSale.total || 0);
-        cache.timestamp = Date.now(); // Actualizar timestamp
-      }
-      
-      // Disparar eventos para actualizar stock en segundo plano
-      setTimeout(() => {
-        if (newSale.items && newSale.items.length > 0) {
-          newSale.items.forEach(item => {
-            window.dispatchEvent(new CustomEvent('stockUpdated', { 
-              detail: { 
-                productId: item.productId,
-                quantitySold: item.quantity,
-                timestamp: new Date().toISOString()
-              } 
-            }));
-          });
+      // Actualizar caché SOLO si no hay filtros
+      if (!hasActiveFilters()) {
+        const cache = getCompanyCache();
+        if (cache && cache.initialized) {
+          cache.sales = [newSale, ...cache.sales];
+          cache.stats.totalAllSales = (cache.stats.totalAllSales || 0) + 1;
+          cache.stats.totalUmsatz = (cache.stats.totalUmsatz || 0) + (newSale.total || 0);
+          cache.timestamp = Date.now();
         }
-      }, 100);
+      }
       
       return { success: true, sale: newSale };
       
@@ -272,7 +311,7 @@ export function useSales() {
     }
   };
 
-  // updateSale optimizada
+  // updateSale - ACTUALIZADA
   const updateSale = async (id, payload) => {
     if (!isAuthenticated) {
       setError('Debe iniciar sesión para actualizar ventas');
@@ -287,12 +326,15 @@ export function useSales() {
           sale._id === id ? res.sale : sale
         ));
         
-        const cache = getCompanyCache();
-        if (cache && cache.initialized) {
-          cache.sales = cache.sales.map(sale => 
-            sale._id === id ? res.sale : sale
-          );
-          cache.timestamp = Date.now();
+        // Actualizar caché SOLO si no hay filtros
+        if (!hasActiveFilters()) {
+          const cache = getCompanyCache();
+          if (cache && cache.initialized) {
+            cache.sales = cache.sales.map(sale => 
+              sale._id === id ? res.sale : sale
+            );
+            cache.timestamp = Date.now();
+          }
         }
       }
       
@@ -304,7 +346,7 @@ export function useSales() {
     }
   };
 
-  // deleteSale optimizada
+  // deleteSale - ACTUALIZADA
   const deleteSale = async (id) => {
     if (!isAuthenticated) {
       setError('Debe iniciar sesión para eliminar ventas');
@@ -316,10 +358,13 @@ export function useSales() {
 
       setSales(prev => prev.filter(sale => sale._id !== id));
       
-      const cache = getCompanyCache();
-      if (cache && cache.initialized) {
-        cache.sales = cache.sales.filter(sale => sale._id !== id);
-        cache.timestamp = Date.now();
+      // Actualizar caché SOLO si no hay filtros
+      if (!hasActiveFilters()) {
+        const cache = getCompanyCache();
+        if (cache && cache.initialized) {
+          cache.sales = cache.sales.filter(sale => sale._id !== id);
+          cache.timestamp = Date.now();
+        }
       }
       
       return { success: true };
@@ -330,18 +375,19 @@ export function useSales() {
     }
   };
 
-  // Limpiar filtros
+  // Limpiar filtros - ACTUALIZADA
   const clearFilters = useCallback(() => {
-    setSearch('');
-    setDebouncedSearch('');
+    setSearchInput('');
+    setSearchTerm('');
     setDateFrom('');
     setDateTo('');
     setStatusFilter('');
     setSortField('createdAt');
     setSortDirection('desc');
+    setCurrentPage(1);
   }, []);
 
-  // Limpiar caché de la empresa
+  // Limpiar caché
   const clearCache = useCallback(() => {
     if (companyId) {
       salesCache.delete(companyId);
@@ -361,8 +407,8 @@ export function useSales() {
     hasMore,
     goToPage,
     loadMore,
-    search,
-    setSearch,
+    search: searchInput, // EXPONER searchInput como 'search'
+    setSearch: setSearchInput, // setSearch ahora actualiza searchInput
     dateFrom,
     setDateFrom,
     dateTo,

@@ -15,7 +15,7 @@
     "starter": {
       "name": "Free Mode",
       "desc": "Test the app and explore its features",
-      "f1": "Up to 15 products",
+      "f1": "Up to 1000 products",
       "f2": "Barcode scanning",
       "f3": "1 user",
       "f4": "Basic support"

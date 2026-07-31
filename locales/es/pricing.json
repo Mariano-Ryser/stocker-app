@@ -15,7 +15,7 @@
     "starter": {
       "name": "Modo Gratuito",
       "desc": "Para testear la aplicacion y conocer sus funciones",
-      "f1": "Hasta 15 productos",
+      "f1": "Hasta 1000 productos",
       "f2": "Escaneo de códigos de barras",
       "f3": "1 usuarios",
       "f4": "Soporte básico"

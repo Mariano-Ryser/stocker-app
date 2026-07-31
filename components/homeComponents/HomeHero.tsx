@@ -44,7 +44,7 @@ export default function HomeHero() {
           />
         </div>
       </div>
-
+      
       <style jsx>{`
         .hero {
           margin-top:5rem;
