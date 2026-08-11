@@ -21,7 +21,6 @@ export default function Home() {
     <>  
       <HomeHero />
       <FeaturesSection /> 
-     {/* <TestimonialsSection />  */}
       <PricingSection /> 
       <TechCarrousel />
       <CTASection />
@@ -32,6 +31,7 @@ export default function Home() {
           <p>{t('home.p')}</p>
         </div>
       </div>
+      {/* <TestimonialsSection />    */}
       <Footer />
       <style jsx>{`
         .privacy-background {

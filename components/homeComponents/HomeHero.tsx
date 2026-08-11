@@ -58,6 +58,8 @@ export default function HomeHero() {
 
         .hero-title {
           animation: fadeTitleIn 3s ease-in-out;
+          
+ font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
         
         @keyframes fadeTitleIn { 
@@ -83,7 +85,7 @@ export default function HomeHero() {
 
         /* CONTENT */
         .content h1 {
-          font-size: 2.8rem;
+          font-size: 2.5rem;
           line-height: 1.2;
           margin-bottom: 20px;
           color: var(--dark);

@@ -173,6 +173,13 @@ const Footer = memo(() => {
             >
               {t("footer.companyItems.imprint")}
             </button>
+              <button
+              className={styles.bottomLink}
+              onClick={() => handleNavigation("/publi2")}
+            >
+              Publi
+            </button>
+            
           </div>
 
           {/* Scroll to top button */}

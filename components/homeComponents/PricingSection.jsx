@@ -93,7 +93,7 @@ export default function PricingSection() {
 
       <style jsx>{`
         .pricing {
-          padding: 80px 20px;
+          padding: 10px 20px;
           background: linear-gradient(180deg, #f9f9f9 0%, #f8fcff 100%);
         }
 
@@ -102,13 +102,30 @@ export default function PricingSection() {
           margin: 0 auto;
         }
 
-        h2 {
-          text-align: center;
-          font-size: 2.5rem;
-          font-weight: 700;
-          margin-bottom: 3rem;
-          color: #1a1a1a;
-        }
+    @keyframes fadeBlurIn {
+  0% {
+    opacity: 0;
+    filter: blur(20px);
+    transform: scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    filter: blur(0);
+    transform: scale(1);
+  }
+}
+
+h2 {
+  font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  text-align: center;
+  font-size: 4.5rem;
+  font-weight: 700;
+  margin-bottom: 5rem;
+  color: #1a1a1a;
+  
+  /* Animación */
+  animation: fadeBlurIn 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 
         /* TOGGLE BUTTONS */
         .toggle {
@@ -120,7 +137,7 @@ export default function PricingSection() {
 
         .toggle button {
           padding: 10px 32px;
-          border: 1.5px solid #d1d9e6;
+          border: 1.5px solid #b8c9dd;
           background: #fff;
           font-size: 1rem;
           font-weight: 500;
@@ -131,13 +148,13 @@ export default function PricingSection() {
         }
 
         .toggle button:hover {
-          border-color: #7bb3e0;
-          background: #f0f7ff;
+          border-color: #2b6b9e;
+          background: #e8f0f8;
         }
 
         .toggle button.active {
-          background: #7bb3e0;
-          border-color: #7bb3e0;
+          background: #2b6b9e;
+          border-color: #2b6b9e;
           color: #fff;
         }
 
@@ -153,7 +170,7 @@ export default function PricingSection() {
         /* CARDS */
         .card {
           background: #fff;
-          border: 1px solid #e6edf4;
+          border: 1px solid #d5e0eb;
           border-radius: 16px;
           position: relative;
           transition: all 0.25s ease;
@@ -164,15 +181,15 @@ export default function PricingSection() {
         }
 
         .card:hover {
-          border-color: #7bb3e0;
-          box-shadow: 0 12px 28px rgba(123, 179, 224, 0.15);
+          border-color: #2b6b9e;
+          box-shadow: 0 12px 28px rgba(43, 107, 158, 0.15);
           transform: translateY(-4px);
         }
 
         .card.popular {
-          border: 2px solid #7bb3e0;
+          border: 2px solid #1a5276;
           background: #ffffff;
-          box-shadow: 0 8px 24px rgba(123, 179, 224, 0.2);
+          box-shadow: 0 8px 24px rgba(43, 107, 158, 0.25);
           transform: scale(1.02);
         }
 
@@ -185,14 +202,14 @@ export default function PricingSection() {
           top: -12px;
           left: 50%;
           transform: translateX(-50%);
-          background: #7bb3e0;
+          background: #1a5276;
           color: #fff;
           font-size: 0.75rem;
           padding: 6px 20px;
           border-radius: 20px;
           font-weight: 600;
           letter-spacing: 0.5px;
-          box-shadow: 0 2px 8px rgba(123, 179, 224, 0.3);
+          box-shadow: 0 2px 8px rgba(26, 82, 118, 0.3);
           z-index: 10;
           white-space: nowrap;
         }
@@ -226,9 +243,9 @@ export default function PricingSection() {
         }
 
         .amount {
-          font-size: 1,8rem;
+          font-size: 2.8rem;
           font-weight: 800;
-          color: #47a2ed;
+          color: #1a5276;
         }
 
         .period {
@@ -252,7 +269,7 @@ export default function PricingSection() {
         }
 
         .check {
-          color: #7bb3e0;
+          color: #1a5276;
           font-weight: bold;
           font-size: 1.1rem;
           min-width: 20px;
@@ -264,38 +281,38 @@ export default function PricingSection() {
           margin: 0 24px 28px 24px;
           padding: 14px;
           background: #fff;
-          border: 2px solid #7bb3e0;
+          border: 2px solid #1a5276;
           border-radius: 10px;
           font-size: 1rem;
           font-weight: 600;
           cursor: pointer;
           transition: all 0.2s;
-          color: #1e4b7a;
+          color: #1a5276;
           align-self: flex-end;
         }
 
         .btn:hover {
-          background: #e1f0fa;
-          border-color: #5a9bcf;
+          background: #d4e3f0;
+          border-color: #0d3b57;
           transform: translateY(-2px);
         }
 
         .btn-primary {
-          background: #7bb3e0;
+          background: #1a5276;
           color: #fff;
-          border: 2px solid #7bb3e0;
+          border: 2px solid #1a5276;
         }
 
         .btn-primary:hover {
-          background: #5a9bcf;
-          border-color: #5a9bcf;
+          background: #0d3b57;
+          border-color: #0d3b57;
         }
 
         /* TRIAL SECTION */
         .trial {
           text-align: center;
           padding: 48px;
-          background: linear-gradient(135deg, #e1f0fa 0%, #f0f7ff 100%);
+          background: linear-gradient(135deg, #d4e3f0 0%, #e8f0f8 100%);
           border-radius: 20px;
           max-width: 800px;
           margin: 0 auto;
@@ -303,7 +320,7 @@ export default function PricingSection() {
 
         .trial p {
           margin: 0;
-          color: #1e4b7a;
+          color: #0d3b57;
           font-size: 1.15rem;
           font-weight: 500;
         }
@@ -333,8 +350,8 @@ export default function PricingSection() {
           }
           
           h2 {
-            font-size: 2rem;
-            margin-bottom: 2rem;
+            font-size: 1.6rem;
+            margin-bottom: 3rem;
           }
           
           .toggle {

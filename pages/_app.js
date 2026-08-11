@@ -7,6 +7,9 @@ import { AuthProvider } from '../components/auth/AuthProvider'
 import { LanguageProvider } from '../contexts/LanguageContext'
 import { ToastProvider } from '../contexts/ToastContext' // ✅ Agregar import
 
+// Importa la fuente Space Grotesk desde Google Fonts (Next JS 13+)
+import { Space_Grotesk } from 'next/font/google';
+
 function MyApp({ Component, pageProps, router }) {
   const isDashboard = router.pathname.startsWith("/dashboard");
   const baseUrl = "https://www.stockercloud.com";
