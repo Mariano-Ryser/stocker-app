@@ -21,7 +21,9 @@ const UberUns = () => {
     });
   };
 
-  
+  // ✅ Blur placeholder optimizado
+  const blurPlaceholder = "data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAADAAQDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCwAA8A/9k=";
+
   return (
     <>
       <Head>
@@ -44,29 +46,33 @@ const UberUns = () => {
             fill
             priority
             className={styles.heroImage} 
-            sizes="(max-width: 768px) 100vw, 1200px"
-             placeholder="blur"
-  blurDataURL="data:image/jpeg;base64,..." // Add tiny blurred placeholder
+            sizes="100vw"
+            quality={80} 
+            placeholder="blur"
+            blurDataURL={blurPlaceholder}
           />
           <div className={styles.heroOverlay} />
         </div>
         
-
         <div className={styles.heroContent}>
           <h1>{t('uns.heroTitle')}</h1>
           <p>{t('uns.heroSubtitle')}</p>
-          {/* <button onClick={scrollToFooter} className={styles.ctaButton}>
-            {t('uns.ctaButton')}
-          </button> */}
         </div>
       </section>
+
       {/* CTA */}
-      
+      <section className={styles.cta}>
+        <h2>{t('uns.ctaTitle')}</h2>
+        <p>{t('uns.ctaText')}</p>
+        <button onClick={scrollToFooter} className={styles.ctaButton}>
+          {t('uns.ctaButton')}
+        </button>
+      </section>
+
       {/* QUIÉNES SOMOS */}
       <section className={styles.section}>
         <h2>{t('uns.section1Title')}</h2>
-        
-        {/* PRIMERA IMAGEN AGREGADA */}
+         
         <div className={styles.sectionImage}>
           <Image
             src="/img/wharehouse.png" 
@@ -74,22 +80,16 @@ const UberUns = () => {
             width={800}
             height={400}
             className={styles.responsiveImage}
+            quality={80}
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL={blurPlaceholder}
           />
         </div>
         
         <p>{t('uns.section1Text1')}</p>
         <p>{t('uns.section1Text2')}</p>
       </section>
-
-<section className={styles.cta}>
-        <h2>{t('uns.ctaTitle')}</h2>
-        <p>{t('uns.ctaText')}</p>
-
-        <button onClick={scrollToFooter} className={styles.ctaButton}>
-          {t('uns.ctaButton')}
-        </button>
-      </section>
-
 
       {/* SERVICIOS */}
       <section className={styles.sectionAlt}>
@@ -117,14 +117,17 @@ const UberUns = () => {
       <section className={styles.section}>
         <h2>{t('uns.section3Title')}</h2>
         
-        {/* SEGUNDA IMAGEN AGREGADA */}
         <div className={styles.sectionImage}>
           <Image
-            src="/img/stapler.webp" /* CAMBIA ESTA RUTA */
+            src="/img/stapler.webp"
             alt="Oficina moderna"
             width={800}
             height={400}
             className={styles.responsiveImage}
+            quality={80}
+            loading="lazy"
+            placeholder="blur"
+            blurDataURL={blurPlaceholder}
           />
         </div>
         
@@ -153,6 +156,10 @@ const UberUns = () => {
               width={150}
               height={150}
               className={styles.profileImage}
+              quality={80}
+              loading="lazy"
+              placeholder="blur"
+              blurDataURL={blurPlaceholder}
             />
           </div>
           <h3>{t('uns.team.member1.name')}</h3>
@@ -160,8 +167,6 @@ const UberUns = () => {
           <p>{t('uns.team.member1.bio')}</p>
         </div>
       </section>
-
-
 
       <Footer />
       <div id="contacto"></div>

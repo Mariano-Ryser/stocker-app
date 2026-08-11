@@ -35,7 +35,6 @@ export default function HomeHero() {
         </div>
         <div className="image">
           <Image
-            // src="/img/homeHero3.webp" 
             src="/img/heroo23.png" 
             alt="Stocker Dashboard"
             width={760}
@@ -47,7 +46,7 @@ export default function HomeHero() {
       
       <style jsx>{`
         .hero {
-          margin-top:5rem;
+          margin-top:6rem;
           background: linear-gradient(
             180deg,
             #ffffff 0%,
@@ -135,7 +134,7 @@ export default function HomeHero() {
           background: #f9fafb;
         }
 
-        /* FOCUS (accesibilidad SaaS real) */
+        /* FOCUS */
         .btn:focus-visible {
           outline: none;
           box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
@@ -205,16 +204,16 @@ export default function HomeHero() {
 
         @media (max-width: 787px) {
           .hero {
-            padding: 6rem 0 6rem; /* Eliminamos el padding lateral aquí */
+            padding: 6rem 0 6rem;
           }
           
           .container {
             gap: 32px;
-            padding: 0; /* Eliminamos el padding del container */
+            padding: 0;
           }
           
           .content {
-            padding: 0 24px; /* Aplicamos padding solo al contenido */
+            padding: 0 24px;
           }
           
           .content h1 {
@@ -233,14 +232,14 @@ export default function HomeHero() {
           
           .image {
             margin-top: 20px;
-            width: 100%; /* Aseguramos que ocupe todo el ancho */
+            width: 100%;
           }
           
           .image :global(img) {
             width: 100%;
-            max-width: none; /* Eliminamos el max-width para que toque los bordes */
+            max-width: none;
             height: auto;
-            border-radius: 0; /* Opcional: eliminamos bordes redondeados si los tuviera */
+            border-radius: 0;
           }
         }
 
@@ -281,6 +280,45 @@ export default function HomeHero() {
           .image :global(img) {
             width: 100%;
             max-width: none;
+          }
+        }
+
+        /* ===== DARK MODE ===== */
+        @media (prefers-color-scheme: dark) {
+          .hero {
+            background: linear-gradient(
+              180deg,
+              #0f172a 0%,
+              #1e293b 100%
+            );
+          }
+
+          .content h1 {
+            color: #f1f5f9;
+          }
+
+          .content h1 span {
+            color: #60a5fa;
+          }
+
+          .content p {
+            color: #94a3b8;
+          }
+
+          .btn.secondary {
+            background: #1e293b;
+            color: #e2e8f0;
+            border-color: #475569;
+          }
+
+          .btn.secondary:hover {
+            border-color: #60a5fa;
+            color: #60a5fa;
+            background: rgba(59, 130, 246, 0.1);
+          }
+
+          .image :global(img) {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
           }
         }
       `}</style>
