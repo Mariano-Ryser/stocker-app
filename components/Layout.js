@@ -10,7 +10,7 @@ const Layout = ({ children}) => {
 <style jsx>{`    
   .content {
 		width: 100%;
-		color: white;
+		color: black;
 		font-size: 20px;
 		line-height: 1.6;
     padding:0px;

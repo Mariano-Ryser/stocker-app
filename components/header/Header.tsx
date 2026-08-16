@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import Router from "next/router";
-import { Menu, X } from "lucide-react";
+import { Menu, X, Leaf, Trees, Mountain } from "lucide-react";
 import { useAuth } from "../auth/AuthProvider";
 import LogoutButton from "../ui/LogoutButton";
 import styles from "./Header.module.css";
@@ -11,38 +11,31 @@ export default function Header() {
   const { t } = useLanguage();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [scrolled, setScrolled] = useState(false);
-  const [hidden, setHidden] = useState(false); // Nuevo estado para ocultar/mostrar header
+  const [hidden, setHidden] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0); // Para guardar la última posición del scroll
+  const [lastScrollY, setLastScrollY] = useState(0);
   const menuRef = useRef(null);
   const toggleRef = useRef(null);
-  const SCROLL_THRESHOLD = 100; // Umbral de 100px para ocultar/mostrar
+  const SCROLL_THRESHOLD = 100;
 
   useEffect(() => {
     const onScroll = () => {
       const currentScrollY = window.scrollY;
-      
-      // Determinar si ha pasado el umbral de 8px para el efecto de fondo
       setScrolled(currentScrollY > 8);
       
-      // Lógica para ocultar/mostrar el header basado en la dirección del scroll
       if (currentScrollY > lastScrollY && currentScrollY > SCROLL_THRESHOLD) {
-        // Scrolling hacia abajo y pasó el umbral de 100px -> ocultar header
         setHidden(true);
       } else if (currentScrollY < lastScrollY) {
-        // Scrolling hacia arriba -> mostrar header
         setHidden(false);
       }
       
-      // Actualizar la última posición del scroll
       setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
-  }, [lastScrollY]); // Dependencia de lastScrollY para evitar problemas
+  }, [lastScrollY]);
 
-  // Cierra el menú si pasas a desktop
   useEffect(() => {
     const onResize = () => {
       if (window.innerWidth >= 1024) setMobileOpen(false);
@@ -51,9 +44,8 @@ export default function Header() {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // Cierra el menú al hacer clic fuera
   useEffect(() => {
-    const handleClickOutside = (e:any) => {
+    const handleClickOutside = (e: any) => {
       if (
         mobileOpen &&
         menuRef.current &&
@@ -77,7 +69,7 @@ export default function Header() {
   const handleLogoClick = () => {
     Router.push("/");
     setMobileOpen(false);
-  };  
+  };
 
   const toggleMenu = () => {
     setMobileOpen(!mobileOpen);
@@ -95,13 +87,16 @@ export default function Header() {
           {/* Logo */}
           <div className={styles.logo} onClick={handleLogoClick}>
             <div className={styles.logoIcon}>
-               <img
-                src="/img/logo80.webp" 
+              <img
+                src="/img/logo81.webp" 
                 alt="Logo"
                 className={styles.logoImage}
-              /> 
+              />
             </div>
-          
+            <div className={styles.logoText}>
+              <span className={styles.logoTitle}>Stocker<span className={styles.logoHighlight}></span></span>
+              {/* <span className={styles.logoSubtitle}>🌿 </span> */}
+            </div>
           </div>
 
           {/* Desktop nav */}
@@ -117,11 +112,9 @@ export default function Header() {
           {/* Desktop actions */}
           {!isAuthenticated && (
             <div className={styles.desktopActions}>
-                
               <button className={styles.btnText} onClick={() => Router.push("/login")}>
                 {t("header.login")}
               </button>
-             
             </div>
           )}
           
@@ -134,7 +127,6 @@ export default function Header() {
               <button className={styles.btnText} onClick={() => Router.push("/dashboard")}>
                 {t("header.dashboard")}
               </button>
-             
             </div>
           )}
                               
@@ -146,7 +138,6 @@ export default function Header() {
             aria-label={mobileOpen ? "Menü schließen" : "Menü öffnen"}
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
-            
           </button>
          
         </div>
@@ -185,7 +176,7 @@ export default function Header() {
               </button>
              
               <button 
-                className={styles.mobileLoginBtn} 
+                className={styles.mobileRegisterBtn} 
                 onClick={() => {
                   setMobileOpen(false);
                   setTimeout(() => Router.push("/register"), 0);
@@ -213,7 +204,7 @@ export default function Header() {
         </nav>
       </div>
 
-      {/* Backdrop para cerrar al hacer clic fuera */}
+      {/* Backdrop */}
       {mobileOpen && (
         <div 
           className={styles.menuBackdrop} 

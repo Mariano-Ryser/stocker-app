@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 import { useAuth } from "../../components/auth/AuthProvider";
 import { useLanguage } from "../../contexts/LanguageContext";
-
 import styles from "./register.module.css";
 
 export default function RegisterPage() {
@@ -16,7 +15,6 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   
-  // Estados para mostrar/ocultar contraseñas
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
@@ -111,21 +109,38 @@ export default function RegisterPage() {
   return (
     <div className={styles.container}>
       <div className={styles.imageSection}>
-        <div className={styles.imageOverlay}></div>
         <div className={styles.imageContent}>
-          <img 
-            src="/img/logo80.webp" 
-            alt="Alpina Logo" 
-            className={styles.companyLogo}
-          />
+          <div className={styles.logoWrapper}>
+            <img 
+              src="/img/logo80.webp" 
+              alt="Alpina Logo" 
+              className={styles.companyLogo}
+            />
+            <div className={styles.logoGlow} />
+          </div>
           <h1 className={styles.companyName}>{t('register.welcome')}</h1>
           <p className={styles.companySlogan}>{t('register.subtitle')}</p>
+          <div className={styles.companyFeatures}>
+            <div className={styles.feature}>
+              <span className={styles.featureIcon}>✦</span>
+              <span>Registro seguro</span>
+            </div>
+            <div className={styles.feature}>
+              <span className={styles.featureIcon}>✦</span>
+              <span>Protección de datos</span>
+            </div>
+            <div className={styles.feature}>
+              <span className={styles.featureIcon}>✦</span>
+              <span>Acceso inmediato</span>
+            </div>
+          </div>
         </div>
       </div>
 
       <div className={styles.formSection}>
         <div className={styles.formContainer}>
           <div className={styles.formHeader}>
+            <div className={styles.welcomeBadge}>✦ StockerCloud</div>
             <h2 className={styles.welcomeTitle}>{t('register.title')}</h2>
             <p className={styles.welcomeSubtitle}>{t('register.formTitle')}</p>
           </div>
@@ -168,6 +183,25 @@ export default function RegisterPage() {
                   disabled={loading}
                 />
               </div>
+
+              <div className={styles.inputGroup}>
+                <label htmlFor="company" className={styles.inputLabel}>
+                  <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clipRule="evenodd" />
+                    <path d="M8 6h4v2H8V6zm0 4h4v2H8v-2zm0 4h4v2H8v-2z" />
+                  </svg>
+                  {t('register.company.label')}
+                </label>
+                <input
+                  id="company"
+                  type="text"
+                  value={company}
+                  onChange={(e) => setCompany(e.target.value)}
+                  className={styles.inputField}
+                  placeholder={t('register.company.placeholder')}
+                  disabled={loading}
+                />
+              </div>
             </div>
 
             <div className={styles.inputGroup}>
@@ -191,7 +225,6 @@ export default function RegisterPage() {
             </div>
 
             <div className={styles.twoColumn}>
-              {/* Input de Password con toggle */}
               <div className={styles.inputGroup}>
                 <label htmlFor="password" className={styles.inputLabel}>
                   <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
@@ -231,12 +264,8 @@ export default function RegisterPage() {
                     )}
                   </button>
                 </div>
-                <div className={styles.passwordHint}>
-                  {t('register.password.hint')}
-                </div>
               </div>
 
-              {/* Input de Confirm Password con toggle */}
               <div className={styles.inputGroup}>
                 <label htmlFor="confirmPassword" className={styles.inputLabel}>
                   <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
@@ -278,9 +307,9 @@ export default function RegisterPage() {
                 </div>
                 <div className={styles.passwordHint}>
                   {confirmPassword && password !== confirmPassword ? (
-                    <span className={styles.passwordMismatch}>{t('register.confirmPassword.mismatch')}</span>
+                    <span className={styles.passwordMismatch}>✦ Las contraseñas no coinciden</span>
                   ) : confirmPassword && password === confirmPassword ? (
-                    <span className={styles.passwordMatch}>{t('register.confirmPassword.match')}</span>
+                    <span className={styles.passwordMatch}>✓ Contraseñas coinciden</span>
                   ) : (
                     t('register.confirmPassword.hint')
                   )}
@@ -289,7 +318,7 @@ export default function RegisterPage() {
             </div>
 
             <div className={styles.passwordRequirements}>
-              <h4>{t('register.requirements.title')}</h4>
+              <h4>🔐 {t('register.requirements.title')}</h4>
               <ul>
                 <li className={passwordErrors.minLength ? styles.requirementMet : styles.requirementNotMet}>
                   <span className={styles.requirementIcon}>
@@ -362,9 +391,9 @@ export default function RegisterPage() {
                 className={styles.termsCheckbox}
               />
               <label htmlFor="terms" className={styles.termsLabel}>
-                {t('register.termsSection.text')
-                  .replace('{termsLink}', '')
-                  .replace('{privacyLink}', '')}
+                <span className={styles.termsText}>
+                  {t('register.termsSection.text')}
+                </span>
                 <span
                   className={styles.termsLink}
                   onClick={(e) => {
@@ -384,7 +413,7 @@ export default function RegisterPage() {
                 >
                   {t('register.termsSection.privacyLabel')}
                 </span>
-                {" *"}
+                {" ✦"}
               </label>
             </div>
 
@@ -403,24 +432,6 @@ export default function RegisterPage() {
               )}
             </button>
 
-            <div className={styles.divider}>
-              <span>oder</span>
-            </div>
-
-            <button
-              type="button"
-              className={styles.googleButton}
-              onClick={() => {}}
-              disabled={loading}
-            >
-              <svg className={styles.googleIcon} viewBox="0 0 24 24">
-                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-              </svg>
-            </button>
-
             <div className={styles.loginLink}>
               {t('register.loginSection.prompt')}{" "}
               <span
@@ -431,7 +442,7 @@ export default function RegisterPage() {
                 tabIndex={0}
                 role="link"
               >
-                {t('register.loginSection.link')}
+                {t('register.loginSection.link')} ✦
               </span>
             </div>
           </form>
@@ -439,8 +450,18 @@ export default function RegisterPage() {
           <div className={styles.copyright}>
             {t('register.copyright').replace('{year}', new Date().getFullYear().toString())}
             <br />
-            <span className={styles.terms}>
-              <a href="/privacy">{t('register.privacy')}</a> | <a href="/terms"> {t('register.terms')} </a>
+            <span
+              className={styles.link}
+              onClick={() => router.push("/informativePages/privacyPage")}
+            >
+              {t('register.privacy')}
+            </span>
+            {" | "}
+            <span
+              className={styles.link}
+              onClick={() => router.push("/informativePages/termsPage")}
+            >
+              {t('register.terms')}
             </span>
           </div>
         </div>

@@ -1,7 +1,6 @@
 import Image from 'next/image';
 import Router from 'next/router';
 import { useAuth } from '../../components/auth/AuthProvider';
-import { useEffect } from 'react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function HomeHero() {
@@ -15,11 +14,11 @@ export default function HomeHero() {
       <div className="container">
         <div className="content">
           <h1 className="hero-title">{t('homeHero.title')}</h1>
-          <p>{t('homeHero.subtitle')}</p>
+          <p className="subtitle">{t('homeHero.subtitle')}</p>
  
           <div className="actions">
             <button
-              className="btn secondary"
+              className="btn primary"
               onClick={() => Router.push(loginUrl)}
             >
               {isAuthenticated ? t('homeHero.b1a') : t('homeHero.b1')}
@@ -33,44 +32,48 @@ export default function HomeHero() {
             </button>
           </div>
         </div>
-        <div className="image">
-          <Image
-            src="/img/heroo23.png" 
-            alt="Stocker Dashboard"
-            width={760}
-            height={30}
-            priority
-          />
+        
+        <div className="image-wrapper">
+          <div className="image-container">
+            <Image
+              src="/img/heroo23.png" 
+              alt="Stocker Dashboard"
+              width={760}
+              height={500}
+              priority
+              className="hero-image"
+              style={{ width: '100%', height: 'auto' }}
+            />
+          </div>
         </div>
       </div>
       
       <style jsx>{`
         .hero {
-          margin-top:6rem;
+          margin-top: 6rem;
           background: linear-gradient(
             180deg,
-            #ffffff 0%,
-            var(--light) 100%
+            #0a0e27 0%,
+            #1a1040 30%,
+            #0d1233 70%,
+            #0a0e27 100%
           );
           padding: 8rem 1rem 8rem;
           overflow: hidden;
+          position: relative;
         }
 
-        .hero-title {
-          animation: fadeTitleIn 3s ease-in-out;
-          
- font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        
-        @keyframes fadeTitleIn { 
-          from {
-            opacity: 0; 
-            transform: translateY(20px);  
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
+        .hero::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: 
+            radial-gradient(ellipse at 20% 80%, rgba(76, 175, 80, 0.05) 0%, transparent 60%),
+            radial-gradient(ellipse at 80% 20%, rgba(212, 163, 115, 0.04) 0%, transparent 50%);
+          pointer-events: none;
         }
 
         .container {
@@ -78,249 +81,237 @@ export default function HomeHero() {
           margin: 0 auto;
           padding: 0 24px;
           display: grid;
-          grid-template-columns: 1fr;
+          grid-template-columns: 1fr 1fr;
           gap: 48px;
           align-items: center;
+          position: relative;
+          z-index: 1;
         }
 
         /* CONTENT */
-        .content h1 {
-          font-size: 2.5rem;
+        .content {
+          display: flex;
+          flex-direction: column;
+        }
+
+        /* TÍTULO - Color madera */
+        .hero-title {
+          font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          font-size: 3.2rem;
+          font-weight: 800;
           line-height: 1.2;
-          margin-bottom: 20px;
-          color: var(--dark);
+          margin: 0 0 16px 0;
+          color: #d4a373;
+          text-shadow: 0 0 40px rgba(212, 163, 115, 0.05);
+          animation: fadeIn 1s ease;
         }
 
-        .content h1 span {
-          color: var(--primary);
-        }
-
-        .content p {
+        /* SUBTITLE */
+        .subtitle {
           font-size: 1.15rem;
-          color: var(--gray);
+          color: rgba(255, 255, 255, 0.6);
           max-width: 720px;
           line-height: 1.6;
-          margin-bottom: 32px;
+          margin: 0 0 32px 0;
+          animation: fadeIn 1s ease 0.3s both;
+        }
+
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
 
         .actions {
           display: flex;
           gap: 14px;
           flex-wrap: wrap;
+          animation: fadeIn 1s ease 0.6s both;
         }
 
         .btn {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          padding: 14px 26px;
+          padding: 14px 28px;
           border-radius: 10px;
           font-size: 0.95rem;
           font-weight: 600;
           cursor: pointer;
-          transition: all 0.25s ease;
+          transition: all 0.3s ease;
           border: 1px solid transparent;
           letter-spacing: 0.2px;
         }
 
-        /* SECONDARY */
+        /* PRIMARY - Verde naturaleza */
+        .btn.primary {
+          background: linear-gradient(135deg, #4caf50, #388e3c);
+          color: white;
+          border: 1px solid rgba(76, 175, 80, 0.3);
+          box-shadow: 0 4px 20px rgba(76, 175, 80, 0.15);
+        }
+
+        .btn.primary:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 30px rgba(76, 175, 80, 0.25);
+          border-color: rgba(76, 175, 80, 0.5);
+        }
+
+        /* SECONDARY - Madera */
         .btn.secondary {
-          background: #fff;
-          color: var(--dark);
-          border: 1px solid #e5e7eb;
+          background: rgba(212, 163, 115, 0.05);
+          color: #d4a373;
+          border: 1px solid rgba(212, 163, 115, 0.15);
         }
 
         .btn.secondary:hover {
-          border-color: var(--primary);
-          color: var(--primary);
-          background: #f9fafb;
+          border-color: rgba(212, 163, 115, 0.3);
+          color: #d4a373;
+          background: rgba(212, 163, 115, 0.08);
+          transform: translateY(-2px);
         }
 
-        /* FOCUS */
         .btn:focus-visible {
           outline: none;
-          box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
-        }
-
-        .secondary {
-          background: transparent;
-          border: 1px solid #e5e7eb;
-          color: var(--dark);
-        }
-
-        .secondary:hover {
-          border-color: var(--primary);
-          color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.35);
         }
 
         /* IMAGE */
-        .image {
+        .image-wrapper {
           display: flex;
           justify-content: center;
-          order: 1;
-          animation: fadeIn 2s ease-in-out;
+          align-items: center;
+          width: 100%;
+        }
+
+        .image-container {
+          width: 100%;
+          max-width: 760px;
+          position: relative;
+          animation: imageFadeIn 1.2s ease 0.5s both;
         }
         
-        @keyframes fadeIn {
+        @keyframes imageFadeIn {
           from {
-            opacity: 0; 
-            transform: translateX(60px);
+            opacity: 0;
+            transform: translateX(60px) scale(0.95);
           }
           to {
             opacity: 1;
-            transform: translateX(0);
+            transform: translateX(0) scale(1);
           }
         }
 
-        .image :global(img) {
-          box-shadow: 0 20px 50px rgba(53, 53, 53, 0.16);
-          max-width: 100%;
+        .hero-image {
+          width: 100%;
           height: auto;
+          border-radius: 16px;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+          border: 1px solid rgba(212, 163, 115, 0.05);
+          object-fit: contain;
         }
 
         /* RESPONSIVE */
-        @media (min-width: 898px) {
-          .container {
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-          }
-          
-          .image {
-            order: 0;
-          }
-          
-          .content h1 {
-            font-size: 3rem;
-          }
-          
-          .content p {
-            font-size: 1.1rem;
+        @media (max-width: 1024px) {
+          .hero-title {
+            font-size: 2.8rem;
           }
         }
 
-        @media (min-width: 1024px) {
-          .content h1 {
-            font-size: 3.4rem;
-          }
-        }
-
-        @media (max-width: 787px) {
-          .hero {
-            padding: 6rem 0 6rem;
-          }
-          
+        @media (max-width: 898px) {
           .container {
+            grid-template-columns: 1fr;
             gap: 32px;
-            padding: 0;
           }
-          
+
           .content {
-            padding: 0 24px;
-          }
-          
-          .content h1 {
-            font-size: 2.4rem;
+            align-items: center;
             text-align: center;
           }
-          
-          .content p {
-            font-size: 1.1rem;
+
+          .hero-title {
+            font-size: 2.6rem;
             text-align: center;
           }
-          
+
+          .subtitle {
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
           .actions {
             justify-content: center;
           }
-          
-          .image {
-            margin-top: 20px;
-            width: 100%;
+
+          .image-wrapper {
+            padding: 0 20px;
           }
-          
-          .image :global(img) {
-            width: 100%;
-            max-width: none;
-            height: auto;
-            border-radius: 0;
+
+          .image-container {
+            max-width: 100%;
           }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
           .hero {
-             margin-top:0rem;
-            padding: 6rem 0 4rem;
+            margin-top: 5rem;
+            padding: 5rem 0 4rem;
           }
-          
-          .content {
-            padding: 0 24px;
+
+          .container {
+            padding: 0 16px;
+            gap: 24px;
           }
-          
-          .content h1 {
+
+          .hero-title {
             font-size: 2rem;
           }
-          
-          .content p {
-            font-size: 1.1rem;
-            text-align: center;
+
+          .subtitle {
+            font-size: 1rem;
           }
-          
+
           .actions {
             flex-direction: column;
             width: 100%;
           }
-          
+
           .actions button {
             width: 100%;
           }
-          
-          .image {
-            width: 100%;
-            margin-left: 0;
-            margin-right: 0;
+
+          .btn {
+            padding: 12px 20px;
+            font-size: 0.9rem;
           }
-          
-          .image :global(img) {
-            width: 100%;
-            max-width: none;
+
+          .image-wrapper {
+            padding: 0;
+          }
+
+          .hero-image {
+            border-radius: 12px;
           }
         }
 
-        /* ===== DARK MODE ===== */
-        @media (prefers-color-scheme: dark) {
+        @media (max-width: 400px) {
           .hero {
-            background: linear-gradient(
-              180deg,
-              #0f172a 0%,
-              #1e293b 100%
-            );
+            margin-top: 4.3rem;
+            padding: 3rem 0 3rem;
           }
 
-          .content h1 {
-            color: #f1f5f9;
+          .hero-title {
+            font-size: 1.6rem;
           }
 
-          .content h1 span {
-            color: #60a5fa;
-          }
-
-          .content p {
-            color: #94a3b8;
-          }
-
-          .btn.secondary {
-            background: #1e293b;
-            color: #e2e8f0;
-            border-color: #475569;
-          }
-
-          .btn.secondary:hover {
-            border-color: #60a5fa;
-            color: #60a5fa;
-            background: rgba(59, 130, 246, 0.1);
-          }
-
-          .image :global(img) {
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+          .subtitle {
+            font-size: 0.9rem;
           }
         }
       `}</style>

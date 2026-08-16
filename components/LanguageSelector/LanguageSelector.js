@@ -2,6 +2,7 @@ import { useState } from 'react';
 import Flag from '../../components/flags/Flags';
 import styles from './LanguageSelector.module.css';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { ChevronDown, Globe } from 'lucide-react';
 
 const LanguageSelector = ({ showName = false, size = 'medium' }) => {
   const { language, changeLanguage, languageOptions, isChanging } = useLanguage();
@@ -28,33 +29,59 @@ const LanguageSelector = ({ showName = false, size = 'medium' }) => {
         onClick={() => setIsOpen(o => !o)}
         disabled={isChanging}
       >
+        <span className={styles.globeIcon}>
+          <Globe size={16} />
+        </span>
         <Flag countryCode={language} size={currentSize.flag} />
         {showName && (
-          <span style={{ fontSize: currentSize.text }}>
+          <span className={styles.languageName} style={{ fontSize: currentSize.text }}>
             {currentLanguage?.name}
           </span>
         )}
         <span className={styles.code} style={{ fontSize: currentSize.text }}>
           {currentLanguage?.code.toUpperCase()}
         </span>
+        <ChevronDown 
+          size={14} 
+          className={`${styles.chevron} ${isOpen ? styles.chevronOpen : ''}`}
+        />
       </button>
 
       {isOpen && (
-        <div className={styles.dropdown}>
-          {languageOptions.map(lang => (
-            <button
-              key={lang.code}
-              className={styles.option}
-              onClick={() => handleLanguageChange(lang.code)}
-            >
-              <Flag countryCode={lang.code} size={currentSize.flag} />
-              <span>{lang.name}</span>
-              <span className={styles.optionCode}>
-                {lang.code.toUpperCase()}
-              </span>
-            </button>
-          ))}
-        </div>
+        <>
+          <div className={styles.dropdown}>
+            <div className={styles.dropdownHeader}>
+              <span className={styles.dropdownTitle}>✦ Idioma</span>
+              <span className={styles.dropdownSubtitle}>Language</span>
+            </div>
+            <div className={styles.dropdownDivider} />
+            {languageOptions.map(lang => {
+              const isActive = lang.code === language;
+              return (
+                <button
+                  key={lang.code}
+                  className={`${styles.option} ${isActive ? styles.optionActive : ''}`}
+                  onClick={() => handleLanguageChange(lang.code)}
+                >
+                  <span className={styles.optionFlag}>
+                    <Flag countryCode={lang.code} size={currentSize.flag} />
+                  </span>
+                  <span className={styles.optionName}>{lang.name}</span>
+                  <span className={styles.optionCode}>
+                    {lang.code.toUpperCase()}
+                  </span>
+                  {isActive && (
+                    <span className={styles.optionCheck}>✦</span>
+                  )}
+                </button>
+              );
+            })}
+            <div className={styles.dropdownFooter}>
+              <span className={styles.footerText}>🌌 StockerCloud</span>
+            </div>
+          </div>
+          <div className={styles.backdrop} onClick={() => setIsOpen(false)} />
+        </>
       )}
     </div>
   );
