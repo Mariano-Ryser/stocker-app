@@ -88,7 +88,7 @@ export default function Header() {
           <div className={styles.logo} onClick={handleLogoClick}>
             <div className={styles.logoIcon}>
               <img
-                src="/img/logo80.webp" 
+                src="/img/logo81.webp" 
                 alt="Logo"
                 className={styles.logoImage}
               />

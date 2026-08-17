@@ -131,35 +131,7 @@ const UberUns = () => {
         </div>
       </section>
 
-      <section className={styles.sectionAlt}>
-  <div className={styles.sectionHeader}>
-    <span className={styles.sectionBadge}>🌟 Equipo</span>
-    <h2>{t('uns.section4Title')}</h2>
-    <p className={styles.subtitle}>{t('uns.section4Subtitle')}</p>
-    <div className={styles.sectionDivider} />
-  </div>
 
-  <div className={styles.teamCard}>
-    <div className={styles.profileImageContainer}>
-      <div className={styles.profileGlow} />
-      <Image
-        src="/img/Mariano.webp"
-        alt="Mariano Ryser"
-        width={150}
-        height={150}
-        className={styles.profileImage}
-        quality={80}
-        loading="lazy"
-        placeholder="blur"
-        blurDataURL={blurPlaceholder}
-      />
-    </div>
-    <h3>{t('uns.team.member1.name')}</h3>
-    <span className={styles.teamRole}>{t('uns.team.member1.role')}</span>
-    <p className={styles.teamBio}>{t('uns.team.member1.bio')}</p>
-    <div className={styles.teamLine} />
-  </div>
-</section>
 
       {/* PROFESIONALIDAD */}
       <section className={styles.section}>

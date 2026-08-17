@@ -1,7 +1,7 @@
 // components/layout/Footer.tsx
 import React, { memo, useCallback } from "react";
 import { useRouter } from "next/router";
-import { Mail, Phone, MapPin, Globe, Github, Twitter, Linkedin, ArrowUp } from "lucide-react";
+import { Mail, Phone, MapPin, Globe, Github, Twitter, Linkedin, ArrowUp, Instagram } from "lucide-react";
 import { useLanguage } from "../../contexts/LanguageContext";
 import styles from "./Footer.module.css";
 
@@ -30,17 +30,22 @@ const Footer = memo(() => {
   const socialLinks: SocialLink[] = [
     { 
       icon: <Github size={18} className={styles.iconWhite} />, 
-      url: "https://github.com", 
+      url: "https://github.com/Mariano-Ryser", 
       label: "GitHub" 
     },
     { 
-      icon: <Twitter size={18} className={styles.iconWhite} />, 
-      url: "https://twitter.com", 
-      label: "Twitter" 
+      icon: <Instagram size={18} className={styles.iconWhite} />, 
+      url: "https://www.instagram.com/marianorys22/", 
+      label: "Instagram" 
     },
+    // { 
+    //   icon: <Twitter size={18} className={styles.iconWhite} />, 
+    //   url: "https://twitter.com", 
+    //   label: "Twitter" 
+    // },
     { 
       icon: <Linkedin size={18} className={styles.iconWhite} />, 
-      url: "https://linkedin.com", 
+      url: "https://www.linkedin.com/in/mariano-ryser-073731221/", 
       label: "LinkedIn" 
     },
   ];
@@ -62,7 +67,7 @@ const Footer = memo(() => {
         <div className={styles.brand}>
           <div className={styles.logo}>
             <img
-              src="/img/logo80.png"
+              src="/img/logo81.webp"
               alt="Stocker - Gestión de inventario"
               className={styles.logoImg}
               width={160}
@@ -173,12 +178,13 @@ const Footer = memo(() => {
             >
               {t("footer.companyItems.imprint")}
             </button>
-              <button
+
+              {/* <button
               className={styles.bottomLink}
               onClick={() => handleNavigation("/publi2")}
             >
               Publi
-            </button>
+            </button> */}
             
           </div>
 
