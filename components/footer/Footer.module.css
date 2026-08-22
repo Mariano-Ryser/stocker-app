@@ -1,13 +1,13 @@
 /* components/layout/Footer.module.css */
 
-/* ===== VARIABLES ===== */
+/* ===== VARIABLES - DARK MODE FORZADO ===== */
 :root {
-  --footer-bg: #f8fafc;
-  --footer-border: #e5e7eb;
-  --footer-text: #1f2937;
-  --footer-gray: #6b7280;
-  --footer-primary: #2563eb;
-  --footer-primary-hover: #1d4ed8;
+  --footer-bg: #0a0e27; /* 🔥 Fondo azul oscuro como el resto de la app */
+  --footer-border: rgba(255, 255, 255, 0.06);
+  --footer-text: #f1f5f9;
+  --footer-gray: #94a3b8;
+  --footer-primary: #4caf50; /* 🔥 Verde consistente con la app */
+  --footer-primary-hover: #388e3c;
   --footer-radius: 12px;
   --footer-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -57,6 +57,8 @@
   max-width: 140px;
   height: auto;
   transition: var(--footer-transition);
+  /* 🔥 Si tu logo es oscuro, hazlo blanco */
+  filter: brightness(0) invert(1);
 }
 
 .logoImg:hover {
@@ -66,7 +68,7 @@
 .brandDesc {
   max-width: 100%;
   font-size: 0.95rem;
-  color: var(--footer-gray);
+  color: rgba(255, 255, 255, 0.5); /* 🔥 Texto claro */
   line-height: 1.7;
   margin: 0 0 1rem 0;
 }
@@ -86,18 +88,18 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(37, 99, 235, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   color: #ffffff;
   transition: var(--footer-transition);
-  border: 1px solid rgba(37, 99, 235, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .socialLink:hover {
-  background: var(--footer-primary);
+  background: #4caf50;
   color: #ffffff;
   transform: translateY(-3px);
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-  border-color: var(--footer-primary);
+  box-shadow: 0 4px 12px rgba(76, 175, 80, 0.25);
+  border-color: #4caf50;
 }
 
 .socialLink:active {
@@ -106,7 +108,7 @@
 
 .socialLink:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.35);
 }
 
 .socialLink .iconWhite {
@@ -124,7 +126,7 @@
   margin-bottom: 16px;
   font-size: 1.05rem;
   font-weight: 700;
-  color: var(--footer-text);
+  color: #d4a373; /* 🔥 Color dorado/beige como en la app */
   letter-spacing: -0.01em;
   position: relative;
   padding-bottom: 10px;
@@ -137,13 +139,8 @@
   left: 0;
   width: 32px;
   height: 2px;
-  background: var(--footer-primary);
+  background: #4caf50;
   border-radius: 2px;
-}
-
-.columnTitle.centered::after {
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 /* ===== LINK LIST ===== */
@@ -161,7 +158,7 @@
   border: none;
   padding: 6px 0;
   font-size: 0.95rem;
-  color: var(--footer-gray);
+  color: rgba(255, 255, 255, 0.5); /* 🔥 Texto claro */
   cursor: pointer;
   transition: var(--footer-transition);
   text-align: left;
@@ -175,11 +172,11 @@
   left: -18px;
   opacity: 0;
   transition: var(--footer-transition);
-  color: var(--footer-primary);
+  color: #4caf50;
 }
 
 .linkButton:hover {
-  color: var(--footer-primary);
+  color: #4caf50;
   padding-left: 20px;
 }
 
@@ -194,7 +191,7 @@
 
 .linkButton:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.25);
   border-radius: 4px;
   padding-left: 20px;
 }
@@ -210,12 +207,12 @@
   gap: 12px;
   padding: 8px 0;
   font-size: 0.95rem;
-  color: var(--footer-gray);
+  color: rgba(255, 255, 255, 0.5); /* 🔥 Texto claro */
   transition: var(--footer-transition);
 }
 
 .contactItem:hover {
-  color: var(--footer-text);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .contactItem .iconWhite {
@@ -236,20 +233,20 @@
 }
 
 .contactLink:hover {
-  color: var(--footer-primary);
+  color: #4caf50;
 }
 
 .contactText {
   word-break: break-word;
-  color:#e5e7eb;
+  color: rgba(255, 255, 255, 0.5);
 }
 
 /* ===== BOTTOM ===== */
 .bottom {
   margin-top: 1.5rem;
   padding: 1.25rem 16px;
-  border-top: 1px solid var(--footer-border);
-  background: rgba(0, 0, 0, 0.01);
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .bottomContent {
@@ -264,7 +261,7 @@
 
 .copyright {
   font-size: 0.8rem;
-  color: var(--footer-gray);
+  color: rgba(255, 255, 255, 0.3); /* 🔥 Texto claro */
   letter-spacing: 0.3px;
 }
 
@@ -279,7 +276,7 @@
   background: none;
   border: none;
   font-size: 0.8rem;
-  color: var(--footer-gray);
+  color: rgba(255, 255, 255, 0.3); /* 🔥 Texto claro */
   cursor: pointer;
   transition: var(--footer-transition);
   padding: 4px 8px;
@@ -288,17 +285,17 @@
 }
 
 .bottomLink:hover {
-  color: var(--footer-primary);
-  background: rgba(37, 99, 235, 0.06);
+  color: #4caf50;
+  background: rgba(76, 175, 80, 0.08);
 }
 
 .bottomLink:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.25);
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.25);
 }
 
 .bottomDivider {
-  color: var(--footer-border);
+  color: rgba(255, 255, 255, 0.1);
   font-size: 0.8rem;
 }
 
@@ -310,7 +307,7 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--footer-primary);
+  background: #4caf50;
   color: #ffffff;
   border: none;
   cursor: pointer;
@@ -318,7 +315,7 @@
   align-items: center;
   justify-content: center;
   transition: var(--footer-transition);
-  box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 16px rgba(76, 175, 80, 0.3);
   opacity: 0.8;
   z-index: 50;
 }
@@ -331,7 +328,7 @@
 .scrollTop:hover {
   transform: translateY(-4px);
   opacity: 1;
-  box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 8px 24px rgba(76, 175, 80, 0.4);
 }
 
 .scrollTop:active {
@@ -340,7 +337,7 @@
 
 .scrollTop:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.35), 0 0 0 6px rgba(37, 99, 235, 0.15);
+  box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.35), 0 0 0 6px rgba(76, 175, 80, 0.15);
 }
 
 /* ===== RESPONSIVE ===== */
@@ -455,54 +452,6 @@
     height: 38px;
     bottom: 16px;
     right: 16px;
-  }
-}
-
-/* ===== DARK MODE ===== */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --footer-bg: #0f172a;
-    --footer-border: rgba(255, 255, 255, 0.06);
-    --footer-text: #f1f5f9;
-    --footer-gray: #94a3b8;
-    --footer-primary: #3b82f6;
-    --footer-primary-hover: #2563eb;
-  }
-
-  .footer {
-    background: var(--footer-bg);
-  }
-
-  .socialLink {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .socialLink:hover {
-    background: var(--footer-primary);
-    border-color: var(--footer-primary);
-  }
-
-  .bottom {
-    background: rgba(0, 0, 0, 0.15);
-  }
-
-  .bottomLink:hover {
-    background: rgba(37, 99, 235, 0.12);
-  }
-
-  .scrollTop {
-    background: var(--footer-primary);
-    box-shadow: 0 4px 16px rgba(59, 130, 246, 0.3);
-  }
-
-  .scrollTop:hover {
-    box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
-  }
-
-  .iconWhite {
-    color: #ffffff !important;
-    stroke: #ffffff !important;
   }
 }
 
