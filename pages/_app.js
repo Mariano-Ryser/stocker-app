@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps, router }) {
   const isDashboard = router.pathname.startsWith("/dashboard");
   const baseUrl = "https://www.stockercloud.com";
 
-  return (
+  return ( 
     <>
       <Head>
         <title>Stocker | Intelligent Inventory Management SaaS</title>

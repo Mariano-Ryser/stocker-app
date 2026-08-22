@@ -46,6 +46,8 @@
   flex-direction: column;
   gap: 1rem;
   padding: 0 1rem;
+  color:black;
+  background: #ffffff !important
 }
 /* Main Container */
 .dashboardContainer {

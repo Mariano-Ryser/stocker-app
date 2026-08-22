@@ -5,6 +5,7 @@
   font-family: "Montserrat" ;
 }
 html, body {
+   background: #ffffff !important;
   margin: 0;
   padding: 0;
   width: 100%;
@@ -18,9 +19,7 @@ html, body {
 }
  /* Color de fondo por defecto */
 
-body { 
-  background: rgba(0, 0, 0, 0.95);
-}
+
 
 
 @media (max-width: 900px) {

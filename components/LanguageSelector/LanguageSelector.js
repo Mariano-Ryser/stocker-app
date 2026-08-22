@@ -29,9 +29,9 @@ const LanguageSelector = ({ showName = false, size = 'medium' }) => {
         onClick={() => setIsOpen(o => !o)}
         disabled={isChanging}
       >
-        <span className={styles.globeIcon}>
+        {/* <span className={styles.globeIcon}>
           <Globe size={16} />
-        </span>
+        </span> */}
         <Flag countryCode={language} size={currentSize.flag} />
         {showName && (
           <span className={styles.languageName} style={{ fontSize: currentSize.text }}>
@@ -50,10 +50,10 @@ const LanguageSelector = ({ showName = false, size = 'medium' }) => {
       {isOpen && (
         <>
           <div className={styles.dropdown}>
-            <div className={styles.dropdownHeader}>
+            {/* <div className={styles.dropdownHeader}>
               <span className={styles.dropdownTitle}>✦ Idioma</span>
               <span className={styles.dropdownSubtitle}>Language</span>
-            </div>
+            </div> */}
             <div className={styles.dropdownDivider} />
             {languageOptions.map(lang => {
               const isActive = lang.code === language;
@@ -76,9 +76,9 @@ const LanguageSelector = ({ showName = false, size = 'medium' }) => {
                 </button>
               );
             })}
-            <div className={styles.dropdownFooter}>
+            {/* <div className={styles.dropdownFooter}>
               <span className={styles.footerText}>🌌 StockerCloud</span>
-            </div>
+            </div> */}
           </div>
           <div className={styles.backdrop} onClick={() => setIsOpen(false)} />
         </>

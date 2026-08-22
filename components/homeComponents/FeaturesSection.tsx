@@ -56,7 +56,7 @@ export default function FeaturesSection() {
 
       <style jsx>{`
         .features {
-          padding: 80px 20px;
+          padding: 0rem;
           background: linear-gradient(180deg, #0a0e27 0%, #1a1040 30%, #0d1233 70%, #0a0e27 100%);
           position: relative;
           overflow: hidden;

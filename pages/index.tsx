@@ -86,7 +86,7 @@ export default function Home() {
           {/* Badge decorativo */}
           <div className="about-badge">
             <span className="badge-icon">✦</span>
-            <span className="badge-text">StockerCloud — Agua & Estrellas</span>
+            <span className="badge-text">StockerCloud</span>
             <span className="badge-icon">✦</span>
           </div>
 
@@ -134,6 +134,10 @@ export default function Home() {
       <Footer />
 
       <style jsx>{`
+        body {
+          font-family: 'Space Grotesk', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          background-color: #040e52;
+        }
         /* ===== ABOUT SECTION ===== */
         .about-page {
           position: relative;

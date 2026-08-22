@@ -1,25 +1,25 @@
-/* HEADER ADMIN - DARK MODE */
+/* HEADER ADMIN - LIGHT MODE */
 .header { 
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   height: 6rem;
-  background: rgba(10, 10, 10, 0.95);
+  background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
   z-index: 100;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
   transform: translateY(0);
 }
 
 .header.scrolled {
   height: 5rem;
-  background: rgba(10, 10, 10, 0.98);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 /* Clase para ocultar el header */
@@ -37,7 +37,7 @@
   justify-content: space-between;
 }
 
-/* LOGO */
+/* LOGO - SIN FILTROS */
 .logo {
   cursor: pointer;
   display: flex;
@@ -63,11 +63,11 @@
 .logoImage {
   width: 6.5rem;
   margin-left: 0px;
-  filter: brightness(0) invert(20%) sepia(100%) saturate(7500%) hue-rotate(120deg) brightness(95%) contrast(105%);
+  /* FILTRO ELIMINADO - imagen original */
 }
 
 .logoText h1 {
-  color: #ffffff;
+  color: #0a0a0a;
   font-size: 1.5rem;
   font-weight: 700;
   letter-spacing: -0.025em;
@@ -75,7 +75,7 @@
 }
 
 .logoSubtitle {
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(0, 0, 0, 0.5);
   font-size: 0.75rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -98,7 +98,7 @@
   font-size: 0.9rem;
   font-weight: 500;
   transition: all 0.2s ease;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.6);
   border-radius: 8px;
   position: relative;
 }
@@ -110,15 +110,15 @@
   left: 50%;
   width: 0;
   height: 2px;
-  background: #ffffff;
+  background: #0a0a0a;
   transition: all 0.3s ease;
   transform: translateX(-50%);
   border-radius: 2px;
 }
 
 .desktopNav a:hover {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.05);
+  color: #0a0a0a;
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .desktopNav a:hover::after {
@@ -126,8 +126,8 @@
 }
 
 .desktopNav a.active {
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.08);
+  color: #0a0a0a;
+  background: rgba(0, 0, 0, 0.06);
 }
 
 .desktopNav a.active::after {
@@ -141,12 +141,12 @@
   gap: 0.75rem;
 }
 
-/* DESKTOP BUTTONS */
+/* DESKTOP BUTTONS - LIGHT MODE */
 .btnText {
   background: transparent;
   border: none;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.6);
   font-size: 0.9rem;
   font-weight: 500;
   padding: 0.625rem 1.25rem;
@@ -155,15 +155,15 @@
 }
 
 .btnText:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background: rgba(0, 0, 0, 0.04);
+  color: #0a0a0a;
 }
 
 .btnPrimary {
-  background: linear-gradient(135deg, #ffffff, #e0e0e0);
+  background: linear-gradient(135deg, #0a0a0a, #1a1a1a);
   border: none;
   cursor: pointer;
-  color: #0a0a0a;
+  color: #ffffff;
   font-size: 0.9rem;
   font-weight: 600;
   padding: 0.625rem 1.5rem;
@@ -173,15 +173,15 @@
 
 .btnPrimary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
 }
 
-/* MOBILE TOGGLE */
+/* MOBILE TOGGLE - LIGHT MODE */
 .mobileToggle {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   cursor: pointer;
-  color: #ffffff;
+  color: #0a0a0a;
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
@@ -194,7 +194,7 @@
 }
 
 .mobileToggle:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.08);
 }
 
 .mobileToggle svg {
@@ -202,12 +202,12 @@
   height: 24px;
 }
 
-/* MOBILE MENU DROPDOWN */
+/* MOBILE MENU DROPDOWN - LIGHT MODE */
 .mobileMenu {
   position: fixed;
   top: 5rem;
   right: 1.5rem;
-  background: rgba(15, 15, 15, 0.98);
+  background: rgba(255, 255, 255, 0.98);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   z-index: 101;
@@ -218,10 +218,10 @@
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   min-width: 300px;
   max-width: 90vw;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 16px;
   overflow: hidden;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
 }
 
 .header.hidden + .mobileMenu,
@@ -247,7 +247,7 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.875rem 1.5rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(0, 0, 0, 0.6);
   text-decoration: none;
   font-size: 0.95rem;
   font-weight: 500;
@@ -257,8 +257,8 @@
 }
 
 .mobileNavItem:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background: rgba(0, 0, 0, 0.04);
+  color: #0a0a0a;
 }
 
 .mobileNavItem svg {
@@ -267,7 +267,7 @@
 
 .mobileDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(0, 0, 0, 0.06);
   margin: 0.5rem 1.5rem;
 }
 
@@ -281,41 +281,41 @@
 .mobileLoginBtn {
   width: 100%;
   padding: 0.875rem 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 10px;
   font-size: 0.95rem;
   font-weight: 600;
-  color: #ffffff;
-  background: rgba(255, 255, 255, 0.05);
+  color: #0a0a0a;
+  background: rgba(0, 0, 0, 0.04);
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
 }
 
 .mobileLoginBtn:hover {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.08);
   transform: translateY(-1px);
 }
 
 .mobileLoginBtn.primary {
-  background: #ffffff;
-  color: #0a0a0a;
+  background: #0a0a0a;
+  color: #ffffff;
   border: none;
 }
 
 .mobileLoginBtn.primary:hover {
-  background: #e0e0e0;
-  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+  background: #1a1a1a;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* BACKDROP */
+/* BACKDROP - LIGHT MODE */
 .menuBackdrop {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(4px);
   -webkit-backdrop-filter: blur(4px);
   z-index: 99;

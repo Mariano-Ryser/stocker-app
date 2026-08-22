@@ -112,7 +112,7 @@ export default function RegisterPage() {
         <div className={styles.imageContent}>
           <div className={styles.logoWrapper}>
             <img 
-              src="/img/logo80.webp" 
+              src="/img/logo81.webp" 
               alt="Alpina Logo" 
               className={styles.companyLogo}
             />
@@ -120,7 +120,7 @@ export default function RegisterPage() {
           </div>
           <h1 className={styles.companyName}>{t('register.welcome')}</h1>
           <p className={styles.companySlogan}>{t('register.subtitle')}</p>
-          <div className={styles.companyFeatures}>
+          {/* <div className={styles.companyFeatures}>
             <div className={styles.feature}>
               <span className={styles.featureIcon}>✦</span>
               <span>Registro seguro</span>
@@ -133,7 +133,7 @@ export default function RegisterPage() {
               <span className={styles.featureIcon}>✦</span>
               <span>Acceso inmediato</span>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
 
@@ -184,7 +184,7 @@ export default function RegisterPage() {
                 />
               </div>
 
-              <div className={styles.inputGroup}>
+              {/* <div className={styles.inputGroup}>
                 <label htmlFor="company" className={styles.inputLabel}>
                   <svg className={styles.inputIcon} viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M4 4a2 2 0 012-2h8a2 2 0 012 2v12a2 2 0 01-2 2H6a2 2 0 01-2-2V4zm2 0v12h8V4H6z" clipRule="evenodd" />
@@ -201,7 +201,7 @@ export default function RegisterPage() {
                   placeholder={t('register.company.placeholder')}
                   disabled={loading}
                 />
-              </div>
+              </div> */}
             </div>
 
             <div className={styles.inputGroup}>
@@ -403,7 +403,8 @@ export default function RegisterPage() {
                 >
                   {t('register.termsSection.termsLabel')}
                 </span>
-                {" und der "}
+                {t('register.termsSection.ylos')}
+               
                 <span
                   className={styles.termsLink}
                   onClick={(e) => {

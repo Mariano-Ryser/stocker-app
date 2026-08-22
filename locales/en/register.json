@@ -40,9 +40,10 @@
       "strong": " Strong"
     },
      "termsSection": {
-      "text": "I agree to the {termsLink} and {privacyLink} *",
+      "text": "I agree to the ",
       "termsLabel": "Terms of Use",
-      "privacyLabel": "Privacy Policy"
+      "privacyLabel": "Privacy Policy",
+      "ylos": " and the "
     },
     "button": {
       "register": "Create account",

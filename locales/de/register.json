@@ -40,9 +40,10 @@
       "strong": " Stark"
     },
     "termsSection": {
-      "text": "Ich stimme den {termsLink} und der {privacyLink} zu *",
+      "text": "Ich stimme den ",
       "termsLabel": "Nutzungsbedingungen",
-      "privacyLabel": "Datenschutzerklärung"
+      "privacyLabel": "Datenschutzerklärung",
+      "ylos": " und der "
     },
     "button": {
       "register": "Konto erstellen",

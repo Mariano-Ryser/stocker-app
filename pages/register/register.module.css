@@ -1,10 +1,11 @@
 /* ===== CONTENEDOR PRINCIPAL ===== */
 .container {
-  margin-top: 5rem;
   display: flex;
   min-height: 100vh;
+  min-height: 100dvh;
   width: 100%;
   background: #0a0e27;
+  padding-top: 5rem; /* 🔥 Eliminamos margin-top y usamos padding */
 }
 
 /* ===== IMAGE SECTION ===== */
@@ -71,8 +72,8 @@
 
 .companyLogo {
   width: 300px;
-  filter: brightness(0) invert(1);
-  opacity: 0.8;
+  /* 🔥 FILTRO ELIMINADO - imagen original */
+  opacity: 0.9;
   animation: sweep 1.5s forwards;
   position: relative;
   z-index: 1;
@@ -104,7 +105,7 @@
   100% { 
     -webkit-mask-position: 0 0;
     mask-position: 0 0;
-    opacity: 1;
+    opacity: 0.9;
   }
 }
 
@@ -135,7 +136,7 @@
 }
 
 .companySlogan {
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.5); /* 🔥 Más claro: 0.5 */
   font-size: 1.1rem;
   margin-bottom: 30px;
   line-height: 1.6;
@@ -151,7 +152,7 @@
   align-items: center;
   margin-bottom: 12px;
   font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.5);
+  color: rgba(255, 255, 255, 0.55); /* 🔥 Más claro: 0.55 */
   animation: fadeInLeft 0.6s ease forwards;
   opacity: 0;
 }
@@ -213,7 +214,7 @@
   border: 1px solid rgba(212, 163, 115, 0.1);
   border-radius: 50px;
   font-size: 0.65rem;
-  color: rgba(212, 163, 115, 0.4);
+  color: rgba(212, 163, 115, 0.5); /* 🔥 Más claro: 0.5 */
   letter-spacing: 2px;
   text-transform: uppercase;
   margin-bottom: 16px;
@@ -228,7 +229,7 @@
 }
 
 .welcomeSubtitle {
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.4); /* 🔥 Más claro: 0.4 */
   font-size: 1rem;
   line-height: 1.5;
 }
@@ -239,8 +240,8 @@
 }
 
 .errorMessage {
-  background: rgba(239, 68, 68, 0.05);
-  color: #f87171;
+  background: rgba(239, 68, 68, 0.08); /* 🔥 Más visible */
+  color: #fca5a5; /* 🔥 Más claro */
   padding: 14px 16px;
   border-radius: 10px;
   margin-bottom: 24px;
@@ -248,7 +249,7 @@
   align-items: center;
   gap: 12px;
   font-size: 0.9rem;
-  border: 1px solid rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.15);
   animation: shake 0.5s ease;
 }
 
@@ -261,8 +262,8 @@
 }
 
 .successMessage {
-  background: rgba(76, 175, 80, 0.05);
-  color: #4caf50;
+  background: rgba(76, 175, 80, 0.08); /* 🔥 Más visible */
+  color: #86efac; /* 🔥 Más claro */
   padding: 14px 16px;
   border-radius: 10px;
   margin-bottom: 24px;
@@ -270,7 +271,7 @@
   align-items: center;
   gap: 12px;
   font-size: 0.9rem;
-  border: 1px solid rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.15);
   animation: fadeInUp 0.5s ease;
 }
 
@@ -298,37 +299,37 @@
   gap: 10px;
   font-size: 0.875rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.5); /* 🔥 Más claro: 0.5 */
   margin-bottom: 8px;
 }
 
 .inputIcon {
   width: 18px;
   height: 18px;
-  color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.2);
   flex-shrink: 0;
 }
 
 .inputField {
   width: 100%;
   padding: 14px 16px;
-  border: 2px solid rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.08); /* 🔥 Más visible */
   border-radius: 10px;
   font-size: 0.95rem;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.02);
-  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.9); /* 🔥 Más claro */
 }
 
 .inputField::placeholder {
-  color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.2); /* 🔥 Más visible */
 }
 
 .inputField:focus {
   outline: none;
   border-color: #4caf50;
   box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .inputField:disabled {
@@ -345,23 +346,23 @@
 .inputFieldWithToggle {
   width: 100%;
   padding: 14px 48px 14px 16px;
-  border: 2px solid rgba(255, 255, 255, 0.05);
+  border: 2px solid rgba(255, 255, 255, 0.08); /* 🔥 Más visible */
   border-radius: 10px;
   font-size: 0.95rem;
   transition: all 0.3s ease;
-  background: rgba(255, 255, 255, 0.02);
-  color: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.03);
+  color: rgba(255, 255, 255, 0.9); /* 🔥 Más claro */
 }
 
 .inputFieldWithToggle::placeholder {
-  color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.2); /* 🔥 Más visible */
 }
 
 .inputFieldWithToggle:focus {
   outline: none;
   border-color: #4caf50;
   box-shadow: 0 0 0 4px rgba(76, 175, 80, 0.1);
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .inputFieldWithToggle:disabled {
@@ -390,7 +391,7 @@
   justify-content: center;
   border-radius: 8px;
   transition: all 0.3s ease;
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.3); /* 🔥 Más visible */
   z-index: 10;
 }
 
@@ -411,25 +412,25 @@
 
 .passwordHint {
   font-size: 0.75rem;
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.25); /* 🔥 Más visible */
   margin-top: 6px;
   margin-left: 4px;
 }
 
 .passwordMismatch {
-  color: #f87171;
+  color: #fca5a5; /* 🔥 Más claro */
   font-weight: 500;
 }
 
 .passwordMatch {
-  color: #4caf50;
+  color: #86efac; /* 🔥 Más claro */
   font-weight: 500;
 }
 
 /* Password Requirements */
 .passwordRequirements {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
   border-radius: 10px;
   padding: 16px 20px;
   margin: 20px 0 24px;
@@ -438,7 +439,7 @@
 .passwordRequirements h4 {
   font-size: 0.85rem;
   font-weight: 600;
-  color: rgba(212, 163, 115, 0.6);
+  color: rgba(212, 163, 115, 0.7); /* 🔥 Más claro */
   margin-bottom: 12px;
 }
 
@@ -469,21 +470,21 @@
 }
 
 .requirementMet {
-  color: #4caf50;
+  color: #86efac; /* 🔥 Más claro */
 }
 
 .requirementMet .requirementIcon {
   background: rgba(76, 175, 80, 0.1);
-  color: #4caf50;
+  color: #86efac;
 }
 
 .requirementNotMet {
-  color: rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.25); /* 🔥 Más visible */
 }
 
 .requirementNotMet .requirementIcon {
   background: rgba(255, 255, 255, 0.02);
-  color: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.2);
 }
 
 .passwordStrength {
@@ -498,18 +499,18 @@
   align-items: center;
   font-size: 0.85rem;
   font-weight: 500;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.4); /* 🔥 Más claro */
   margin-bottom: 8px;
 }
 
-.strengthNone { color: rgba(255, 255, 255, 0.15); }
-.strengthWeak { color: #f87171; }
-.strengthMedium { color: #fbbf24; }
-.strengthStrong { color: #4caf50; }
+.strengthNone { color: rgba(255, 255, 255, 0.2); }
+.strengthWeak { color: #fca5a5; } /* 🔥 Más claro */
+.strengthMedium { color: #fcd34d; } /* 🔥 Más claro */
+.strengthStrong { color: #86efac; } /* 🔥 Más claro */
 
 .strengthMeter {
   height: 6px;
-  background: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.05);
   border-radius: 3px;
   overflow: hidden;
 }
@@ -533,7 +534,7 @@
   margin: 24px 0 32px;
   padding: 16px;
   background: rgba(255, 255, 255, 0.01);
-  border: 1px solid rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
   border-radius: 10px;
 }
 
@@ -549,7 +550,7 @@
 
 .termsLabel {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.4); /* 🔥 Más claro */
   line-height: 1.6;
 }
 
@@ -629,7 +630,7 @@
 
 .loginLink {
   text-align: center;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.4); /* 🔥 Más claro */
   font-size: 0.9rem;
   margin: 16px 0 24px;
 }
@@ -648,7 +649,7 @@
 .copyright {
   text-align: center;
   margin-top: 40px;
-  color: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.12); /* 🔥 Más visible */
   font-size: 0.75rem;
   line-height: 1.8;
 }
@@ -695,7 +696,7 @@
 @media (max-width: 768px) {
   .container {
     flex-direction: column;
-    margin-top: 5rem;
+    padding-top: 0; /* 🔥 Sin padding extra */
   }
   
   .imageSection {
@@ -722,7 +723,7 @@
 }
 
 @media (max-width: 480px) {
-  .container { margin-top: 4rem; }
+  .container { padding-top: 0; }
   
   .imageSection {
     min-height: 180px;

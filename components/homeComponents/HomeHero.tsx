@@ -50,7 +50,6 @@ export default function HomeHero() {
       
       <style jsx>{`
         .hero {
-          margin-top: 6rem;
           background: linear-gradient(
             180deg,
             #0a0e27 0%,
@@ -58,7 +57,7 @@ export default function HomeHero() {
             #0d1233 70%,
             #0a0e27 100%
           );
-          padding: 8rem 1rem 8rem;
+          padding: 17rem 1rem 8rem;
           overflow: hidden;
           position: relative;
         }
@@ -260,8 +259,7 @@ export default function HomeHero() {
 
         @media (max-width: 600px) {
           .hero {
-            margin-top: 5rem;
-            padding: 5rem 0 4rem;
+            padding: 10rem 0 4rem;
           }
 
           .container {
@@ -302,8 +300,7 @@ export default function HomeHero() {
 
         @media (max-width: 400px) {
           .hero {
-            margin-top: 4.3rem;
-            padding: 3rem 0 3rem;
+            padding: 7.6rem 0 3rem;
           }
 
           .hero-title {

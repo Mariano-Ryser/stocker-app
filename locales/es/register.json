@@ -8,7 +8,7 @@
     "name": {
       "label": "Nombre completo *",
       "placeholder": "Juan Pérez"
-    },
+    }, 
     "email": {
       "label": "Email empresarial *",
       "placeholder": "tu@empresa.com"
@@ -40,9 +40,10 @@
       "strong": " Fuerte"
     },
     "termsSection": {
-      "text": "Acepto los {termsLink} y la {privacyLink} *",
+      "text": "Acepto los ",
       "termsLabel": "Términos de Uso",
-      "privacyLabel": "Política de Privacidad"
+      "privacyLabel": "Política de Privacidad",
+      "ylos": " y la "
     },
     "button": {
       "register": "Crear cuenta",

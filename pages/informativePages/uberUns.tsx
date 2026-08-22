@@ -15,7 +15,7 @@ const UberUns = () => {
       heroRef.current.classList.add(styles.visible);
     }
 
-    const newStars = Array.from({ length: 80 }, () => ({
+    const newStars = Array.from({ length: 10 }, () => ({
       x: Math.random() * 100,
       y: Math.random() * 100,
       size: 1 + Math.random() * 3,
@@ -136,7 +136,7 @@ const UberUns = () => {
       {/* PROFESIONALIDAD */}
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
-          <span className={styles.sectionBadge}>🌳 Valores</span>
+          {/* <span className={styles.sectionBadge}>🌳 Valores</span> */}
           <h2>{t('uns.section3Title')}</h2>
           <div className={styles.sectionDivider} />
         </div>
